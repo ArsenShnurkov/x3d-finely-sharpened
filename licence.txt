@@ -1,6 +1,6 @@
 NEW BSD LICENCE
 
-Copyright (c) 2013, Mr Gerallt G. Franke All rights reserved.
+Copyright (c) 2013 - 2016, Mr Gerallt G. Franke All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:

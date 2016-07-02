@@ -23,11 +23,10 @@ This project will remain here for archive purposes. I have nearly completed the 
 Todo list
 ```
 
-IMPLEM: Plugin for chromium (depricated, here for archive purposes)
-PARTLY: URL/URI/filesys resource fetching
+PARTLY: URL/URI/filesys/data:text/plain resource fetching
 TODO: Scripting using JavaScript (JIT compiled using the V8 Engine)
 TODO: Node Prototyping
-TODO: abstract types defined according to X3D 3.3 spec
+PARTLY: abstract types defined according to X3D 3.3 spec
 PARTLY: DEF and USE
 PARTLY: grouping
 TODO: event propagation
@@ -75,7 +74,7 @@ Licence
 
 New BSD Licence
 
-Copyright © 2013, Mr Gerallt G. Franke of Tasmania, Australia
+Copyright © 2013 - 2016, Mr Gerallt G. Franke of Tasmania, Australia
 
 All rights reserved.
 
