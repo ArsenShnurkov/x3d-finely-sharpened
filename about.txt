@@ -1,0 +1,31 @@
+With software like Blender and Unity3D around, as well as libraries like SharpGL, X3D as a markup for 3D scenes makes for a viable alternative to the COLLADA XML dialect and other formats.
+
+X3D is underrated, undeveloped, and needs to have its roots revived!
+Thus, the Author is proud to present this little C# X3D library for those in need.
+
+A version of SharpGL ships along free of charge as the library uses it at the moment as a point of reference.
+
+--
+We're a bit low on documentation at this stage.
+I have included a few X3D examples pulled from random sources on the www. 
+As X3D is reasonably close semantically to the now deprecated VRML, you may look into the VRML books for help.
+There is also plenty of books, online tutorials, and examples on OpenGL around so feel free to use them.
+If you are a beginner in C# or the .NET framework, I'd recommend a mad surf on the www as a starter, and something from the Sams Teach Yourself series as an entrée.
+Perhaps untertake a semester of a Computing course if you have difficulty.
+
+If you observe the library is not yet complete. 
+Although there are some minimal usable functionalities, 
+i.e. a partial <Shape> rendering implementation; polygon, and colour-per-vertex parsing
+the todo list can be itemised in the following:
+
+* transformations
+* colouring
+* texturing
+* lighting
+* shading
+* NURBS
+* <Scene> parsing & rendering
+* X3DB parsing
+* expose rendering options in core library
+* support for WebGL (is intended)
+  - port the library to a technology like JSIL for WebGL and XMLHttpRequest support
