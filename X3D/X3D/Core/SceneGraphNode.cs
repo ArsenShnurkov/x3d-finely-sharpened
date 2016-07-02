@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,7 @@ namespace X3D
         public virtual void PostDescendantDeserialization() { }
 
         public virtual void PreRender() { }
-        public virtual void Render() { }
+        public virtual void Render(FrameEventArgs e) { }
         public virtual void PostRender() { }
 
         public List<SceneGraphNode> DecendantsByType(Type t)

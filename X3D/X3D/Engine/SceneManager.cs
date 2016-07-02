@@ -13,6 +13,7 @@ using System.Xml.XPath;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using OpenTK;
 
 /*
 createX3DFromStream
@@ -580,14 +581,14 @@ namespace X3D.Engine
             }
         }
 
-        public void Draw()
+        public void Draw(FrameEventArgs e)
         {
-            Draw(this);
+            Draw(this,e);
         }
 
-        public static void Draw(SceneManager scene)
+        public static void Draw(SceneManager scene, FrameEventArgs e)
         {
-            Render.Scene(scene);
+            Render.Scene(scene,e);
         }
     }
 }

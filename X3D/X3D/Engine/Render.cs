@@ -6,18 +6,19 @@ using OpenTK.Graphics.OpenGL;
 
 using System.Collections.Generic;
 using System.Linq;
+using OpenTK;
 
 namespace X3D.Engine
 {
     public class Render
     {//:IX3DRenderer {
         //TODO: put all this in X3D.Engine.Renderer
-        public static void Scene(SceneManager scene)
+        public static void Scene(SceneManager scene, FrameEventArgs e)
         {
 #if DEBUG_SCENE_GRAPH_RENDERING
             Console.Clear();
 #endif
-            Draw(scene.SceneGraph);
+            Draw(scene.SceneGraph,e);
         }
 
         /* There are several ways to perform the rendering..
@@ -32,14 +33,14 @@ namespace X3D.Engine
          */
 
 
-        public static void Draw(SceneGraph sg)
+        public static void Draw(SceneGraph sg, FrameEventArgs e)
         {
 
-            draw_scenegraph_dfs_iterative(sg.GetRoot());
+            draw_scenegraph_dfs_iterative(sg.GetRoot(),e);
 
         }
 
-        private static void draw_scenegraph_dfs_iterative(SceneGraphNode root)
+        private static void draw_scenegraph_dfs_iterative(SceneGraphNode root, FrameEventArgs e)
         {
             //TODO: make extensive use of GUID lookups from DAG to improve efficiency, instead of copying X3DNodes to and from the stack
             Stack<SceneGraphNode> work_items;
@@ -65,14 +66,14 @@ namespace X3D.Engine
                 {
                     nodes_visited.Add(node.id, node);
 
-                    visit(node);
+                    visit(node,e);
 
                     num_nodes_visited++;
                 }
                 if (HasBackEdge(node, work_items) && node.Children.Count > 0)
                 {
                     //TODO: dont like this recursive
-                    draw_scenegraph_dfs_iterative(node.Children[0]);//,__GetNodeByGUID);
+                    draw_scenegraph_dfs_iterative(node.Children[0],e);//,__GetNodeByGUID);
                 }
                 //if (node.PassthroughAllowed)
                 {
@@ -103,7 +104,7 @@ namespace X3D.Engine
 #endif
         }
 
-        private static void visit(SceneGraphNode node)
+        private static void visit(SceneGraphNode node, FrameEventArgs e)
         {
 #if DEBUG_SCENE_GRAPH_RENDERING
 #if DEBUG_SCENE_GRAPH_RENDERING_VERBOSE
@@ -114,7 +115,7 @@ namespace X3D.Engine
 #endif
 
             node.PreRender();
-            node.Render();
+            node.Render(e);
         }
 
         private static void leave(SceneGraphNode node)

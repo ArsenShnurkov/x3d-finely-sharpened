@@ -144,7 +144,7 @@ namespace x3druntime.ui.opentk
             if (scene != null && scene.SceneGraph.Loaded)
             {
                 GL.PushMatrix();
-                scene.Draw();
+                scene.Draw(e);
                 GL.PopMatrix();
             }
             else
