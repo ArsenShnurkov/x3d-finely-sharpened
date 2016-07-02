@@ -3,7 +3,7 @@ With software like Blender and Unity3D around, as well as libraries like SharpGL
 X3D is underrated, undeveloped, and needs to have its roots revived!
 Thus, the Author is proud to present this little C# X3D library for those in need.
 
-A version of SharpGL ships along free of charge as the library uses it at the moment as a point of reference.
+A OpenTK v1.0.1287.7350 ships along as the library uses it at the moment as a wrapper to OpenGL.
 
 --
 We're a bit low on documentation at this stage.
