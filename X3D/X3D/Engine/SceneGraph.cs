@@ -110,6 +110,11 @@ namespace X3D.Engine
                     {
                         child.IsLeaf = true;
                     }
+
+                    //child.ContinueDeserialization();
+                    // ... DEF_use
+
+                    child.PostDeserialization();
                 }
 
                 if (nav.HasChildren)
@@ -130,6 +135,7 @@ namespace X3D.Engine
                             }
                             if (parent != null)
                             {
+                                parent.PostDescendantDeserialization();
 
                                 if (parent.IsLeaf == false && parent.Children.Count > 0)
                                 {
