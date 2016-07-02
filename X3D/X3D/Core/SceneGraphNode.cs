@@ -18,6 +18,11 @@ namespace X3D
 
         public int Depth { get; set; }
 
+        public virtual void Load() { }
+
+        public virtual void PostDeserialization() { Load(); }
+        public virtual void PostDescendantDeserialization() { }
+
         public virtual void PreRender() { }
         public virtual void Render() { }
         public virtual void PostRender() { }
