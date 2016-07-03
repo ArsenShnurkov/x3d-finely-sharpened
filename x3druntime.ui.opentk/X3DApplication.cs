@@ -13,6 +13,8 @@ using OpenTK.Graphics.OpenGL;
 using g = OpenTK.Graphics;
 using System.Runtime.InteropServices;
 using X3D.Engine;
+using OpenTK.Input;
+using X3D;
 /* Need OpenTK.Compatibility.dll for GLu */
 
 /* Some important things:
@@ -31,7 +33,7 @@ namespace x3druntime.ui.opentk
         public string BaseURL { get; set; }
         public string BaseMIME { get; set; }
 
-        
+
         private static SceneManager scene;
 
         /// <param name="window">
@@ -44,7 +46,45 @@ namespace x3druntime.ui.opentk
             //this.window.KeyPress+=new EventHandler<KeyPressEventArgs>(X3DApplication_KeyPress);
             //this.Keyboard.KeyDown+=new EventHandler<OpenTK.Input.KeyboardKeyEventArgs>(Keyboard_KeyDown);
             this.Keyboard.KeyUp += new EventHandler<OpenTK.Input.KeyboardKeyEventArgs>(Keyboard_KeyUp);
+
+
+            this.ActiveCamera = new Camera(this.window.Width, this.window.Height);
+
+            this.Mouse.WheelChanged += Mouse_WheelChanged;
+            this.window.MouseLeave += Window_MouseLeave;
+            this.Mouse.ButtonDown += (object sender, MouseButtonEventArgs e) =>
+            {
+                if (e.IsPressed && e.Button == MouseButton.Left) {
+                    ispanning = true;
+                    iszooming = false;
+                }
+                else if (e.IsPressed && e.Button == MouseButton.Right) {
+                    iszooming = true;
+                    ispanning = false;
+                }
+                mouseDragging = true;
+            };
+            this.Mouse.ButtonUp += (object sender, MouseButtonEventArgs e) =>
+            {
+                mouseDragging = false;
+            };
+            this.Mouse.Move += (object sender, MouseMoveEventArgs e) =>
+            {
+                if (mouseDragging)
+                {
+
+                    if (ispanning)
+                    {
+                        ActiveCamera.PanXY(e.XDelta * mouseScale, e.YDelta * mouseScale);
+                    }
+                    else if (iszooming)
+                    {
+                        ActiveCamera.OrbitXY(e.XDelta, e.YDelta);
+                    }
+                }
+            };
         }
+
 
         public void Init(string url, string mime_type)
         {
@@ -110,12 +150,13 @@ namespace x3druntime.ui.opentk
         }
 
 
-        
+
 
         public void Render(FrameEventArgs e)
         {
             _prev = DateTime.Now;
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.ClearColor(System.Drawing.Color.White);
             GL.Enable(EnableCap.DepthTest);
             GL.DepthMask(true);
             GL.DepthFunc(DepthFunction.Lequal);
@@ -123,23 +164,22 @@ namespace x3druntime.ui.opentk
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref modelview);
 
+            //TODO: replace with Camera Class
+            ActiveCamera.setupGLRenderMatrix();
+
+            GL.Scale(ActiveCamera.Scale);
+
 #if NAVIGATION_MOUSE
             //TODO: Improve this: think of mouse navigation as a vector pointing from the origin inside a sphere
             GL.Rotate(Mouse.X,Vector3.UnitY);
             GL.Rotate(Mouse.Y,Vector3.UnitX);
 #endif
 #if NAVIGATION_KEYBOARD
-            //This is shit. Improve this
-            // player should have 6DOF, and movement should be relative to the player's current location
-            GL.Rotate(this.lookupdown, 1.0f, 0.0f, 0.0f);
-            GL.Rotate(360.0f - this.yrot, 0.0f, 1.0f, 0.0f);
+            //GL.Rotate(this.lookupdown, 1.0f, 0.0f, 0.0f);
+            //GL.Rotate(360.0f - this.yrot, 0.0f, 1.0f, 0.0f);
 
-            //GL.Rotate(0,0.0f,0.0f,lookleftright);
-            //GL.Rotate(360.0f-lookleftright,Vector3d.UnitX);
-            //GL.Rotate(360.0f-lookleftright,Vector3d.UnitZ);
-            //GL.Rotate(360.0f-lookleftright,Vector3d.UnitY); // left|right
 
-            GL.Translate(-this.xpos, -this.walkbias - 0.25f + this.ypos, -this.zpos);
+            //GL.Translate(-this.xpos, -this.walkbias - 0.25f + this.ypos, -this.zpos);
 #endif
             if (scene != null && scene.SceneGraph.Loaded)
             {
@@ -151,11 +191,6 @@ namespace x3druntime.ui.opentk
             {
                 Console.WriteLine("null scene draw");
             }
-#if ROTATE_SCENE_ANNOYINGLY
-            if(rotate_enable) {
-                rotation+=3.0f;
-            }
-#endif
 
             if (e != null)
             {
@@ -173,15 +208,23 @@ namespace x3druntime.ui.opentk
         /// </summary>
         public void Resize()
         {
-            Matrix4 projection;
+            //Matrix4 projection;
 
             GL.Viewport(this.window.ClientRectangle);
 
-            //projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4,Width/(float)Height, 0.00001f, 500.0f);
-            projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, window.Width / (float)window.Height, 1.0f, 500.0f);
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref projection);
+
+            //projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, window.Width / (float)window.Height, 1.0f, 500.0f);
+            //GL.MatrixMode(MatrixMode.Projection);
+            //GL.LoadMatrix(ref projection);
+
+
+            //GL.MatrixMode(MatrixMode.Projection);
+            //GL.LoadIdentity();
+            //GL.Ortho(-10.0 - zoom - panX, 10.0 + zoom - panX, -10.0 - zoom + panY, 10.0 + zoom + panY, -50.0, 50.0);
+
+            ActiveCamera.viewportSize(window.Width, window.Height);
         }
+
 
         public void FrameUpdated(FrameEventArgs e)
         {
@@ -189,7 +232,27 @@ namespace x3druntime.ui.opentk
             //fps=GetFps(e.Time);
         }
 
+        #region test orbital control
 
+        Camera ActiveCamera;
+        bool ispanning, iszooming;
+        float mouseScale = 0.01f;
+        bool mouseDragging = false;
+
+        private void Mouse_WheelChanged(object sender, MouseWheelEventArgs e)
+        {
+            //base.OnMouseWheel(e);
+            ActiveCamera.Dolly(e.DeltaPrecise * mouseScale * 10);
+        }
+
+
+        private void Window_MouseLeave(object sender, EventArgs e)
+        {
+
+            mouseDragging = false;
+        }
+
+        #endregion
 
     }
 }
