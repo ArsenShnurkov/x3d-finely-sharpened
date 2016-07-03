@@ -42,11 +42,6 @@ namespace X3D
 
         #endregion
 
-        public void RenderShape()
-        {
-
-        }
-
         #region Geometry
 
         public sealed class BoxGeometry : ShapeGeometry

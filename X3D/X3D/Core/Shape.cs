@@ -49,33 +49,19 @@ void main()
         string fragmentShaderSource = @"
 #version 330
  
-out vec4 FragColor;
+//out vec4 FragColor;
  
 void main()
 {
-	FragColor = vec4(0.5, 0.8, 1.0, 1.0);
+	//FragColor = vec4(0.5, 0.8, 1.0, 1.0);
 }";
 
-        int vbo, shaderProgramHandle, vertexShaderHandle, fragmentShaderHandle;
+        int shaderProgramHandle, vertexShaderHandle, fragmentShaderHandle;
 
         int uniformScale;
         float variableScale;
 
-        double time;
-
-        private void CreateVertexBuffer()
-        {
-            Vector3[] vertices = new Vector3[3];
-            vertices[0] = new Vector3(-1f, -1f, 0f);
-            vertices[1] = new Vector3(1f, -1f, 0f);
-            vertices[2] = new Vector3(0f, 1f, 0f);
-
-            GL.GenBuffers(1, out vbo);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-            GL.BufferData<Vector3>(BufferTarget.ArrayBuffer,
-                                   new IntPtr(vertices.Length * Vector3.SizeInBytes),
-                                   vertices, BufferUsageHint.StaticDraw);
-        }
+        double fade_time;
 
         private void CreateShaders()
         {
@@ -111,18 +97,17 @@ void main()
 
             // load assets
             GL.ClearColor(System.Drawing.Color.Green);
-            CreateVertexBuffer();
-            CreateShaders();
+            //CreateShaders();
         }
 
         public override void PreRender()
         {
             base.PreRender();
 
-            this.geometry = (X3DGeometryNode)this.Children.FirstOrDefault(c => typeof(X3DGeometryNode).IsInstanceOfType(c));
+            //this.geometry = (X3DGeometryNode)this.Children.FirstOrDefault(c => typeof(X3DGeometryNode).IsInstanceOfType(c));
             this.appearance = (X3DAppearanceNode)this.Children.FirstOrDefault(c => typeof(X3DAppearanceNode).IsInstanceOfType(c));
 
-            this.isComposedGeometry = typeof(X3DComposedGeometryNode).IsInstanceOfType(this.geometry);
+            //this.isComposedGeometry = typeof(X3DComposedGeometryNode).IsInstanceOfType(this.geometry);
 
             shaders = this.DecendantsByType(typeof(X3DShaderNode)).Select(n => (X3DShaderNode)n).ToList();
             hasShaders = shaders.Any();
@@ -132,20 +117,10 @@ void main()
         {
             base.Render(e);
 
-            GL.Clear(ClearBufferMask.ColorBufferBit);
+            fade_time = (fade_time >= Math.PI) ? 0.0 : fade_time + e.Time;
 
-            time = (time >= Math.PI) ? 0.0 : time + e.Time;
-
-            variableScale = (float)(Math.Sin(time));
-            GL.Uniform1(uniformScale, variableScale);
-
-            GL.EnableVertexAttribArray(0);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
-
-            GL.DrawArrays(BeginMode.Triangles, 0, 3);
-
-            GL.DisableVertexAttribArray(0);
+            variableScale = (float)(Math.Sin(fade_time));
+            //GL.Uniform1(uniformScale, variableScale);
         }
 
         public override void PostRender()
