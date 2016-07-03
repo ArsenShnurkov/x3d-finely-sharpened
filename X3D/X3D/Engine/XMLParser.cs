@@ -35,10 +35,10 @@ namespace X3D.Engine
         public static T Deserialise<T>(string xml)
         {
             XmlSerializer ser;
-            //XmlReaderSettings xs;
-            //XmlReader xr;
             StreamWriter stw;
             MemoryStream stm;
+            //XmlReaderSettings xs;
+            //XmlReader xr;
 
             ser = new XmlSerializer(typeof(T));
 

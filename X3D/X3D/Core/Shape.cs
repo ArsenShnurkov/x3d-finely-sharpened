@@ -146,8 +146,6 @@ void main()
             GL.DrawArrays(BeginMode.Triangles, 0, 3);
 
             GL.DisableVertexAttribArray(0);
-
-            //SwapBuffers();
         }
 
         public override void PostRender()
