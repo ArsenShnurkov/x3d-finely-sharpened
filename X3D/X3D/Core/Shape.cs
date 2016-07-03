@@ -28,7 +28,7 @@ namespace X3D
 {
     public partial class Shape : X3DShapeNode
     {
-        private bool isComposedGeometry;
+        //private bool isComposedGeometry;
         private bool hasShaders;
         private List<X3DShaderNode> shaders;
 
@@ -96,7 +96,7 @@ void main()
             base.Load();
 
             // load assets
-            GL.ClearColor(System.Drawing.Color.Green);
+            
             //CreateShaders();
         }
 

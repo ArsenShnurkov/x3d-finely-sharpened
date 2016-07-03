@@ -8,7 +8,9 @@ using win = System.Drawing;
 
 namespace X3D
 {
-
+    /// <summary>
+    /// 
+    /// </summary>
     public partial class Box
     {
         private BoxGeometry _boxGeometry = new BoxGeometry();
@@ -92,12 +94,12 @@ namespace X3D
                 {
                     ColorToRgba32(win.Color.DarkRed),
                     ColorToRgba32(win.Color.DarkRed),
-                    ColorToRgba32(win.Color.Gold),
-                    ColorToRgba32(win.Color.Gold),
+                    ColorToRgba32(win.Color.Green),
+                    ColorToRgba32(win.Color.Green),
                     ColorToRgba32(win.Color.DarkRed),
                     ColorToRgba32(win.Color.DarkRed),
-                    ColorToRgba32(win.Color.Gold),
-                    ColorToRgba32(win.Color.Gold),
+                    ColorToRgba32(win.Color.Blue),
+                    ColorToRgba32(win.Color.Blue),
                 };
 
                 Texcoords = new Vector2[]
