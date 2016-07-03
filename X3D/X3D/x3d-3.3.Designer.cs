@@ -10516,6 +10516,9 @@ namespace X3D
         }
     }
 
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class X3D : SceneGraphNode, SceneGraphStructureStatement
     {
 
@@ -10524,6 +10527,7 @@ namespace X3D
         private Scene _scene = new Scene();
 
         private x3dVersion  _version;
+        private string _versionstr;
 
         private profileNames _profile;
 
@@ -10553,15 +10557,30 @@ namespace X3D
         }
 
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public x3dVersion version
+        public string version
         {
             get
             {
-                return this._version;
+                return this._versionstr;
             }
             set
             {
-                this._version = value;
+                this._versionstr = value;
+                switch(value)
+                {
+                    case "3.0":
+                        this._version = x3dVersion.X3D_3_0;
+                        break;
+                    case "3.1":
+                        this._version = x3dVersion.X3D_3_1;
+                        break;
+                    case "3.2":
+                        this._version = x3dVersion.X3D_3_2;
+                        break;
+                    case "3.3":
+                        this._version = x3dVersion.X3D_3_3;
+                        break;
+                }
             }
         }
 
