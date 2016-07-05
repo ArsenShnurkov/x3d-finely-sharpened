@@ -75,12 +75,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="X3D\Core\Appearance.cs" />
     <Compile Include="X3D\Core\Box.cs" />
     <Compile Include="X3D\Core\Camera.cs" />
+    <Compile Include="X3D\Core\ImageTexture.cs" />
+    <Compile Include="X3D\Core\IndexedFaceSet.cs" />
+    <Compile Include="X3D\Core\RenderingContext.cs" />
     <Compile Include="X3D\Core\Shape.cs" />
     <Compile Include="X3D\Core\ShapeGeometry.cs" />
     <Compile Include="X3D\Core\X3D.cs" />
     <Compile Include="X3D\Core\SceneGraphNode.cs" />
+    <Compile Include="X3D\Engine\GLTexture.cs" />
+    <Compile Include="X3D\Engine\Helpers.cs" />
     <Compile Include="X3D\x3d-3.3.Designer.cs" />
     <Compile Include="X3D\Engine\XMLParser.cs" />
     <Compile Include="X3D\Engine\SceneGraph.cs" />
@@ -133,7 +139,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_IncrementBeforeBuild="True" BuildVersion_UseGlobalSettings="False" BuildVersion_AssemblyInfoFilename="" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_AssemblyInfoFilename="" BuildVersion_UseGlobalSettings="False" BuildVersion_IncrementBeforeBuild="True" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

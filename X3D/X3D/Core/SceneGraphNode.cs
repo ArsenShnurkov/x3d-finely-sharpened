@@ -25,7 +25,7 @@ namespace X3D
         public virtual void PostDescendantDeserialization() { }
 
         public virtual void PreRender() { }
-        public virtual void Render(FrameEventArgs e) { }
+        public virtual void Render(RenderingContext rc) { }
         public virtual void PostRender() { }
 
         public List<SceneGraphNode> DecendantsByType(Type t)

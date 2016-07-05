@@ -16,7 +16,9 @@ namespace X3D
     using System.ComponentModel;
     using System.Xml;
     using System.Collections.Generic;
-
+    using OpenTK;
+    using System.Linq;
+    using Parser;
     /// <summary>
     /// x3dVersion enumeration string constants are used to identify 
     /// the allowed versions for an X3D scene graph
@@ -1077,6 +1079,7 @@ namespace X3D
     {
 
         private string _size;
+        private Vector3 _vec3;
 
         private bool _solid;
 
@@ -1085,6 +1088,7 @@ namespace X3D
         public Box()
         {
             this._size = "2 2 2";
+            this._vec3 = new Vector3(2, 2, 2);
             this._solid = true;
             this._containerField = "geometry";
         }
@@ -1100,6 +1104,20 @@ namespace X3D
             set
             {
                 this._size = value;
+                _vec3 = Helpers.SFVec3(value);
+            }
+        }
+
+        public Vector3 Size
+        {
+            get
+            {
+                return _vec3;
+            }
+            set
+            {
+                _vec3 = value;
+                _size = Helpers.ToString(value);
             }
         }
 

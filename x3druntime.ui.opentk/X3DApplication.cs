@@ -48,7 +48,7 @@ namespace x3druntime.ui.opentk
             this.Keyboard.KeyUp += new EventHandler<OpenTK.Input.KeyboardKeyEventArgs>(Keyboard_KeyUp);
 
 
-            this.ActiveCamera = new Camera(this.window.Width, this.window.Height);
+            ActiveCamera = new Camera(this.window.Width, this.window.Height);
 
             this.Mouse.WheelChanged += Mouse_WheelChanged;
             this.window.MouseLeave += Window_MouseLeave;
@@ -155,19 +155,22 @@ namespace x3druntime.ui.opentk
         public void Render(FrameEventArgs e)
         {
             _prev = DateTime.Now;
+            GL.Disable(EnableCap.Lighting);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             GL.ClearColor(System.Drawing.Color.White);
             GL.Enable(EnableCap.DepthTest);
             GL.DepthMask(true);
             GL.DepthFunc(DepthFunction.Lequal);
 
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref modelview);
+            GL.PointSize(6.0f);
+
+            //GL.MatrixMode(MatrixMode.Modelview);
+            //GL.LoadMatrix(ref modelview);
 
             //TODO: replace with Camera Class
             ActiveCamera.setupGLRenderMatrix();
 
-            GL.Scale(ActiveCamera.Scale);
+            //GL.Scale(ActiveCamera.Scale);
 
 #if NAVIGATION_MOUSE
             //TODO: Improve this: think of mouse navigation as a vector pointing from the origin inside a sphere
@@ -183,9 +186,17 @@ namespace x3druntime.ui.opentk
 #endif
             if (scene != null && scene.SceneGraph.Loaded)
             {
-                GL.PushMatrix();
-                scene.Draw(e);
-                GL.PopMatrix();
+                //GL.PushMatrix();
+
+                RenderingContext rc = new RenderingContext();
+                rc.e = e;
+                rc.modelview = ActiveCamera.cameraViewMatrix;
+                rc.projection = ActiveCamera.projectionMatrix;
+                rc.cam = ActiveCamera;
+
+                scene.Draw(rc);
+
+                //GL.PopMatrix();
             }
             else
             {
@@ -234,7 +245,7 @@ namespace x3druntime.ui.opentk
 
         #region test orbital control
 
-        Camera ActiveCamera;
+        protected Camera ActiveCamera;
         bool ispanning, iszooming;
         float mouseScale = 0.01f;
         bool mouseDragging = false;

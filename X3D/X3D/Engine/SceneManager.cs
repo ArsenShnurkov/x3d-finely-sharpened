@@ -581,14 +581,14 @@ namespace X3D.Engine
             }
         }
 
-        public void Draw(FrameEventArgs e)
+        public void Draw(RenderingContext rc)
         {
-            Draw(this,e);
+            Draw(this, rc);
         }
 
-        public static void Draw(SceneManager scene, FrameEventArgs e)
+        public static void Draw(SceneManager scene, RenderingContext rc)
         {
-            Render.Scene(scene,e);
+            Render.Scene(scene, rc);
         }
     }
 }

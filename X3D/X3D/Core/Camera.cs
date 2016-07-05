@@ -10,7 +10,8 @@ namespace X3D
     public class Camera
     {
         int Width, Height; // window viewport size
-        Matrix4 projectionMatrix;
+        public Matrix4 projectionMatrix = Matrix4.Identity;
+        public Matrix4 cameraViewMatrix = Matrix4.Identity;
 
         public Vector3 Pos = new Vector3(0, 0, -1);
         public Vector3 Dir = new Vector3(0, 0, 1);
@@ -29,7 +30,7 @@ namespace X3D
             this.Height = viewportHeight;
             float aspectRatio = Width / (float)Height;
 
-            projectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 1.0f, 64.0f);
+            projectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 1.0f, 500.0f);
 
         }
 
@@ -37,14 +38,14 @@ namespace X3D
         {
             // setup projection
             GL.Viewport(0, 0, Width, Height);
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadMatrix(ref projectionMatrix);
+            //GL.MatrixMode(MatrixMode.Projection);
+            //GL.LoadMatrix(ref projectionMatrix);
 
             // create and setup camera view matrix
-            Matrix4 cameraViewMatrix = Matrix4.LookAt(Pos, Pos + Dir, Up);
+            cameraViewMatrix = Matrix4.LookAt(Pos, Pos + Dir, Up);
             
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadMatrix(ref cameraViewMatrix);
+            //GL.MatrixMode(MatrixMode.Modelview);
+            //GL.LoadMatrix(ref cameraViewMatrix);
         }
 
         public void Dolly(float distance)

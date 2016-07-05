@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using X3D.Parser;
 
 namespace X3D
 {
@@ -32,60 +33,95 @@ namespace X3D
         private bool hasShaders;
         private List<X3DShaderNode> shaders;
 
-        #region Test
+        #region Test Shader
+
         string vertexShaderSource = @"
-#version 330
- 
-layout (location = 0) in vec3 Position;
- 
-uniform float scale;
- 
+#version 400
+layout(location = 0) in vec3 position;
+layout(location = 1) in vec3 normal;
+layout(location = 2) in vec4 color;
+layout(location = 3) in vec2 texcoord;
+
+uniform mat4 modelview;
+uniform mat4 projection;
+uniform float camscale;
+uniform vec3 size;
+uniform vec3 scale;
+
+varying vec3 lightVec; 
+varying vec3 eyeVec; 
+varying vec3 normalVec;
+
+out vec4 vColor;
+out lowp vec2 uv;
+
 void main()
 {
-	gl_Position = vec4(scale * Position.x,
-	                   scale * Position.y,
-	                   Position.z, 1.0);
+    mat4 model = projection * modelview;
+
+	gl_Position = model * vec4(camscale * scale * size * position, 1.0);
+    vColor = color;
+
+	//gl_TexCoord[0] = gl_MultiTexCoord0; 
+	normalVec = normalize(normal); // gl_Normal
+
+	vec4 eyePos = gl_ModelViewMatrixInverse * vec4(0., 0., 0., 1.); 
+	eyeVec = normalize(eyePos.xyz - position.xyz);
+
+	vec4 lightPos = modelview * vec4(1.0, 0.0, 0.0, 1.0); // gl_ModelViewMatrixInverse  gl_LightSource[0].position.xyz
+	lightVec = normalize(lightPos.xyz - position.xyz);
+
+    uv = texcoord;
 }";
+
         string fragmentShaderSource = @"
-#version 330
+#version 400
  
-//out vec4 FragColor;
- 
+varying vec3 lightVec; 
+varying vec3 eyeVec; 
+varying vec3 normalVec;
+
+in vec2 uv;
+in vec4 vColor;
+out vec4 FragColor;
+
+uniform sampler2D _MainTex;
+uniform vec3 specular = vec3(.7, .7, .7); 
+uniform float ambient = 0.2;
+
 void main()
 {
+    vec4 texture_color = texture2D(_MainTex, uv);
+
+    // PHONG SHADING TEST
+	vec3 texCol = vec3(0.1, 0.1, 0.1); 
+	vec3 halfVec = normalize( eyeVec + lightVec );
+	float ndotl = max( dot( lightVec, normalVec ), 0.0 ); 
+	float ndoth = (ndotl > 0.0) ? pow(max( dot( halfVec, normalVec ), 0.0 ), 128.) : 0.0;  
+	vec3 color = 0.2 * ambient + ndotl * texCol + ndoth * specular;
+
+    //FragColor = vec4(color, 1.0);	
+    //FragColor = vec4(color, 1.0) +  vColor / 2;
+    
+
 	//FragColor = vec4(0.5, 0.8, 1.0, 1.0);
-}";
+    //FragColor = vColor;
 
-        int shaderProgramHandle, vertexShaderHandle, fragmentShaderHandle;
+    FragColor = texture_color;
+}
 
-        int uniformScale;
-        float variableScale;
+";
+
+        public static int shaderProgramHandle;
+        public static int uniformModelview, uniformProjection;
+
+        private int uniformCameraScale;
+        private static float variableScale;
+
+        public Vector3 ShapeScale = new Vector3(1,1,1);
 
         double fade_time;
 
-        private void CreateShaders()
-        {
-            shaderProgramHandle = GL.CreateProgram();
-
-            vertexShaderHandle = GL.CreateShader(ShaderType.VertexShader);
-            fragmentShaderHandle = GL.CreateShader(ShaderType.FragmentShader);
-
-            GL.ShaderSource(vertexShaderHandle, vertexShaderSource);
-            GL.ShaderSource(fragmentShaderHandle, fragmentShaderSource);
-
-            GL.CompileShader(vertexShaderHandle);
-            GL.CompileShader(fragmentShaderHandle);
-            Console.WriteLine(GL.GetShaderInfoLog(vertexShaderHandle));
-            Console.WriteLine(GL.GetShaderInfoLog(fragmentShaderHandle));
-
-            GL.AttachShader(shaderProgramHandle, vertexShaderHandle);
-            GL.AttachShader(shaderProgramHandle, fragmentShaderHandle);
-            GL.LinkProgram(shaderProgramHandle);
-            Console.WriteLine(GL.GetProgramInfoLog(shaderProgramHandle));
-            GL.UseProgram(shaderProgramHandle);
-
-            uniformScale = GL.GetUniformLocation(shaderProgramHandle, "scale");
-        }
 
         #endregion
 
@@ -96,8 +132,12 @@ void main()
             base.Load();
 
             // load assets
-            
-            //CreateShaders();
+
+            shaderProgramHandle = Helpers.ApplyShader(vertexShaderSource, fragmentShaderSource);
+
+            uniformModelview = GL.GetUniformLocation(shaderProgramHandle, "modelview");
+            uniformProjection = GL.GetUniformLocation(shaderProgramHandle, "projection");
+            uniformCameraScale = GL.GetUniformLocation(shaderProgramHandle, "camscale");
         }
 
         public override void PreRender()
@@ -113,20 +153,26 @@ void main()
             hasShaders = shaders.Any();
         }
 
-        public override void Render(FrameEventArgs e)
+        public override void Render(RenderingContext rc)
         {
-            base.Render(e);
+            base.Render(rc);
 
-            fade_time = (fade_time >= Math.PI) ? 0.0 : fade_time + e.Time;
+            fade_time = (fade_time >= Math.PI) ? 0.0 : fade_time + rc.e.Time; // fade in/out
 
             variableScale = (float)(Math.Sin(fade_time));
-            //GL.Uniform1(uniformScale, variableScale);
+
+            GL.UseProgram(shaderProgramHandle);
+            GL.UniformMatrix4(uniformModelview, false, ref rc.modelview);
+            GL.UniformMatrix4(uniformProjection, false, ref rc.projection);
+            GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
+
+            rc.modelview = Matrix4.Identity;
         }
 
         public override void PostRender()
         {
             base.PostRender();
-
+            GL.UseProgram(0);
         }
 
         #endregion
