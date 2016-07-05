@@ -47,6 +47,7 @@ uniform mat4 projection;
 uniform float camscale;
 uniform vec3 size;
 uniform vec3 scale;
+uniform vec3 X3DScale;
 
 varying vec3 lightVec; 
 varying vec3 eyeVec; 
@@ -59,7 +60,7 @@ void main()
 {
     mat4 model = projection * modelview;
 
-	gl_Position = model * vec4(camscale * scale * size * position, 1.0);
+	gl_Position = model * vec4(X3DScale * camscale * scale * size * position, 1.0);
     vColor = color;
 
 	//gl_TexCoord[0] = gl_MultiTexCoord0; 
@@ -102,23 +103,21 @@ void main()
 
     //FragColor = vec4(color, 1.0);	
     //FragColor = vec4(color, 1.0) +  vColor / 2;
-    
-
 	//FragColor = vec4(0.5, 0.8, 1.0, 1.0);
     //FragColor = vColor;
 
-    FragColor = texture_color;
+    vec4 op = texture_color + vColor / 2;
+    op = op + vec4(color, 1.0) / 2;
+
+    FragColor = op;
 }
 
 ";
-
+        int testShader;
         public static int shaderProgramHandle;
         public static int uniformModelview, uniformProjection;
 
-        private int uniformCameraScale;
-        private static float variableScale;
-
-        public Vector3 ShapeScale = new Vector3(1,1,1);
+        private int uniformCameraScale, uniformX3DScale;
 
         double fade_time;
 
@@ -132,12 +131,13 @@ void main()
             base.Load();
 
             // load assets
-
+            //testShader = Helpers.ApplyTestShader();
             shaderProgramHandle = Helpers.ApplyShader(vertexShaderSource, fragmentShaderSource);
 
             uniformModelview = GL.GetUniformLocation(shaderProgramHandle, "modelview");
             uniformProjection = GL.GetUniformLocation(shaderProgramHandle, "projection");
             uniformCameraScale = GL.GetUniformLocation(shaderProgramHandle, "camscale");
+            uniformX3DScale = GL.GetUniformLocation(shaderProgramHandle, "X3DScale");
         }
 
         public override void PreRender()
@@ -157,21 +157,22 @@ void main()
         {
             base.Render(rc);
 
-            fade_time = (fade_time >= Math.PI) ? 0.0 : fade_time + rc.e.Time; // fade in/out
+            fade_time = (fade_time >= Math.PI) ? 0.0 : fade_time + rc.Time; // fade in/out
 
-            variableScale = (float)(Math.Sin(fade_time));
+            float variableScale = (float)(Math.Sin(fade_time));
 
+            //GL.UseProgram(testShader);
             GL.UseProgram(shaderProgramHandle);
-            GL.UniformMatrix4(uniformModelview, false, ref rc.modelview);
-            GL.UniformMatrix4(uniformProjection, false, ref rc.projection);
+            GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);
+            GL.UniformMatrix4(uniformProjection, false, ref rc.matricies.projection);
             GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
-
-            rc.modelview = Matrix4.Identity;
+            GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
         }
 
-        public override void PostRender()
+        public override void PostRender(RenderingContext rc)
         {
-            base.PostRender();
+            base.PostRender(rc);
+
             GL.UseProgram(0);
         }
 

@@ -1,42 +1,12 @@
 ﻿using OpenTK;
+using OpenTK.Graphics.OpenGL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using OpenTK.Graphics.OpenGL;
 using System.Text.RegularExpressions;
-using System.Runtime.InteropServices;
 
 namespace X3D.Parser
 {
-    [StructLayout(LayoutKind.Sequential)]
-    public struct Vertex
-    { // mimic InterleavedArrayFormat.T2fC4fN3fV3f
-      /// <summary>
-      /// Required
-      /// </summary>
-        public Vector3 Position;
-        public Vector3 Normal;
-        //public Vector4 Color;
-        public Vector2 TexCoord;
-        
-        public static Vertex Zero
-        {
-            get
-            {
-                Vertex v = new Vertex();
-                v.TexCoord = Vector2.Zero;
-                v.Normal = Vector3.Zero;
-                return v;
-            }
-        }
-
-
-        public static readonly int SizeInBytes = Vector2.SizeInBytes + Vector4.SizeInBytes + Vector3.SizeInBytes + Vector3.SizeInBytes;
-
-        public static readonly int Stride = Marshal.SizeOf(default(Vertex));
-    }
-
     public class Helpers
     {
 
@@ -252,9 +222,63 @@ namespace X3D.Parser
             Console.WriteLine("Expanded to {0}", NumVerticies);
         }
 
-        public static string ToString(Vector3 sfVec3f)
+        public static int ApplyTestShader()
         {
-            return string.Format("{0} {1} {2}", sfVec3f.X, sfVec3f.Y, sfVec3f.Z);
+            string vert = @"
+#version 400
+
+// 0.4, 0.4, 0.4
+out lowp vec2 uv;
+void main() 
+{
+    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+    uv = gl_MultiTexCoord0.xy;
+}
+";
+            string frag = @"
+#version 400
+in vec2 uv;
+const vec4 threshold = vec4(0.7, 0.7, 0.7, 1.0); // transparency threshold
+uniform sampler2D _MainTex;
+void main() 
+{
+    vec4 c = texture2D(_MainTex, uv);
+    //vec4 alp = texture2D(_AlphaMap, c.rg);
+
+    //c = c * alp;
+
+    // color replace function
+    if(c.r > 0 && c.r < 0.2
+    && c.g > 0 && c.g < 0.2 
+    && c.b > 0 && c.b < 0.2
+    ){
+        //c.r = c.r  + 0.01;
+    }
+
+    if(c.r > 0.2 && c.r < 0.6
+    && c.g > 0.2 && c.g < 0.6 
+    && c.b > 0.2 && c.b < 0.6
+    ){
+        //c.r = c.r + 0.4;
+    }
+
+    if(c.r > 0.6 && c.r < 0.8
+    && c.g > 0.6 && c.g < 0.8 
+    && c.b > 0.6 && c.b < 0.8
+    ){
+        //c.r = c.r + 0.2;
+    }
+
+    gl_FragColor = c;
+
+    // transparency thresholding
+        if (c.r > threshold.x 
+        && c.g > threshold.y 
+            && c.b > threshold.z) 
+            discard;
+} 
+";
+            return ApplyShader(vert, frag);
         }
 
         /// <summary>
@@ -273,11 +297,32 @@ namespace X3D.Parser
             GL.CompileShader(vertexShaderHandle);
             GL.CompileShader(fragmentShaderHandle);
 
-            Console.WriteLine(GL.GetShaderInfoLog(vertexShaderHandle));
-            Console.WriteLine(GL.GetShaderInfoLog(fragmentShaderHandle));
+            Console.WriteLine(GL.GetShaderInfoLog(vertexShaderHandle).Trim());
+            Console.WriteLine(GL.GetShaderInfoLog(fragmentShaderHandle).Trim());
 
             GL.AttachShader(shaderProgramHandle, vertexShaderHandle);
             GL.AttachShader(shaderProgramHandle, fragmentShaderHandle);
+            GL.LinkProgram(shaderProgramHandle);
+
+            Console.WriteLine(GL.GetProgramInfoLog(shaderProgramHandle).Trim());
+
+            //GL.UseProgram(shaderProgramHandle);
+
+            return shaderProgramHandle;
+        }
+        public static int ApplyShader(string shaderSource, ShaderType type)
+        {
+            int shaderProgramHandle = GL.CreateProgram();
+
+            int shaderHandle = GL.CreateShader(type);
+
+            GL.ShaderSource(shaderHandle, shaderSource);
+
+            GL.CompileShader(shaderHandle);
+
+            Console.WriteLine(GL.GetShaderInfoLog(shaderHandle));
+
+            GL.AttachShader(shaderProgramHandle, shaderHandle);
             GL.LinkProgram(shaderProgramHandle);
 
             Console.WriteLine(GL.GetProgramInfoLog(shaderProgramHandle));
@@ -286,7 +331,6 @@ namespace X3D.Parser
 
             return shaderProgramHandle;
         }
-
         public static int[] ParseIndicies(string value)
         {
             List<int> indicies = new List<int>();
@@ -307,6 +351,16 @@ namespace X3D.Parser
             return indicies.ToArray();
         }
 
+        public static string ToString(Vector3 sfVec3f)
+        {
+            return string.Format("{0} {1} {2}", sfVec3f.X, sfVec3f.Y, sfVec3f.Z);
+        }
+
+        public static string ToString(Vector4 sfVec4f)
+        {
+            return string.Format("{0} {1} {2} {3}", sfVec4f.X, sfVec4f.Y, sfVec4f.Z, sfVec4f.W);
+        }
+
         public static Vector3 SFVec3(string value)
         {
             float[] values = value.Split(' ').Select(s => float.Parse(s)).ToArray();
@@ -314,14 +368,28 @@ namespace X3D.Parser
         }
         public static Vector3 SFVec3f(string value)
         {
+            //Regex regMFInt32 = new Regex("[+-]?\\d+\\.\\d+");
+            //MatchCollection mc = regMFInt32.Matches(value);
+
+            //return new Vector3(float.Parse(mc[0].Value), 
+            //                   float.Parse(mc[1].Value), 
+            //                   float.Parse(mc[2].Value));
+            float[] f = Floats(value);
+
+            return new Vector3(f[0],
+                   f[1],
+                   f[2]);
+        }
+        public static Vector4 SFVec4f(string value)
+        {
             Regex regMFInt32 = new Regex("[+-]?\\d+\\.\\d+");
             MatchCollection mc = regMFInt32.Matches(value);
-            
-            return new Vector3(float.Parse(mc[0].Value), 
-                               float.Parse(mc[1].Value), 
-                               float.Parse(mc[2].Value));
-        }
 
+            return new Vector4(float.Parse(mc[0].Value),
+                               float.Parse(mc[1].Value),
+                               float.Parse(mc[2].Value),
+                               float.Parse(mc[3].Value));
+        }
         public static float[] Floats(string value)
         {
             Regex regMFInt32 = new Regex("([+-]?[0-9]+[.]?[0-9]?)+"); // [+-]?\\d+\\.\\d+

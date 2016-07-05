@@ -189,9 +189,9 @@ namespace x3druntime.ui.opentk
                 //GL.PushMatrix();
 
                 RenderingContext rc = new RenderingContext();
-                rc.e = e;
-                rc.modelview = ActiveCamera.cameraViewMatrix;
-                rc.projection = ActiveCamera.projectionMatrix;
+                rc.Time = e.Time;
+                rc.matricies.modelview = ActiveCamera.cameraViewMatrix;
+                rc.matricies.projection = ActiveCamera.projectionMatrix;
                 rc.cam = ActiveCamera;
 
                 scene.Draw(rc);

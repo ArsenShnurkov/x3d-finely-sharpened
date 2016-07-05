@@ -40,17 +40,17 @@ namespace X3D.Engine
 
         }
 
-        private static void draw_scenegraph_dfs_iterative(SceneGraphNode root, RenderingContext rc)
+        private static void draw_scenegraph_dfs_iterative(SceneGraphNode root, RenderingContext context)
         {
             //TODO: make extensive use of GUID lookups from DAG to improve efficiency, instead of copying X3DNodes to and from the stack
             Stack<SceneGraphNode> work_items;
-            Dictionary<int, SceneGraphNode> nodes_visited;
+            List<int> nodes_visited;
             IEnumerable<SceneGraphNode> children;
             int num_nodes_visited;
             int num_children_visited;
             SceneGraphNode node;
 
-            nodes_visited = new Dictionary<int, SceneGraphNode>(); /* It is required to keep track of all the nodes visited for post rendering 
+            nodes_visited = new List<int>(); /* It is required to keep track of all the nodes visited for post rendering 
                                                            * (there is no other way (for dfs algorithm) around this) */
             work_items = new Stack<SceneGraphNode>();
 
@@ -62,25 +62,26 @@ namespace X3D.Engine
                 node = work_items.Peek();
                 num_children_visited = 0;
 
-                if (!nodes_visited.ContainsKey(node.id))
+                if (!nodes_visited.Contains(node.id))
                 {
-                    nodes_visited.Add(node.id, node);
+                    nodes_visited.Add(node.id);
 
-                    visit(node,rc);
+                    visit(node,context);
 
                     num_nodes_visited++;
                 }
-                if (HasBackEdge(node, work_items) && node.Children.Count > 0)
-                {
+                //if (HasBackEdge(node, work_items) && node.Children.Count > 0)
+                //{
                     //TODO: dont like this recursive
-                    draw_scenegraph_dfs_iterative(node.Children[0],rc);//,__GetNodeByGUID);
-                }
-                //if (node.PassthroughAllowed)
+                    //draw_scenegraph_dfs_iterative(node.Children[0],context);//,__GetNodeByGUID);
+                //}
+
+                if (node.PassthroughAllowed)
                 {
                     children = x_xReverse(node.Children);
                     foreach (SceneGraphNode n in children)
                     {
-                        if (nodes_visited.ContainsKey(n.id))
+                        if (nodes_visited.Contains(n.id))
                         {
                             num_children_visited++;
                         }
@@ -90,10 +91,10 @@ namespace X3D.Engine
                         }
                     }
                 }
-                //if((num_children_visited==node.Children.Count)) {
-                if (/*(node.PassthroughAllowed == false) ||*/ (num_children_visited == node.Children.Count))
+
+                if ((node.PassthroughAllowed == false) || (num_children_visited == node.Children.Count))
                 {
-                    leave(node);
+                    leave(node,context);
 
                     work_items.Pop();
                 }
@@ -118,7 +119,7 @@ namespace X3D.Engine
             node.Render(rc);
         }
 
-        private static void leave(SceneGraphNode node)
+        private static void leave(SceneGraphNode node, RenderingContext rc)
         {
 #if DEBUG_SCENE_GRAPH_RENDERING
 #if DEBUG_SCENE_GRAPH_RENDERING_VERBOSE
@@ -127,7 +128,7 @@ namespace X3D.Engine
             Console.WriteLine("".PadLeft(node.Depth,'\t')+"</"+node.GetNodeName()+">");
 #endif
 #endif
-            node.PostRender();
+            node.PostRender(rc);
         }
 
         private static bool HasBackEdge(SceneGraphNode node, Stack<SceneGraphNode> work_items)
@@ -143,7 +144,7 @@ namespace X3D.Engine
 
             foreach (SceneGraphNode parent in node.Parents)
             {
-                if (work_items.Contains(parent))
+                if (work_items.Any(n => n.id == parent.id))
                 {
                     return true;
                 }

@@ -23,9 +23,7 @@ namespace X3D
         {
             base.Load();
 
-
             this._boxGeometry.Load();
-            
         }
 
         public override void PreRender()
@@ -48,15 +46,13 @@ namespace X3D
             GL.Uniform3(uniformScale, zeroish);
 
             this._boxGeometry.Render(rc);
-
-
         }
 
-        public override void PostRender()
+        public override void PostRender(RenderingContext rc)
         {
-            base.PostRender();
+            base.PostRender(rc);
 
-            //GL.UseProgram(0);
+
         }
 
         #endregion

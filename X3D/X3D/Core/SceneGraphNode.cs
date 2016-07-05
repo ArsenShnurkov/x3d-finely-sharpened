@@ -9,6 +9,7 @@ namespace X3D
     public abstract partial class SceneGraphNode
     {
         public int id = -1;
+        public bool PassthroughAllowed = true;
 
         public SceneGraphNode Parent = null;
         public List<SceneGraphNode> Parents = new List<SceneGraphNode>();
@@ -26,7 +27,7 @@ namespace X3D
 
         public virtual void PreRender() { }
         public virtual void Render(RenderingContext rc) { }
-        public virtual void PostRender() { }
+        public virtual void PostRender(RenderingContext rc) { }
 
         public List<SceneGraphNode> DecendantsByType(Type t)
         {

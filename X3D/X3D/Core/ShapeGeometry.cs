@@ -29,6 +29,8 @@ namespace X3D
 
         #endregion Geometry
 
+        #region Rendering Methods
+
         public void Load()
         {
             Helpers.Interleave(out _vbo_interleaved, out NumVerticies, this.Indices, null, this.Vertices, this.Texcoords, this.Normals);
@@ -40,6 +42,8 @@ namespace X3D
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
             GL.DrawArrays(BeginMode.Triangles, 0, NumVerticies);
         }
+
+        #endregion
 
         /// <summary>
         /// Converts a System.Drawing.Color to a System.Int32.

@@ -9263,6 +9263,9 @@ namespace X3D
 
         private string _containerField;
 
+        private Vector3 _vec3Scale, _vec3Trans;
+        private Vector4 _vec4Rot, _vec4ScaleOrientation;
+
         public Transform()
         {
             this._center = "0 0 0";
@@ -9271,6 +9274,62 @@ namespace X3D
             this._scaleOrientation = "0 0 1 0";
             this._translation = "0 0 0";
             this._containerField = "children";
+            this._vec3Trans = Vector3.Zero;
+            this._vec3Scale = Vector3.One;
+            this._vec4Rot = Vector4.UnitZ;
+            this._vec4ScaleOrientation = Vector4.UnitZ;
+        }
+
+        public Vector4 Rotation
+        {
+            get
+            {
+                return this._vec4Rot;
+            }
+            set
+            {
+                this._vec4Rot = value;
+                this._rotation = Helpers.ToString(value);
+            }
+        }
+
+        public Vector3 Scale
+        {
+            get
+            {
+                return this._vec3Scale;
+            }
+            set
+            {
+                this._vec3Scale = value;
+                this._scale = Helpers.ToString(value);
+            }
+        }
+
+        public Vector4 ScaleOrientation
+        {
+            get
+            {
+                return this._vec4ScaleOrientation;
+            }
+            set
+            {
+                this._vec4ScaleOrientation = value;
+                this._scaleOrientation = Helpers.ToString(value);
+            }
+        }
+
+        public Vector3 Translation
+        {
+            get
+            {
+                return this._vec3Trans;
+            }
+            set
+            {
+                this._vec3Trans = value;
+                this._translation = Helpers.ToString(value);
+            }
         }
 
         [System.Xml.Serialization.XmlAttributeAttribute()]
@@ -9298,6 +9357,7 @@ namespace X3D
             set
             {
                 this._rotation = value;
+                this._vec4Rot = Helpers.SFVec4f(value);
             }
         }
 
@@ -9312,6 +9372,7 @@ namespace X3D
             set
             {
                 this._scale = value;
+                this._vec3Scale = Helpers.SFVec3f(value);
             }
         }
 
@@ -9326,6 +9387,7 @@ namespace X3D
             set
             {
                 this._scaleOrientation = value;
+                this._vec4ScaleOrientation = Helpers.SFVec4f(value);
             }
         }
 
@@ -9340,6 +9402,7 @@ namespace X3D
             set
             {
                 this._translation = value;
+                this._vec3Trans = Helpers.SFVec3f(value);
             }
         }
 

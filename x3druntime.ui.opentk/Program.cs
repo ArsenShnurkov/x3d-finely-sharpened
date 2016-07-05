@@ -37,20 +37,20 @@ namespace x3druntime.ui.opentk
 
         private static void LoadBrowser()
         {
-            //BackgroundWorker bw;
-            //AutoResetEvent closureEvent;
+            BackgroundWorker bw;
+            AutoResetEvent closureEvent;
             X3DBrowser browser;
             string url;
 
             url = App.SelectFile();
 
-            //closureEvent = new AutoResetEvent(false);
-            //bw = new BackgroundWorker();
+            closureEvent = new AutoResetEvent(false);
+            bw = new BackgroundWorker();
 
-            //bw.WorkerReportsProgress = true;
-            //bw.WorkerSupportsCancellation = true;
-            //bw.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
-            //{
+            bw.WorkerReportsProgress = true;
+            bw.WorkerSupportsCancellation = true;
+            bw.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
+            {
                 browser = new X3DBrowser(VSync, url, Resolution.Size800x600, new GraphicsMode(32, 16, 0, 4));
                 browser.Title = "Initilising..";
 #if VSYNC_ACTIVE
@@ -58,14 +58,14 @@ namespace x3druntime.ui.opentk
 #else
                 browser.Run(60);
 #endif
-            //});
-            //bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
-            //{
-            //    closureEvent.Set();
-            //});
+            });
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
+            {
+                closureEvent.Set();
+            });
 
-            //bw.RunWorkerAsync();
-            //closureEvent.WaitOne();
+            bw.RunWorkerAsync();
+            closureEvent.WaitOne();
         }
     }
 
