@@ -161,6 +161,7 @@ void main()
 
             float variableScale = (float)(Math.Sin(fade_time));
 
+
             //GL.UseProgram(testShader);
             GL.UseProgram(shaderProgramHandle);
             GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);

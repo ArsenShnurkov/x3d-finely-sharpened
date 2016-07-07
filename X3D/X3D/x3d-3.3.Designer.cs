@@ -1563,8 +1563,8 @@ namespace X3D
 
         public Cone()
         {
-            this._bottomRadius = ((float)(1F));
-            this._height = ((float)(2F));
+            this._bottomRadius = 1.0f;
+            this._height = 2.0f;
             this._side = true;
             this._bottom = true;
             this._solid = true;

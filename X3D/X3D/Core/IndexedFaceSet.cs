@@ -74,7 +74,6 @@ namespace X3D
         }
         int _vbo_interleaved;
         int NumVerticies;
-        int vao;
 
         public override void Render(RenderingContext rc)
         {
@@ -85,7 +84,6 @@ namespace X3D
 
 
                 GL.UseProgram(Shape.shaderProgramHandle);
-                //GL.BindVertexArray(vao);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved); // InterleavedArrayFormat.T2fC4fN3fV3f
                 GL.DrawArrays(BeginMode.Triangles, 0, NumVerticies); // Triangles Points  Lines
             }

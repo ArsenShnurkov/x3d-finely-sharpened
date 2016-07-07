@@ -9,8 +9,147 @@ namespace X3D.Parser
 {
     public class Helpers
     {
+        public static int BufferShaderGeometry(List<List<Vertex>> geometries, out int verts)
+        {
+            GL.UseProgram(Shape.shaderProgramHandle);
 
-        public static void Interleave(out int vbo_interleaved, out int NumVerticies,
+            int a_position = GL.GetAttribLocation(Shape.shaderProgramHandle, "position");
+            int a_normal = GL.GetAttribLocation(Shape.shaderProgramHandle, "normal");
+            int a_color = GL.GetAttribLocation(Shape.shaderProgramHandle, "color");
+            int a_texcoord = GL.GetAttribLocation(Shape.shaderProgramHandle, "texcoord");
+
+            int numBuffers = geometries.Count;
+            int buffers;
+
+            
+            GL.GenBuffers(1, out buffers);
+
+            int totalSize = 0;
+
+            for (int i = 0; i < numBuffers; i++)
+            {
+                totalSize += geometries[i].Count * Vertex.SizeInBytes;
+            }
+
+            //GL.BindBuffer(BufferTarget.ArrayBuffer, buffers[0]);
+            // GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(totalSize*2), IntPtr.Zero, BufferUsageHint.StaticDraw);
+            //GL.BindBuffer(BufferTarget.ArrayBuffer, buffers[1]);
+            //GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)totalSize, IntPtr.Zero, BufferUsageHint.StaticDraw);
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, buffers);
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(totalSize), IntPtr.Zero, BufferUsageHint.StaticDraw);
+
+            verts = 0;
+
+            int offset = 0;
+            for (int i = 0; i < numBuffers; i++)
+            {
+                Vertex[] _interleaved3 = geometries[i].ToArray();
+                verts += _interleaved3.Length;
+
+                
+                int stride = BlittableValueType.StrideOf(_interleaved3); // Vertex.SizeInBytes;
+                int size = _interleaved3.Length * stride;
+
+                Console.WriteLine("Buffering Verticies..");
+                GL.BufferSubData<Vertex>(BufferTarget.ArrayBuffer, (IntPtr)offset, (IntPtr)(size), _interleaved3);
+                Console.WriteLine("[done]");
+
+                offset += size;
+
+                if (a_position != -1)
+                {
+                    GL.EnableVertexAttribArray(a_position); // vertex position
+                    GL.VertexAttribPointer(a_position, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)0);
+                }
+
+                if (a_normal != -1)
+                {
+                    GL.EnableVertexAttribArray(a_normal); // vertex normal
+                    GL.VertexAttribPointer(a_normal, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes));
+                }
+
+                if (a_color != -1)
+                {
+                    //GL.EnableVertexAttribArray(a_color); // vertex color
+                    //GL.VertexAttribPointer(a_color, 4, VertexAttribPointerType.Float, false, Vertex.Stride, 0);
+                }
+
+
+                if (a_texcoord != -1)
+                {
+                    GL.EnableVertexAttribArray(a_texcoord); // vertex texCoordinate
+                    GL.VertexAttribPointer(a_texcoord, 2, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes));
+                }
+
+            }
+
+            return buffers;
+        }
+        public static int BufferShaderGeometry(List<Vertex> geometry, out int vbo_interleaved3, out int NumVerticies)
+        {
+            Vertex[] _interleaved3 = geometry.ToArray();
+
+            GL.UseProgram(Shape.shaderProgramHandle);
+
+            int a_position = GL.GetAttribLocation(Shape.shaderProgramHandle, "position");
+            int a_normal = GL.GetAttribLocation(Shape.shaderProgramHandle, "normal");
+            int a_color = GL.GetAttribLocation(Shape.shaderProgramHandle, "color");
+            int a_texcoord = GL.GetAttribLocation(Shape.shaderProgramHandle, "texcoord");
+
+
+
+            Console.WriteLine("Buffering Verticies..");
+
+            GL.GenBuffers(1, out vbo_interleaved3);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_interleaved3);
+            GL.BufferData<Vertex>(BufferTarget.ArrayBuffer, (IntPtr)(_interleaved3.Length * Vertex.SizeInBytes), _interleaved3, BufferUsageHint.StaticDraw);
+
+            Console.WriteLine("[done]");
+
+
+            // STRIDE each float is 4 bytes
+            // [1 1] [1 1 1 1]  [1 1 1]   [1 1 1]
+            //     8        24  28    36  40   48
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_interleaved3); // InterleavedArrayFormat.T2fC4fN3fV3f
+
+            if (a_position != -1)
+            {
+                GL.EnableVertexAttribArray(a_position); // vertex position
+                GL.VertexAttribPointer(a_position, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)0);
+            }
+
+            if (a_normal != -1)
+            {
+                GL.EnableVertexAttribArray(a_normal); // vertex normal
+                GL.VertexAttribPointer(a_normal, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes));
+            }
+
+            if (a_color != -1)
+            {
+                //GL.EnableVertexAttribArray(a_color); // vertex color
+                //GL.VertexAttribPointer(a_color, 4, VertexAttribPointerType.Float, false, Vertex.Stride, 0);
+            }
+
+
+            if (a_texcoord != -1)
+            {
+                GL.EnableVertexAttribArray(a_texcoord); // vertex texCoordinate
+                GL.VertexAttribPointer(a_texcoord, 2, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes));
+            }
+
+            //GL.ColorPointer(4, ColorPointerType.Float, InterleavedVertexData.size_in_bytes, (IntPtr)0);
+            //GL.VertexPointer(3, VertexPointerType.Float, InterleavedVertexData.size_in_bytes, (IntPtr)(COLOR_COORD_SIZE * sizeof(float)));
+            //GL.TexCoordPointer(2, TexCoordPointerType.Float, InterleavedVertexData.size_in_bytes, (IntPtr)((COLOR_COORD_SIZE + VERTEX_COORD_SIZE) * sizeof(float)));
+            //GL.NormalPointer(NormalPointerType.Float, InterleavedVertexData.size_in_bytes, (IntPtr)((COLOR_COORD_SIZE + VERTEX_COORD_SIZE + TEXTURE_COORD_SIZE) * sizeof(float)));
+
+            NumVerticies = _interleaved3.Length;
+
+            return vbo_interleaved3;
+        }
+
+        public static void Interleave(out int vbo_interleaved3, out int NumVerticies,
             int[] _indices, int[] _texIndices, 
             Vector3[] _coords, Vector2[] _texCoords, Vector3[] _normals, int? restartIndex = -1)
         {
@@ -156,68 +295,10 @@ namespace X3D.Parser
                 }
             }
 
-
-            Vertex[] _interleaved = verticies3.ToArray();
             //TODO: figure out how to render type 4
 
-
-            GL.UseProgram(Shape.shaderProgramHandle);
-
-            int a_position = GL.GetAttribLocation(Shape.shaderProgramHandle, "position");
-            int a_normal = GL.GetAttribLocation(Shape.shaderProgramHandle, "normal");
-            int a_color = GL.GetAttribLocation(Shape.shaderProgramHandle, "color");
-            int a_texcoord = GL.GetAttribLocation(Shape.shaderProgramHandle, "texcoord");
-
-
-
-            Console.WriteLine("Buffering Verticies..");
-
-            GL.GenBuffers(1, out vbo_interleaved);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_interleaved);
-            GL.BufferData<Vertex>(BufferTarget.ArrayBuffer, (IntPtr)(_interleaved.Length * Vertex.SizeInBytes), _interleaved, BufferUsageHint.StaticDraw);
-
-            Console.WriteLine("[done]");
-
-
-            // STRIDE each float is 4 bytes
-            // [1 1] [1 1 1 1]  [1 1 1]   [1 1 1]
-            //     8        24  28    36  40   48
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_interleaved); // InterleavedArrayFormat.T2fC4fN3fV3f
-            
-            if(a_position != -1)
-            {
-                GL.EnableVertexAttribArray(a_position); // vertex position
-                GL.VertexAttribPointer(a_position, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)0);
-            }
-
-            if (a_normal != -1)
-            {
-                GL.EnableVertexAttribArray(a_normal); // vertex normal
-                GL.VertexAttribPointer(a_normal, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes));
-            }
-
-            if (a_color!= -1)
-            {
-                //GL.EnableVertexAttribArray(a_color); // vertex color
-                //GL.VertexAttribPointer(a_color, 4, VertexAttribPointerType.Float, false, Vertex.Stride, 0);
-            }
-
-
-            if (a_texcoord != -1)
-            {
-                GL.EnableVertexAttribArray(a_texcoord); // vertex texCoordinate
-                GL.VertexAttribPointer(a_texcoord, 2, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes));
-            }
-
-            //GL.ColorPointer(4, ColorPointerType.Float, InterleavedVertexData.size_in_bytes, (IntPtr)0);
-            //GL.VertexPointer(3, VertexPointerType.Float, InterleavedVertexData.size_in_bytes, (IntPtr)(COLOR_COORD_SIZE * sizeof(float)));
-            //GL.TexCoordPointer(2, TexCoordPointerType.Float, InterleavedVertexData.size_in_bytes, (IntPtr)((COLOR_COORD_SIZE + VERTEX_COORD_SIZE) * sizeof(float)));
-            //GL.NormalPointer(NormalPointerType.Float, InterleavedVertexData.size_in_bytes, (IntPtr)((COLOR_COORD_SIZE + VERTEX_COORD_SIZE + TEXTURE_COORD_SIZE) * sizeof(float)));
-
-
-
-            NumVerticies = _interleaved.Length;
+            // BUFFER GEOMETRY
+            BufferShaderGeometry(verticies3, out vbo_interleaved3, out NumVerticies);
 
             Console.WriteLine("Expanded to {0}", NumVerticies);
         }

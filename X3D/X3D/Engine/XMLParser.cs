@@ -9,6 +9,7 @@ using System.IO;
 using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Text.RegularExpressions;
+using System.Reflection;
 
 namespace X3D.Engine
 {
@@ -18,21 +19,47 @@ namespace X3D.Engine
         private static Regex regTrimMultipleSpaces = new Regex("\\s+\\s+"); // replaces multiple spaces with a single space
         private static Regex negOnes = new Regex("[-]{1}[1]{1}[\\s]+||[\\w]+"); // selects -1 integers
 
-        public static T Deserialise<T>(XElement element)
+        private static Dictionary<string, Type> x3dTypeMap;
+
+        public static SceneGraphNode ParseXMLElement(XPathNavigator element)
+        {
+            Assembly x3dCoreAssembly = Assembly.GetExecutingAssembly();
+
+            if (!(x3dTypeMap != null && x3dTypeMap.Count > 0))
+            {
+                x3dTypeMap = x3dCoreAssembly.GetTypes()
+                    .ToDictionary(t => t.FullName, t => t, StringComparer.OrdinalIgnoreCase);
+            }
+
+            Type type;
+            string typeName = string.Format("X3D.{0}", element.Name);
+            if (x3dTypeMap.TryGetValue(typeName, out type))
+            {
+                return DeserialiseSGN(element, type);
+            }
+            else
+            {
+                throw new Exception("Type not found in X3D.Core");
+            }
+        }
+
+        #region Deserialization Methods
+
+        public static SceneGraphNode DeserialiseSGN(XElement element, Type type)
         {
             if (element == null)
             {
-                return default(T);
+                return default(SceneGraphNode);
             }
-            return Deserialise<T>(element.ToXmlNode().OuterXml);
+            return DeserialiseSGN(element.ToXmlNode().OuterXml, type);
         }
 
-        public static T Deserialise<T>(XPathNavigator nav)
+        public static SceneGraphNode DeserialiseSGN(XPathNavigator nav, Type type)
         {
-            return Deserialise<T>(nav.OuterXml);
+            return DeserialiseSGN(nav.OuterXml, type);
         }
 
-        public static T Deserialise<T>(string xml)
+        public static SceneGraphNode DeserialiseSGN(string xml, Type type)
         {
             XmlSerializer ser;
             StreamWriter stw;
@@ -40,14 +67,14 @@ namespace X3D.Engine
             //XmlReaderSettings xs;
             //XmlReader xr;
 
-            ser = new XmlSerializer(typeof(T));
+            ser = new XmlSerializer(type);
 
             stm = new MemoryStream();
             stw = new StreamWriter(stm);
             stw.Write(xml);
             stw.Flush();
             stm.Position = 0;
-            return (T)ser.Deserialize(stm);
+            return (SceneGraphNode)ser.Deserialize(stm);
 
             //xs = new XmlReaderSettings();
             //xs.DtdProcessing = DtdProcessing.Ignore;
@@ -60,118 +87,8 @@ namespace X3D.Engine
             //return (T)ser.Deserialize(xr);
         }
 
-        public static SceneGraphNode ParseXMLElement(XPathNavigator element)
-        {
-            SceneGraphNode node;
+        #endregion
 
-            node = null;
-
-            switch (element.Name.ToUpper())
-            {
-                case "X3D":
-                    node = Deserialise<X3D>(element);
-                    break;
-                case "HEAD":
-                    node = Deserialise<head>(element);
-                    break;
-                case "META":
-                    node = Deserialise<meta>(element);
-                    break;
-                case "SCENE":
-                    node = Deserialise<Scene>(element);
-                    break;
-                case "ROUTE":
-                    node = Deserialise<ROUTE>(element);
-                    break;
-                //case "PROTO":
-                    //node=Deserialise<Proto>(element);
-                    //break;
-                //case "EXTERNPROTO":
-                    //node=Deserialise<ExternProto>(element);
-                    //break;
-                case "IMPORT":
-                    node=Deserialise<IMPORT>(element);
-                    break;
-                case "EXPORT":
-                    node=Deserialise<EXPORT>(element);
-                    break;
-                case "INLINE":
-                    node=Deserialise<Inline>(element);
-                    break;
-                case "TIMESENSOR":
-                    node = Deserialise<TimeSensor>(element);
-                    break;
-                case "INTEGERSEQUENCER":
-                    node = Deserialise<IntegerSequencer>(element);
-                    break;
-                case "TRANSFORM":
-                    node = Deserialise<Transform>(element);
-                    break;
-                case "GROUP":
-                    node = Deserialise<Group>(element);
-                    break;
-                case "STATICGROUP":
-                    node = Deserialise<StaticGroup>(element);
-                    break;
-                case "SWITCH":
-                    node = Deserialise<Switch>(element);
-                    break;
-                case "SHAPE":
-                    node = Deserialise<Shape>(element);
-                    break;
-                case "COORDINATE":
-                    node = Deserialise<Coordinate>(element);
-                    break;
-                case "NORMAL":
-                    node=Deserialise<Normal>(element);
-                    break;
-                case "TEXTURECOORDINATE":
-                    node=Deserialise<TextureCoordinate>(element);
-                    break;
-                case "COLOR":
-                    node=Deserialise<Color>(element);
-                    break;
-                case "COLORRGBA":
-                    node=Deserialise<ColorRGBA>(element);
-                    break;
-                case "ELEVATIONGRID":
-                    node = Deserialise<ElevationGrid>(element);
-                    break;
-                case "INDEXEDFACESET":
-                    node = Deserialise<IndexedFaceSet>(element);
-                    break;
-                case "APPEARANCE":
-                    node = Deserialise<Appearance>(element);
-                    break;
-                case "MATERIAL":
-                    node = Deserialise<Material>(element);
-                    break;
-                case "IMAGETEXTURE":
-                    node = Deserialise<ImageTexture>(element);
-                    break;
-                case "CYLINDER":
-                    node=Deserialise<Cylinder>(element);
-                    break;
-                case "SPHERE":
-                    node = Deserialise<Sphere>(element);
-                    break;
-                case "BOX":
-                    node = Deserialise<Box>(element);
-                    break;
-                case "EXTRUSION":
-                    node = Deserialise<Extrusion>(element);
-                    break;
-                case "COMPOSEDSHADER":
-                    node = Deserialise<ComposedShader>(element);
-                    break;
-                case "SHADERPART":
-                    node = Deserialise<ShaderPart>(element);
-                    break;
-            }
-            
-
-            return node;
-        }
 
         public static XmlAttribute getAttributeById(XElement node, string id)
         {
