@@ -46,6 +46,16 @@ namespace X3D
                 phi += angleSegment;
             }
 
+            if (this.top)
+            {
+
+            }
+
+            if (this.bottom)
+            {
+
+            }
+
             Helpers.BufferShaderGeometry(geometry, out vbo, out verts);
         }
 
