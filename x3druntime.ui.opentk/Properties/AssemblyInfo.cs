@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("x3druntime.ui.opentk")]
-[assembly: AssemblyCopyright("Copyright © Gerallt G. Franke  2013")]
+[assembly: AssemblyCopyright("Copyright © Gerallt G. Franke  2013 - 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.3.0.500")]
-[assembly: AssemblyFileVersion("3.3.0.500")]
+[assembly: AssemblyVersion("3.3.1.1")]
+[assembly: AssemblyFileVersion("3.3.1.1")]

@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("X3D")]
-[assembly: AssemblyDescription("Jade")]
+[assembly: AssemblyDescription("Sawtooth")]
 [assembly: AssemblyConfiguration("experimental")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("x3d-finely-sharpened")]
-[assembly: AssemblyCopyright("Copyright © Gerallt G. Franke 2013")]
+[assembly: AssemblyCopyright("Copyright © Gerallt G. Franke 2013 - 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.3.0.1290")]
-[assembly: AssemblyFileVersion("3.3.0.1290")]
+[assembly: AssemblyVersion("3.3.1.1")]
+[assembly: AssemblyFileVersion("3.3.1.1")]
