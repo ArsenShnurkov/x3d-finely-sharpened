@@ -2603,11 +2603,11 @@ namespace X3D
 
         private bool _solid;
 
-        private string _xDimension;
+        private int _xDimension;
 
         private float _xSpacing;
 
-        private string _zDimension;
+        private int _zDimension;
 
         private float _zSpacing;
 
@@ -2621,9 +2621,9 @@ namespace X3D
             this._creaseAngle = ((float)(0F));
             this._normalPerVertex = true;
             this._solid = true;
-            this._xDimension = "2";
+            this._xDimension = 2;
             this._xSpacing = ((float)(1F));
-            this._zDimension = "2";
+            this._zDimension = 2;
             this._zSpacing = ((float)(1F));
             this._containerField = "geometry";
         }
@@ -2653,6 +2653,9 @@ namespace X3D
             }
         }
 
+        [XmlIgnore]
+        public float[] heights;
+
         [System.Xml.Serialization.XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0 0")]
         public string height
@@ -2664,6 +2667,8 @@ namespace X3D
             set
             {
                 this._height = value;
+
+                this.heights = Helpers.Floats(value);
             }
         }
 
@@ -2743,11 +2748,11 @@ namespace X3D
         {
             get
             {
-                return this._xDimension;
+                return this._xDimension.ToString();
             }
             set
             {
-                this._xDimension = value;
+                this._xDimension = int.Parse(value);
             }
         }
 
@@ -2771,11 +2776,11 @@ namespace X3D
         {
             get
             {
-                return this._zDimension;
+                return _zDimension.ToString();
             }
             set
             {
-                this._zDimension = value;
+                this._zDimension = int.Parse(value);
             }
         }
 
