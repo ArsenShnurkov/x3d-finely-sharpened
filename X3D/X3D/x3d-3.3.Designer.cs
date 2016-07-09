@@ -19,6 +19,8 @@ namespace X3D
     using OpenTK;
     using System.Linq;
     using Parser;
+    using System.Drawing;
+
     /// <summary>
     /// x3dVersion enumeration string constants are used to identify 
     /// the allowed versions for an X3D scene graph
@@ -1354,6 +1356,13 @@ namespace X3D
             {
                 this._containerField = value;
             }
+        }
+
+        public static Color ToColor(System.Drawing.Color col)
+        {
+            Color c = new Color();
+            c.color = string.Format("{0} {1} {2}", col.R, col.G, col.B);
+            return c;
         }
     }
 

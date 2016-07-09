@@ -39,7 +39,7 @@ namespace X3D.Engine
             }
             else
             {
-                throw new Exception("Type not found in X3D.Core");
+                throw new Exception(string.Format("Type {0} not found in X3D.Core", typeName));
             }
         }
 

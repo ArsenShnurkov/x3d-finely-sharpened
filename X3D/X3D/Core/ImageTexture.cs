@@ -65,8 +65,8 @@ namespace X3D
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
                 GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMinFilter.Linear);
 
-                GL.TexGen(TextureCoordName.S, TextureGenParameter.TextureGenMode, GL_OBJECT_LINEAR);
-                GL.TexGen(TextureCoordName.T, TextureGenParameter.TextureGenMode, GL_OBJECT_LINEAR);
+                //GL.TexGen(TextureCoordName.S, TextureGenParameter.TextureGenMode, GL_OBJECT_LINEAR);
+                //GL.TexGen(TextureCoordName.T, TextureGenParameter.TextureGenMode, GL_OBJECT_LINEAR);
 
                 //GL.TexParameter(TextureTarget.Texture2D,TextureParameterName.TextureWrapS,(int)TextureWrapMode.Repeat);
                 //GL.TexParameter(TextureTarget.Texture2D,TextureParameterName.TextureWrapT,(int)TextureWrapMode.Repeat);

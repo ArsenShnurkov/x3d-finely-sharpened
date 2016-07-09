@@ -14,6 +14,7 @@ namespace X3D
         private int NumVerticies;
 
         private int _vbo_interleaved;
+        private Shape parentShape;
 
         #region Geometry
 
@@ -31,14 +32,16 @@ namespace X3D
 
         #region Rendering Methods
 
-        public void Load()
+        public void Load(Shape parentShape)
         {
-            Helpers.Interleave(out _vbo_interleaved, out NumVerticies, this.Indices, null, this.Vertices, this.Texcoords, this.Normals);
+            this.parentShape = parentShape;
+
+            Helpers.Interleave(parentShape, out _vbo_interleaved, out NumVerticies, this.Indices, null, this.Vertices, this.Texcoords, this.Normals);
         }
 
         public void Render(RenderingContext rc)
         {
-            GL.UseProgram(Shape.shaderProgramHandle);
+            GL.UseProgram(parentShape.shaderProgramHandle);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
             GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
         }

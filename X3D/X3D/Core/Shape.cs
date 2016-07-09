@@ -89,6 +89,7 @@ in vec3 gFacetNormal;
 in vec3 gTriDistance;
 in vec3 gPatchDistance;
 in float gPrimitive;
+//in vec2 gFacetTexCoord; 
 
 in vec2 uv;
 in vec4 vColor;
@@ -116,41 +117,42 @@ void main()
     vec4 texture_color = texture2D(_MainTex, uv);
 
     // PHONG SHADING TEST
-	vec3 texCol = vec3(0.1, 0.1, 0.1); 
-	vec3 halfVec = normalize( eyeVec + lightVec );
-	float ndotl = max( dot( lightVec, normalVec ), 0.0 ); 
-	float ndoth = (ndotl > 0.0) ? pow(max( dot( halfVec, normalVec ), 0.0 ), 128.) : 0.0;  
-	vec3 color = 0.2 * ambient + ndotl * texCol + ndoth * specular;
+	//vec3 texCol = vec3(0.1, 0.1, 0.1); 
+	//vec3 halfVec = normalize( eyeVec + lightVec );
+	//float ndotl = max( dot( lightVec, normalVec ), 0.0 ); 
+	//float ndoth = (ndotl > 0.0) ? pow(max( dot( halfVec, normalVec ), 0.0 ), 128.) : 0.0;  
+	//vec3 color = 0.2 * ambient + ndotl * texCol + ndoth * specular;
 
     //FragColor = vec4(color, 1.0);	
     //FragColor = vec4(color, 1.0) +  vColor / 2;
 	//FragColor = vec4(0.5, 0.8, 1.0, 1.0);
     //FragColor = vColor;
 
-    vec4 op = texture_color + vColor / 2;
-    op = op + vec4(color, 1.0) / 2;
+    //vec4 op = texture_color + vColor / 2;
+    //op = op + vec4(color, 1.0) / 2;
 
-    FragColor = op;
-
-
+    //FragColor = op;
 
 
-    //vec3 N = normalize(gFacetNormal);
-    //vec3 L = LightPosition;
-    //float df = abs(dot(N, L));
-    //vec3 color = AmbientMaterial + df * DiffuseMaterial;
 
-    //float d1 = min(min(gTriDistance.x, gTriDistance.y), gTriDistance.z);
-    //float d2 = min(min(gPatchDistance.x, gPatchDistance.y), gPatchDistance.z);
-    //color = amplify(d1, 40, -0.5) * amplify(d2, 60, -0.5) * color;
 
-    //FragColor = vec4(color, 1.0);
+    vec3 N = normalize(gFacetNormal);
+    vec3 L = LightPosition;
+    float df = abs(dot(N, L));
+    vec3 color = AmbientMaterial + df * DiffuseMaterial;
+
+    float d1 = min(min(gTriDistance.x, gTriDistance.y), gTriDistance.z);
+    float d2 = min(min(gPatchDistance.x, gPatchDistance.y), gPatchDistance.z);
+    color = amplify(d1, 40, -0.5) * amplify(d2, 60, -0.5) * color;
+
+    FragColor = vec4(color, 1.0);
 }
 
 ";
         //int testShader;
-        public static int shaderProgramHandle;
-        public static int uniformModelview, uniformProjection;
+        public int shaderProgramHandle;
+        public int uniformModelview, uniformProjection;
+        public ShaderUniformsPNCT uniforms = new ShaderUniformsPNCT();
         private int uniformCameraScale, uniformX3DScale;
 
         double fade_time; // for testing
@@ -160,14 +162,11 @@ void main()
 
         #region Render Methods
 
-        public void Tesselate(string tessControlShaderSource, string tessEvalShaderSource, string geometryShaderSource)
+        public void IncludeTesselationShaders(string tessControlShaderSource, string tessEvalShaderSource, 
+                                              string geometryShaderSource)
         {
-            shaderProgramHandle = Helpers.ApplyShader(vertexShaderSource, fragmentShaderSource,
-                tessControlShaderSource, tessEvalShaderSource,
-                //"","",
-                //geometryShaderSource
-                ""
-            );
+            shaderProgramHandle = Helpers.ApplyShader(vertexShaderSource, fragmentShaderSource, 
+                tessControlShaderSource, tessEvalShaderSource, geometryShaderSource);
 
             uniformModelview = GL.GetUniformLocation(shaderProgramHandle, "modelview");
             uniformProjection = GL.GetUniformLocation(shaderProgramHandle, "projection");

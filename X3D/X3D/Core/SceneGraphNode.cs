@@ -29,6 +29,11 @@ namespace X3D
         public virtual void Render(RenderingContext rc) { }
         public virtual void PostRender(RenderingContext rc) { }
 
+        public SGn GetParent<SGn>() where SGn : SceneGraphNode
+        {
+            return (SGn)AscendantByType<SGn>().FirstOrDefault();
+        }
+
         public List<SceneGraphNode> DecendantsByType(Type t)
         {
             // Breadth first search for decendant node by type

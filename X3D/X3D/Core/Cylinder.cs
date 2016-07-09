@@ -14,6 +14,7 @@ namespace X3D
 
         private int vbo;
         private int verts;
+        private Shape parentShape;
 
 
         public override void Load()
@@ -56,7 +57,9 @@ namespace X3D
 
             }
 
-            Helpers.BufferShaderGeometry(geometry, out vbo, out verts);
+            parentShape = GetParent<Shape>();
+
+            Helpers.BufferShaderGeometry(geometry, parentShape, out vbo, out verts);
         }
 
         public override void Render(RenderingContext rc)
@@ -64,9 +67,9 @@ namespace X3D
             base.Render(rc);
 
 
-            GL.UseProgram(Shape.shaderProgramHandle);
-            int uniformSize = GL.GetUniformLocation(Shape.shaderProgramHandle, "size");
-            int uniformScale = GL.GetUniformLocation(Shape.shaderProgramHandle, "scale");
+            GL.UseProgram(parentShape.shaderProgramHandle);
+            int uniformSize = GL.GetUniformLocation(parentShape.shaderProgramHandle, "size");
+            int uniformScale = GL.GetUniformLocation(parentShape.shaderProgramHandle, "scale");
             var size = new Vector3(1, 1, 1);
             var scale = new Vector3(1.0f, 1.0f, 1.0f);
             GL.Uniform3(uniformSize, size);

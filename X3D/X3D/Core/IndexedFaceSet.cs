@@ -20,13 +20,19 @@ namespace X3D
         private int[] _texIndices;
         private Vector2[] _texCoords;
         private const int RESTART_INDEX = -1;
-         
+        private Shape parentShape;
+
+        private int _vbo_interleaved;
+        private int NumVerticies;
+
         public override void Load()
         {
             int? restartIndex = null;
             
             base.Load();
-            
+
+            parentShape = GetParent<Shape>();
+
             texCoordinate = (TextureCoordinate)this.Items.FirstOrDefault(n => n.GetType() == typeof(TextureCoordinate));
             coordinate = (Coordinate)this.Items.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
             color = (Color)this.Items.FirstOrDefault(n => n.GetType() == typeof(Color));
@@ -54,14 +60,14 @@ namespace X3D
                     restartIndex = RESTART_INDEX;
                 }
 
-                Helpers.Interleave(out _vbo_interleaved, out NumVerticies, _indices,_texIndices, _coords, 
+                Helpers.Interleave(parentShape, out _vbo_interleaved, out NumVerticies, _indices,_texIndices, _coords, 
                     _texCoords, null, restartIndex);
             }
 
-            GL.UseProgram(Shape.shaderProgramHandle);
+            GL.UseProgram(parentShape.shaderProgramHandle);
 
-            int uniformSize = GL.GetUniformLocation(Shape.shaderProgramHandle, "size");
-            int uniformScale = GL.GetUniformLocation(Shape.shaderProgramHandle, "scale");
+            int uniformSize = GL.GetUniformLocation(parentShape.shaderProgramHandle, "size");
+            int uniformScale = GL.GetUniformLocation(parentShape.shaderProgramHandle, "scale");
 
             var size = new Vector3(1,1,1);
             //var scale = new Vector3(1, 1, 1);
@@ -72,8 +78,6 @@ namespace X3D
 
             Console.WriteLine("IndexedFaceSet [loaded]");
         }
-        int _vbo_interleaved;
-        int NumVerticies;
 
         public override void Render(RenderingContext rc)
         {
@@ -81,9 +85,7 @@ namespace X3D
 
             if(this.coordinate != null && !string.IsNullOrEmpty(this.coordIndex))
             {
-
-
-                GL.UseProgram(Shape.shaderProgramHandle);
+                GL.UseProgram(parentShape.shaderProgramHandle);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved); // InterleavedArrayFormat.T2fC4fN3fV3f
                 GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies); // Triangles Points  Lines
             }

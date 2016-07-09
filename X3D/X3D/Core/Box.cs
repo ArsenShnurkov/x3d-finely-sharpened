@@ -15,7 +15,7 @@ namespace X3D
     public partial class Box
     {
         private BoxGeometry _boxGeometry = new BoxGeometry();
-
+        private Shape parentShape;
 
         #region Render Methods
 
@@ -23,7 +23,9 @@ namespace X3D
         {
             base.Load();
 
-            this._boxGeometry.Load();
+            parentShape = GetParent<Shape>();
+
+            this._boxGeometry.Load(parentShape);
         }
 
         public override void PreRender()
@@ -37,10 +39,10 @@ namespace X3D
 
             Vector3 zeroish = new Vector3(0.05f, 0.05f, 0.05f);
 
-            GL.UseProgram(Shape.shaderProgramHandle);
+            GL.UseProgram(parentShape.shaderProgramHandle);
 
-            int uniformSize = GL.GetUniformLocation(Shape.shaderProgramHandle, "size");
-            int uniformScale = GL.GetUniformLocation(Shape.shaderProgramHandle, "scale");
+            int uniformSize = GL.GetUniformLocation(parentShape.shaderProgramHandle, "size");
+            int uniformScale = GL.GetUniformLocation(parentShape.shaderProgramHandle, "scale");
 
             GL.Uniform3(uniformSize, this._vec3);
             GL.Uniform3(uniformScale, zeroish);

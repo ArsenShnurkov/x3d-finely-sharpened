@@ -17,6 +17,7 @@ namespace X3D
 
         private Vector3 StartAxis = Vector3.UnitY ; // Axis defined as a normalized vector from base to apex. UnitY by default
         private Vector3 StartPosition; // Position of apex. (the top "sharp" point of the cone)
+        private Shape parentShape;
 
         public override unsafe void Load()
         {
@@ -96,7 +97,9 @@ namespace X3D
             geometries = new List<List<Vertex>>();
             geometries.Add(geometry);
 
-            Helpers.BufferShaderGeometry(geometry, out handles, out verts);
+            parentShape = GetParent<Shape>();
+
+            Helpers.BufferShaderGeometry(geometry, parentShape,  out handles, out verts);
         }
 
         public override unsafe void Render(RenderingContext rc)
@@ -115,9 +118,9 @@ namespace X3D
                 //GL.Disable(EnableCap.CullFace);
             }
 
-            GL.UseProgram(Shape.shaderProgramHandle);
-            int uniformSize = GL.GetUniformLocation(Shape.shaderProgramHandle, "size");
-            int uniformScale = GL.GetUniformLocation(Shape.shaderProgramHandle, "scale");
+            GL.UseProgram(parentShape.shaderProgramHandle);
+            int uniformSize = GL.GetUniformLocation(parentShape.shaderProgramHandle, "size");
+            int uniformScale = GL.GetUniformLocation(parentShape.shaderProgramHandle, "scale");
             var size = new Vector3(1, 1, 1);
             var scale = new Vector3(0.7f, 0.7f, 0.7f);
             GL.Uniform3(uniformSize, size);

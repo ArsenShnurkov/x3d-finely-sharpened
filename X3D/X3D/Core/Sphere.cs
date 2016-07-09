@@ -26,10 +26,13 @@ namespace X3D
         }
 
         private ShaderUniforms Uniforms = new ShaderUniforms();
+        private Shape parentShape;
         private static float TessLevelInner = 3;
         private static float TessLevelOuter = 2;
+        
 
         static string tessControlShader = @"
+// original source Philip Rideout http://prideout.net/blog/?p=48
 #version 420 core
 layout(vertices = 3) out;
 in vec3 vPosition[];
@@ -55,18 +58,14 @@ void main()
 // original source Philip Rideout http://prideout.net/blog/?p=48
 #version 420 core
 layout(triangles, equal_spacing, cw) in;
- in vec3 tcPosition[];
+in vec3 tcPosition[];
 out vec3 tePosition;
 out vec3 tePatchDistance;
 uniform mat4 projection;
 uniform mat4 modelview;
+uniform vec3 scale;
 
-//in GS_FS_VERTEX
-//{
-//    vec3 pos;
-//    vec3 normal;
-//    vec2 tex_coord;
-//} vertex_out[];
+#define M_PI 3.1415926535897932384626433832795
 
 void main()
 {
@@ -74,16 +73,21 @@ void main()
     vec3 p1 = gl_TessCoord.y * tcPosition[1];
     vec3 p2 = gl_TessCoord.z * tcPosition[2];
     tePatchDistance = gl_TessCoord;
-    tePosition = normalize(p0 + p1 + p2);
+    tePosition = scale * normalize(p0 + p1 + p2);
     gl_Position = projection * modelview * vec4(tePosition, 1);
+
+    //vec2(asin(Nx)/M_PI + 0.5 , asin(Ny) / M_PI + 0.5 )
+
+    //gFacetTexCoord; gl_TexCoord
 }
 ";
-
-        //string geometryShaderSource = "";//
+        //BUG: geometry shader not compatible with current vertex layout
         static string geometryShaderSource = @"
+// original source Philip Rideout http://prideout.net/blog/?p=48
 #version 420 core
 uniform mat4 modelview;
 uniform mat3 normalmatrix;
+layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
 in vec3 tePosition[3];
@@ -124,63 +128,64 @@ void main()
         {
             base.Load();
 
-            Helpers.Interleave(out vbo, out NumVerticies, Faces, null, Verts, null, null, -1);
+            parentShape = GetParent<Shape>();
 
-            GL.UseProgram(Shape.shaderProgramHandle);
+            Helpers.Interleave(parentShape, out vbo, out NumVerticies, Faces, null, Verts, null, null, 
+                restartIndex: -1, genTexCoordPerVertex: true);
 
-            Shape parentShape = (Shape)AscendantByType<Shape>().FirstOrDefault();
+            GL.UseProgram(parentShape.shaderProgramHandle);
 
             if(parentShape!= null)
             {
                 // TESSELLATION
-                parentShape.Tesselate(tessControlShader, tessEvalShader, geometryShaderSource);
+                parentShape.IncludeTesselationShaders(tessControlShader, tessEvalShader, geometryShaderSource);
             }
 
-            Uniforms.Modelview = GL.GetUniformLocation(Shape.shaderProgramHandle, "modelview");
-            Uniforms.Projection = GL.GetUniformLocation(Shape.shaderProgramHandle, "projection");
-            Uniforms.NormalMatrix = GL.GetUniformLocation(Shape.shaderProgramHandle, "normalmatrix");
-            Uniforms.LightPosition = GL.GetUniformLocation(Shape.shaderProgramHandle, "LightPosition");
-            Uniforms.AmbientMaterial = GL.GetUniformLocation(Shape.shaderProgramHandle, "AmbientMaterial");
-            Uniforms.DiffuseMaterial = GL.GetUniformLocation(Shape.shaderProgramHandle, "DiffuseMaterial");
-            Uniforms.TessLevelInner = GL.GetUniformLocation(Shape.shaderProgramHandle, "TessLevelInner");
-            Uniforms.TessLevelOuter = GL.GetUniformLocation(Shape.shaderProgramHandle, "TessLevelOuter");
+            Uniforms.Modelview = GL.GetUniformLocation(parentShape.shaderProgramHandle, "modelview");
+            Uniforms.Projection = GL.GetUniformLocation(parentShape.shaderProgramHandle, "projection");
+            Uniforms.NormalMatrix = GL.GetUniformLocation(parentShape.shaderProgramHandle, "normalmatrix");
+            Uniforms.LightPosition = GL.GetUniformLocation(parentShape.shaderProgramHandle, "LightPosition");
+            Uniforms.AmbientMaterial = GL.GetUniformLocation(parentShape.shaderProgramHandle, "AmbientMaterial");
+            Uniforms.DiffuseMaterial = GL.GetUniformLocation(parentShape.shaderProgramHandle, "DiffuseMaterial");
+            Uniforms.TessLevelInner = GL.GetUniformLocation(parentShape.shaderProgramHandle, "TessLevelInner");
+            Uniforms.TessLevelOuter = GL.GetUniformLocation(parentShape.shaderProgramHandle, "TessLevelOuter");
 
 
 
-            Vector4 lightPosition = new Vector4(0.25f, 0.25f, 1f, 0f);
-            GL.Uniform3(Uniforms.LightPosition, 1, ref lightPosition.X);
-            GL.Uniform3(Uniforms.AmbientMaterial, 0.04f, 0.04f, 0.04f);
-            GL.Uniform3(Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f);
+
         }
 
         public override void Render(RenderingContext rc)
         {
             base.Render(rc);
 
-            GL.UseProgram(Shape.shaderProgramHandle);
-            int uniformSize = GL.GetUniformLocation(Shape.shaderProgramHandle, "size");
-            int uniformScale = GL.GetUniformLocation(Shape.shaderProgramHandle, "scale");
+            GL.UseProgram(parentShape.shaderProgramHandle);
+            int uniformSize = GL.GetUniformLocation(parentShape.shaderProgramHandle, "size");
+            int uniformScale = GL.GetUniformLocation(parentShape.shaderProgramHandle, "scale");
             var size = new Vector3(1, 1, 1);
             var scale = new Vector3(0.7f, 0.7f, 0.7f);
             GL.Uniform3(uniformSize, size);
             GL.Uniform3(uniformScale, scale);
 
             Matrix3 NormalMatrix = new Matrix3(rc.matricies.modelview); // NormalMatrix = M4GetUpper3x3(ModelviewMatrix);
+            Vector4 lightPosition = new Vector4(0.25f, 0.25f, 1f, 0f);
 
             GL.UniformMatrix3(Uniforms.NormalMatrix, false, ref NormalMatrix);
             GL.Uniform1(Uniforms.TessLevelInner, TessLevelInner);
             GL.Uniform1(Uniforms.TessLevelOuter, TessLevelOuter);
+            GL.Uniform3(Uniforms.LightPosition, 1, ref lightPosition.X);
+            GL.Uniform3(Uniforms.AmbientMaterial, Helpers.ToVec3(OpenTK.Graphics.Color4.Aqua) ); // 0.04f, 0.04f, 0.04f
+            GL.Uniform3(Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f); 
 
             GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo); // InterleavedArrayFormat.T2fC4fN3fV3f
             GL.DrawArrays(PrimitiveType.Patches, 0, NumVerticies); // Triangles Points  Lines
 
+            // Testing of tessellation parameters
             if (rc.Keyboard[Key.Right] ) TessLevelInner++;
             if (rc.Keyboard[Key.Left]) TessLevelInner = TessLevelInner > 1 ? TessLevelInner - 1 : 1;
             if (rc.Keyboard[Key.Up]) TessLevelOuter++;
             if (rc.Keyboard[Key.Down]) TessLevelOuter = TessLevelOuter > 1 ? TessLevelOuter - 1 : 1;
-
-
         }
 
         #endregion
@@ -226,7 +231,6 @@ void main()
              new Vector3(0.724f, -0.526f, -0.447f),
              new Vector3(0.000f,  0.000f, -1.000f)
         };
-
         #endregion
     }
 }
