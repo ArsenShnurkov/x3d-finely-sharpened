@@ -24,6 +24,10 @@ Example 2 - test of IndexedFaceSet: X3D Runtime 3.3 Core using OpenGL Version 4
 
 
 
+Example 3 - test of ElevationGrid: X3D Runtime 3.3 Core using OpenGL Version 4
+![alt text](screenshots/screenshot3.png "X3D Runtime Viewer Example 3")
+
+
 Notices
 ```
 
