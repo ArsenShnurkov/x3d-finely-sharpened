@@ -145,7 +145,7 @@ void main()
 
 
 
-
+    // TexCoords from tessellation
     vec3 N = normalize(gFacetNormal);
     vec3 L = LightPosition;
     float df = abs(dot(N, L));
@@ -155,10 +155,6 @@ void main()
     float d2 = min(min(gPatchDistance.x, gPatchDistance.y), gPatchDistance.z);
     color = amplify(d1, 40, -0.5) * amplify(d2, 60, -0.5) * color;
 
-    //FragColor = vec4(color, 1.0);
-
-    
-    
     FragColor = texture_color + vec4(color, 1.0) / 2;
 }
 
