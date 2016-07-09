@@ -114,7 +114,17 @@ float amplify(float d, float scale, float offset)
 
 void main()
 {
-    vec4 texture_color = texture2D(_MainTex, uv);
+
+    vec4 texture_color;
+
+    if(length(uv) == 0)
+    {
+        texture_color = texture2D(_MainTex, gFacetTexCoord);
+    }
+    else 
+    {
+        texture_color = texture2D(_MainTex, uv);
+    }
 
     // PHONG SHADING TEST
 	//vec3 texCol = vec3(0.1, 0.1, 0.1); 
@@ -147,9 +157,9 @@ void main()
 
     //FragColor = vec4(color, 1.0);
 
-    vec4 facet_texture_color = texture2D(_MainTex, gFacetTexCoord);
     
-    FragColor = facet_texture_color + vec4(color, 1.0) / 2;
+    
+    FragColor = texture_color + vec4(color, 1.0) / 2;
 }
 
 ";
