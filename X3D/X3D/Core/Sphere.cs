@@ -65,8 +65,6 @@ uniform mat4 projection;
 uniform mat4 modelview;
 uniform vec3 scale;
 
-#define M_PI 3.1415926535897932384626433832795
-
 void main()
 {
     vec3 p0 = gl_TessCoord.x * tcPosition[0];
@@ -75,10 +73,6 @@ void main()
     tePatchDistance = gl_TessCoord;
     tePosition = scale * normalize(p0 + p1 + p2);
     gl_Position = projection * modelview * vec4(tePosition, 1);
-
-    //vec2(asin(Nx)/M_PI + 0.5 , asin(Ny) / M_PI + 0.5 )
-
-    //gFacetTexCoord; gl_TexCoord
 }
 ";
         //BUG: geometry shader not compatible with current vertex layout
@@ -96,13 +90,17 @@ in vec3 tePatchDistance[3];
 out vec3 gFacetNormal;
 out vec3 gPatchDistance;
 out vec3 gTriDistance;
+out vec2 gFacetTexCoord;
+
+#define M_PI 3.1415926535897932384626433832795
 
 void main()
 {
     vec3 A = tePosition[2] - tePosition[0];
     vec3 B = tePosition[1] - tePosition[0];
     gFacetNormal = normalmatrix  * normalize(cross(A, B));
-    
+    gFacetTexCoord = vec2(asin(gFacetNormal.x)/M_PI + 0.5 , asin(gFacetNormal.y) / M_PI + 0.5 );
+
     gPatchDistance = tePatchDistance[0];
     gTriDistance = vec3(1, 0, 0);
     gl_Position = gl_in[0].gl_Position; 
