@@ -19,6 +19,10 @@ Example 1 - test of tessellated Sphere X3D node: X3D Runtime 3.3 Core using Open
 
 
 
+Example 2 - test of IndexedFaceSet: X3D Runtime 3.3 Core using OpenGL Version 4 
+![alt text](screenshots/screenshot1.png "X3D Runtime Viewer Example 1")
+
+
 
 Notices
 ```
