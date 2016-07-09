@@ -18,7 +18,7 @@
 // todo: webgl currently lacks support for primativeRestartIndex(), but even then if webgl did support this, i dont think that a restart index can be a signed integer. (-1)
 
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,8 +35,9 @@ namespace X3D
 
         #region Test Shader
 
-        string vertexShaderSource = @"
-#version 400
+
+        static string vertexShaderSource = @"
+#version 420 core
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
 layout(location = 2) in vec4 color;
@@ -55,12 +56,14 @@ varying vec3 normalVec;
 
 out vec4 vColor;
 out lowp vec2 uv;
+out vec3 vPosition;
 
 void main()
 {
     mat4 model = projection * modelview;
 
-	gl_Position = model * vec4(X3DScale * camscale * scale * size * position, 1.0);
+    vPosition = X3DScale * camscale * scale * size * position;
+	gl_Position = model * vec4(vPosition, 1.0);
     vColor = color;
 
 	//gl_TexCoord[0] = gl_MultiTexCoord0; 
@@ -75,12 +78,17 @@ void main()
     uv = texcoord;
 }";
 
-        string fragmentShaderSource = @"
-#version 400
+       static string fragmentShaderSource = @"
+#version 420 core
  
 varying vec3 lightVec; 
 varying vec3 eyeVec; 
 varying vec3 normalVec;
+
+in vec3 gFacetNormal;
+in vec3 gTriDistance;
+in vec3 gPatchDistance;
+in float gPrimitive;
 
 in vec2 uv;
 in vec4 vColor;
@@ -89,6 +97,19 @@ out vec4 FragColor;
 uniform sampler2D _MainTex;
 uniform vec3 specular = vec3(.7, .7, .7); 
 uniform float ambient = 0.2;
+
+uniform vec3 LightPosition;
+uniform vec3 DiffuseMaterial;
+uniform vec3 AmbientMaterial;
+
+
+float amplify(float d, float scale, float offset)
+{
+    d = scale * d + offset;
+    d = clamp(d, 0, 1);
+    d = 1 - exp2(-2*d*d);
+    return d;
+}
 
 void main()
 {
@@ -110,21 +131,49 @@ void main()
     op = op + vec4(color, 1.0) / 2;
 
     FragColor = op;
+
+
+
+
+    //vec3 N = normalize(gFacetNormal);
+    //vec3 L = LightPosition;
+    //float df = abs(dot(N, L));
+    //vec3 color = AmbientMaterial + df * DiffuseMaterial;
+
+    //float d1 = min(min(gTriDistance.x, gTriDistance.y), gTriDistance.z);
+    //float d2 = min(min(gPatchDistance.x, gPatchDistance.y), gPatchDistance.z);
+    //color = amplify(d1, 40, -0.5) * amplify(d2, 60, -0.5) * color;
+
+    //FragColor = vec4(color, 1.0);
 }
 
 ";
-        int testShader;
+        //int testShader;
         public static int shaderProgramHandle;
         public static int uniformModelview, uniformProjection;
-
         private int uniformCameraScale, uniformX3DScale;
 
-        double fade_time;
+        double fade_time; // for testing
 
 
         #endregion
 
         #region Render Methods
+
+        public void Tesselate(string tessControlShaderSource, string tessEvalShaderSource, string geometryShaderSource)
+        {
+            shaderProgramHandle = Helpers.ApplyShader(vertexShaderSource, fragmentShaderSource,
+                tessControlShaderSource, tessEvalShaderSource,
+                //"","",
+                //geometryShaderSource
+                ""
+            );
+
+            uniformModelview = GL.GetUniformLocation(shaderProgramHandle, "modelview");
+            uniformProjection = GL.GetUniformLocation(shaderProgramHandle, "projection");
+            uniformCameraScale = GL.GetUniformLocation(shaderProgramHandle, "camscale");
+            uniformX3DScale = GL.GetUniformLocation(shaderProgramHandle, "X3DScale");
+        }
 
         public override void Load()
         {
@@ -132,7 +181,9 @@ void main()
 
             // load assets
             //testShader = Helpers.ApplyTestShader();
+
             shaderProgramHandle = Helpers.ApplyShader(vertexShaderSource, fragmentShaderSource);
+
 
             uniformModelview = GL.GetUniformLocation(shaderProgramHandle, "modelview");
             uniformProjection = GL.GetUniformLocation(shaderProgramHandle, "projection");
@@ -161,13 +212,13 @@ void main()
 
             float variableScale = (float)(Math.Sin(fade_time));
 
-
             //GL.UseProgram(testShader);
             GL.UseProgram(shaderProgramHandle);
             GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);
             GL.UniformMatrix4(uniformProjection, false, ref rc.matricies.projection);
             GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
             GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
+            
         }
 
         public override void PostRender(RenderingContext rc)

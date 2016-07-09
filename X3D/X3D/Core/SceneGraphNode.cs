@@ -58,5 +58,25 @@ namespace X3D
             return lst;
         }
 
+        public List<SceneGraphNode> AscendantByType<T>()
+        {
+            SceneGraphNode parent;
+            List<SceneGraphNode> lst = new List<SceneGraphNode>();
+            Type t = typeof(T);
+
+            parent = this.Parent;
+            
+            while (parent != null)
+            {
+                if (t.IsInstanceOfType(parent))
+                {
+                    lst.Add(parent);
+                }
+
+                parent = parent.Parent;
+            }
+
+            return lst;
+        }
     }
 }

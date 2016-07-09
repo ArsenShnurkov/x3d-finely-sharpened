@@ -19,15 +19,61 @@
     <Background skyColor='1 1 1'/>
     <Viewpoint description='Side View' position='0 0 3'/>
     <Viewpoint description='Book View' orientation='-1 0 0 0.68' position='0 1.11 1.93'/>
-    <Shape>
-	   <Appearance>
-		<Material diffuseColor="0.1 0.1 0.9" specularColor="1.0 1.0 1.0" />
-		<ImageTexture  url='"spectrum.jpg"'/>
-	   </Appearance>
-      <Cone bottom='true' bottomRadius='1' height='1' side='true' solid="true"/>
-      <Appearance>
-        <Material/>
-      </Appearance>
-    </Shape>
+	
+	
+	<Transform translation="0 0 0.0">
+		<Shape>
+		   <Appearance>
+			<Material diffuseColor="0.1 0.1 0.9" specularColor="1.0 1.0 1.0" />
+			<ImageTexture  url='"spectrum.jpg"'/>
+		   </Appearance>
+		  <Cone bottom='true' bottomRadius='1' height='1' side='true' solid="true"/>
+		  <Appearance>
+			<Material/>
+		  </Appearance>
+		</Shape>
+
+	
+		<Transform translation="0 0 -4.0">
+			<Shape>
+			   <Appearance>
+				<Material diffuseColor="0.1 0.1 0.9" specularColor="1.0 1.0 1.0" />
+				<ImageTexture  url='"spectrum.jpg"'/>
+			   </Appearance>
+			  <Cone bottom='true' bottomRadius='1' height='1' side='true' solid="true"/>
+			  <Appearance>
+				<Material/>
+			  </Appearance>
+			</Shape>
+		</Transform>
+		
+		
+		
+		<Transform translation="4.0 0 0">
+			<Shape>
+			   <Appearance>
+				<Material diffuseColor="0.1 0.1 0.9" specularColor="1.0 1.0 1.0" />
+				<ImageTexture  url='"spectrum.jpg"'/>
+			   </Appearance>
+			  <Cone bottom='true' bottomRadius='1' height='1' side='true' solid="true"/>
+			  <Appearance>
+				<Material/>
+			  </Appearance>
+			</Shape>
+		</Transform>
+		
+		<Transform translation="-4.0 0 0">
+			<Shape>
+			   <Appearance>
+				<Material diffuseColor="0.1 0.1 0.9" specularColor="1.0 1.0 1.0" />
+				<ImageTexture  url='"spectrum.jpg"'/>
+			   </Appearance>
+			  <Cone bottom='true' bottomRadius='1' height='1' side='true' solid="true"/>
+			  <Appearance>
+				<Material/>
+			  </Appearance>
+			</Shape>
+		</Transform>
+	</Transform>
   </Scene>
 </X3D>

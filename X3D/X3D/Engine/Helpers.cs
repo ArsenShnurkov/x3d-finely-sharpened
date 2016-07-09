@@ -365,16 +365,17 @@ void main()
         /// <summary>
         /// Relocate this elsewhere
         /// </summary>
-        public static int ApplyShader(string vertexShaderSource, string fragmentShaderSource)
+        public static int ApplyShader(string vertexShaderSource, string fragmentShaderSource, 
+            string tessControlSource = "", string tessEvalSource = "", string geometryShaderSource = "")
         {
             int shaderProgramHandle = GL.CreateProgram();
 
             int vertexShaderHandle = GL.CreateShader(ShaderType.VertexShader);
             int fragmentShaderHandle = GL.CreateShader(ShaderType.FragmentShader);
+            int tessControlShaderHandle = -1, tessEvalShaderHandle = -1, geometryShaderHandle = -1;
 
             GL.ShaderSource(vertexShaderHandle, vertexShaderSource);
             GL.ShaderSource(fragmentShaderHandle, fragmentShaderSource);
-
             GL.CompileShader(vertexShaderHandle);
             GL.CompileShader(fragmentShaderHandle);
 
@@ -382,15 +383,55 @@ void main()
             Console.WriteLine(GL.GetShaderInfoLog(fragmentShaderHandle).Trim());
 
             GL.AttachShader(shaderProgramHandle, vertexShaderHandle);
+            
+
+            if (!string.IsNullOrEmpty(tessControlSource))
+            {
+                tessControlShaderHandle = GL.CreateShader(ShaderType.TessControlShader);
+                GL.ShaderSource(tessControlShaderHandle, tessControlSource);
+                GL.CompileShader(tessControlShaderHandle);
+                Console.WriteLine(GL.GetShaderInfoLog(tessControlShaderHandle).Trim());
+
+                GL.AttachShader(shaderProgramHandle, tessControlShaderHandle);
+            }
+            if (!string.IsNullOrEmpty(tessEvalSource))
+            {
+                tessEvalShaderHandle = GL.CreateShader(ShaderType.TessEvaluationShader);
+                GL.ShaderSource(tessEvalShaderHandle, tessEvalSource);
+                GL.CompileShader(tessEvalShaderHandle);
+                Console.WriteLine(GL.GetShaderInfoLog(tessEvalShaderHandle).Trim());
+
+                GL.AttachShader(shaderProgramHandle, tessEvalShaderHandle);
+            }
+            if (!string.IsNullOrEmpty(geometryShaderSource))
+            {
+                geometryShaderHandle = GL.CreateShader(ShaderType.TessEvaluationShader);
+                GL.ShaderSource(geometryShaderHandle, geometryShaderSource);
+                GL.CompileShader(geometryShaderHandle);
+                Console.WriteLine(GL.GetShaderInfoLog(geometryShaderHandle).Trim());
+
+                GL.AttachShader(shaderProgramHandle, geometryShaderHandle);
+            }
+
             GL.AttachShader(shaderProgramHandle, fragmentShaderHandle);
+
+            //const int PositionSlot = 0;
+            //GL.BindAttribLocation(shaderProgramHandle, PositionSlot, "Position");
+
             GL.LinkProgram(shaderProgramHandle);
 
             Console.WriteLine(GL.GetProgramInfoLog(shaderProgramHandle).Trim());
 
             //GL.UseProgram(shaderProgramHandle);
+            
+            if(GL.GetError() != ErrorCode.NoError)
+            {
+                throw new Exception("Error Linking Shader Program");
+            }
 
             return shaderProgramHandle;
         }
+
         public static int ApplyShader(string shaderSource, ShaderType type)
         {
             int shaderProgramHandle = GL.CreateProgram();
@@ -407,8 +448,6 @@ void main()
             GL.LinkProgram(shaderProgramHandle);
 
             Console.WriteLine(GL.GetProgramInfoLog(shaderProgramHandle));
-
-            //GL.UseProgram(shaderProgramHandle);
 
             return shaderProgramHandle;
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL4;
 using X3D.Parser;
 
 namespace X3D
@@ -85,7 +85,7 @@ namespace X3D
 
                 GL.UseProgram(Shape.shaderProgramHandle);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved); // InterleavedArrayFormat.T2fC4fN3fV3f
-                GL.DrawArrays(BeginMode.Triangles, 0, NumVerticies); // Triangles Points  Lines
+                GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies); // Triangles Points  Lines
             }
         }
     }

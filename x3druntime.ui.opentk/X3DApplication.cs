@@ -33,8 +33,11 @@ namespace x3druntime.ui.opentk
         public string BaseURL { get; set; }
         public string BaseMIME { get; set; }
 
-
         private static SceneManager scene;
+        private Camera ActiveCamera;
+        private bool ispanning, iszooming;
+        private float mouseScale = 0.01f;
+        private bool mouseDragging = false;
 
         /// <param name="window">
         /// A window or display which is used to render the X3D application
@@ -84,7 +87,6 @@ namespace x3druntime.ui.opentk
                 }
             };
         }
-
 
         public void Init(string url, string mime_type)
         {
@@ -149,9 +151,6 @@ namespace x3druntime.ui.opentk
 
         }
 
-
-
-
         public void Render(FrameEventArgs e)
         {
             _prev = DateTime.Now;
@@ -164,43 +163,23 @@ namespace x3druntime.ui.opentk
 
             GL.PointSize(6.0f);
 
-            //GL.MatrixMode(MatrixMode.Modelview);
-            //GL.LoadMatrix(ref modelview);
-
-            //TODO: replace with Camera Class
+            //TODO: replace with better Camera Class
             ActiveCamera.setupGLRenderMatrix();
 
-            //GL.Scale(ActiveCamera.Scale);
-
-#if NAVIGATION_MOUSE
-            //TODO: Improve this: think of mouse navigation as a vector pointing from the origin inside a sphere
-            GL.Rotate(Mouse.X,Vector3.UnitY);
-            GL.Rotate(Mouse.Y,Vector3.UnitX);
-#endif
-#if NAVIGATION_KEYBOARD
-            //GL.Rotate(this.lookupdown, 1.0f, 0.0f, 0.0f);
-            //GL.Rotate(360.0f - this.yrot, 0.0f, 1.0f, 0.0f);
-
-
-            //GL.Translate(-this.xpos, -this.walkbias - 0.25f + this.ypos, -this.zpos);
-#endif
             if (scene != null && scene.SceneGraph.Loaded)
             {
-                //GL.PushMatrix();
-
                 RenderingContext rc = new RenderingContext();
                 rc.Time = e.Time;
                 rc.matricies.modelview = ActiveCamera.cameraViewMatrix;
                 rc.matricies.projection = ActiveCamera.projectionMatrix;
                 rc.cam = ActiveCamera;
-
+                rc.Keyboard = this.Keyboard;
+                
                 scene.Draw(rc);
-
-                //GL.PopMatrix();
             }
             else
             {
-                Console.WriteLine("null scene draw");
+                X3DProgram.Restart();
             }
 
             if (e != null)
@@ -244,11 +223,6 @@ namespace x3druntime.ui.opentk
         }
 
         #region test orbital control
-
-        protected Camera ActiveCamera;
-        bool ispanning, iszooming;
-        float mouseScale = 0.01f;
-        bool mouseDragging = false;
 
         private void Mouse_WheelChanged(object sender, MouseWheelEventArgs e)
         {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK;
-using OpenTK.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL4;
 using X3D.Parser;
 
 namespace X3D
@@ -18,8 +18,6 @@ namespace X3D
         private Vector3 StartAxis = Vector3.UnitY ; // Axis defined as a normalized vector from base to apex. UnitY by default
         private Vector3 StartPosition; // Position of apex. (the top "sharp" point of the cone)
 
-        
-
         public override unsafe void Load()
         {
             base.Load();
@@ -29,8 +27,9 @@ namespace X3D
             int n = 10; // Number of radial "slices."
 
             StartPosition = new Vector3(0, 0, height); // with its position of apex at y = height / 2
-
+            Vector3 startPos = StartPosition + (-StartAxis);
             Vector3 bottomStartPosition = StartPosition + (-StartAxis * this.height);
+            Vector3 bottomStartPosition2 = StartPosition + (StartAxis * this.height);
             Vector3 e0 = MathHelpers.Perp(StartAxis);
             Vector3 e1 = Vector3.Cross(e0, StartAxis);
             float angleDirectrix = 360.0f / n * MathHelpers.PI_OVER_180;
@@ -40,47 +39,64 @@ namespace X3D
             var geometryBottomFace = new List<Vertex>();
 
             // calculate points around directrix
-            for (int i = 0; i < n; ++i)
-            {
-                float phi = angleDirectrix * i;
-                Vector3 p = bottomStartPosition + (((e0 * (float)Math.Cos(phi)) + (e1 * (float)Math.Sin(phi))) * rd);
-
-                pts.Add(p);
-            }
-
-            // cone top
-            geometry.Add(new Vertex(StartPosition));
-            for (int i = 0; i < n; ++i)
-            {
-                geometry.Add(new Vertex(pts[i], MathHelpers.uv(1.0f, 1.0f)));
-            }
-            geometry.Add(new Vertex(pts[n - 1], MathHelpers.uv(1.0f, 1.0f)));
-
-            // cone bottom
-            for (int i = n - 1; i >= 0; --i)
-            {
-                geometry.Add(new Vertex(pts[i], MathHelpers.uv(1.0f * (pts[i].Y / height), 1.0f * (pts[i].X / bottomRadius))));
-            }
-            geometry.Add(new Vertex(pts[n - 1], MathHelpers.uv(1.0f * (pts[n - 1].Y / height), 1.0f * (pts[n - 1].X / bottomRadius))));
-
-            // cone bottom face
-            //geometryBottomFace.Add(new Vertex(bottomStartPosition, MathHelpers.uv(0.0f, 0.0f)));
             //for (int i = 0; i < n; ++i)
             //{
-            //    geometryBottomFace.Add(new Vertex(pts[i], MathHelpers.uv(pts[i], bottomRadius)));
-            //}
-            ////geometryBottomFace.Add(new Vertex(pts[n - 1], MathHelpers.uv(pts[n - 1], bottomRadius)));
-            //geometryBottomFace.Add(new Vertex(Vector3.Zero, MathHelpers.uv(0.0f, 0.0f)));
+            //    float phi = angleDirectrix * i;
+            //    Vector3 p = bottomStartPosition + (((e0 * (float)Math.Cos(phi)) + (e1 * (float)Math.Sin(phi))) * rd);
 
+            //    pts.Add(p);
+            //}
+
+            // cone top
+            //geometry.Add(new Vertex(StartPosition));
+            //for (int i = 0; i < n; ++i)
+            //{
+            //    geometry.Add(new Vertex(pts[i], MathHelpers.uv(1.0f, 1.0f)));
+            //}
+            //geometry.Add(new Vertex(pts[n - 1], MathHelpers.uv(1.0f, 1.0f)));
+
+            //// cone bottom
+            //for (int i = n - 1; i >= 0; --i)
+            //{
+            //    geometry.Add(new Vertex(pts[i], MathHelpers.uv(1.0f * (pts[i].Y / height), 1.0f * (pts[i].X / bottomRadius))));
+            //}
+            //geometry.Add(new Vertex(pts[n - 1], MathHelpers.uv(1.0f * (pts[n - 1].Y / height), 1.0f * (pts[n - 1].X / bottomRadius))));
+
+
+            // draw the upper part of the cone
+            //geometry.Add(new Vertex(bottomStartPosition2, MathHelpers.uv(0.0f, 0.0f)));
+            //for (int phi = 0; phi < n; phi++)
+            //{
+            //    Vector3 p = ((e0 * (float)Math.Cos(phi)) + (e1 * (float)Math.Sin(phi))) * bottomRadius;
+
+            //    //Vector3 pos = new Vector3((float)e0 * Math.Sin(angle) * bottomRadius, (float)Math.Cos(angle) * bottomRadius, 0);
+
+            //    geometry.Add(new Vertex(p, MathHelpers.uv(1.0f, 1.0f)));
+            //}
+
+            // draw the base of the cone
+            geometry.Add(new Vertex(bottomStartPosition2, MathHelpers.uv(0.0f, 0.0f)));
+            for (int phi = 0; phi < n; phi++)
+            {
+
+                Vector3 p = bottomStartPosition + (((e0 * (float)Math.Cos(phi)) + (e1 * (float)Math.Sin(phi))) * bottomRadius);
+
+                geometry.Add(new Vertex(p, MathHelpers.uv(1.0f * (p.Y / height), 1.0f * (p.X / bottomRadius))));
+            }
+
+            //geometry.Add(new Vertex(startPos, MathHelpers.uv(0.0f, 0.0f)));
+            //for (int i = 0; i < n; i++)
+            //{
+            //    float phi = angleDirectrix * i;
+            //    Vector3 p = bottomStartPosition + (((e0 * (float)Math.Cos(phi)) + (e1 * (float)Math.Sin(phi))) * bottomRadius);
+
+            //    geometry.Add(new Vertex(p, MathHelpers.uv(1.0f * (p.Y / height), 1.0f * (p.X / bottomRadius))));
+            //}
 
             geometries = new List<List<Vertex>>();
             geometries.Add(geometry);
-            //geometries.Add(geometryBottomFace);
 
-            handles = Helpers.BufferShaderGeometry(geometries, out verts);
-
-            //Helpers.BufferShaderGeometry(geometry, out vbo, out NumVerticies);
-            //Helpers.BufferShaderGeometry(geometryBottomFace, out vboBottomFace, out NumVerticiesBottomFace);
+            Helpers.BufferShaderGeometry(geometry, out handles, out verts);
         }
 
         public override unsafe void Render(RenderingContext rc)
@@ -107,13 +123,13 @@ namespace X3D
             GL.Uniform3(uniformSize, size);
             GL.Uniform3(uniformScale, scale);
 
-            //for (int i=0;i< handles.Length; i++)
-            {
-                //GL.BindBuffer(BufferTarget.ArrayBuffer, handles[i]);
-                GL.BindBuffer(BufferTarget.ArrayBuffer, handles);
-                GL.DrawArrays(BeginMode.TriangleFan, 0, verts); // TriangleFan Points
-                //GL.DrawArrays(BeginMode.TriangleFan, 0, geometries[1].Count); // TriangleFan Points
-            }
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, handles);
+            GL.DrawArrays(PrimitiveType.TriangleFan, 0, verts); // TriangleFan Points
+            
+
+
+
         }
 
         #endregion

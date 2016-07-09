@@ -40,7 +40,7 @@ namespace X3D
         {
             GL.UseProgram(Shape.shaderProgramHandle);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
-            GL.DrawArrays(BeginMode.Triangles, 0, NumVerticies);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
         }
 
         #endregion

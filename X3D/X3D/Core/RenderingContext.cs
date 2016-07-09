@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OpenTK.Input;
 
 namespace X3D
 {
@@ -13,6 +14,8 @@ namespace X3D
         public double Time;
 
         private Stack<Matricies> transformHierarchy = new Stack<Matricies>();
+
+        public KeyboardDevice Keyboard { get; set; }
 
         public void Translate(Vector3 translation)
         {

@@ -13,11 +13,11 @@ namespace X3D
         public Matrix4 projectionMatrix = Matrix4.Identity;
         public Matrix4 cameraViewMatrix = Matrix4.Identity;
 
-        public Vector3 Pos = new Vector3(0, 0, -1);
+        public Vector3 Pos = new Vector3(0, 0, -2);
         public Vector3 Dir = new Vector3(0, 0, 1);
         public Vector3 Up = Vector3.UnitY;
 
-        public Vector3 Scale = new Vector3(1.0f, 1.0f, 1.0f);
+        public Vector3 Scale = new Vector3(2.579998f, 1.46f, 1f);
 
         public Camera(int viewportWidth, int viewportHeight)
         {

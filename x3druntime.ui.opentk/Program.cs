@@ -20,6 +20,11 @@ namespace x3druntime.ui.opentk
     {
         private const int EXIT_SUCCESS = 0;
         private static VSyncMode VSync;
+        private static BackgroundWorker bw;
+        private static AutoResetEvent closureEvent;
+        private static bool restartRequired = false;
+        private static X3DBrowser browser;
+        private static string url;
 
         [STAThread]
         public static int Main(string[] args)
@@ -35,13 +40,20 @@ namespace x3druntime.ui.opentk
             return EXIT_SUCCESS;
         }
 
+        public static void Restart()
+        {
+            restartRequired = true;
+            browser.Close();
+            closureEvent.Set();
+        }
+
+        private static void restart()
+        {
+            LoadBrowser();
+        }
+
         private static void LoadBrowser()
         {
-            BackgroundWorker bw;
-            AutoResetEvent closureEvent;
-            X3DBrowser browser;
-            string url;
-
             url = App.SelectFile();
 
             closureEvent = new AutoResetEvent(false);
@@ -59,6 +71,7 @@ namespace x3druntime.ui.opentk
                 browser.Run(60);
 #endif
             });
+
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
             {
                 closureEvent.Set();
@@ -66,6 +79,11 @@ namespace x3druntime.ui.opentk
 
             bw.RunWorkerAsync();
             closureEvent.WaitOne();
+
+            if (restartRequired)
+            {
+                restart();
+            }
         }
     }
 
