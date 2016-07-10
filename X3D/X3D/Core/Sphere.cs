@@ -14,6 +14,7 @@ namespace X3D
     public partial class Sphere
     {
         int vbo, NumVerticies;
+        int vbo4, NumVerticies4; // not used
 
         private TessShaderUniforms Uniforms = new TessShaderUniforms();
         private Shape parentShape;
@@ -29,7 +30,9 @@ namespace X3D
 
             parentShape = GetParent<Shape>();
 
-            Buffering.Interleave(parentShape, out vbo, out NumVerticies, Faces, null, Verts, null, null, null, null,
+            Buffering.Interleave(parentShape, null, out vbo, out NumVerticies, 
+                out vbo4, out NumVerticies4, 
+                Faces, null, Verts, null, null, null, null,
                 restartIndex: -1, genTexCoordPerVertex: true);
 
             GL.UseProgram(parentShape.shaderProgramHandle);

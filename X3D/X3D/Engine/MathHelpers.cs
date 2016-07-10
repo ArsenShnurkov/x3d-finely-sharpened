@@ -10,14 +10,10 @@ namespace X3D
 
     public class BoundingBox
     {
-        public float X, Y;
-
         public float Width, Height, Depth;
 
         public BoundingBox()
         {
-            this.X = 0f;
-            this.Y = 0;
             this.Width = 0f;
             this.Height = 0f;
             this.Depth = 0f;
@@ -25,8 +21,6 @@ namespace X3D
 
         public BoundingBox(float x, float y, float w, float h, float d)
         {
-            this.X = x;
-            this.Y = y;
             this.Width = w;
             this.Height = h;
             this.Depth = d;
@@ -37,6 +31,211 @@ namespace X3D
     {
         public const float PI_OVER_180 = (float)Math.PI / 180.0f;
         public const float TWO_PI = 2.0f * (float)Math.PI;
+
+        public static BoundingBox CalcBoundingBox(IndexedTriangleSet its, int? restartIndex)
+        {
+            BoundingBox box;
+            int i;
+            int facesetPointer;
+            float maxwidth;
+            float minwidth;
+            float maxdepth;
+            float mindepth;
+            float maxheight;
+            float minheight;
+            Vector3 v;
+
+            int FACE_RESTART_INDEX = 2; // 0 - 2
+
+            box = new BoundingBox();
+
+            maxwidth = float.MinValue;
+            maxdepth = float.MinValue;
+            maxheight = float.MinValue;
+            minwidth = float.MaxValue;
+            mindepth = float.MaxValue;
+            minheight = float.MaxValue;
+
+            if (its.coordinate != null && its.coordinate.point != null)
+            {
+                for (i = 0; i < its._indicies.Length; i++)
+                {
+                    facesetPointer = its._indicies[i];
+
+                    if (restartIndex.HasValue)
+                    {
+                        if (facesetPointer != restartIndex.Value)
+                        {
+                            if (!((facesetPointer * 3 < its.coordinate.point.Length) &&
+                                (facesetPointer * 3 + 1 < its.coordinate.point.Length) &&
+                                (facesetPointer * 3 + 2 < its.coordinate.point.Length)) || facesetPointer < 0)
+                            {
+                                /* If an index specified in coordIndex is invalid or not related to coordinate.point, we need to skip it */
+                                /* At this point we could display a warning message for each one of these errors 
+                                    * indicating the particular cordIndex and the maximum range exceeded */
+                                continue;
+                            }
+
+                            v = its._coords[facesetPointer];
+
+                            maxwidth = Math.Max(v.X, maxwidth);
+                            minwidth = Math.Min(v.X, minwidth);
+
+                            maxdepth = Math.Max(v.Z, maxdepth);
+                            mindepth = Math.Min(v.Z, mindepth);
+
+                            minheight = Math.Max(v.Y, minheight);
+                            minheight = Math.Min(v.Y, minheight);
+                        }
+                    }
+                    else
+                    {
+                        // NO RESTART INDEX, assume new face is at every 3rd value / i = 2
+
+                        if (facesetPointer > 0 && facesetPointer % FACE_RESTART_INDEX == 0)
+                        {
+                            if (!((facesetPointer * 3 < its.coordinate.point.Length) &&
+                                (facesetPointer * 3 + 1 < its.coordinate.point.Length) &&
+                                (facesetPointer * 3 + 2 < its.coordinate.point.Length)) || facesetPointer < 0)
+                            {
+                                /* If an index specified in coordIndex is invalid or not related to coordinate.point, we need to skip it */
+                                /* At this point we could display a warning message for each one of these errors 
+                                    * indicating the particular cordIndex and the maximum range exceeded */
+                                continue;
+                            }
+
+                            v = its._coords[facesetPointer];
+
+                            maxwidth = Math.Max(v.X, maxwidth);
+                            minwidth = Math.Min(v.X, minwidth);
+
+                            maxdepth = Math.Max(v.Z, maxdepth);
+                            mindepth = Math.Min(v.Z, mindepth);
+
+                            maxheight = Math.Max(v.Y, maxheight);
+                            minheight = Math.Min(v.Y, minheight);
+                        }
+                    }
+                }
+            }
+
+            box.Width = Math.Abs(maxwidth) + Math.Abs(minwidth);
+            box.Height = Math.Abs(maxheight) + Math.Abs(minheight);
+            box.Depth = Math.Abs(maxdepth) + Math.Abs(mindepth);
+
+            if (box.Height == 0) box.Height = 1.0f;
+
+            return box;
+        }
+
+        public static BoundingBox CalcBoundingBox(IndexedFaceSet ifs, int? restartIndex)
+        {
+            BoundingBox box;
+            int i;
+            int facesetPointer;
+            float maxwidth;
+            float minwidth;
+            float maxdepth;
+            float mindepth;
+            float maxheight;
+            float minheight;
+            Vector3 v;
+
+            int FACE_RESTART_INDEX = 2;
+
+            box = new BoundingBox();
+
+            maxwidth = float.MinValue;
+            maxdepth = float.MinValue;
+            maxheight = float.MinValue;
+            minwidth = float.MaxValue;
+            mindepth = float.MaxValue;
+            minheight = float.MaxValue;
+
+            if (ifs.coordinate != null && ifs.coordinate.point != null)
+            {
+                for (i = 0; i < ifs._indices.Length; i++)
+                {
+                    facesetPointer = ifs._indices[i];
+
+                    if (restartIndex.HasValue)
+                    {
+                        if (facesetPointer != restartIndex.Value)
+                        {
+                            if (!((facesetPointer * 3 < ifs.coordinate.point.Length) &&
+                                (facesetPointer * 3 + 1 < ifs.coordinate.point.Length) &&
+                                (facesetPointer * 3 + 2 < ifs.coordinate.point.Length)) || facesetPointer < 0)
+                            {
+                                /* If an index specified in coordIndex is invalid or not related to coordinate.point, we need to skip it */
+                                /* At this point we could display a warning message for each one of these errors 
+                                    * indicating the particular cordIndex and the maximum range exceeded */
+                                continue;
+                            }
+                            
+                            v = ifs._coords[facesetPointer];
+
+                            maxwidth = Math.Max(v.X, maxwidth);
+                            minwidth = Math.Min(v.X, minwidth);
+
+                            maxdepth = Math.Max(v.Z, maxdepth);
+                            mindepth = Math.Min(v.Z, mindepth);
+
+                            minheight = Math.Max(v.Y, minheight);
+                            minheight = Math.Min(v.Y, minheight);
+                        }
+                    }
+                    else
+                    {
+                        // NO RESTART INDEX, assume new face is at every 3rd value / i = 2
+
+                        if (ifs._indices.Length == 4)
+                        {
+                            FACE_RESTART_INDEX = 3; // 0-3 Quad
+                        }
+                        else if (ifs._indices.Length == 3)
+                        {
+                            FACE_RESTART_INDEX = 2; // 0-3 Triangle
+                        }
+                        else
+                        {
+                            FACE_RESTART_INDEX = 2;
+                        }
+
+                        if (facesetPointer > 0 && facesetPointer % FACE_RESTART_INDEX == 0)
+                        {
+                            if (!((facesetPointer * 3 < ifs.coordinate.point.Length) &&
+                                (facesetPointer * 3 + 1 < ifs.coordinate.point.Length) &&
+                                (facesetPointer * 3 + 2 < ifs.coordinate.point.Length)) || facesetPointer < 0)
+                            {
+                                /* If an index specified in coordIndex is invalid or not related to coordinate.point, we need to skip it */
+                                /* At this point we could display a warning message for each one of these errors 
+                                    * indicating the particular cordIndex and the maximum range exceeded */
+                                continue;
+                            }
+
+                            v = ifs._coords[facesetPointer];
+
+                            maxwidth = Math.Max(v.X, maxwidth);
+                            minwidth = Math.Min(v.X, minwidth);
+
+                            maxdepth = Math.Max(v.Z, maxdepth);
+                            mindepth = Math.Min(v.Z, mindepth);
+
+                            maxheight = Math.Max(v.Y, maxheight);
+                            minheight = Math.Min(v.Y, minheight);
+                        }
+                    }
+                }
+            }
+
+            box.Width = Math.Abs(maxwidth) + Math.Abs(minwidth);
+            box.Height = Math.Abs(maxheight) + Math.Abs(minheight);
+            box.Depth = Math.Abs(maxdepth) + Math.Abs(mindepth);
+
+            if (box.Height == 0) box.Height = 1.0f;
+
+            return box;
+        }
 
         public static BoundingBox CalcBoundingBox(ElevationGrid elevationGrid)
         {
@@ -76,7 +275,7 @@ namespace X3D
                 }
                 else
                 {
-                    t = new Vector2(verticies[i].Position.X / boundingBox.Width, 
+                    t = new Vector2(verticies[i].Position.X / boundingBox.Width,
                         verticies[i].Position.Z / boundingBox.Depth);
                 }
 

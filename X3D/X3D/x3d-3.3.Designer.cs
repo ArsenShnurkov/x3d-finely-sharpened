@@ -4855,6 +4855,7 @@ namespace X3D
     {
 
         private string _index;
+        internal int[] _indicies;
 
         private string _containerField;
 
@@ -4873,6 +4874,7 @@ namespace X3D
             set
             {
                 this._index = value;
+                this._indicies = Helpers.ParseIndicies(value.Replace(",", ""));
             }
         }
 
@@ -5816,13 +5818,13 @@ namespace X3D
 
         private float _ambientIntensity;
 
-        private string _diffuseColor;
+        private Vector3 _diffuseColor;
 
-        private string _emissiveColor;
+        private Vector3 _emissiveColor;
 
         private float _shininess;
 
-        private string _specularColor;
+        private Vector3 _specularColor;
 
         private float _transparency;
 
@@ -5831,10 +5833,10 @@ namespace X3D
         public Material()
         {
             this._ambientIntensity = ((float)(0.2F));
-            this._diffuseColor = "0.8 0.8 0.8";
-            this._emissiveColor = "0 0 0";
+            this._diffuseColor = new Vector3(0.8f, 0.8f, 0.8f);
+            this._emissiveColor = new Vector3(0, 0, 0);
             this._shininess = ((float)(0.2F));
-            this._specularColor = "0 0 0";
+            this._specularColor = new Vector3(0, 0, 0);
             this._transparency = ((float)(0F));
             this._containerField = "material";
         }
@@ -5859,11 +5861,11 @@ namespace X3D
         {
             get
             {
-                return this._diffuseColor;
+                return Helpers.ToString(this._diffuseColor);
             }
             set
             {
-                this._diffuseColor = value;
+                this._diffuseColor = Helpers.SFVec3f(value);
             }
         }
 
@@ -5873,11 +5875,11 @@ namespace X3D
         {
             get
             {
-                return this._emissiveColor;
+                return Helpers.ToString(this._emissiveColor);
             }
             set
             {
-                this._emissiveColor = value;
+                this._emissiveColor = Helpers.SFVec3f(value);
             }
         }
 
@@ -5901,11 +5903,11 @@ namespace X3D
         {
             get
             {
-                return this._specularColor;
+                return Helpers.ToString(this._specularColor);
             }
             set
             {
-                this._specularColor = value;
+                this._specularColor = Helpers.SFVec3f(value);
             }
         }
 
@@ -10237,20 +10239,25 @@ namespace X3D
         }
     }
 
-    public partial class field : SceneGraphStructureStatement
+    public partial class field : SceneGraphNode, SceneGraphStructureStatement
     {
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute("")]
+        public string name { get; set; }
 
-        public field()
-        {
-        }
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute("")]
+        public string type { get; set; }
+
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute("")]
+        public string value { get; set; }
     }
 
-    public partial class fieldValue : SceneGraphStructureStatement
+    public partial class fieldValue : SceneGraphNode, SceneGraphStructureStatement
     {
 
-        public fieldValue()
-        {
-        }
+
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]

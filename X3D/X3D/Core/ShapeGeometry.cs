@@ -12,9 +12,9 @@ namespace X3D
     public abstract class ShapeGeometry
     {
         public int NumElements;
-        private int NumVerticies;
+        private int NumVerticies, NumVerticies4;
 
-        private int _vbo_interleaved;
+        private int _vbo_interleaved, _vbo_interleaved4;
         private Shape parentShape;
 
         #region Geometry
@@ -37,7 +37,8 @@ namespace X3D
         {
             this.parentShape = parentShape;
 
-            Buffering.Interleave(parentShape, out _vbo_interleaved, out NumVerticies, 
+            Buffering.Interleave(parentShape, null, out _vbo_interleaved, out NumVerticies,
+                out _vbo_interleaved4, out NumVerticies4,
                 this.Indices, this.Indices, this.Vertices, this.Texcoords, this.Normals, null, null);
         }
 

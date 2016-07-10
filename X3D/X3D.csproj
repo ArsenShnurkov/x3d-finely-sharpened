@@ -83,6 +83,7 @@
     <Compile Include="X3D\Core\ElevationGrid.cs" />
     <Compile Include="X3D\Core\ImageTexture.cs" />
     <Compile Include="X3D\Core\IndexedFaceSet.cs" />
+    <Compile Include="X3D\Core\IndexedTriangleSet.cs" />
     <Compile Include="X3D\Core\Material.cs" />
     <Compile Include="X3D\Core\RenderingContext.cs" />
     <Compile Include="X3D\Core\Shape.cs" />

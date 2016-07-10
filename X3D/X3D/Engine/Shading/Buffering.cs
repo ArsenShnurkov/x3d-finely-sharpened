@@ -142,14 +142,16 @@ namespace X3D.Engine.Shading
             return vbo_interleaved3;
         }
 
-        public static void Interleave(Shape parentShape,
+        public static void Interleave(Shape parentShape, BoundingBox _bbox,
             out int vbo_interleaved3, out int NumVerticies,
+            out int vbo_interleaved4, out int NumVerticies4,
             int[] _indices, int[] _texIndices,
             Vector3[] _coords, Vector2[] _texCoords, Vector3[] _normals, 
             int[] _colorIndicies, float[] colors,
-            int? restartIndex = -1, bool genTexCoordPerVertex = true, bool colorPerVertex = true, bool coloring = false)
+            int? restartIndex = -1, bool genTexCoordPerVertex = true, bool colorPerVertex = true, 
+            bool coloring = false, bool texturing = false)
         {
-            const int FACE_RESTART_INDEX = 2;
+            int FACE_RESTART_INDEX = 2;
 
             // INTERLEAVE FACE SET
             Console.WriteLine("Interleaving {0} indicies", _indices.Length);
@@ -165,6 +167,7 @@ namespace X3D.Engine.Shading
             List<Vertex> verticies4 = new List<Vertex>();
             Vertex v;
             Vector4 c;
+            float tmp;
 
             if (restartIndex.HasValue)
             {
@@ -190,7 +193,6 @@ namespace X3D.Engine.Shading
                                     v.Position = _coords[faceset[k]];
 
                                     // Flip Z and Y
-                                    float tmp;
                                     tmp = v.Position.Z;
                                     v.Position.Z = -v.Position.Y;
                                     v.Position.Y = tmp;
@@ -199,9 +201,10 @@ namespace X3D.Engine.Shading
                                     {
                                         v.TexCoord = _texCoords[texset[k]];
                                     }
-                                    else if (genTexCoordPerVertex)
+                                    else if (genTexCoordPerVertex && texturing && _bbox != null)
                                     {
                                         //v.TexCoord = MathHelpers.uv(v.Position.x);
+                                        v = MathHelpers.uv(_bbox, new Vertex[] { v }, at_origin: false)[0];
                                     }
 
                                     if (coloring)
@@ -261,6 +264,19 @@ namespace X3D.Engine.Shading
             {
                 // NO RESTART INDEX, assume new face is at every 3rd value / i = 2
 
+                if(_indices.Length == 4)
+                {
+                    FACE_RESTART_INDEX = 4; // 0-3 Quad
+                }
+                else if (_indices.Length == 3)
+                {
+                    FACE_RESTART_INDEX = 3; // 0-3 Triangle
+                }
+                else
+                {
+                    FACE_RESTART_INDEX = 3;
+                }
+
                 for (int coordIndex = 0; coordIndex < _indices.Length; coordIndex++)
                 {
                     faceSetValue = _indices[coordIndex];
@@ -273,7 +289,7 @@ namespace X3D.Engine.Shading
                         texset.Add(texSetValue);
                     }
 
-                    if (faceSetValue > 0 && faceSetValue % FACE_RESTART_INDEX == 0)
+                    if (coordIndex > 0 && (coordIndex + 1) % FACE_RESTART_INDEX == 0)
                     {
                         for (int k = 0; k < faceType; k++)
                         {
@@ -284,7 +300,6 @@ namespace X3D.Engine.Shading
                                     v.Position = _coords[faceset[k]];
 
                                     // Flip Z and Y
-                                    float tmp;
                                     tmp = v.Position.Z;
                                     v.Position.Z = -v.Position.Y;
                                     v.Position.Y = tmp;
@@ -292,6 +307,11 @@ namespace X3D.Engine.Shading
                                     if (texset != null && texset.Count > 0 && _texCoords != null && _texCoords.Length > 0)
                                     {
                                         v.TexCoord = _texCoords[texset[k]];
+                                    }
+                                    else if (genTexCoordPerVertex && texturing && _bbox != null)
+                                    {
+                                        //v.TexCoord = MathHelpers.uv(v.Position.x);
+                                        v = MathHelpers.uv(_bbox, new Vertex[] { v }, at_origin: false)[0];
                                     }
 
                                     if (_normals != null && _normals.Length > 0)
@@ -304,6 +324,26 @@ namespace X3D.Engine.Shading
 
                                 case 4:
                                     v = Vertex.Zero;
+                                    v.Position = _coords[faceset[k]];
+
+                                    // Flip Z and Y
+                                    tmp = v.Position.Z;
+                                    v.Position.Z = -v.Position.Y;
+                                    v.Position.Y = tmp;
+
+                                    if (texset != null && texset.Count > 0 && _texCoords != null && _texCoords.Length > 0)
+                                    {
+                                        v.TexCoord = _texCoords[texset[k]];
+                                    }
+                                    else if (genTexCoordPerVertex && texturing && _bbox != null)
+                                    {
+                                        v = MathHelpers.uv(_bbox, new Vertex[] { v }, at_origin: false)[0];
+                                    }
+
+                                    if (_normals != null && _normals.Length > 0)
+                                    {
+                                        v.Normal = _normals[faceset[k]];
+                                    }
                                     //v.Position = new Vector4(_coords[faceset[k]]);
 
                                     verticies4.Add(v);
@@ -326,12 +366,15 @@ namespace X3D.Engine.Shading
                 }
             }
 
-            //TODO: figure out how to render type 4
+            //BUG: buffering more than one object seems to overwrite ealier buffers
+            NumVerticies = NumVerticies4 = 0;
+            vbo_interleaved3 = vbo_interleaved4 = - 1;
 
             // BUFFER GEOMETRY
-            BufferShaderGeometry(verticies3, parentShape, out vbo_interleaved3, out NumVerticies);
+            if (verticies3.Count > 0) BufferShaderGeometry(verticies3, parentShape, out vbo_interleaved3, out NumVerticies);
+            if(verticies4.Count > 0) BufferShaderGeometry(verticies4, parentShape, out vbo_interleaved4, out NumVerticies4);
 
-            Console.WriteLine("Expanded to {0}", NumVerticies);
+            Console.WriteLine("Expanded to {0}", NumVerticies + NumVerticies4);
         }
 
     }

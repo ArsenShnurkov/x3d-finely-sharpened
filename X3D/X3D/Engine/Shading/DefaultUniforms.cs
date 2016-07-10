@@ -15,6 +15,17 @@ namespace X3D.Engine.Shading.DefaultUniforms
         public int a_texturingEnabled;
     }
 
+    public class ShaderMaterialUniforms
+    {
+        //X3D Material Node
+        public int ambientIntensity;
+        public int diffuseColor;
+        public int emissiveColor;
+        public int shininess;
+        public int specularColor;
+        public int transparency;
+    }
+
     public class TessShaderUniforms
     {
         public int Projection;

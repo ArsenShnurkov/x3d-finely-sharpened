@@ -9,23 +9,20 @@ using X3D.Engine.Shading;
 
 namespace X3D
 {
-    public partial class IndexedFaceSet
+    public partial class IndexedTriangleSet
     {
         internal Coordinate coordinate;
         private TextureCoordinate texCoordinate;
-        internal int[] _indices;
         internal Vector3[] _coords;
-        private int[] _colorIndicies;
         private float[] color;
         private Color colorNode;
         private ColorRGBA colorRGBANode;
-        private int[] _texIndices;
         private Vector2[] _texCoords;
         private const int RESTART_INDEX = -1;
         private Shape parentShape;
 
         private BoundingBox _bbox;
-        private bool RGBA = false, RGB = false, coloring = false, texturing = false, generateColorMap = false;
+        private bool RGBA = false, RGB = false, coloring = false, texturing = false;
         private int _vbo_interleaved, _vbo_interleaved4;
         private int NumVerticies, NumVerticies4;
 
@@ -39,7 +36,7 @@ namespace X3D
 
             texturing = texCoordinate != null || parentShape.texturingEnabled;
 
-            
+
 
             texCoordinate = (TextureCoordinate)this.Items.FirstOrDefault(n => n.GetType() == typeof(TextureCoordinate));
             coordinate = (Coordinate)this.Items.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
@@ -49,7 +46,6 @@ namespace X3D
             RGBA = colorRGBANode != null;
             RGB = colorNode != null;
             coloring = RGBA || RGB;
-            generateColorMap = coloring;
 
 
             if (RGB && !RGBA)
@@ -61,35 +57,25 @@ namespace X3D
                 color = Helpers.Floats(colorRGBANode.color);
             }
 
-            if (this.texCoordinate != null && !string.IsNullOrEmpty(this.texCoordIndex))
+            if (this.texCoordinate != null)
             {
-                _texIndices = Helpers.ParseIndicies(this.texCoordIndex);
                 _texCoords = Helpers.MFVec2f(this.texCoordinate.point);
             }
 
-            if (this.coordinate != null && !string.IsNullOrEmpty(this.coordIndex))
+            if (this.coordinate != null)
             {
-                _indices = Helpers.ParseIndicies(this.coordIndex);
                 _coords = Helpers.MFVec3f(this.coordinate.point);
 
-                if (!string.IsNullOrEmpty(this.colorIndex))
-                {
-                    _colorIndicies = Helpers.ParseIndicies(this.colorIndex);
-                }
-
-                if (this.coordIndex.Contains(RESTART_INDEX.ToString()))
-                {
-                    restartIndex = RESTART_INDEX;
-                }
+                restartIndex = null;
 
                 this._bbox = MathHelpers.CalcBoundingBox(this, restartIndex);
 
-                Buffering.Interleave(parentShape, this._bbox, 
+                Buffering.Interleave(parentShape, this._bbox,
                     out _vbo_interleaved, out NumVerticies,
-                    out _vbo_interleaved4, out NumVerticies4,
-                    _indices, _texIndices, _coords,
-                    _texCoords, null, _colorIndicies, color, restartIndex, true,
-                    this.colorPerVertex, this.coloring, this.texturing);
+                    out _vbo_interleaved4, out NumVerticies4, 
+                    this._indicies, null, _coords,
+                    null, null, null, color, restartIndex, true,
+                    true, coloring, this.texturing);
             }
 
             GL.UseProgram(parentShape.shaderProgramHandle);
@@ -115,7 +101,7 @@ namespace X3D
         {
             base.Render(rc);
 
-            if(this.coordinate != null && !string.IsNullOrEmpty(this.coordIndex))
+            if (this.coordinate != null && this._indicies != null && this._indicies.Length > 0)
             {
                 GL.UseProgram(parentShape.shaderProgramHandle);
 
@@ -123,12 +109,6 @@ namespace X3D
                 {
                     GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
                     GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
-                }
-
-                if(NumVerticies4 > 0)
-                {
-                    GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved4);
-                    GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies4);
                 }
             }
         }

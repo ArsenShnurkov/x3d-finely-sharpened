@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile='Interchange' version='3.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.0.xsd'>
+  <head>
+    <meta content='Figure17.10cTextureTransparencyTree.x3d' name='title'/>
+    <meta content='Figure 17.10c, The VRML 2.0 Sourcebook, Copyright [1997] By Andrea L. Ames, David R. Nadeau, and John L. Moreland' name='creator'/>
+    <meta content='http://www.wiley.com/legacy/compbooks/vrml2sbk/ch17/17fig10c.htm' name='reference'/>
+    <meta content='Don Brutzman' name='translator'/>
+    <meta content='28 August 2000' name='created'/>
+    <meta content='15 January 2011' name='modified'/>
+    <meta content='A tree image texture mapped, with pixel transparencies, on a rectangular face to create a tree.' name='description'/>
+    <meta content='http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/Chapter17-Textures/Figure17.10cTextureTransparencyTree.x3d' name='identifier'/>
+    <meta content='X3D-Edit 3.3, https://savage.nps.edu/X3D-Edit' name='generator'/>
+    <meta content='../../license.html' name='license'/>
+  </head>
+  <Scene>
+    <Viewpoint description='Tree view' orientation='1 0 0 -0.4' position='0 4 8'/>
+    <Viewpoint description='Side view (no billboarding)' orientation='-0.2915 0.9332 0.2101 1.3153' position='6 4 2'/>
+    <Group>
+      <Shape DEF='GroundPlane'>
+        <Appearance>
+          <Material diffuseColor='0.8 0.5 0.3'/>
+        </Appearance>
+        <IndexedFaceSet coordIndex='0 1 2 3' solid='false'>
+          <Coordinate point='-5 0 5 5 0 5 5 0 -5 -5 0 -5'/>
+        </IndexedFaceSet>
+      </Shape>
+      <Shape DEF='Tree'>
+        <Appearance>
+          <ImageTexture url='"tree1.png" "http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/Chapter17-Textures/tree1.png"'/>
+        </Appearance>
+        <IndexedFaceSet coordIndex='0 1 2 3' solid='false'>
+          <Coordinate point='-1.51 0 0 1.51 0 0 1.51 3 0 -1.51 3 0'/>
+        </IndexedFaceSet>
+      </Shape>
+    </Group>
+  </Scene>
+</X3D>

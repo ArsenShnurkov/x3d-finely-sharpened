@@ -46,6 +46,7 @@ namespace X3D
         public int shaderProgramHandle;
         public int uniformModelview, uniformProjection;
         public ShaderUniformsPNCT uniforms = new ShaderUniformsPNCT();
+        public ShaderMaterialUniforms Materials = new ShaderMaterialUniforms();
         private int uniformCameraScale, uniformX3DScale;
 
         double fade_time; // for testing
@@ -68,6 +69,18 @@ namespace X3D
 
             uniforms.a_coloringEnabled = GL.GetUniformLocation(shaderProgramHandle, "coloringEnabled");
             uniforms.a_texturingEnabled = GL.GetUniformLocation(shaderProgramHandle, "texturingEnabled");
+
+            RefreshMaterialUniforms();
+        }
+
+        public void RefreshMaterialUniforms()
+        {
+            Materials.ambientIntensity = GL.GetUniformLocation(shaderProgramHandle, "ambientIntensity");
+            Materials.diffuseColor = GL.GetUniformLocation(shaderProgramHandle, "diffuseColor");
+            Materials.emissiveColor = GL.GetUniformLocation(shaderProgramHandle, "emissiveColor");
+            Materials.shininess = GL.GetUniformLocation(shaderProgramHandle, "shininess");
+            Materials.specularColor = GL.GetUniformLocation(shaderProgramHandle, "specularColor");
+            Materials.transparency = GL.GetUniformLocation(shaderProgramHandle, "transparency");
         }
 
         public override void Load()
@@ -91,6 +104,8 @@ namespace X3D
             uniforms.a_texcoord = GL.GetAttribLocation(shaderProgramHandle, "texcoord");
             uniforms.a_coloringEnabled = GL.GetUniformLocation(shaderProgramHandle, "coloringEnabled");
             uniforms.a_texturingEnabled = GL.GetUniformLocation(shaderProgramHandle, "texturingEnabled");
+
+            RefreshMaterialUniforms();
         }
 
         public override void PreRender()
