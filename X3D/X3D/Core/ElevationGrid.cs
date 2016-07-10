@@ -53,10 +53,6 @@ namespace X3D
             colorNode = (Color)this.Children.FirstOrDefault(n => n.GetType() == typeof(Color));
             colorRGBANode = (ColorRGBA)this.Children.FirstOrDefault(n => n.GetType() == typeof(ColorRGBA));
 
-
-
-            
-
             RGBA = colorRGBANode != null;
             RGB = colorNode != null;
             coloring = RGBA || RGB;
@@ -83,7 +79,7 @@ namespace X3D
             int uniformScale = GL.GetUniformLocation(parentShape.shaderProgramHandle, "scale");
 
             var size = new Vector3(1, 1, 1);
-            var scale = new Vector3(1, 1, 1);
+            var scale = new Vector3(0.5f, 0.5f, 0.5f);
 
             GL.Uniform3(uniformSize, size);
             GL.Uniform3(uniformScale, scale);
@@ -125,6 +121,7 @@ namespace X3D
             Vector4 lightPosition = new Vector4(0.25f, 0.25f, 1f, 0f);
 
             GL.UniformMatrix3(Uniforms.NormalMatrix, false, ref NormalMatrix);
+            GL.Uniform1(parentShape.uniforms.a_coloringEnabled, coloring ? 1 : 0);
             GL.Uniform1(Uniforms.TessLevelInner, TessLevelInner);
             GL.Uniform1(Uniforms.TessLevelOuter, TessLevelOuter);
             GL.Uniform3(Uniforms.LightPosition, 1, ref lightPosition.X);

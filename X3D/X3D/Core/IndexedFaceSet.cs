@@ -16,13 +16,15 @@ namespace X3D
         private int[] _indices;
         private Vector3[] _coords;
         private int[] _colorIndicies;
-        private Color color;
-        private ColorRGBA colorRGBA;
+        private float[] color;
+        private Color colorNode;
+        private ColorRGBA colorRGBANode;
         private int[] _texIndices;
         private Vector2[] _texCoords;
         private const int RESTART_INDEX = -1;
         private Shape parentShape;
 
+        private bool RGBA = false, RGB = false, coloring = false, texturing = false, generateColorMap = false;
         private int _vbo_interleaved;
         private int NumVerticies;
 
@@ -36,8 +38,22 @@ namespace X3D
 
             texCoordinate = (TextureCoordinate)this.Items.FirstOrDefault(n => n.GetType() == typeof(TextureCoordinate));
             coordinate = (Coordinate)this.Items.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
-            color = (Color)this.Items.FirstOrDefault(n => n.GetType() == typeof(Color));
-            colorRGBA = (ColorRGBA)this.Items.FirstOrDefault(n => n.GetType() == typeof(ColorRGBA));
+            colorNode = (Color)this.Items.FirstOrDefault(n => n.GetType() == typeof(Color));
+            colorRGBANode = (ColorRGBA)this.Items.FirstOrDefault(n => n.GetType() == typeof(ColorRGBA));
+
+            RGBA = colorRGBANode != null;
+            RGB = colorNode != null;
+            coloring = RGBA || RGB;
+            generateColorMap = coloring;
+
+            if (RGB && !RGBA)
+            {
+                color = Helpers.Floats(colorNode.color);
+            }
+            else if (RGBA && !RGB)
+            {
+                color = Helpers.Floats(colorRGBANode.color);
+            }
 
             if (this.texCoordinate != null && !string.IsNullOrEmpty(this.texCoordIndex))
             {
@@ -61,8 +77,8 @@ namespace X3D
                     restartIndex = RESTART_INDEX;
                 }
 
-                Buffering.Interleave(parentShape, out _vbo_interleaved, out NumVerticies, _indices,_texIndices, _coords, 
-                    _texCoords, null, restartIndex);
+                Buffering.Interleave(parentShape, out _vbo_interleaved, out NumVerticies, _indices, _texIndices, _coords,
+                    _texCoords, null, _colorIndicies, color, restartIndex, this.colorPerVertex, this.coloring);
             }
 
             GL.UseProgram(parentShape.shaderProgramHandle);

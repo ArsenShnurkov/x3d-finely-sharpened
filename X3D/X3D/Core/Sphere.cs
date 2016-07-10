@@ -29,7 +29,7 @@ namespace X3D
 
             parentShape = GetParent<Shape>();
 
-            Buffering.Interleave(parentShape, out vbo, out NumVerticies, Faces, null, Verts, null, null, 
+            Buffering.Interleave(parentShape, out vbo, out NumVerticies, Faces, null, Verts, null, null, null, null,
                 restartIndex: -1, genTexCoordPerVertex: true);
 
             GL.UseProgram(parentShape.shaderProgramHandle);

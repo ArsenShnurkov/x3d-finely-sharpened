@@ -20,6 +20,8 @@ uniform float camscale;
 uniform vec3 size;
 uniform vec3 scale;
 uniform vec3 X3DScale;
+uniform int coloringEnabled;
+uniform int texturingEnabled;
 
 varying vec3 lightVec; 
 varying vec3 eyeVec; 
@@ -73,7 +75,8 @@ uniform float ambient = 0.2;
 uniform vec3 LightPosition;
 uniform vec3 DiffuseMaterial;
 uniform vec3 AmbientMaterial;
-
+uniform int coloringEnabled;
+uniform int texturingEnabled;
 
 float amplify(float d, float scale, float offset)
 {
@@ -126,9 +129,23 @@ void main()
     float d2 = min(min(gPatchDistance.x, gPatchDistance.y), gPatchDistance.z);
     color = amplify(d1, 40, -0.5) * amplify(d2, 60, -0.5) * color;
 
-    vec4 col_accum = texture_color + vec4(color, 1.0) / 2;
+    vec4 col_accum;
 
-    col_accum = col_accum + vColor / 2;
+    col_accum = vec4(color, 1.0) / 2;
+
+    if(texturingEnabled == 1 && coloringEnabled == 1)
+    {
+        col_accum = texture_color;
+        col_accum = col_accum + vColor / 2;
+    }
+    else if (coloringEnabled == 1)
+    {
+        col_accum = vColor;
+    }   
+    else if (texturingEnabled == 1)
+    {
+        col_accum = col_accum + texture_color / 2;
+    }  
  
     FragColor = col_accum;
 }

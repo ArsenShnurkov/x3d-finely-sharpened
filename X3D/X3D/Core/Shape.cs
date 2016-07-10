@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 using X3D.Engine.Shading;
 using X3D.Engine.Shading.DefaultUniforms;
 using X3D.Parser;
@@ -38,7 +39,9 @@ namespace X3D
         #region Test Shader
 
 
-        
+        [XmlIgnore]
+        public bool texturingEnabled;
+
         //int testShader;
         public int shaderProgramHandle;
         public int uniformModelview, uniformProjection;
@@ -62,6 +65,9 @@ namespace X3D
             uniformProjection = GL.GetUniformLocation(shaderProgramHandle, "projection");
             uniformCameraScale = GL.GetUniformLocation(shaderProgramHandle, "camscale");
             uniformX3DScale = GL.GetUniformLocation(shaderProgramHandle, "X3DScale");
+
+            uniforms.a_coloringEnabled = GL.GetUniformLocation(shaderProgramHandle, "coloringEnabled");
+            uniforms.a_texturingEnabled = GL.GetUniformLocation(shaderProgramHandle, "texturingEnabled");
         }
 
         public override void Load()
@@ -78,11 +84,20 @@ namespace X3D
             uniformProjection = GL.GetUniformLocation(shaderProgramHandle, "projection");
             uniformCameraScale = GL.GetUniformLocation(shaderProgramHandle, "camscale");
             uniformX3DScale = GL.GetUniformLocation(shaderProgramHandle, "X3DScale");
+
+            uniforms.a_position = GL.GetAttribLocation(shaderProgramHandle, "position");
+            uniforms.a_normal = GL.GetAttribLocation(shaderProgramHandle, "normal");
+            uniforms.a_color = GL.GetAttribLocation(shaderProgramHandle, "color");
+            uniforms.a_texcoord = GL.GetAttribLocation(shaderProgramHandle, "texcoord");
+            uniforms.a_coloringEnabled = GL.GetUniformLocation(shaderProgramHandle, "coloringEnabled");
+            uniforms.a_texturingEnabled = GL.GetUniformLocation(shaderProgramHandle, "texturingEnabled");
         }
 
         public override void PreRender()
         {
             base.PreRender();
+
+            texturingEnabled = GL.IsEnabled(EnableCap.Texture2D);
 
             //this.geometry = (X3DGeometryNode)this.Children.FirstOrDefault(c => typeof(X3DGeometryNode).IsInstanceOfType(c));
             this.appearance = (X3DAppearanceNode)this.Children.FirstOrDefault(c => typeof(X3DAppearanceNode).IsInstanceOfType(c));
@@ -107,7 +122,8 @@ namespace X3D
             GL.UniformMatrix4(uniformProjection, false, ref rc.matricies.projection);
             GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
             GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
-            
+            GL.Uniform1(uniforms.a_coloringEnabled, 0);
+            GL.Uniform1(uniforms.a_texturingEnabled, this.texturingEnabled ? 1 : 0);
         }
 
         public override void PostRender(RenderingContext rc)

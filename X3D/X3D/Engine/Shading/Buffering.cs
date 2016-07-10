@@ -14,11 +14,6 @@ namespace X3D.Engine.Shading
         {
             GL.UseProgram(parentShape.shaderProgramHandle);
 
-            parentShape.uniforms.a_position = GL.GetAttribLocation(parentShape.shaderProgramHandle, "position");
-            parentShape.uniforms.a_normal = GL.GetAttribLocation(parentShape.shaderProgramHandle, "normal");
-            parentShape.uniforms.a_color = GL.GetAttribLocation(parentShape.shaderProgramHandle, "color");
-            parentShape.uniforms.a_texcoord = GL.GetAttribLocation(parentShape.shaderProgramHandle, "texcoord");
-
             int numBuffers = geometries.Count;
             int buffers;
 
@@ -95,10 +90,6 @@ namespace X3D.Engine.Shading
 
 
             GL.UseProgram(parentShape.shaderProgramHandle);
-            parentShape.uniforms.a_position = GL.GetAttribLocation(parentShape.shaderProgramHandle, "position");
-            parentShape.uniforms.a_normal = GL.GetAttribLocation(parentShape.shaderProgramHandle, "normal");
-            parentShape.uniforms.a_color = GL.GetAttribLocation(parentShape.shaderProgramHandle, "color");
-            parentShape.uniforms.a_texcoord = GL.GetAttribLocation(parentShape.shaderProgramHandle, "texcoord");
 
 
             Console.WriteLine("Buffering Verticies..");
@@ -131,14 +122,14 @@ namespace X3D.Engine.Shading
             if (parentShape.uniforms.a_color != -1)
             {
                 GL.EnableVertexAttribArray(parentShape.uniforms.a_color); // vertex color
-                GL.VertexAttribPointer(parentShape.uniforms.a_color, 4, VertexAttribPointerType.Float, false, Vertex.Stride, 0);
+                GL.VertexAttribPointer(parentShape.uniforms.a_color, 4, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes));
             }
 
 
             if (parentShape.uniforms.a_texcoord != -1)
             {
                 GL.EnableVertexAttribArray(parentShape.uniforms.a_texcoord); // vertex texCoordinate
-                GL.VertexAttribPointer(parentShape.uniforms.a_texcoord, 2, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes));
+                GL.VertexAttribPointer(parentShape.uniforms.a_texcoord, 2, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes + Vector4.SizeInBytes));
             }
 
             //GL.ColorPointer(4, ColorPointerType.Float, InterleavedVertexData.size_in_bytes, (IntPtr)0);
@@ -154,7 +145,9 @@ namespace X3D.Engine.Shading
         public static void Interleave(Shape parentShape,
             out int vbo_interleaved3, out int NumVerticies,
             int[] _indices, int[] _texIndices,
-            Vector3[] _coords, Vector2[] _texCoords, Vector3[] _normals, int? restartIndex = -1, bool genTexCoordPerVertex = true)
+            Vector3[] _coords, Vector2[] _texCoords, Vector3[] _normals, 
+            int[] _colorIndicies, float[] colors,
+            int? restartIndex = -1, bool genTexCoordPerVertex = true, bool colorPerVertex = true, bool coloring = false)
         {
             const int FACE_RESTART_INDEX = 2;
 
@@ -162,14 +155,16 @@ namespace X3D.Engine.Shading
             Console.WriteLine("Interleaving {0} indicies", _indices.Length);
 
             int faceSetIndex = 0;
-            int faceSetValue, texSetValue = -1;
+            int faceSetValue, texSetValue = -1, colSetValue = -1;
             int faceType = 0;
             List<int> faceset = new List<int>();
             List<int> texset = new List<int>();
+            List<int> colset = new List<int>();
             List<Vertex> verticies2 = new List<Vertex>();
             List<Vertex> verticies3 = new List<Vertex>(); // buffer verticies of different face types separatly
             List<Vertex> verticies4 = new List<Vertex>();
             Vertex v;
+            Vector4 c;
 
             if (restartIndex.HasValue)
             {
@@ -180,6 +175,9 @@ namespace X3D.Engine.Shading
 
                     if (_texIndices != null && _texIndices.Length > 0)
                         texSetValue = _texIndices[coordIndex];
+
+                    if (_texIndices != null && _texIndices.Length > 0)
+                        colSetValue = _texIndices[coordIndex];
 
                     if (faceSetValue == restartIndex.Value)
                     {
@@ -204,6 +202,20 @@ namespace X3D.Engine.Shading
                                     else if (genTexCoordPerVertex)
                                     {
                                         //v.TexCoord = MathHelpers.uv(v.Position.x);
+                                    }
+
+                                    if (coloring)
+                                    {
+                                        if (colorPerVertex)
+                                        {
+                                            
+                                        }
+                                        else
+                                        {
+                                            // color per face
+
+                                            
+                                        }
                                     }
 
                                     if (_normals != null && _normals.Length > 0)

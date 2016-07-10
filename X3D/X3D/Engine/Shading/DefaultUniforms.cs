@@ -11,6 +11,8 @@ namespace X3D.Engine.Shading.DefaultUniforms
         public int a_normal;
         public int a_color;
         public int a_texcoord;
+        public int a_coloringEnabled;
+        public int a_texturingEnabled;
     }
 
     public class TessShaderUniforms
