@@ -75,8 +75,10 @@ namespace X3D
 
                 GL.LinkProgram(this.ShaderHandle);
                 string err = GL.GetProgramInfoLog(this.ShaderHandle).Trim();
-                Console.WriteLine(err);
-                Console.WriteLine("ComposedShader [linked]"); //TODO: check for link errors
+
+                if(!string.IsNullOrEmpty(err))
+                    Console.WriteLine(err);
+                
 
                 if (GL.GetError() != ErrorCode.NoError)
                 {
@@ -85,9 +87,8 @@ namespace X3D
                 else
                 {
                     this.Linked = true;
-                    //shaderProgramHandle = shader.ShaderHandle;
 
-
+                    Console.WriteLine("ComposedShader [linked]"); //TODO: check for more link errors
                 }
             }
             else
@@ -96,11 +97,11 @@ namespace X3D
             }
         }
 
-        public ComposedShader ApplyFieldsAsUniforms()
+        public void ApplyFieldsAsUniforms()
         {
 
 
-            return this;
+
         }
     }
 }

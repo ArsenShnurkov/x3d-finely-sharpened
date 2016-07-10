@@ -82,7 +82,8 @@ namespace X3D.Parser
             GL.CompileShader(part.ShaderHandle);
 
             string err = GL.GetShaderInfoLog(part.ShaderHandle).Trim();
-            Console.WriteLine(err);
+            if (!string.IsNullOrEmpty(err))
+                Console.WriteLine(err);
 
             GL.AttachShader(shaderProgramHandle, part.ShaderHandle);
             Console.WriteLine("ShaderPart {0} [attaching]", part.Type);
