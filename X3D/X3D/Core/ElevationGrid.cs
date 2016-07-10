@@ -22,30 +22,59 @@ namespace X3D
         private Shape parentShape;
         private List<Vertex> geometry = new List<Vertex>();
 
-        private bool RGBA = false, coloring = false, texturing = false;
+        private bool RGBA = false, RGB = false, coloring = false, texturing = false, generateColorMap = false;
 
         [XmlIgnore]
         public float[,] HeightMap;
+        [XmlIgnore]
+        public Vector4[,] ColorMap;
+        [XmlIgnore]
         private float MaxHeight;
+        [XmlIgnore]
         private float MinHeight;
+        [XmlIgnore]
         private int mapSize;
 
         private float TessLevelInner = 3;
         private float TessLevelOuter = 2;
         private TessShaderUniforms Uniforms = new TessShaderUniforms();
+        private Color colorNode;
+        private ColorRGBA colorRGBANode;
+        private float[] color;
+        private bool _isLoaded = false;
 
         #region Rendering Methods
 
-        public override void Load()
+        public override void PostDescendantDeserialization()
         {
-            base.Load();
+            base.PostDescendantDeserialization();
+
+            parentShape = GetParent<Shape>();
+            colorNode = (Color)this.Children.FirstOrDefault(n => n.GetType() == typeof(Color));
+            colorRGBANode = (ColorRGBA)this.Children.FirstOrDefault(n => n.GetType() == typeof(ColorRGBA));
+
+
+
+            
+
+            RGBA = colorRGBANode != null;
+            RGB = colorNode != null;
+            coloring = RGBA || RGB;
+            generateColorMap = coloring;
+
+            if (RGB && !RGBA)
+            {
+                color = Helpers.Floats(colorNode.color);
+            }
+            else if (RGBA && !RGB)
+            {
+                color = Helpers.Floats(colorRGBANode.color);
+            }
 
             height_mapping();
             BuildElevationGeometry();
 
-            parentShape = GetParent<Shape>();
-
-            Helpers.BufferShaderGeometry(geometry, parentShape, out _vbo_interleaved, out NumVerticies);
+            Buffering.BufferShaderGeometry(geometry, parentShape, out _vbo_interleaved, out NumVerticies);
 
 
             GL.UseProgram(parentShape.shaderProgramHandle);
@@ -63,7 +92,7 @@ namespace X3D
             if (parentShape != null)
             {
                 // TESSELLATION
-                parentShape.IncludeTesselationShaders(QuadTessShader.tessControlShader, QuadTessShader.tessEvalShader, string.Empty);
+                //parentShape.IncludeTesselationShaders(QuadTessShader.tessControlShader, QuadTessShader.tessEvalShader, string.Empty);
             }
 
             Uniforms.Modelview = GL.GetUniformLocation(parentShape.shaderProgramHandle, "modelview");
@@ -74,15 +103,22 @@ namespace X3D
             Uniforms.DiffuseMaterial = GL.GetUniformLocation(parentShape.shaderProgramHandle, "DiffuseMaterial");
             Uniforms.TessLevelInner = GL.GetUniformLocation(parentShape.shaderProgramHandle, "TessLevelInner");
             Uniforms.TessLevelOuter = GL.GetUniformLocation(parentShape.shaderProgramHandle, "TessLevelOuter");
+
+            _isLoaded = true;
+        }
+
+        public override void Load()
+        {
+            base.Load();
         }
 
         public override void Render(RenderingContext rc)
         {
             base.Render(rc);
 
+            if (!_isLoaded) return;
+
             GL.UseProgram(parentShape.shaderProgramHandle);
-            //GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved); // InterleavedArrayFormat.T2fC4fN3fV3f
-            //GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies); // Quads Points  Lines
 
 
             Matrix3 NormalMatrix = new Matrix3(rc.matricies.modelview); // NormalMatrix = M4GetUpper3x3(ModelviewMatrix);
@@ -110,11 +146,10 @@ namespace X3D
         {
             int row, col, index;
             float heightValue;
-            //bool generateColorMap;
-            //bool generateNormalMap;
-            //bool generateTexCoordMap;
 
             this.HeightMap = new float[this._xDimension, this._zDimension];
+            this.ColorMap = new Vector4[this._xDimension, this._zDimension];
+
             this.mapSize = this._xDimension * this._zDimension;
 
             if (this.height == null)
@@ -151,20 +186,20 @@ namespace X3D
                 heightValue = heights[index];
                 this.HeightMap[row, col] = heightValue;
 
-                //if (RGBA)
-                //{
-                //    if (generateColorMap && (index * 4 + 2 < color.Length))
-                //    {
-                //        this.ColorMap[row, col] = new Color(new float[] { color[index * 4], color[index * 4 + 1], color[index * 4 + 2], color[index * 4 + 3] });
-                //    }
-                //}
-                //else
-                //{
-                //    if (generateColorMap && (index * 3 + 2 < color.Length))
-                //    {
-                //        this.ColorMap[row, col] = new Color(new float[] { color[index * 3], color[index * 3 + 1], color[index * 3 + 2] });
-                //    }
-                //}
+                if (RGBA)
+                {
+                    if (generateColorMap && (index * 4 + 2 < color.Length))
+                    {
+                        this.ColorMap[row, col] = new Vector4(color[index * 4], color[index * 4 + 1], color[index * 4 + 2], color[index * 4 + 3]);
+                    }
+                }
+                else
+                {
+                    if (generateColorMap && (index * 3 + 2 < color.Length))
+                    {
+                        this.ColorMap[row, col] = new Vector4(color[index * 3], color[index * 3 + 1], color[index * 3 + 2], 1.0f);
+                    }
+                }
 
 
                 //if (generateNormalMap && (index * 3 + 2 < normalVectors.Length))
@@ -191,6 +226,12 @@ namespace X3D
             int index;
             float gx, gz;
             int xDim, zDim;
+            Vector3 p;
+            Vector4 c;
+            Vertex v1;
+            Vertex v2;
+            Vertex v3;
+            Vertex v4;
 
             geometry = new List<Vertex>();
 
@@ -201,6 +242,7 @@ namespace X3D
             gz = 0;
             xDim = this._xDimension - 1;
             zDim = this._zDimension - 1;
+            //this.coloring = false;
 
             for (row = 0; row < xDim; row++)
             {
@@ -209,21 +251,94 @@ namespace X3D
                     gx = row * xSpacing;
                     gz = col * zSpacing;
 
-                    /* Construct a grid cell with 2 Triangles out of the 4 verticies */
-
                     // Construct a grid cell with 1 Quadrilateral using the 4 verticies
-                    geometry.Add(new Vertex( new Vector3(gx, HeightMap[row, col], gz)
-                                /*  .    .
-                                    * [.]   .   */));
-                    geometry.Add(new Vertex(new Vector3(gx, HeightMap[row, col + 1], gz + zSpacing)
-                                /* .
-                                    * . ___ [.] */));
-                    geometry.Add(new Vertex(new Vector3(gx + xSpacing, HeightMap[row + 1, col + 1], gz + zSpacing)
-                                /* .  /[.]
-                                    * . /  .    */));
-                    geometry.Add(new Vertex(new Vector3(gx + xSpacing, HeightMap[row + 1, col], gz)
-                                /* [.]   .
-                                    *  .    .   */));
+                    p = new Vector3(gx, HeightMap[row, col], gz);
+                    v1 = new Vertex()
+                    {
+                        Position = p
+                    };
+
+                    p = new Vector3(gx, HeightMap[row, col + 1], gz + zSpacing);
+                    v2 = new Vertex()
+                    {
+                        Position = p
+                    };
+
+                    p = new Vector3(gx + xSpacing, HeightMap[row + 1, col + 1], gz + zSpacing);
+                    v3 = new Vertex()
+                    {
+                        Position = p
+                    };
+
+                    p = new Vector3(gx + xSpacing, HeightMap[row + 1, col], gz);
+                    v4 = new Vertex()
+                    {
+                        Position = p
+                    };
+                    
+                    // COLORING
+                    if (this.coloring)
+                    {
+                        int collength;
+                        if (this.RGBA)
+                        {
+                            collength = 4;
+                        }
+                        else
+                        {
+                            collength = 3;
+                        }
+
+                        if (color.Length / collength >= xDim * zDim)
+                        {
+                            /* Assume that there are 3 or 4 colors per grid cell, 
+                                * it is also valid to assume that colorPerVertex may be false */
+
+                            // Auto generate colors based on height value?
+
+                            if (colorPerVertex)
+                            {
+                                c = new Vector4(this.ColorMap[row, col]);
+                                v1.Color = c;
+
+                                c = new Vector4(this.ColorMap[row, col + 1]);
+                                v2.Color = c;
+
+                                c = new Vector4(this.ColorMap[row + 1, col + 1]);
+                                v3.Color = c;
+
+                                c = new Vector4(this.ColorMap[row + 1, col]);
+                                v4.Color = c;
+                            }
+                            else
+                            {
+                                // Color per face
+                                if (RGB)
+                                {
+                                    if (index * 3 + 2 < color.Length)
+                                    {
+                                        /* There are 4 verticies in the quadrilateral that must have the same color */
+                                        c = new Vector4(color[index * 3], color[index * 3 + 1], color[index * 3 + 2], 1.0f);
+                                        v1.Color = v2.Color = v3.Color = v4.Color = c;
+                                    }
+                                }
+                                else if(RGBA)
+                                {
+                                    if (index * 4 + 2 < color.Length)
+                                    {
+                                        /* There are 4 verticies in the quadrilateral that must have the same color */
+                                        c = new Vector4(color[index * 4], color[index * 4 + 1], color[index * 4 + 2], color[index * 4 + 3]);
+                                        v1.Color = v2.Color = v3.Color = v4.Color = c;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    geometry.Add(v1);
+                    geometry.Add(v2);
+                    geometry.Add(v3);
+                    geometry.Add(v4);
 
                     index++;
                 }

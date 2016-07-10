@@ -5,6 +5,7 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using X3D.Parser;
+using X3D.Engine.Shading;
 
 namespace X3D
 {
@@ -59,7 +60,7 @@ namespace X3D
 
             parentShape = GetParent<Shape>();
 
-            Helpers.BufferShaderGeometry(geometry, parentShape, out vbo, out verts);
+            Buffering.BufferShaderGeometry(geometry, parentShape, out vbo, out verts);
         }
 
         public override void Render(RenderingContext rc)
@@ -77,7 +78,7 @@ namespace X3D
 
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-            GL.DrawArrays(PrimitiveType.TriangleStrip, 0, verts); // TriangleFan Points
+            GL.DrawArrays(PrimitiveType.TriangleStrip, 0, verts);
         }
 
         #endregion

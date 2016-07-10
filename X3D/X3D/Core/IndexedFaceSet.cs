@@ -5,6 +5,7 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using X3D.Parser;
+using X3D.Engine.Shading;
 
 namespace X3D
 {
@@ -60,7 +61,7 @@ namespace X3D
                     restartIndex = RESTART_INDEX;
                 }
 
-                Helpers.Interleave(parentShape, out _vbo_interleaved, out NumVerticies, _indices,_texIndices, _coords, 
+                Buffering.Interleave(parentShape, out _vbo_interleaved, out NumVerticies, _indices,_texIndices, _coords, 
                     _texCoords, null, restartIndex);
             }
 
@@ -70,7 +71,6 @@ namespace X3D
             int uniformScale = GL.GetUniformLocation(parentShape.shaderProgramHandle, "scale");
 
             var size = new Vector3(1,1,1);
-            //var scale = new Vector3(1, 1, 1);
             var scale = new Vector3(0.05f, 0.05f, 0.05f);
 
             GL.Uniform3(uniformSize, size);

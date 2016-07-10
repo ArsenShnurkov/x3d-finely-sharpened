@@ -31,6 +31,11 @@ namespace X3D.Engine
                     .ToDictionary(t => t.FullName, t => t, StringComparer.OrdinalIgnoreCase);
             }
 
+            if (string.IsNullOrEmpty(element.Name))
+            {
+                return null;
+            }
+
             Type type;
             string typeName = string.Format("X3D.{0}", element.Name);
             if (x3dTypeMap.TryGetValue(typeName, out type))

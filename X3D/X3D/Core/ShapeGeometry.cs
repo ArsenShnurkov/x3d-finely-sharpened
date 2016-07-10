@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using X3D.Engine.Shading;
 using X3D.Parser;
 
 namespace X3D
@@ -36,7 +37,7 @@ namespace X3D
         {
             this.parentShape = parentShape;
 
-            Helpers.Interleave(parentShape, out _vbo_interleaved, out NumVerticies, 
+            Buffering.Interleave(parentShape, out _vbo_interleaved, out NumVerticies, 
                 this.Indices, this.Indices, this.Vertices, this.Texcoords, this.Normals);
         }
 

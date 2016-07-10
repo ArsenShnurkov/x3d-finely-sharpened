@@ -7,6 +7,7 @@ using OpenTK.Graphics.OpenGL4;
 using X3D.Parser;
 using OpenTK.Input;
 using X3D.Engine.Shading.DefaultUniforms;
+using X3D.Engine.Shading;
 
 namespace X3D
 {
@@ -28,7 +29,7 @@ namespace X3D
 
             parentShape = GetParent<Shape>();
 
-            Helpers.Interleave(parentShape, out vbo, out NumVerticies, Faces, null, Verts, null, null, 
+            Buffering.Interleave(parentShape, out vbo, out NumVerticies, Faces, null, Verts, null, null, 
                 restartIndex: -1, genTexCoordPerVertex: true);
 
             GL.UseProgram(parentShape.shaderProgramHandle);
@@ -36,7 +37,7 @@ namespace X3D
             if(parentShape!= null)
             {
                 // TESSELLATION
-                parentShape.IncludeTesselationShaders(Helpers.tessControlShader, Helpers.tessEvalShader, Helpers.geometryShaderSource);
+                parentShape.IncludeTesselationShaders(TriangleTessShader.tessControlShader, TriangleTessShader.tessEvalShader, TriangleTessShader.geometryShaderSource);
             }
 
             Uniforms.Modelview = GL.GetUniformLocation(parentShape.shaderProgramHandle, "modelview");
@@ -47,10 +48,6 @@ namespace X3D
             Uniforms.DiffuseMaterial = GL.GetUniformLocation(parentShape.shaderProgramHandle, "DiffuseMaterial");
             Uniforms.TessLevelInner = GL.GetUniformLocation(parentShape.shaderProgramHandle, "TessLevelInner");
             Uniforms.TessLevelOuter = GL.GetUniformLocation(parentShape.shaderProgramHandle, "TessLevelOuter");
-
-
-
-
         }
 
         public override void Render(RenderingContext rc)
@@ -61,7 +58,7 @@ namespace X3D
             int uniformSize = GL.GetUniformLocation(parentShape.shaderProgramHandle, "size");
             int uniformScale = GL.GetUniformLocation(parentShape.shaderProgramHandle, "scale");
             var size = new Vector3(1, 1, 1);
-            var scale = new Vector3(0.7f, 0.7f, 0.7f);
+            var scale = new Vector3(0.17f, 0.17f, 0.17f);
             GL.Uniform3(uniformSize, size);
             GL.Uniform3(uniformScale, scale);
 

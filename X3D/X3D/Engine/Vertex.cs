@@ -15,7 +15,7 @@ namespace X3D.Parser // TODO: put in X3D.Engine namespace
       /// </summary>
         public Vector3 Position;
         public Vector3 Normal;
-        //public Vector4 Color;
+        public Vector4 Color;
         public Vector2 TexCoord;
 
         public static Vertex Zero
@@ -23,8 +23,10 @@ namespace X3D.Parser // TODO: put in X3D.Engine namespace
             get
             {
                 Vertex v = new Vertex();
+                v.Position = Vector3.Zero;
                 v.TexCoord = Vector2.Zero;
                 v.Normal = Vector3.Zero;
+                v.Color = Vector4.Zero;
                 return v;
             }
         }
@@ -36,6 +38,7 @@ namespace X3D.Parser // TODO: put in X3D.Engine namespace
             this.Position = position;
             this.TexCoord = Vector2.Zero;
             this.Normal = Vector3.Zero;
+            this.Color = Vector4.Zero;
         }
 
         public Vertex(Vector3 position, Vector2 texCoord)
@@ -43,6 +46,7 @@ namespace X3D.Parser // TODO: put in X3D.Engine namespace
             this.Position = position;
             this.TexCoord = texCoord;
             this.Normal = Vector3.Zero;
+            this.Color = Vector4.Zero;
         }
 
         public Vertex(Vector3 position, Vector2 texCoord, Vector3 norm)
@@ -50,8 +54,16 @@ namespace X3D.Parser // TODO: put in X3D.Engine namespace
             this.Position = position;
             this.TexCoord = texCoord;
             this.Normal = norm;
+            this.Color = Vector4.Zero;
         }
 
+        public Vertex(Vector3 position, Vector2 texCoord, Vector3 norm, Vector4 color)
+        {
+            this.Position = position;
+            this.TexCoord = texCoord;
+            this.Normal = norm;
+            this.Color = color;
+        }
         #endregion
 
         public static readonly int SizeInBytes = Vector2.SizeInBytes + Vector4.SizeInBytes + Vector3.SizeInBytes + Vector3.SizeInBytes;
