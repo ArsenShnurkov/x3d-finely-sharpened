@@ -24,10 +24,20 @@ namespace X3D
 
         public void Rotate(Vector4 rotation)
         {
+
+        }
+
+        public void Rotate(Vector4 rotation, Vector3 centerOfRotation)
+        {
             
         }
 
         public void Scale(Vector3 scale)
+        {
+            matricies.Scale = Vector3.Multiply(matricies.Scale, scale);
+        }
+
+        public void Scale(Vector3 scale, Vector4 scaleOrientation)
         {
             matricies.Scale = Vector3.Multiply(matricies.Scale, scale);
         }

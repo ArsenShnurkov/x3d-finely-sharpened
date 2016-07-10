@@ -17,6 +17,7 @@ namespace X3D
         public List<SceneGraphNode> Siblings = new List<SceneGraphNode>();
         
         public bool IsLeaf;
+        public bool HasRendered = false;
 
         public int Depth { get; set; }
 
@@ -25,6 +26,7 @@ namespace X3D
         public virtual void PostDeserialization() { Load(); }
         public virtual void PostDescendantDeserialization() { }
 
+        public virtual void PreRenderOnce(RenderingContext rc) { }
         public virtual void PreRender() { }
         public virtual void Render(RenderingContext rc) { }
         public virtual void PostRender(RenderingContext rc) { }

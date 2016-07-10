@@ -115,6 +115,12 @@ namespace X3D.Engine
 #endif
 #endif
 
+
+            if (!node.HasRendered)
+            {
+                node.PreRenderOnce(rc);
+                node.HasRendered = true;
+            }
             node.PreRender();
             node.Render(rc);
         }

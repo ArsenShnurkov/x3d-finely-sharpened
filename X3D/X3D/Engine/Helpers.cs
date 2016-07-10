@@ -216,13 +216,19 @@ void main()
         }
         public static Vector4 SFVec4f(string value)
         {
-            Regex regMFInt32 = new Regex("[+-]?\\d+\\.\\d+");
-            MatchCollection mc = regMFInt32.Matches(value);
+            //Regex regMFInt32 = new Regex("[+-]?\\d+\\.\\d+");
+            //MatchCollection mc = regMFInt32.Matches(value);
+            float[] f = Floats(value);
 
-            return new Vector4(float.Parse(mc[0].Value),
-                               float.Parse(mc[1].Value),
-                               float.Parse(mc[2].Value),
-                               float.Parse(mc[3].Value));
+            return new Vector4(f[0],
+                   f[1],
+                   f[2],
+                   f[3]);
+
+            //return new Vector4(float.Parse(mc[0].Value),
+            //                   float.Parse(mc[1].Value),
+            //                   float.Parse(mc[2].Value),
+            //                   float.Parse(mc[3].Value));
         }
         public static float[] Floats(string value)
         {

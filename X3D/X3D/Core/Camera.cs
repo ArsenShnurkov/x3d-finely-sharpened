@@ -17,7 +17,7 @@ namespace X3D
         public Vector3 Dir = new Vector3(0, 0, 1);
         public Vector3 Up = Vector3.UnitY;
 
-        public Vector3 Scale = new Vector3(2.579998f, 1.46f, 1f);
+        public Vector3 Scale = new Vector3(1f, 1f, 1f);
 
         public Camera(int viewportWidth, int viewportHeight)
         {
@@ -30,7 +30,7 @@ namespace X3D
             this.Height = viewportHeight;
             float aspectRatio = Width / (float)Height;
 
-            projectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 1.0f, 500.0f);
+            projectionMatrix = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 0.01f, 1000.0f);
 
         }
 

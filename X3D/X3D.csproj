@@ -83,11 +83,13 @@
     <Compile Include="X3D\Core\ElevationGrid.cs" />
     <Compile Include="X3D\Core\ImageTexture.cs" />
     <Compile Include="X3D\Core\IndexedFaceSet.cs" />
+    <Compile Include="X3D\Core\Material.cs" />
     <Compile Include="X3D\Core\RenderingContext.cs" />
     <Compile Include="X3D\Core\Shape.cs" />
     <Compile Include="X3D\Core\ShapeGeometry.cs" />
     <Compile Include="X3D\Core\Sphere.cs" />
     <Compile Include="X3D\Core\Transform.cs" />
+    <Compile Include="X3D\Core\Viewpoint.cs" />
     <Compile Include="X3D\Core\X3D.cs" />
     <Compile Include="X3D\Core\SceneGraphNode.cs" />
     <Compile Include="X3D\Engine\Helpers.cs" />

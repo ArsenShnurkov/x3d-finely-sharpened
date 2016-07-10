@@ -11,7 +11,7 @@ namespace X3D
         public Matrix4 modelview;
         public Matrix4 projection;
 
-        public Vector3 Scale = Vector3.One; // accumulated scale
+        public Vector3 Scale = Vector3.One; // Vector3.One accumulated scale
         //private Quaternion _orientation; // TODO: use Quaternions to model rotation
     }
 }

@@ -91,13 +91,16 @@ void main()
 
     vec4 texture_color;
 
-    if(length(uv) == 0)
+    if(texturingEnabled == 1)
     {
-        texture_color = texture2D(_MainTex, gFacetTexCoord);
-    }
-    else 
-    {
-        texture_color = texture2D(_MainTex, uv);
+        if(length(uv) == 0)
+        {
+            texture_color = texture2D(_MainTex, gFacetTexCoord);
+        }
+        else 
+        {
+            texture_color = texture2D(_MainTex, uv);
+        }
     }
 
     // PHONG SHADING TEST
@@ -146,6 +149,10 @@ void main()
     {
         col_accum = col_accum + texture_color / 2;
     }  
+    else 
+    {
+        col_accum = vec4(0.0, 0, 0, 1.0);
+    }
  
     FragColor = col_accum;
 }

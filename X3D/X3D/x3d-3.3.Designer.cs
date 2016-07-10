@@ -770,10 +770,14 @@ namespace X3D
 
         private bool _retainUserOffsets;
 
+        [XmlIgnore]
+        public Vector4 Orientation;
+
         public X3DViewpointNode()
         {
             this._jump = true;
             this._orientation = "0 0 1 0";
+            this.Orientation = new Vector4(0, 0, 1, 0);
             this._retainUserOffsets = false;
         }
 
@@ -815,6 +819,7 @@ namespace X3D
             set
             {
                 this._orientation = value;
+                this.Orientation = Helpers.SFVec4f(value);
             }
         }
 
@@ -2603,13 +2608,13 @@ namespace X3D
 
         private bool _solid;
 
-        private int _xDimension;
+        internal int _xDimension;
 
-        private float _xSpacing;
+        internal float _xSpacing;
 
-        private int _zDimension;
+        internal int _zDimension;
 
-        private float _zSpacing;
+        internal float _zSpacing;
 
         private string _containerField;
 
@@ -9641,10 +9646,15 @@ namespace X3D
         public Viewpoint()
         {
             this._centerOfRotation = "0 0 0";
+            this.CenterOfRotation = Vector3.Zero;
             this._fieldOfView = ((float)(0.7854F));
             this._position = "0 0 10";
+            this.Position = new Vector3(0, 0, 10);
             this._containerField = "children";
         }
+
+        [XmlIgnore]
+        public Vector3 CenterOfRotation;
 
         [System.Xml.Serialization.XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
@@ -9657,6 +9667,7 @@ namespace X3D
             set
             {
                 this._centerOfRotation = value;
+                this.CenterOfRotation = Helpers.SFVec3f(value);
             }
         }
 
@@ -9674,6 +9685,9 @@ namespace X3D
             }
         }
 
+        [XmlIgnore]
+        public Vector3 Position;
+
         [System.Xml.Serialization.XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 10")]
         public string position
@@ -9685,6 +9699,7 @@ namespace X3D
             set
             {
                 this._position = value;
+                this.Position = Helpers.SFVec3f(value);
             }
         }
 
