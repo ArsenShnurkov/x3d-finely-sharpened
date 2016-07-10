@@ -20,7 +20,6 @@ namespace X3D
         private int _vbo_interleaved;
         private int NumVerticies;
         private Shape parentShape;
-        private List<Vertex> geometry = new List<Vertex>();
 
         private bool RGBA = false, RGB = false, coloring = false, texturing = false, 
             generateColorMap = false, generateTexCoordMap = false;
@@ -81,7 +80,9 @@ namespace X3D
         public override void PreRenderOnce(RenderingContext rc)
         {
             base.PreRenderOnce(rc);
-            
+
+            List<Vertex> geometry;
+
             if (!this._isLoaded)
             {
                 parentShape = GetParent<Shape>();
@@ -92,13 +93,13 @@ namespace X3D
                 this._isLoaded = true;
             }
 
-            
-
+ 
             height_mapping();
 
             _bbox = MathHelpers.CalcBoundingBox(this);
 
-            BuildElevationGeometry();
+
+            geometry = BuildElevationGeometry();
 
             Buffering.BufferShaderGeometry(geometry, parentShape, out _vbo_interleaved, out NumVerticies);
 
@@ -242,7 +243,7 @@ namespace X3D
             }
         }
 
-        public void BuildElevationGeometry()
+        public List<Vertex> BuildElevationGeometry()
         {
             int row, col;
             int index;
@@ -259,7 +260,7 @@ namespace X3D
             auto_texcoords = !(this.texCoordinateNode != null && texCoordinateNode.point != null && texCoordinateNode.point.Length > 0);
             //auto_normals = !(this.normalVectorsNode != null && normalVectorsNode.Length > 0);
 
-            geometry = new List<Vertex>();
+            List<Vertex> geometry = new List<Vertex>();
 
             row = 0;
             col = 0;
@@ -391,7 +392,7 @@ namespace X3D
                 }
             }
 
-
+            return geometry;
         }
 
         #endregion

@@ -1,5 +1,5 @@
 ﻿using OpenTK;
-using OpenTK.Graphics.OpenGL;
+using OpenTK.Graphics.OpenGL4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,6 +77,74 @@ void main()
 } 
 ";
             return ApplyShader(vert, frag);
+        }
+
+        public static string UnescapeXMLValue(string xmlString)
+        {
+            if (xmlString == null)
+                throw new ArgumentNullException("xmlString");
+
+            return xmlString
+                .Replace("&#13;", "\n")
+                .Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n")
+
+                .Replace("&apos;", "'")
+                .Replace("&quot;", "\"")
+                .Replace("&gt;", ">")
+                .Replace("&lt;", "<")
+                .Replace("&amp;", "&");
+        }
+
+        public static string EscapeXMLValue(string xmlString)
+        {
+
+            if (xmlString == null)
+                throw new ArgumentNullException("xmlString");
+       
+            return xmlString
+                .Replace("\n", "&#13;")
+                .Replace("'", "&apos;")
+                .Replace("\"", "&quot;")
+                .Replace(">", "&gt;")
+                .Replace("<", "&lt;")
+                .Replace("&", "&amp;");
+        }
+
+        public static int ApplyShaderPart(int shaderProgramHandle, ShaderPart part)
+        {
+            ShaderType type = ShaderType.VertexShader;
+
+            switch (part.Type)
+            {
+                case shaderPartTypeValues.VERTEX:
+                    type = ShaderType.VertexShader;
+                    break;
+                case shaderPartTypeValues.FRAGMENT:
+                    type = ShaderType.VertexShader;
+                    break;
+                case shaderPartTypeValues.TESS_CONTROL:
+                    type = ShaderType.TessControlShader;
+                    break;
+                case shaderPartTypeValues.TESS_EVAL:
+                    type = ShaderType.TessEvaluationShader;
+                    break;
+                case shaderPartTypeValues.GEOMETRY:
+                    type = ShaderType.GeometryShader;
+                    break;
+            }
+
+            part.ShaderHandle = GL.CreateShader(type);
+
+            GL.ShaderSource(part.ShaderHandle, part.ShaderSource);
+            GL.CompileShader(part.ShaderHandle);
+
+            string err = GL.GetShaderInfoLog(part.ShaderHandle).Trim();
+            Console.WriteLine(err);
+
+            GL.AttachShader(shaderProgramHandle, part.ShaderHandle);
+            Console.WriteLine("ShaderPart [attaching]");
+
+            return part.ShaderHandle;
         }
 
         /// <summary>

@@ -20,7 +20,7 @@ namespace X3D
     using System.Linq;
     using Parser;
     using System.Drawing;
-
+    using Engine;
     /// <summary>
     /// x3dVersion enumeration string constants are used to identify 
     /// the allowed versions for an X3D scene graph
@@ -18015,12 +18015,15 @@ namespace X3D
     [System.SerializableAttribute()]
     public enum shaderPartTypeValues
     {
-
-        /// <remarks/>
         VERTEX,
 
-        /// <remarks/>
         FRAGMENT,
+
+        TESS_CONTROL, // out of spec
+
+        TESS_EVAL,  // out of spec
+
+        GEOMETRY // out of spec
     }
 
     public abstract partial class X3DNodeMixedContent : SceneGraphNode
@@ -18037,7 +18040,7 @@ namespace X3D
     public partial class ShaderPart : X3DNodeMixedContent
     {
 
-        private List<string> _url;
+        private string _url;
 
         private shaderPartTypeValues _type;
 
@@ -18045,13 +18048,21 @@ namespace X3D
 
         public ShaderPart()
         {
-            this._url = new List<string>();
+            this._url = "";
             this._type = shaderPartTypeValues.VERTEX;
             this._containerField = "parts";
         }
 
+        public string[] MFString
+        {
+            get
+            {
+                return SceneManager.GetMFString(this._url);
+            }
+        }
+
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public List<string> url
+        public string url
         {
             get
             {

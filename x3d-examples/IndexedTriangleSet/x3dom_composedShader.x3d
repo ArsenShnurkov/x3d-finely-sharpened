@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN" "http://www.web3d.org/specifications/x3d-3.3.dtd">
+
 <X3D profile='Interactive' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
+	<head>
+		<meta content='http://www.x3dom.org/x3dom/example/x3dom_composedShader.xhtml' name='identifier'/>
+	</head>
 	<Scene DEF='scene'>
 		<Viewpoint position='0 5 100' />
 		<Background backUrl='"texture\generic\BK.png"' bottomUrl='"texture\generic\DN.png"' frontUrl='"texture\generic\FR.png"' leftUrl='"texture\generic\LF.png"' rightUrl='"texture\generic\RT.png"' topUrl='"texture\generic\UP.png"' />

@@ -49,7 +49,8 @@ void main()
 	lightVec = normalize(lightPos.xyz - position.xyz);
 
     uv = texcoord;
-}";
+}
+";
 
         public static string fragmentShaderSource = @"
 #version 420 core

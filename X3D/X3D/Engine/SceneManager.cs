@@ -371,6 +371,7 @@ namespace X3D.Engine
             CurrentLocation = url.TrimEnd().TrimEnd(System.IO.Path.GetFileName(url).ToCharArray());
         }
 
+        public const string DATA_TEXT_PLAIN = "data:text/plain";
 
         private static Regex regMFString = new Regex(@"(?:[\""][^\""]+\"")|(?:['][^']+['])", RegexOptions.Compiled);
         private static Regex regProto = new Regex("[a-zA-Z]+[:][/][/]", RegexOptions.Compiled);
@@ -381,6 +382,8 @@ namespace X3D.Engine
             {
                 return false;
             }
+
+
 
             if (str.Contains("\""))
             {
@@ -407,6 +410,13 @@ namespace X3D.Engine
             if (string.IsNullOrEmpty(str))
             {
                 return new string[] { };
+            }
+
+            if (str.StartsWith(SceneManager.DATA_TEXT_PLAIN))
+            {
+                string source = str.Remove(0, SceneManager.DATA_TEXT_PLAIN.Length);
+
+                return new string[] { source };
             }
 
             if (str.Contains("\""))

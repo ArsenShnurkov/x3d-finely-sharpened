@@ -36,6 +36,8 @@ namespace X3D
         private bool hasShaders;
         private List<X3DShaderNode> shaders;
 
+        private List<ComposedShader> ComposedShaders = new List<ComposedShader>();
+
         #region Test Shader
 
 
@@ -55,6 +57,11 @@ namespace X3D
         #endregion
 
         #region Render Methods
+
+        public void IncludeComposedShader(ComposedShader shader)
+        {
+            ComposedShaders.Add(shader);
+        }
 
         public void IncludeTesselationShaders(string tessControlShaderSource, string tessEvalShaderSource, 
                                               string geometryShaderSource)
@@ -106,6 +113,40 @@ namespace X3D
             uniforms.a_texturingEnabled = GL.GetUniformLocation(shaderProgramHandle, "texturingEnabled");
 
             RefreshMaterialUniforms();
+        }
+
+        public override void PreRenderOnce(RenderingContext rc)
+        {
+            base.PreRenderOnce(rc);
+
+            foreach (ComposedShader shader in ComposedShaders)
+            {
+                Console.WriteLine("ComposedShader {0}", shader.language);
+
+                if (shader.language == "GLSL")
+                {
+                    int _shaderProgramHandle = GL.CreateProgram();
+
+                    foreach (ShaderPart part in shader.ShaderParts)
+                    {
+                        Helpers.ApplyShaderPart(_shaderProgramHandle, part);
+                    }
+
+                    GL.LinkProgram(_shaderProgramHandle);
+                    string err = GL.GetProgramInfoLog(_shaderProgramHandle).Trim();
+                    Console.WriteLine(err);
+                    Console.WriteLine("ComposedShader [linked]"); //TODO: check for link errors
+
+                    if (GL.GetError() != ErrorCode.NoError)
+                    {
+                        throw new Exception("Error Linking ComposedShader Shader Program");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("ComposedShader language {0} unsupported", shader.language);
+                }
+            }
         }
 
         public override void PreRender()
