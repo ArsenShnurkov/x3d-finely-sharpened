@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN" "http://www.web3d.org/specifications/x3d-3.3.dtd">
+<X3D profile='Interactive' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
+  <head>
+    <meta content='ElevationGrid.x3d' name='title'/>
+    <meta content='Simple ElevationGrid example.' name='description'/>
+    <meta content='Don Brutzman' name='creator'/>
+    <meta content='Naval Postgraduate School' name='organization'/>
+    <meta content='8 May 2008' name='created'/>
+    <meta content='15 March 2009' name='modified'/>
+    <meta content='http://X3dGraphics.com/examples/X3dForWebAuthors/Chapter06-GeometryPointsLinesPolygons/ElevationGrid.x3d' name='identifier'/>
+    <meta content='X3D-Edit 3.3, https://savage.nps.edu/X3D-Edit' name='generator'/>
+    <meta content='../license.html' name='license'/>
+  </head>
+  <Scene>
+    <Background skyColor='1 1 1'/>
+    <Viewpoint description='Overhead View' orientation='1 0 0 -1.57' position='0 8 0'/>
+    <Viewpoint DEF='DefaultView' description='ElevationGrid example' position='0 0.2 6'/>
+    <Transform translation='-3 0 -3'>
+      <Shape DEF='ExampleElevationGridShape'>
+        <ElevationGrid height='0 0 0 0 0 0 0 1 1 1 1 0 0 1 2 2 1 0 0 1 2 2 1 0 0 1 1 1 1 0 0 0 0 0 0 0' solid='false' xDimension='6' zDimension='6'/>
+        <Appearance DEF='DiffuseRedAppearance'>
+          <Material diffuseColor='0.9 0.1 0.1'/>
+        </Appearance>
+      </Shape>
+    </Transform>
+  </Scene>
+</X3D>
