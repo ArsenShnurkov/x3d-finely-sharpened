@@ -44,7 +44,7 @@ namespace X3D
 
         public void Render(RenderingContext rc)
         {
-            GL.UseProgram(parentShape.shaderProgramHandle);
+            GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
             GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
         }

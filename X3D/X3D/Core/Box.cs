@@ -39,10 +39,10 @@ namespace X3D
 
             Vector3 zeroish = new Vector3(0.05f, 0.05f, 0.05f);
 
-            GL.UseProgram(parentShape.shaderProgramHandle);
+            GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
 
-            int uniformSize = GL.GetUniformLocation(parentShape.shaderProgramHandle, "size");
-            int uniformScale = GL.GetUniformLocation(parentShape.shaderProgramHandle, "scale");
+            int uniformSize = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "size");
+            int uniformScale = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "scale");
 
             GL.Uniform3(uniformSize, this._vec3);
             GL.Uniform3(uniformScale, zeroish);

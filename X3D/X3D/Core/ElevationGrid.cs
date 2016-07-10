@@ -103,10 +103,10 @@ namespace X3D
 
             Buffering.BufferShaderGeometry(geometry, parentShape, out _vbo_interleaved, out NumVerticies);
 
-            GL.UseProgram(parentShape.shaderProgramHandle);
+            GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
 
-            int uniformSize = GL.GetUniformLocation(parentShape.shaderProgramHandle, "size");
-            int uniformScale = GL.GetUniformLocation(parentShape.shaderProgramHandle, "scale");
+            int uniformSize = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "size");
+            int uniformScale = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "scale");
 
             var size = new Vector3(1, 1, 1);
             //var scale = new Vector3(1, 1, 1);
@@ -138,7 +138,7 @@ namespace X3D
 
             if (!_isLoaded) return;
 
-            GL.UseProgram(parentShape.shaderProgramHandle);
+            GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
 
 
             Matrix3 NormalMatrix = new Matrix3(rc.matricies.modelview); // NormalMatrix = M4GetUpper3x3(ModelviewMatrix);

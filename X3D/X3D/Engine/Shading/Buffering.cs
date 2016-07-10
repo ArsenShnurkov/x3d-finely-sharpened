@@ -12,7 +12,7 @@ namespace X3D.Engine.Shading
     {
         public static int BufferShaderGeometry(List<List<Vertex>> geometries, Shape parentShape, out int verts)
         {
-            GL.UseProgram(parentShape.shaderProgramHandle);
+            GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
 
             int numBuffers = geometries.Count;
             int buffers;
@@ -89,7 +89,7 @@ namespace X3D.Engine.Shading
             Vertex[] _interleaved3 = geometry.ToArray();
 
 
-            GL.UseProgram(parentShape.shaderProgramHandle);
+            GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
 
 
             Console.WriteLine("Buffering Verticies..");

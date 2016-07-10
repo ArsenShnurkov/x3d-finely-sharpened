@@ -78,17 +78,17 @@ void main()
     gFacetTexCoord = vec2(asin(gFacetNormal.x)/M_PI + 0.5 , asin(gFacetNormal.y) / M_PI + 0.5 ); // Sphere TexCoord
 
     gPatchDistance = tePatchDistance[0];
-    gTriDistance = vec3(1, 0, 0);
+    //gTriDistance = vec3(1, 0, 0);
     gl_Position = gl_in[0].gl_Position; 
     EmitVertex();
 
     gPatchDistance = tePatchDistance[1];
-    gTriDistance = vec3(0, 1, 0);
+    //gTriDistance = vec3(0, 1, 0);
     gl_Position = gl_in[1].gl_Position; 
     EmitVertex();
 
     gPatchDistance = tePatchDistance[2];
-    gTriDistance = vec3(0, 0, 1);
+    //gTriDistance = vec3(0, 0, 1);
     gl_Position = gl_in[2].gl_Position; 
     EmitVertex();
 

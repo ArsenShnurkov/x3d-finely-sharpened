@@ -19,6 +19,7 @@
 
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
+using OpenTK.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,11 +33,10 @@ namespace X3D
 {
     public partial class Shape : X3DShapeNode
     {
-        //private bool isComposedGeometry;
         private bool hasShaders;
         private List<X3DShaderNode> shaders;
 
-        private List<ComposedShader> ComposedShaders = new List<ComposedShader>();
+        public List<ComposedShader> ComposedShaders = new List<ComposedShader>();
 
         #region Test Shader
 
@@ -44,15 +44,19 @@ namespace X3D
         [XmlIgnore]
         public bool texturingEnabled;
 
-        //int testShader;
-        public int shaderProgramHandle;
         public int uniformModelview, uniformProjection;
         public ShaderUniformsPNCT uniforms = new ShaderUniformsPNCT();
         public ShaderMaterialUniforms Materials = new ShaderMaterialUniforms();
+        public TessShaderUniforms Uniforms = new TessShaderUniforms();
         private int uniformCameraScale, uniformX3DScale;
 
-        double fade_time; // for testing
 
+        public float TessLevelInner = 137; // 3
+        public float TessLevelOuter = 115; // 2
+        public Matrix3 NormalMatrix = Matrix3.Identity;
+
+        [XmlIgnore]
+        public ComposedShader CurrentShader = null;
 
         #endregion
 
@@ -60,93 +64,81 @@ namespace X3D
 
         public void IncludeComposedShader(ComposedShader shader)
         {
+            shader.Link();
+            shader.Use();
+
+            RefreshDefaultUniforms();
+            RefreshMaterialUniforms();
+            if (shader.IsTessellator)
+            {
+                RefreshTessUniforms();
+            }
+
             ComposedShaders.Add(shader);
         }
 
-        public void IncludeTesselationShaders(string tessControlShaderSource, string tessEvalShaderSource, 
+        public void IncludeTesselationShaders(string tessControlShaderSource, string tessEvalShaderSource,
                                               string geometryShaderSource)
         {
-            shaderProgramHandle = Helpers.ApplyShader(DefaultShader.vertexShaderSource, DefaultShader.fragmentShaderSource, 
+            CurrentShader = Helpers.ApplyShader(DefaultShader.vertexShaderSource, DefaultShader.fragmentShaderSource,
                 tessControlShaderSource, tessEvalShaderSource, geometryShaderSource);
 
-            uniformModelview = GL.GetUniformLocation(shaderProgramHandle, "modelview");
-            uniformProjection = GL.GetUniformLocation(shaderProgramHandle, "projection");
-            uniformCameraScale = GL.GetUniformLocation(shaderProgramHandle, "camscale");
-            uniformX3DScale = GL.GetUniformLocation(shaderProgramHandle, "X3DScale");
 
-            uniforms.a_coloringEnabled = GL.GetUniformLocation(shaderProgramHandle, "coloringEnabled");
-            uniforms.a_texturingEnabled = GL.GetUniformLocation(shaderProgramHandle, "texturingEnabled");
 
-            RefreshMaterialUniforms();
+            IncludeComposedShader(CurrentShader);
+
+
+        }
+
+        public void RefreshTessUniforms()
+        {
+            Uniforms.Modelview = GL.GetUniformLocation(CurrentShader.ShaderHandle, "modelview");
+            Uniforms.Projection = GL.GetUniformLocation(CurrentShader.ShaderHandle, "projection");
+            Uniforms.NormalMatrix = GL.GetUniformLocation(CurrentShader.ShaderHandle, "normalmatrix");
+            Uniforms.LightPosition = GL.GetUniformLocation(CurrentShader.ShaderHandle, "LightPosition");
+            Uniforms.AmbientMaterial = GL.GetUniformLocation(CurrentShader.ShaderHandle, "AmbientMaterial");
+            Uniforms.DiffuseMaterial = GL.GetUniformLocation(CurrentShader.ShaderHandle, "DiffuseMaterial");
+            Uniforms.TessLevelInner = GL.GetUniformLocation(CurrentShader.ShaderHandle, "TessLevelInner");
+            Uniforms.TessLevelOuter = GL.GetUniformLocation(CurrentShader.ShaderHandle, "TessLevelOuter");
+        }
+
+        public void RefreshDefaultUniforms()
+        {
+            uniformModelview = GL.GetUniformLocation(CurrentShader.ShaderHandle, "modelview");
+            uniformProjection = GL.GetUniformLocation(CurrentShader.ShaderHandle, "projection");
+            uniformCameraScale = GL.GetUniformLocation(CurrentShader.ShaderHandle, "camscale");
+            uniformX3DScale = GL.GetUniformLocation(CurrentShader.ShaderHandle, "X3DScale");
+
+            uniforms.a_position = GL.GetAttribLocation(CurrentShader.ShaderHandle, "position");
+            uniforms.a_normal = GL.GetAttribLocation(CurrentShader.ShaderHandle, "normal");
+            uniforms.a_color = GL.GetAttribLocation(CurrentShader.ShaderHandle, "color");
+            uniforms.a_texcoord = GL.GetAttribLocation(CurrentShader.ShaderHandle, "texcoord");
+            uniforms.a_coloringEnabled = GL.GetUniformLocation(CurrentShader.ShaderHandle, "coloringEnabled");
+            uniforms.a_texturingEnabled = GL.GetUniformLocation(CurrentShader.ShaderHandle, "texturingEnabled");
         }
 
         public void RefreshMaterialUniforms()
         {
-            Materials.ambientIntensity = GL.GetUniformLocation(shaderProgramHandle, "ambientIntensity");
-            Materials.diffuseColor = GL.GetUniformLocation(shaderProgramHandle, "diffuseColor");
-            Materials.emissiveColor = GL.GetUniformLocation(shaderProgramHandle, "emissiveColor");
-            Materials.shininess = GL.GetUniformLocation(shaderProgramHandle, "shininess");
-            Materials.specularColor = GL.GetUniformLocation(shaderProgramHandle, "specularColor");
-            Materials.transparency = GL.GetUniformLocation(shaderProgramHandle, "transparency");
+            Materials.ambientIntensity = GL.GetUniformLocation(CurrentShader.ShaderHandle, "ambientIntensity");
+            Materials.diffuseColor = GL.GetUniformLocation(CurrentShader.ShaderHandle, "diffuseColor");
+            Materials.emissiveColor = GL.GetUniformLocation(CurrentShader.ShaderHandle, "emissiveColor");
+            Materials.shininess = GL.GetUniformLocation(CurrentShader.ShaderHandle, "shininess");
+            Materials.specularColor = GL.GetUniformLocation(CurrentShader.ShaderHandle, "specularColor");
+            Materials.transparency = GL.GetUniformLocation(CurrentShader.ShaderHandle, "transparency");
         }
 
         public override void Load()
         {
             base.Load();
 
-            // load assets
-            //testShader = Helpers.ApplyTestShader();
+            var @default = Helpers.BuildDefaultShader();
+            @default.Link();
+            @default.Use();
+            CurrentShader = @default;
+            IncludeComposedShader(@default);
 
-            shaderProgramHandle = Helpers.ApplyShader(DefaultShader.vertexShaderSource, DefaultShader.fragmentShaderSource);
-
-
-            uniformModelview = GL.GetUniformLocation(shaderProgramHandle, "modelview");
-            uniformProjection = GL.GetUniformLocation(shaderProgramHandle, "projection");
-            uniformCameraScale = GL.GetUniformLocation(shaderProgramHandle, "camscale");
-            uniformX3DScale = GL.GetUniformLocation(shaderProgramHandle, "X3DScale");
-
-            uniforms.a_position = GL.GetAttribLocation(shaderProgramHandle, "position");
-            uniforms.a_normal = GL.GetAttribLocation(shaderProgramHandle, "normal");
-            uniforms.a_color = GL.GetAttribLocation(shaderProgramHandle, "color");
-            uniforms.a_texcoord = GL.GetAttribLocation(shaderProgramHandle, "texcoord");
-            uniforms.a_coloringEnabled = GL.GetUniformLocation(shaderProgramHandle, "coloringEnabled");
-            uniforms.a_texturingEnabled = GL.GetUniformLocation(shaderProgramHandle, "texturingEnabled");
-
+            RefreshDefaultUniforms();
             RefreshMaterialUniforms();
-        }
-
-        public override void PreRenderOnce(RenderingContext rc)
-        {
-            base.PreRenderOnce(rc);
-
-            foreach (ComposedShader shader in ComposedShaders)
-            {
-                Console.WriteLine("ComposedShader {0}", shader.language);
-
-                if (shader.language == "GLSL")
-                {
-                    int _shaderProgramHandle = GL.CreateProgram();
-
-                    foreach (ShaderPart part in shader.ShaderParts)
-                    {
-                        Helpers.ApplyShaderPart(_shaderProgramHandle, part);
-                    }
-
-                    GL.LinkProgram(_shaderProgramHandle);
-                    string err = GL.GetProgramInfoLog(_shaderProgramHandle).Trim();
-                    Console.WriteLine(err);
-                    Console.WriteLine("ComposedShader [linked]"); //TODO: check for link errors
-
-                    if (GL.GetError() != ErrorCode.NoError)
-                    {
-                        throw new Exception("Error Linking ComposedShader Shader Program");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("ComposedShader language {0} unsupported", shader.language);
-                }
-            }
         }
 
         public override void PreRender()
@@ -154,11 +146,6 @@ namespace X3D
             base.PreRender();
 
             texturingEnabled = GL.IsEnabled(EnableCap.Texture2D);
-
-            //this.geometry = (X3DGeometryNode)this.Children.FirstOrDefault(c => typeof(X3DGeometryNode).IsInstanceOfType(c));
-            this.appearance = (X3DAppearanceNode)this.Children.FirstOrDefault(c => typeof(X3DAppearanceNode).IsInstanceOfType(c));
-
-            //this.isComposedGeometry = typeof(X3DComposedGeometryNode).IsInstanceOfType(this.geometry);
 
             shaders = this.DecendantsByType(typeof(X3DShaderNode)).Select(n => (X3DShaderNode)n).ToList();
             hasShaders = shaders.Any();
@@ -168,25 +155,43 @@ namespace X3D
         {
             base.Render(rc);
 
-            fade_time = (fade_time >= Math.PI) ? 0.0 : fade_time + rc.Time; // fade in/out
+            NormalMatrix = new Matrix3(rc.matricies.modelview); // NormalMatrix = M4GetUpper3x3(ModelviewMatrix);
 
-            float variableScale = (float)(Math.Sin(fade_time));
+            var linkedShaders = ComposedShaders.Last(s => s.Linked);
 
-            //GL.UseProgram(testShader);
-            GL.UseProgram(shaderProgramHandle);
-            GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);
-            GL.UniformMatrix4(uniformProjection, false, ref rc.matricies.projection);
-            GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
-            GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
-            GL.Uniform1(uniforms.a_coloringEnabled, 0);
-            GL.Uniform1(uniforms.a_texturingEnabled, this.texturingEnabled ? 1 : 0);
+            if (linkedShaders != null)
+            {
+                CurrentShader = linkedShaders;
+                this.CurrentShader.Use();
+
+                RefreshDefaultUniforms();
+                RefreshMaterialUniforms();
+
+                if (this.CurrentShader.IsTessellator)
+                    RefreshTessUniforms();
+
+                GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);
+                GL.UniformMatrix4(uniformProjection, false, ref rc.matricies.projection);
+                GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
+                GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
+                GL.Uniform1(uniforms.a_coloringEnabled, 0);
+                GL.Uniform1(uniforms.a_texturingEnabled, this.texturingEnabled ? 1 : 0);
+
+                // Testing of tessellation parameters
+                if (rc.Keyboard[Key.Right]) TessLevelInner++;
+                if (rc.Keyboard[Key.Left]) TessLevelInner = TessLevelInner > 1 ? TessLevelInner - 1 : 1;
+                if (rc.Keyboard[Key.Up]) TessLevelOuter++;
+                if (rc.Keyboard[Key.Down]) TessLevelOuter = TessLevelOuter > 1 ? TessLevelOuter - 1 : 1;
+            }
+
+
         }
 
         public override void PostRender(RenderingContext rc)
         {
             base.PostRender(rc);
 
-            GL.UseProgram(0);
+            CurrentShader.Deactivate();
         }
 
         #endregion

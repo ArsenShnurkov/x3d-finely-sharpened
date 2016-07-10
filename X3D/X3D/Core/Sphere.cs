@@ -16,10 +16,8 @@ namespace X3D
         int vbo, NumVerticies;
         int vbo4, NumVerticies4; // not used
 
-        private TessShaderUniforms Uniforms = new TessShaderUniforms();
+        
         private Shape parentShape;
-        private float TessLevelInner = 3;
-        private float TessLevelOuter = 2;
         
 
         #region Rendering Methods
@@ -30,61 +28,73 @@ namespace X3D
 
             parentShape = GetParent<Shape>();
 
-            Buffering.Interleave(parentShape, null, out vbo, out NumVerticies, 
-                out vbo4, out NumVerticies4, 
-                Faces, null, Verts, null, null, null, null,
-                restartIndex: -1, genTexCoordPerVertex: true);
+            // should be able to access shader here
 
-            GL.UseProgram(parentShape.shaderProgramHandle);
-
-            if(parentShape!= null)
+            if (parentShape != null)
             {
                 // TESSELLATION
-                parentShape.IncludeTesselationShaders(TriangleTessShader.tessControlShader, TriangleTessShader.tessEvalShader, TriangleTessShader.geometryShaderSource);
+                parentShape.IncludeTesselationShaders(TriangleTessShader.tessControlShader, 
+                                                      TriangleTessShader.tessEvalShader, 
+                                                      TriangleTessShader.geometryShaderSource);
             }
 
-            Uniforms.Modelview = GL.GetUniformLocation(parentShape.shaderProgramHandle, "modelview");
-            Uniforms.Projection = GL.GetUniformLocation(parentShape.shaderProgramHandle, "projection");
-            Uniforms.NormalMatrix = GL.GetUniformLocation(parentShape.shaderProgramHandle, "normalmatrix");
-            Uniforms.LightPosition = GL.GetUniformLocation(parentShape.shaderProgramHandle, "LightPosition");
-            Uniforms.AmbientMaterial = GL.GetUniformLocation(parentShape.shaderProgramHandle, "AmbientMaterial");
-            Uniforms.DiffuseMaterial = GL.GetUniformLocation(parentShape.shaderProgramHandle, "DiffuseMaterial");
-            Uniforms.TessLevelInner = GL.GetUniformLocation(parentShape.shaderProgramHandle, "TessLevelInner");
-            Uniforms.TessLevelOuter = GL.GetUniformLocation(parentShape.shaderProgramHandle, "TessLevelOuter");
+            parentShape.CurrentShader.Use();
+
+
+            Buffering.Interleave(parentShape, null, out vbo, out NumVerticies,
+                out vbo4, out NumVerticies4,
+                Faces, null, Verts, null, null, null, null,
+                restartIndex: -1, genTexCoordPerVertex: true);
+        }
+
+        public override void PreRenderOnce(RenderingContext rc)
+        {
+            base.PreRenderOnce(rc);
         }
 
         public override void Render(RenderingContext rc)
         {
             base.Render(rc);
 
-            GL.UseProgram(parentShape.shaderProgramHandle);
-            int uniformSize = GL.GetUniformLocation(parentShape.shaderProgramHandle, "size");
-            int uniformScale = GL.GetUniformLocation(parentShape.shaderProgramHandle, "scale");
             var size = new Vector3(1, 1, 1);
             var scale = new Vector3(1, 1, 1);
             //var scale = new Vector3(0.04f, 0.04f, 0.04f);
-            GL.Uniform3(uniformSize, size);
-            GL.Uniform3(uniformScale, scale);
 
-            Matrix3 NormalMatrix = new Matrix3(rc.matricies.modelview); // NormalMatrix = M4GetUpper3x3(ModelviewMatrix);
-            Vector4 lightPosition = new Vector4(0.25f, 0.25f, 1f, 0f);
+            if(parentShape.ComposedShaders.Any(s => s.Linked))
+            {
+                if (parentShape.CurrentShader != null)
+                {
+                    parentShape.CurrentShader.Use();
 
-            GL.UniformMatrix3(Uniforms.NormalMatrix, false, ref NormalMatrix);
-            GL.Uniform1(Uniforms.TessLevelInner, TessLevelInner);
-            GL.Uniform1(Uniforms.TessLevelOuter, TessLevelOuter);
-            GL.Uniform3(Uniforms.LightPosition, 1, ref lightPosition.X);
-            GL.Uniform3(Uniforms.AmbientMaterial, Helpers.ToVec3(OpenTK.Graphics.Color4.Aqua) ); // 0.04f, 0.04f, 0.04f
-            GL.Uniform3(Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f); 
+                    int uniformSize = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "size");
+                    int uniformScale = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "scale");
 
-            GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-            GL.DrawArrays(PrimitiveType.Patches, 0, NumVerticies);
+                    GL.Uniform3(uniformSize, size);
+                    GL.Uniform3(uniformScale, scale);
 
-            // Testing of tessellation parameters
-            if (rc.Keyboard[Key.Right] ) TessLevelInner++;
-            if (rc.Keyboard[Key.Left]) TessLevelInner = TessLevelInner > 1 ? TessLevelInner - 1 : 1;
-            if (rc.Keyboard[Key.Up]) TessLevelOuter++;
-            if (rc.Keyboard[Key.Down]) TessLevelOuter = TessLevelOuter > 1 ? TessLevelOuter - 1 : 1;
+                    if (parentShape.CurrentShader.IsTessellator)
+                    {
+                        Vector4 lightPosition = new Vector4(0.25f, 0.25f, 1f, 0f);
+
+                        GL.UniformMatrix3(parentShape.Uniforms.NormalMatrix, false, ref parentShape.NormalMatrix);
+                        GL.Uniform1(parentShape.Uniforms.TessLevelInner, parentShape.TessLevelInner);
+                        GL.Uniform1(parentShape.Uniforms.TessLevelOuter, parentShape.TessLevelOuter);
+                        GL.Uniform3(parentShape.Uniforms.LightPosition, 1, ref lightPosition.X);
+                        GL.Uniform3(parentShape.Uniforms.AmbientMaterial, Helpers.ToVec3(OpenTK.Graphics.Color4.Aqua)); // 0.04f, 0.04f, 0.04f
+                        GL.Uniform3(parentShape.Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f);
+
+
+                        GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
+                        GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+                        GL.DrawArrays(PrimitiveType.Patches, 0, NumVerticies);
+                    }
+                    else
+                    {
+                        GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+                        GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
+                    }
+                }
+            }
         }
 
         #endregion

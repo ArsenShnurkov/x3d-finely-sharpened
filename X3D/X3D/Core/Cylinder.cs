@@ -68,9 +68,9 @@ namespace X3D
             base.Render(rc);
 
 
-            GL.UseProgram(parentShape.shaderProgramHandle);
-            int uniformSize = GL.GetUniformLocation(parentShape.shaderProgramHandle, "size");
-            int uniformScale = GL.GetUniformLocation(parentShape.shaderProgramHandle, "scale");
+            GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
+            int uniformSize = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "size");
+            int uniformScale = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "scale");
             var size = new Vector3(1, 1, 1);
             var scale = new Vector3(1.0f, 1.0f, 1.0f);
             GL.Uniform3(uniformSize, size);

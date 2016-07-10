@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using X3D.Engine.Shading;
 
 namespace X3D.Parser
 {
@@ -19,66 +20,6 @@ namespace X3D.Parser
             return new Vector4(color.R, color.G, color.B, color.A);
         }
 
-        public static int ApplyTestShader()
-        {
-            // TODO: combine with current shader set
-            string vert = @"
-#version 400
-
-// 0.4, 0.4, 0.4
-out lowp vec2 uv;
-void main() 
-{
-    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
-    uv = gl_MultiTexCoord0.xy;
-}
-";
-            string frag = @"
-#version 400
-in vec2 uv;
-const vec4 threshold = vec4(0.7, 0.7, 0.7, 1.0); // transparency threshold
-uniform sampler2D _MainTex;
-void main() 
-{
-    vec4 c = texture2D(_MainTex, uv);
-    //vec4 alp = texture2D(_AlphaMap, c.rg);
-
-    //c = c * alp;
-
-    // color replace function
-    if(c.r > 0 && c.r < 0.2
-    && c.g > 0 && c.g < 0.2 
-    && c.b > 0 && c.b < 0.2
-    ){
-        //c.r = c.r  + 0.01;
-    }
-
-    if(c.r > 0.2 && c.r < 0.6
-    && c.g > 0.2 && c.g < 0.6 
-    && c.b > 0.2 && c.b < 0.6
-    ){
-        //c.r = c.r + 0.4;
-    }
-
-    if(c.r > 0.6 && c.r < 0.8
-    && c.g > 0.6 && c.g < 0.8 
-    && c.b > 0.6 && c.b < 0.8
-    ){
-        //c.r = c.r + 0.2;
-    }
-
-    gl_FragColor = c;
-
-    // transparency thresholding
-        if (c.r > threshold.x 
-        && c.g > threshold.y 
-            && c.b > threshold.z) 
-            discard;
-} 
-";
-            return ApplyShader(vert, frag);
-        }
-
         public static string UnescapeXMLValue(string xmlString)
         {
             if (xmlString == null)
@@ -87,7 +28,6 @@ void main()
             return xmlString
                 .Replace("&#13;", "\n")
                 .Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n")
-
                 .Replace("&apos;", "'")
                 .Replace("&quot;", "\"")
                 .Replace("&gt;", ">")
@@ -102,7 +42,8 @@ void main()
                 throw new ArgumentNullException("xmlString");
        
             return xmlString
-                .Replace("\n", "&#13;")
+                .Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "\r\n")
+                .Replace("\r\n", "&#13;")
                 .Replace("'", "&apos;")
                 .Replace("\"", "&quot;")
                 .Replace(">", "&gt;")
@@ -120,7 +61,7 @@ void main()
                     type = ShaderType.VertexShader;
                     break;
                 case shaderPartTypeValues.FRAGMENT:
-                    type = ShaderType.VertexShader;
+                    type = ShaderType.FragmentShader;
                     break;
                 case shaderPartTypeValues.TESS_CONTROL:
                     type = ShaderType.TessControlShader;
@@ -131,6 +72,8 @@ void main()
                 case shaderPartTypeValues.GEOMETRY:
                     type = ShaderType.GeometryShader;
                     break;
+                default:
+                    throw new Exception("unknown shader type");
             }
 
             part.ShaderHandle = GL.CreateShader(type);
@@ -142,76 +85,130 @@ void main()
             Console.WriteLine(err);
 
             GL.AttachShader(shaderProgramHandle, part.ShaderHandle);
-            Console.WriteLine("ShaderPart [attaching]");
+            Console.WriteLine("ShaderPart {0} [attaching]", part.Type);
 
             return part.ShaderHandle;
+        }
+
+        public static ComposedShader BuildDefaultShader()
+        {
+            var defaultsh = new ComposedShader();
+            defaultsh.language = "GLSL";
+            defaultsh.ShaderParts.Add(new ShaderPart()
+            {
+                ShaderSource = DefaultShader.vertexShaderSource,
+                Type = shaderPartTypeValues.VERTEX
+            });
+
+            defaultsh.ShaderParts.Add(new ShaderPart()
+            {
+                ShaderSource = DefaultShader.fragmentShaderSource,
+                Type = shaderPartTypeValues.FRAGMENT
+            });
+
+            return defaultsh;
         }
 
         /// <summary>
         /// Relocate this elsewhere
         /// </summary>
-        public static int ApplyShader(string vertexShaderSource, string fragmentShaderSource, 
+        public static ComposedShader ApplyShader(string vertexShaderSource, string fragmentShaderSource, 
             string tessControlSource = "", string tessEvalSource = "", string geometryShaderSource = "")
         {
-            int shaderProgramHandle = GL.CreateProgram();
+            ComposedShader shader = new ComposedShader();
 
-            int vertexShaderHandle = GL.CreateShader(ShaderType.VertexShader);
-            int fragmentShaderHandle = GL.CreateShader(ShaderType.FragmentShader);
-            int tessControlShaderHandle = -1, tessEvalShaderHandle = -1, geometryShaderHandle = -1;
-
-            GL.ShaderSource(vertexShaderHandle, vertexShaderSource);
-            GL.ShaderSource(fragmentShaderHandle, fragmentShaderSource);
-            GL.CompileShader(vertexShaderHandle);
-            GL.CompileShader(fragmentShaderHandle);
-
-            Console.WriteLine(GL.GetShaderInfoLog(vertexShaderHandle).Trim());
-            Console.WriteLine(GL.GetShaderInfoLog(fragmentShaderHandle).Trim());
-
-            GL.AttachShader(shaderProgramHandle, vertexShaderHandle);
-            
-
-            if (!string.IsNullOrEmpty(tessControlSource))
+            shader.language = "GLSL";
+            shader.ShaderParts.Add(new ShaderPart()
             {
-                tessControlShaderHandle = GL.CreateShader(ShaderType.TessControlShader);
-                GL.ShaderSource(tessControlShaderHandle, tessControlSource);
-                GL.CompileShader(tessControlShaderHandle);
-                Console.WriteLine(GL.GetShaderInfoLog(tessControlShaderHandle).Trim());
+                ShaderSource = vertexShaderSource,
+                Type = shaderPartTypeValues.VERTEX
+            });
 
-                GL.AttachShader(shaderProgramHandle, tessControlShaderHandle);
-            }
-            if (!string.IsNullOrEmpty(tessEvalSource))
+            shader.ShaderParts.Add(new ShaderPart()
             {
-                tessEvalShaderHandle = GL.CreateShader(ShaderType.TessEvaluationShader);
-                GL.ShaderSource(tessEvalShaderHandle, tessEvalSource);
-                GL.CompileShader(tessEvalShaderHandle);
-                Console.WriteLine(GL.GetShaderInfoLog(tessEvalShaderHandle).Trim());
+                ShaderSource = tessControlSource,
+                Type = shaderPartTypeValues.TESS_CONTROL
+            });
 
-                GL.AttachShader(shaderProgramHandle, tessEvalShaderHandle);
-            }
-            if (!string.IsNullOrEmpty(geometryShaderSource))
+            shader.ShaderParts.Add(new ShaderPart()
             {
-                geometryShaderHandle = GL.CreateShader(ShaderType.GeometryShader);
-                GL.ShaderSource(geometryShaderHandle, geometryShaderSource);
-                GL.CompileShader(geometryShaderHandle);
-                Console.WriteLine(GL.GetShaderInfoLog(geometryShaderHandle).Trim());
+                ShaderSource = tessEvalSource,
+                Type = shaderPartTypeValues.TESS_EVAL
+            });
 
-                GL.AttachShader(shaderProgramHandle, geometryShaderHandle);
-            }
-
-            GL.AttachShader(shaderProgramHandle, fragmentShaderHandle);
-
-            GL.LinkProgram(shaderProgramHandle);
-
-            Console.WriteLine(GL.GetProgramInfoLog(shaderProgramHandle).Trim());
-
-            //GL.UseProgram(shaderProgramHandle);
-            
-            if(GL.GetError() != ErrorCode.NoError)
+            shader.ShaderParts.Add(new ShaderPart()
             {
-                throw new Exception("Error Linking Shader Program");
-            }
+                ShaderSource = geometryShaderSource,
+                Type = shaderPartTypeValues.GEOMETRY
+            });
 
-            return shaderProgramHandle;
+            shader.ShaderParts.Add(new ShaderPart()
+            {
+                ShaderSource = fragmentShaderSource,
+                Type = shaderPartTypeValues.FRAGMENT
+            });
+
+            return shader;
+
+            //int shaderProgramHandle = GL.CreateProgram();
+
+            //int vertexShaderHandle = GL.CreateShader(ShaderType.VertexShader);
+            //int fragmentShaderHandle = GL.CreateShader(ShaderType.FragmentShader);
+            //int tessControlShaderHandle = -1, tessEvalShaderHandle = -1, geometryShaderHandle = -1;
+
+            //GL.ShaderSource(vertexShaderHandle, vertexShaderSource);
+            //GL.ShaderSource(fragmentShaderHandle, fragmentShaderSource);
+            //GL.CompileShader(vertexShaderHandle);
+            //GL.CompileShader(fragmentShaderHandle);
+
+            //Console.WriteLine(GL.GetShaderInfoLog(vertexShaderHandle).Trim());
+            //Console.WriteLine(GL.GetShaderInfoLog(fragmentShaderHandle).Trim());
+
+            //GL.AttachShader(shaderProgramHandle, vertexShaderHandle);
+
+
+            //if (!string.IsNullOrEmpty(tessControlSource))
+            //{
+            //    tessControlShaderHandle = GL.CreateShader(ShaderType.TessControlShader);
+            //    GL.ShaderSource(tessControlShaderHandle, tessControlSource);
+            //    GL.CompileShader(tessControlShaderHandle);
+            //    Console.WriteLine(GL.GetShaderInfoLog(tessControlShaderHandle).Trim());
+
+            //    GL.AttachShader(shaderProgramHandle, tessControlShaderHandle);
+            //}
+            //if (!string.IsNullOrEmpty(tessEvalSource))
+            //{
+            //    tessEvalShaderHandle = GL.CreateShader(ShaderType.TessEvaluationShader);
+            //    GL.ShaderSource(tessEvalShaderHandle, tessEvalSource);
+            //    GL.CompileShader(tessEvalShaderHandle);
+            //    Console.WriteLine(GL.GetShaderInfoLog(tessEvalShaderHandle).Trim());
+
+            //    GL.AttachShader(shaderProgramHandle, tessEvalShaderHandle);
+            //}
+            //if (!string.IsNullOrEmpty(geometryShaderSource))
+            //{
+            //    geometryShaderHandle = GL.CreateShader(ShaderType.GeometryShader);
+            //    GL.ShaderSource(geometryShaderHandle, geometryShaderSource);
+            //    GL.CompileShader(geometryShaderHandle);
+            //    Console.WriteLine(GL.GetShaderInfoLog(geometryShaderHandle).Trim());
+
+            //    GL.AttachShader(shaderProgramHandle, geometryShaderHandle);
+            //}
+
+            //GL.AttachShader(shaderProgramHandle, fragmentShaderHandle);
+
+            //GL.LinkProgram(shaderProgramHandle);
+
+            //Console.WriteLine(GL.GetProgramInfoLog(shaderProgramHandle).Trim());
+
+            ////GL.UseProgram(shaderProgramHandle);
+
+            //if(GL.GetError() != ErrorCode.NoError)
+            //{
+            //    throw new Exception("Error Linking Shader Program");
+            //}
+
+            //return shaderProgramHandle;
         }
 
         public static int ApplyShader(string shaderSource, ShaderType type)

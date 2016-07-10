@@ -92,10 +92,10 @@ namespace X3D
                     this.colorPerVertex, this.coloring, this.texturing);
             }
 
-            GL.UseProgram(parentShape.shaderProgramHandle);
+            GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
 
-            int uniformSize = GL.GetUniformLocation(parentShape.shaderProgramHandle, "size");
-            int uniformScale = GL.GetUniformLocation(parentShape.shaderProgramHandle, "scale");
+            int uniformSize = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "size");
+            int uniformScale = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "scale");
 
             var size = new Vector3(1, 1, 1);
             var scale = new Vector3(0.05f, 0.05f, 0.05f);
@@ -117,7 +117,7 @@ namespace X3D
 
             if(this.coordinate != null && !string.IsNullOrEmpty(this.coordIndex))
             {
-                GL.UseProgram(parentShape.shaderProgramHandle);
+                GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
 
                 if (NumVerticies > 0)
                 {
