@@ -6,9 +6,15 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using X3D.Parser;
 using System.Xml.Serialization;
+using OpenTK.Input;
+using X3D.Engine.Shading;
+using X3D.Engine.Shading.DefaultUniforms;
 
 namespace X3D
 {
+    /// <summary>
+    /// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/geometry3D.html#ElevationGrid
+    /// </summary>
     public partial class ElevationGrid
     {
         private int _vbo_interleaved;
@@ -24,6 +30,9 @@ namespace X3D
         private float MinHeight;
         private int mapSize;
 
+        private float TessLevelInner = 3;
+        private float TessLevelOuter = 2;
+        private TessShaderUniforms Uniforms = new TessShaderUniforms();
 
         #region Rendering Methods
 
@@ -49,6 +58,22 @@ namespace X3D
 
             GL.Uniform3(uniformSize, size);
             GL.Uniform3(uniformScale, scale);
+
+
+            if (parentShape != null)
+            {
+                // TESSELLATION
+                parentShape.IncludeTesselationShaders(QuadTessShader.tessControlShader, QuadTessShader.tessEvalShader, string.Empty);
+            }
+
+            Uniforms.Modelview = GL.GetUniformLocation(parentShape.shaderProgramHandle, "modelview");
+            Uniforms.Projection = GL.GetUniformLocation(parentShape.shaderProgramHandle, "projection");
+            Uniforms.NormalMatrix = GL.GetUniformLocation(parentShape.shaderProgramHandle, "normalmatrix");
+            Uniforms.LightPosition = GL.GetUniformLocation(parentShape.shaderProgramHandle, "LightPosition");
+            Uniforms.AmbientMaterial = GL.GetUniformLocation(parentShape.shaderProgramHandle, "AmbientMaterial");
+            Uniforms.DiffuseMaterial = GL.GetUniformLocation(parentShape.shaderProgramHandle, "DiffuseMaterial");
+            Uniforms.TessLevelInner = GL.GetUniformLocation(parentShape.shaderProgramHandle, "TessLevelInner");
+            Uniforms.TessLevelOuter = GL.GetUniformLocation(parentShape.shaderProgramHandle, "TessLevelOuter");
         }
 
         public override void Render(RenderingContext rc)
@@ -56,8 +81,29 @@ namespace X3D
             base.Render(rc);
 
             GL.UseProgram(parentShape.shaderProgramHandle);
+            //GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved); // InterleavedArrayFormat.T2fC4fN3fV3f
+            //GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies); // Quads Points  Lines
+
+
+            Matrix3 NormalMatrix = new Matrix3(rc.matricies.modelview); // NormalMatrix = M4GetUpper3x3(ModelviewMatrix);
+            Vector4 lightPosition = new Vector4(0.25f, 0.25f, 1f, 0f);
+
+            GL.UniformMatrix3(Uniforms.NormalMatrix, false, ref NormalMatrix);
+            GL.Uniform1(Uniforms.TessLevelInner, TessLevelInner);
+            GL.Uniform1(Uniforms.TessLevelOuter, TessLevelOuter);
+            GL.Uniform3(Uniforms.LightPosition, 1, ref lightPosition.X);
+            GL.Uniform3(Uniforms.AmbientMaterial, Helpers.ToVec3(OpenTK.Graphics.Color4.Aqua)); // 0.04f, 0.04f, 0.04f
+            GL.Uniform3(Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f);
+
+            GL.PatchParameter(PatchParameterInt.PatchVertices, 16);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved); // InterleavedArrayFormat.T2fC4fN3fV3f
-            GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies); // Quads Points  Lines
+            GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies); // Patches Quads Points  Lines
+
+            // Testing of tessellation parameters
+            if (rc.Keyboard[Key.Right]) TessLevelInner++;
+            if (rc.Keyboard[Key.Left]) TessLevelInner = TessLevelInner > 1 ? TessLevelInner - 1 : 1;
+            if (rc.Keyboard[Key.Up]) TessLevelOuter++;
+            if (rc.Keyboard[Key.Down]) TessLevelOuter = TessLevelOuter > 1 ? TessLevelOuter - 1 : 1;
         }
 
         private void height_mapping()

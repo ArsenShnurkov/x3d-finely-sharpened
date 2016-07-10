@@ -21,6 +21,7 @@
     <Shape>
       <Box size='1 2 3'/>
       <Appearance>
+		<ImageTexture  url='"spectrum.jpg"'/>
         <Material/>
       </Appearance>
     </Shape>

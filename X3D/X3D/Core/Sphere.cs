@@ -6,6 +6,7 @@ using System.Text;
 using OpenTK.Graphics.OpenGL4;
 using X3D.Parser;
 using OpenTK.Input;
+using X3D.Engine.Shading.DefaultUniforms;
 
 namespace X3D
 {
@@ -13,112 +14,11 @@ namespace X3D
     {
         int vbo, NumVerticies;
 
-        public class ShaderUniforms
-        {
-            public int Projection;
-            public int Modelview;
-            public int NormalMatrix;
-            public int LightPosition;
-            public int AmbientMaterial;
-            public int DiffuseMaterial;
-            public int TessLevelInner;
-            public int TessLevelOuter;
-        }
-
-        private ShaderUniforms Uniforms = new ShaderUniforms();
+        private TessShaderUniforms Uniforms = new TessShaderUniforms();
         private Shape parentShape;
-        private static float TessLevelInner = 3;
-        private static float TessLevelOuter = 2;
+        private float TessLevelInner = 3;
+        private float TessLevelOuter = 2;
         
-
-        static string tessControlShader = @"
-// original source Philip Rideout http://prideout.net/blog/?p=48
-#version 420 core
-layout(vertices = 3) out;
-in vec3 vPosition[];
-out vec3 tcPosition[];
-uniform float TessLevelInner;
-uniform float TessLevelOuter;
-
-#define ID gl_InvocationID
-
-void main()
-{
-    tcPosition[ID] = vPosition[ID];
-    if (ID == 0) {
-        gl_TessLevelInner[0] = TessLevelInner;
-        gl_TessLevelOuter[0] = TessLevelOuter;
-        gl_TessLevelOuter[1] = TessLevelOuter;
-        gl_TessLevelOuter[2] = TessLevelOuter;
-    }
-}
-";
-
-        static string tessEvalShader = @"
-// original source Philip Rideout http://prideout.net/blog/?p=48
-#version 420 core
-layout(triangles, equal_spacing, cw) in;
-in vec3 tcPosition[];
-out vec3 tePosition;
-out vec3 tePatchDistance;
-uniform mat4 projection;
-uniform mat4 modelview;
-uniform vec3 scale;
-
-void main()
-{
-    vec3 p0 = gl_TessCoord.x * tcPosition[0];
-    vec3 p1 = gl_TessCoord.y * tcPosition[1];
-    vec3 p2 = gl_TessCoord.z * tcPosition[2];
-    tePatchDistance = gl_TessCoord;
-    tePosition = scale * normalize(p0 + p1 + p2);
-    gl_Position = projection * modelview * vec4(tePosition, 1);
-}
-";
-        //BUG: geometry shader not compatible with current vertex layout
-        static string geometryShaderSource = @"
-// original source Philip Rideout http://prideout.net/blog/?p=48
-#version 420 core
-uniform mat4 modelview;
-uniform mat3 normalmatrix;
-layout(triangles) in;
-layout(triangle_strip, max_vertices = 3) out;
-
-in vec3 tePosition[3];
-in vec3 tePatchDistance[3];
-
-out vec3 gFacetNormal;
-out vec3 gPatchDistance;
-out vec3 gTriDistance;
-out vec2 gFacetTexCoord;
-
-#define M_PI 3.1415926535897932384626433832795
-
-void main()
-{
-    vec3 A = tePosition[2] - tePosition[0];
-    vec3 B = tePosition[1] - tePosition[0];
-    gFacetNormal = normalmatrix  * normalize(cross(A, B));
-    gFacetTexCoord = vec2(asin(gFacetNormal.x)/M_PI + 0.5 , asin(gFacetNormal.y) / M_PI + 0.5 );
-
-    gPatchDistance = tePatchDistance[0];
-    gTriDistance = vec3(1, 0, 0);
-    gl_Position = gl_in[0].gl_Position; 
-    EmitVertex();
-
-    gPatchDistance = tePatchDistance[1];
-    gTriDistance = vec3(0, 1, 0);
-    gl_Position = gl_in[1].gl_Position; 
-    EmitVertex();
-
-    gPatchDistance = tePatchDistance[2];
-    gTriDistance = vec3(0, 0, 1);
-    gl_Position = gl_in[2].gl_Position; 
-    EmitVertex();
-
-    EndPrimitive();
-}
-";
 
         #region Rendering Methods
 
@@ -136,7 +36,7 @@ void main()
             if(parentShape!= null)
             {
                 // TESSELLATION
-                parentShape.IncludeTesselationShaders(tessControlShader, tessEvalShader, geometryShaderSource);
+                parentShape.IncludeTesselationShaders(Helpers.tessControlShader, Helpers.tessEvalShader, Helpers.geometryShaderSource);
             }
 
             Uniforms.Modelview = GL.GetUniformLocation(parentShape.shaderProgramHandle, "modelview");
@@ -176,8 +76,8 @@ void main()
             GL.Uniform3(Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f); 
 
             GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo); // InterleavedArrayFormat.T2fC4fN3fV3f
-            GL.DrawArrays(PrimitiveType.Patches, 0, NumVerticies); // Triangles Points  Lines
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+            GL.DrawArrays(PrimitiveType.Patches, 0, NumVerticies);
 
             // Testing of tessellation parameters
             if (rc.Keyboard[Key.Right] ) TessLevelInner++;
