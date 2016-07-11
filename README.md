@@ -84,18 +84,17 @@ and an X3D Scene that can be accessed/modified by whatever scripting language is
 
 Info
 ```
+[http://en.wikipedia.org/wiki/X3D](http://en.wikipedia.org/wiki/X3D)
 
-http://en.wikipedia.org/wiki/X3D
+[http://edutechwiki.unige.ch/en/X3D](http://edutechwiki.unige.ch/en/X3D)
 
-http://edutechwiki.unige.ch/en/X3D
+[http://www.web3d.org/x3d/] (http://www.web3d.org/x3d/)
 
-http://www.web3d.org/x3d/
+[http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/concepts.html] (http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/concepts.html)
 
-http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/concepts.html
+[http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/components/core.html] (http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/components/core.html)
 
-http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/components/core.html
-
-http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/componentIndex.html
+[http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/componentIndex.html] (http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/componentIndex.html)
 ```
 
 Licence
