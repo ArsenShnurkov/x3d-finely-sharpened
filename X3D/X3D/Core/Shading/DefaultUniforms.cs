@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace X3D.Engine.Shading.DefaultUniforms
+namespace X3D.Core.Shading.DefaultUniforms
 {
     public class ShaderUniformsPNCT
     {

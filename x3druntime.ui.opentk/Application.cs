@@ -164,7 +164,7 @@ namespace x3druntime.ui.opentk
 
             // update world time a bit faster:
             WorldTime = DateTime.Now.Subtract(time_at_init);
-            this.window.Title = "Test Gallery " + title + " " + WorldTime.ToString() + "vwt";
+            this.window.Title = "X3D Runtime " + title + " " + WorldTime.ToString() + "vwt";
         }
 
         private int GetFps(double time)

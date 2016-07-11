@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using X3D.Engine.Shading;
+using X3D.Core.Shading;
 using X3D.Parser;
 
 namespace X3D

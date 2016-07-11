@@ -5,6 +5,7 @@ using System.Text;
 using System.Xml.Serialization;
 using OpenTK.Graphics.OpenGL4;
 using X3D.Parser;
+using X3D.Core;
 
 namespace X3D
 {
@@ -75,7 +76,7 @@ namespace X3D
 
                 foreach (ShaderPart part in this.ShaderParts)
                 {
-                    Helpers.ApplyShaderPart(this.ShaderHandle, part);
+                    ShaderCompiler.ApplyShaderPart(this.ShaderHandle, part);
                 }
 
                 GL.LinkProgram(this.ShaderHandle);

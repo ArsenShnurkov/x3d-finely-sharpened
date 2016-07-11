@@ -89,6 +89,7 @@
     <Compile Include="X3D\Core\RenderingContext.cs" />
     <Compile Include="X3D\Core\Shading\field.cs" />
     <Compile Include="X3D\Core\Shading\ShaderPart.cs" />
+    <Compile Include="X3D\Core\Shading\ShaderCompiler.cs" />
     <Compile Include="X3D\Core\Shape.cs" />
     <Compile Include="X3D\Core\ShapeGeometry.cs" />
     <Compile Include="X3D\Core\Sphere.cs" />
@@ -99,11 +100,11 @@
     <Compile Include="X3D\Engine\Helpers.cs" />
     <Compile Include="X3D\Engine\MathHelpers.cs" />
     <Compile Include="X3D\Engine\Matricies.cs" />
-    <Compile Include="X3D\Engine\Shading\Buffering.cs" />
-    <Compile Include="X3D\Engine\Shading\DefaultShader.cs" />
-    <Compile Include="X3D\Engine\Shading\DefaultUniforms.cs" />
-    <Compile Include="X3D\Engine\Shading\QuadTessShader.cs" />
-    <Compile Include="X3D\Engine\Shading\TriangleTessShader.cs" />
+    <Compile Include="X3D\Core\Shading\Buffering.cs" />
+    <Compile Include="X3D\Core\Shading\DefaultShader.cs" />
+    <Compile Include="X3D\Core\Shading\DefaultUniforms.cs" />
+    <Compile Include="X3D\Core\Shading\QuadTessShader.cs" />
+    <Compile Include="X3D\Core\Shading\TriangleTessShader.cs" />
     <Compile Include="X3D\Engine\Vertex.cs" />
     <Compile Include="X3D\x3d-3.3.Designer.cs" />
     <Compile Include="X3D\Engine\XMLParser.cs" />
@@ -157,7 +158,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_AssemblyInfoFilename="" BuildVersion_UseGlobalSettings="False" BuildVersion_IncrementBeforeBuild="True" />
+      <UserProperties BuildVersion_IncrementBeforeBuild="True" BuildVersion_UseGlobalSettings="False" BuildVersion_AssemblyInfoFilename="" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

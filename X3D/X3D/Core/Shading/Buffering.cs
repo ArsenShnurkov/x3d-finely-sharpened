@@ -6,7 +6,7 @@ using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using X3D.Parser;
 
-namespace X3D.Engine.Shading
+namespace X3D.Core.Shading
 {
     public class Buffering
     {

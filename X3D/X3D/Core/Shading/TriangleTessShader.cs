@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace X3D.Engine.Shading
+namespace X3D.Core.Shading
 {
     public class TriangleTessShader
     {

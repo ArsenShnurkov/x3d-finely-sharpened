@@ -6,8 +6,8 @@ using System.Text;
 using OpenTK.Graphics.OpenGL4;
 using X3D.Parser;
 using OpenTK.Input;
-using X3D.Engine.Shading.DefaultUniforms;
-using X3D.Engine.Shading;
+using X3D.Core.Shading.DefaultUniforms;
+using X3D.Core.Shading;
 
 namespace X3D
 {

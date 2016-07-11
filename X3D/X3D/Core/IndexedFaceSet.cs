@@ -5,7 +5,7 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using X3D.Parser;
-using X3D.Engine.Shading;
+using X3D.Core.Shading;
 
 namespace X3D
 {

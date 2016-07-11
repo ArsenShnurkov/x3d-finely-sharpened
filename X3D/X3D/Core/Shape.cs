@@ -25,8 +25,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
-using X3D.Engine.Shading;
-using X3D.Engine.Shading.DefaultUniforms;
+using X3D.Core;
+using X3D.Core.Shading;
+using X3D.Core.Shading.DefaultUniforms;
 using X3D.Parser;
 
 namespace X3D
@@ -89,7 +90,7 @@ namespace X3D
         public void IncludeTesselationShaders(string tessControlShaderSource, string tessEvalShaderSource,
                                               string geometryShaderSource)
         {
-            CurrentShader = Helpers.ApplyShader(DefaultShader.vertexShaderSource, DefaultShader.fragmentShaderSource,
+            CurrentShader = ShaderCompiler.ApplyShader(DefaultShader.vertexShaderSource, DefaultShader.fragmentShaderSource,
                 tessControlShaderSource, tessEvalShaderSource, geometryShaderSource);
 
 
@@ -140,7 +141,7 @@ namespace X3D
         {
             base.Load();
 
-            var @default = Helpers.BuildDefaultShader();
+            var @default = ShaderCompiler.BuildDefaultShader();
             @default.Link();
             @default.Use();
             CurrentShader = @default;
