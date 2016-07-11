@@ -31,41 +31,55 @@ Example 3 - test of ElevationGrid: X3D Runtime 3.3 Core using OpenGL Version 4
 Notices
 ```
 
-This is no full X3D framework .. Yet however in addition to a primary focus on C#, there is an experimental port to the dart language for the Web. The C# codebase is focusing on implementing rendering of basic FaceSet nodes and nailing down X3D Core early so the project's foundations adhere to the spec more thoroughly 
+This is currently no full X3D framework .. Imao there is no X3D browser that currently supports the entire v3.3 spec 
+However, this C# codebase is focusing on implementing the rendering component properly 
+and nailing down X3D Core early so the project's foundations adhere to the spec more thoroughly longterm.
 
-This project will remain here for archive purposes. I have nearly completed the rendering of and nodes according to specification There's experimental code released to address some of the items listed The latest source is in the repo `
+This project is the current source there is an earlier prototype of the project 
+archived on Google Code from 3 years ago which was written using the classic OpenGL v2.0 API. 
+All that was done in the original prototype has been replaced with a lighter more customisable OpenGL 4.0 compatible engine and GLSL shader code. 
+This is why the project here on github serves as the current most up to date version, 
+and will likely be better than other X3D browsers available today noted that I take my hat off to X3DOM.
+There's experimental code released of which I try and keep as stable as I can for each commit. 
+The latest source code may be checked out using " git clone https://github.com/RealityDaemon/x3d-finely-sharpened "
+Use Visual Studio 2015 for development and compilation.
+
 ```
 
-Todo list
+Task list
 ```
 
 PARTLY: URL/URI/filesys/data:text/plain resource fetching
+TODO: Viewpoint and ViewpointGroup implementation and decent-scalable Camera model
+TODO: Background, MultiTexturing, CubeMapping, ..
 TODO: Scripting using JavaScript (JIT compiled using the V8 Engine)
 TODO: Node Prototyping
-PARTLY: abstract types defined according to X3D 3.3 spec
+MOSTLY: abstract types defined according to X3D 3.3 spec, see x3d-3.3.Designer.cs
 PARTLY: DEF and USE
 PARTLY: grouping
-TODO: event propagation
+TODO: event propagation between X3D nodes and their fields, and any shader uniforms
 TODO: networking: inline, import, export, etc
 PARTLY: scene graph and event graph models
-PARTLY: transformations
-PARTLY: all texturing related nodes esp. TextureProperties
-TODO: animations & interpolators
-TODO: lighting
+PARTLY: transformations, and better conformance with standard
+PARTLY: all texturing related nodes esp. TextureProperties, and refactor ImageTexturing
+TODO: animations & interpolators and VW timing
+TODO: lighting; phong shading, lit and unlit models, X3D Materials
 TODO: global scene nodes like Viewpoint
 PARTLY: geometry nodes
 PARTLY: shaders
 TODO: Simple volume rendering using slices fetched from sets of image files e.g. *.png, *.jpg
 TODO: volume rendering using either: vox or nrrd formats or whatever will be defined by ISO
-PARTLY: SceneGraph rendering
+TODO: Write support for X3D-B Binary parsing, fast reading and writing. Input conversion between XML and Binary formats
+PARTLY: SceneGraph rendering; DEF_USE, event graph, prototypes, routing fields and shader uniforms
 TODO: documentation
-TODO: complete range of X3D examples covering all node usages
+TODO: complete range of X3D examples covering all node usages and test cases
 ```
 
 Mission statement
 ```
 
-A library implementing the X3D 3.3 specification, frugal by design, with no platform specific boundaries, and an X3D Scene that can be accessed/modified by whatever scripting language is present in the platform.
+A library implementing the X3D 3.3 specification, frugal by design, with no platform specific boundaries, 
+and an X3D Scene that can be accessed/modified by whatever scripting language is present in the platform.
 ```
 
 Info
@@ -90,7 +104,7 @@ Licence
 
 New BSD Licence
 
-Copyright © 2013 - 2016, Mr Gerallt G. Franke of Tasmania, Australia
+Copyright © 2013 - 2016, Mr Gerallt G. Franke of Melbourne/Tasmania, Australia
 
 All rights reserved.
 
