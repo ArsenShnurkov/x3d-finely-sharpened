@@ -83,21 +83,18 @@ and an X3D Scene that can be accessed/modified by whatever scripting language is
 ```
 
 Info
-```
 
 [X3D on Wikipedia][1]
 
 [X3D Edutechwiki][2]
 
-[Web3D X3D][3]
+[Web3D X3D Homepage][3]
 
 [Web3D X3D V3.3 Specification Part1/Concepts][4]
 
 [Web3D X3D V3.3 Specification Part1/Core][5]
 
 [Web3D X3D V3.3 Specification Part1/Component Index][6]
-
-```
 
 Licence
 
