@@ -35,6 +35,11 @@ namespace X3D
             }
         }
 
+        /// <summary>
+        /// If the shader is a built in system shader
+        /// </summary>
+        [XmlIgnore]
+        public bool IsBuiltIn { get; internal set; }
 
         public override void Load()
         {

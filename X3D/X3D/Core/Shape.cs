@@ -177,11 +177,16 @@ namespace X3D
                 GL.Uniform1(uniforms.a_coloringEnabled, 0);
                 GL.Uniform1(uniforms.a_texturingEnabled, this.texturingEnabled ? 1 : 0);
 
-                // Testing of tessellation parameters
-                if (rc.Keyboard[Key.Right]) TessLevelInner++;
-                if (rc.Keyboard[Key.Left]) TessLevelInner = TessLevelInner > 1 ? TessLevelInner - 1 : 1;
-                if (rc.Keyboard[Key.Up]) TessLevelOuter++;
-                if (rc.Keyboard[Key.Down]) TessLevelOuter = TessLevelOuter > 1 ? TessLevelOuter - 1 : 1;
+                if (CurrentShader.IsBuiltIn == false)
+                {
+                    // TODO: later put this logic inside X3D shader examples /sphere-with-tessellation.x3d
+                    
+                    // The ability to incorporate and vary the amount of tesselation should be a X3D scriptable feature
+                    if (rc.Keyboard[Key.Right]) TessLevelInner++;
+                    if (rc.Keyboard[Key.Left]) TessLevelInner = TessLevelInner > 1 ? TessLevelInner - 1 : 1;
+                    if (rc.Keyboard[Key.Up]) TessLevelOuter++;
+                    if (rc.Keyboard[Key.Down]) TessLevelOuter = TessLevelOuter > 1 ? TessLevelOuter - 1 : 1;
+                }
             }
 
 

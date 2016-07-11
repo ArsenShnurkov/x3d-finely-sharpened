@@ -94,6 +94,8 @@ namespace X3D.Parser
         public static ComposedShader BuildDefaultShader()
         {
             var defaultsh = new ComposedShader();
+
+            defaultsh.IsBuiltIn = true; // specifies this is a built in system shader
             defaultsh.language = "GLSL";
             defaultsh.ShaderParts.Add(new ShaderPart()
             {
@@ -118,6 +120,7 @@ namespace X3D.Parser
         {
             ComposedShader shader = new ComposedShader();
 
+            shader.IsBuiltIn = true; // specifies this is a built in system shader
             shader.language = "GLSL";
             shader.ShaderParts.Add(new ShaderPart()
             {
