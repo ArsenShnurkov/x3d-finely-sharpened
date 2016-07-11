@@ -84,17 +84,18 @@ and an X3D Scene that can be accessed/modified by whatever scripting language is
 
 Info
 ```
-<http://en.wikipedia.org/wiki/X3D>
+[X3D on Wikipedia][1]
 
-<http://edutechwiki.unige.ch/en/X3D>
+[X3D Edutechwiki][2]
 
-<http://www.web3d.org/x3d/>
+[Web3D X3D][3]
 
-<http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/concepts.html>
+[Web3D X3D V3.3 Specification Part1/Concepts][4]
 
-<http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/components/core.html>
+[Web3D X3D V3.3 Specification Part1/Core][5]
 
-<http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/componentIndex.html>
+[Web3D X3D V3.3 Specification Part1/Component Index][6]
+
 ```
 
 Licence
@@ -136,3 +137,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+[1]: http://en.wikipedia.org/wiki/X3D
+[2]: http://edutechwiki.unige.ch/en/X3D
+[3]: http://www.web3d.org/x3d/
+[4]: http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/concepts.html
+[5]: http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/components/core.html
+[6]: http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/componentIndex.html
