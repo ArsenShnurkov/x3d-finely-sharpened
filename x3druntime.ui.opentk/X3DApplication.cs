@@ -15,6 +15,9 @@ using System.Runtime.InteropServices;
 using X3D.Engine;
 using OpenTK.Input;
 using X3D;
+using System.Reflection;
+using System.Linq;
+
 /* Need OpenTK.Compatibility.dll for GLu */
 
 /* Some important things:
@@ -88,6 +91,62 @@ namespace x3druntime.ui.opentk
             };
         }
 
+        public void ShowSupportMatrix()
+        {
+            Assembly asm = Assembly.GetAssembly(typeof(X3D.Engine.XMLParser));
+
+            Type[] types = (new List<Type>(asm.GetTypes())).Where(t => t.IsSubclassOf(typeof (SceneGraphNode))).ToArray();
+
+            Console.WriteLine("-- Support Matrix (Informal indicator) --");
+            int w = 4, h = types.Length / w;
+
+
+            string[,] grid = new string[h, w];
+            int r = 0, c = 0;
+
+            for(int i = 0; i < types.Length && c < h; i++)
+            {
+                int j = i;
+                Type t = types[i];
+
+                grid[c, r] = t.FullName;
+
+                if (c < h)
+                {
+                    if (i > 0 && (j + 1) % w == 0)
+                    {
+                        if (c < h) c++;
+                        r = 0;
+                    }
+                    else
+                    {
+                        r++;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            for(int x = 0; x < w; x++)
+            {
+                for (int y = 0; y < h; y++)
+                {
+                    string s = grid[y, x];
+
+                    if (!string.IsNullOrEmpty(s))
+                    {
+                        Console.SetCursorPosition(x * 25, y + 3);
+
+                        Console.Write((x > 0 ? " " : "") + "{0}", s);
+                    }
+                }
+            }
+            Console.Write("\n");
+            Console.WriteLine("-- EO Support Matrix --");
+        }
+
         public void Init(string url, string mime_type)
         {
             Console.WriteLine("LOAD <" + BaseMIME + "> " + BaseURL);
@@ -98,6 +157,8 @@ namespace x3druntime.ui.opentk
             GL.GetInteger(GetPName.MinorVersion, out t[1]);
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("OpenGL Version " + t[0] + "." + t[1]);
+
+            ShowSupportMatrix();
 
 #if GAME_INIT_MODE && FULLSCREEN
             window.WindowState=WindowState.Minimized;

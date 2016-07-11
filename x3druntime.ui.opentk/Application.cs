@@ -27,15 +27,16 @@ namespace x3druntime.ui.opentk {
             get {
                 Assembly asm;
                 AssemblyProductAttribute productName;
-                AssemblyFileVersionAttribute ver;
+                AssemblyVersionAttribute ver;
                 AssemblyDescriptionAttribute desc;
-
-                asm=Assembly.GetAssembly(typeof(X3D.Engine.XMLParser));
+                
+                asm =Assembly.GetAssembly(typeof(X3D.Engine.XMLParser));
                 productName=(AssemblyProductAttribute)Attribute.GetCustomAttribute(asm,typeof(AssemblyProductAttribute));
-                ver=(AssemblyFileVersionAttribute)Attribute.GetCustomAttribute(asm,typeof(AssemblyFileVersionAttribute));
+                //ver=(AssemblyVersionAttribute)Attribute.GetCustomAttribute(asm,typeof(AssemblyVersionAttribute));
                 desc=(AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(asm,typeof(AssemblyDescriptionAttribute));
 
-                return productName.Product+" "+ver.Version+" \""+desc.Description+"\"";
+                string version = asm.GetName().Version.ToString();
+                return productName.Product+" "+ version + " \""+desc.Description+"\"";
             }
         }
 
