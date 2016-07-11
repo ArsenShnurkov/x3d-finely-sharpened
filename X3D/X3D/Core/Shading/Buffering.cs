@@ -8,9 +8,11 @@ using X3D.Parser;
 
 namespace X3D.Core.Shading
 {
+    using Verticies = List<Vertex>;
+
     public class Buffering
     {
-        public static int BufferShaderGeometry(List<List<Vertex>> geometries, Shape parentShape, out int verts)
+        public static int BufferShaderGeometry(List<Verticies> geometries, Shape parentShape, out int verts)
         {
             GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
 
@@ -83,7 +85,7 @@ namespace X3D.Core.Shading
             return buffers;
         }
 
-        public static int BufferShaderGeometry(List<Vertex> geometry, Shape parentShape,
+        public static int BufferShaderGeometry(Verticies geometry, Shape parentShape,
                                                out int vbo_interleaved3, out int NumVerticies)
         {
             Vertex[] _interleaved3 = geometry.ToArray();
