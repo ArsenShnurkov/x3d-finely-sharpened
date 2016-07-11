@@ -8,54 +8,141 @@ namespace X3D.Engine.Shading
     public class QuadTessShader
     {
         public static string tessControlShader = @"
-#version 420 core
+#version 430 core
 layout(vertices = 16) out;
+in vec3 vPosition[];
+out vec3 tcPosition[];
+uniform float TessLevelInner;
+uniform float TessLevelOuter;
 
 #define ID gl_InvocationID
 
 void main()
 {
-    gl_TessLevelInner[0] = 4;
-    gl_TessLevelInner[1] = 4;
+    tcPosition[ID] = vPosition[ID];
 
-    gl_TessLevelOuter[0] = 4;
-    gl_TessLevelOuter[1] = 4;
-    gl_TessLevelOuter[2] = 4;
-    gl_TessLevelOuter[3] = 4;
-
-    gl_out[ID].gl_Position = gl_in[ID].gl_Position;
+    if (ID == 0) {
+        gl_TessLevelInner[0] = TessLevelInner;
+        gl_TessLevelInner[1] = TessLevelInner;
+        gl_TessLevelOuter[0] = TessLevelOuter;
+        gl_TessLevelOuter[1] = TessLevelOuter;
+        gl_TessLevelOuter[2] = TessLevelOuter;
+        gl_TessLevelOuter[3] = TessLevelOuter;
+    }
 }
 ";
 
         public static string tessEvalShader = @"
-#version 420 core
-layout(quads, equal_spacing, cw) in;
+#version 430 core
+layout (quads) in;
+in vec3 tcPosition[];
+out vec3 tePosition;
+out vec4 tePatchDistance;
 uniform mat4 projection;
 uniform mat4 modelview;
 uniform vec3 scale;
-
-float B(int i, float u)
+uniform float camscale;
+uniform vec3 size;
+uniform vec3 X3DScale;
+uniform mat4 B;
+uniform mat4 BT;
+void main(void)
 {
-    const vec4 bc = vec4(1, 3, 3, 1);
+    // TRIANGLES 1
+    //vec4 p1 = mix(gl_in[1].gl_Position,gl_in[0].gl_Position,gl_TessCoord.x);
+    //vec4 p2 = mix(gl_in[2].gl_Position,gl_in[3].gl_Position,gl_TessCoord.x);
+    //gl_Position = mix(p1, p2, gl_TessCoord.y);
 
-    return bc[i] * pow(u, i) * pow(1.0 - u, 3 - i);
+
+    // TRIANGLES 2
+    //gl_Position=(gl_TessCoord.x*gl_in[0].gl_Position+gl_TessCoord.y*gl_in[1].gl_Position+gl_TessCoord.z*gl_in[2].gl_Position);
+
+
+    // QUADS 1
+    float u = gl_TessCoord.x, v = gl_TessCoord.y;
+
+    mat4 Px = mat4(
+        tcPosition[0].x, tcPosition[1].x, tcPosition[2].x, tcPosition[3].x, 
+        tcPosition[4].x, tcPosition[5].x, tcPosition[6].x, tcPosition[7].x, 
+        tcPosition[8].x, tcPosition[9].x, tcPosition[10].x, tcPosition[11].x, 
+        tcPosition[12].x, tcPosition[13].x, tcPosition[14].x, tcPosition[15].x );
+
+    mat4 Py = mat4(
+        tcPosition[0].y, tcPosition[1].y, tcPosition[2].y, tcPosition[3].y, 
+        tcPosition[4].y, tcPosition[5].y, tcPosition[6].y, tcPosition[7].y, 
+        tcPosition[8].y, tcPosition[9].y, tcPosition[10].y, tcPosition[11].y, 
+        tcPosition[12].y, tcPosition[13].y, tcPosition[14].y, tcPosition[15].y );
+
+    mat4 Pz = mat4(
+        tcPosition[0].z, tcPosition[1].z, tcPosition[2].z, tcPosition[3].z, 
+        tcPosition[4].z, tcPosition[5].z, tcPosition[6].z, tcPosition[7].z, 
+        tcPosition[8].z, tcPosition[9].z, tcPosition[10].z, tcPosition[11].z, 
+        tcPosition[12].z, tcPosition[13].z, tcPosition[14].z, tcPosition[15].z );
+
+    mat4 cx = B * Px * BT;
+    mat4 cy = B * Py * BT;
+    mat4 cz = B * Pz * BT;
+
+    vec4 U = vec4(u*u*u, u*u, u, 1);
+    vec4 V = vec4(v*v*v, v*v, v, 1);
+
+    float x = dot(cx * V, U);
+    float y = dot(cy * V, U);
+    float z = dot(cz * V, U);
+    tePosition =  vec3(x, y, z);
+
+    tePatchDistance = vec4(u, v, 1-u, 1-v);
+    tePosition = X3DScale * camscale * scale * size * vec3(x, y, z);
+    gl_Position = projection * modelview * vec4(tePosition, 1);
 }
+
+";
+        //public static string geometryShaderSource = null;
+        public static string geometryShaderSource = @"
+#version 420 core
+uniform mat4 modelview;
+uniform mat3 normalmatrix;
+uniform float bboxMaxWidth;
+uniform float bboxMaxDepth;
+uniform float bboxMaxHeight;
+
+layout (triangles, max_vertices = 3) in;
+layout (triangle_strip, max_vertices = 3) out; // triangle_strip
+
+in vec3 tePosition[3];
+in vec4 tePatchDistance[3];
+
+out vec3 gFacetNormal;
+out vec3 gPatchDistance;
+out vec3 gTriDistance;
+out vec2 gFacetTexCoord;
 
 void main()
 {
-    vec4 paccum = vec4(0.0);
-    float u = gl_TessCoord.x;
-    float v = gl_TessCoord.y;
 
-    for(int j = 0; j < 4; j++)
-    {
-        for(int i = 0; i < 4; i++)
-        {
-            paccum += B(i, u) * B(j, v) * gl_in[4 * j + i].gl_Position;
-            //paccum += gl_in[4 * j + i].gl_Position;
-        }
-    }
-    gl_Position = projection * modelview * vec4(scale * paccum.xyz, 1.0);
+
+    vec3 A = tePosition[2] - tePosition[0];
+    vec3 B = tePosition[1] - tePosition[0];
+
+    gFacetNormal = normalmatrix  * normalize(cross(A, B));
+    gFacetTexCoord  = vec2((tePosition[0].x / bboxMaxWidth) * 1.0, (tePosition[0].z / bboxMaxDepth) * 1.0); // ElevationGrid TexCoord  
+
+
+    gl_Position = gl_in[0].gl_Position; 
+    EmitVertex();
+
+
+    gl_Position = gl_in[1].gl_Position; 
+    EmitVertex();
+
+
+    gl_Position = gl_in[2].gl_Position; 
+    EmitVertex();
+
+    //gl_Position = gl_in[3].gl_Position; 
+    //EmitVertex();
+
+    EndPrimitive();
 }
 ";
 

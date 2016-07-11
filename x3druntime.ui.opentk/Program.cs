@@ -37,8 +37,6 @@ namespace x3druntime.ui.opentk
 
             LoadBrowser();
 
-            Console.ReadLine();
-
             return EXIT_SUCCESS;
         }
 

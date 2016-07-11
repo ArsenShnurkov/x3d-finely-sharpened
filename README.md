@@ -28,6 +28,13 @@ Example 3 - test of ElevationGrid: X3D Runtime 3.3 Core using OpenGL Version 4
 ![alt text](screenshots/screenshot3.png "X3D Runtime Viewer Example 3")
 
 
+
+Example 4 - test of tessellated ElevationGrid: X3D Runtime 3.3 Core using OpenGL Version 4
+![alt text](screenshots/screenshot4.png "X3D Runtime Viewer Example 4")
+
+
+
+
 Notices
 ```
 

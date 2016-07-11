@@ -140,11 +140,15 @@ namespace X3D.Parser
                 Type = shaderPartTypeValues.TESS_EVAL
             });
 
-            shader.ShaderParts.Add(new ShaderPart()
+            if (!string.IsNullOrEmpty(geometryShaderSource))
             {
-                ShaderSource = geometryShaderSource,
-                Type = shaderPartTypeValues.GEOMETRY
-            });
+                shader.ShaderParts.Add(new ShaderPart()
+                {
+                    ShaderSource = geometryShaderSource,
+                    Type = shaderPartTypeValues.GEOMETRY
+                });
+            }
+
 
             shader.ShaderParts.Add(new ShaderPart()
             {

@@ -36,6 +36,7 @@ namespace X3D
         private bool hasShaders;
         private List<X3DShaderNode> shaders;
 
+        [XmlIgnore]
         public List<ComposedShader> ComposedShaders = new List<ComposedShader>();
 
         #region Test Shader
@@ -44,10 +45,18 @@ namespace X3D
         [XmlIgnore]
         public bool texturingEnabled;
 
+        [XmlIgnore]
         public int uniformModelview, uniformProjection;
+
+        [XmlIgnore]
         public ShaderUniformsPNCT uniforms = new ShaderUniformsPNCT();
+
+        [XmlIgnore]
         public ShaderMaterialUniforms Materials = new ShaderMaterialUniforms();
+
+        [XmlIgnore]
         public TessShaderUniforms Uniforms = new TessShaderUniforms();
+
         private int uniformCameraScale, uniformX3DScale;
 
 
