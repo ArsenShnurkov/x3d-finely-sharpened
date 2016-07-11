@@ -97,7 +97,7 @@ namespace x3druntime.ui.opentk
 
             Type[] types = (new List<Type>(asm.GetTypes())).Where(t => t.IsSubclassOf(typeof (SceneGraphNode))).ToArray();
 
-            Console.WriteLine("-- Support Matrix (Informal indicator) --");
+            Console.WriteLine("-- Support Matrix (Informal indicator of available nodes in X3D engine) --");
             int w = 4, h = types.Length / w;
 
 
