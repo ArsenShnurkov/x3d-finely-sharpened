@@ -76,11 +76,11 @@ namespace X3D
 
             if (RGB && !RGBA)
             {
-                color = Helpers.Floats(colorNode.color);
+                color = X3DTypeConverters.Floats(colorNode.color);
             }
             else if (RGBA && !RGB)
             {
-                color = Helpers.Floats(colorRGBANode.color);
+                color = X3DTypeConverters.Floats(colorRGBANode.color);
             }
 
             _isLoaded = true;
@@ -229,7 +229,7 @@ namespace X3D
 
                         GL.UniformMatrix3(parentShape.Uniforms.NormalMatrix, false, ref parentShape.NormalMatrix);
                         GL.Uniform3(parentShape.Uniforms.LightPosition, 1, ref lightPosition.X);
-                        GL.Uniform3(parentShape.Uniforms.AmbientMaterial, Helpers.ToVec3(OpenTK.Graphics.Color4.Aqua)); // 0.04f, 0.04f, 0.04f
+                        GL.Uniform3(parentShape.Uniforms.AmbientMaterial, X3DTypeConverters.ToVec3(OpenTK.Graphics.Color4.Aqua)); // 0.04f, 0.04f, 0.04f
                         GL.Uniform3(parentShape.Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f);
 
                         GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);

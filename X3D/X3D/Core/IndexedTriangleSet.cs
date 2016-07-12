@@ -50,21 +50,21 @@ namespace X3D
 
             if (RGB && !RGBA)
             {
-                color = Helpers.Floats(colorNode.color);
+                color = X3DTypeConverters.Floats(colorNode.color);
             }
             else if (RGBA && !RGB)
             {
-                color = Helpers.Floats(colorRGBANode.color);
+                color = X3DTypeConverters.Floats(colorRGBANode.color);
             }
 
             if (this.texCoordinate != null)
             {
-                _texCoords = Helpers.MFVec2f(this.texCoordinate.point);
+                _texCoords = X3DTypeConverters.MFVec2f(this.texCoordinate.point);
             }
 
             if (this.coordinate != null)
             {
-                _coords = Helpers.MFVec3f(this.coordinate.point);
+                _coords = X3DTypeConverters.MFVec3f(this.coordinate.point);
 
                 restartIndex = null;
 

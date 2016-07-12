@@ -113,7 +113,7 @@ namespace X3D
 
         public void LinkShaderSource(string source)
         {
-            ShaderSource = Helpers.UnescapeXMLValue(source).Trim();
+            ShaderSource = X3DTypeConverters.UnescapeXMLValue(source).Trim();
 
             if (parentShader != null && parentShape != null)
             {

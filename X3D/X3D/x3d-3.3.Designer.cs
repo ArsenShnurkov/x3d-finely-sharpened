@@ -819,7 +819,7 @@ namespace X3D
             set
             {
                 this._orientation = value;
-                this.Orientation = Helpers.SFVec4f(value);
+                this.Orientation = X3DTypeConverters.SFVec4f(value);
             }
         }
 
@@ -1111,7 +1111,7 @@ namespace X3D
             set
             {
                 this._size = value;
-                _vec3 = Helpers.SFVec3(value);
+                _vec3 = X3DTypeConverters.SFVec3(value);
             }
         }
 
@@ -1124,7 +1124,7 @@ namespace X3D
             set
             {
                 _vec3 = value;
-                _size = Helpers.ToString(value);
+                _size = X3DTypeConverters.ToString(value);
             }
         }
 
@@ -2673,7 +2673,7 @@ namespace X3D
             {
                 this._height = value;
 
-                this.heights = Helpers.Floats(value);
+                this.heights = X3DTypeConverters.Floats(value);
             }
         }
 
@@ -4874,7 +4874,7 @@ namespace X3D
             set
             {
                 this._index = value;
-                this._indicies = Helpers.ParseIndicies(value.Replace(",", ""));
+                this._indicies = X3DTypeConverters.ParseIndicies(value.Replace(",", ""));
             }
         }
 
@@ -5861,11 +5861,11 @@ namespace X3D
         {
             get
             {
-                return Helpers.ToString(this._diffuseColor);
+                return X3DTypeConverters.ToString(this._diffuseColor);
             }
             set
             {
-                this._diffuseColor = Helpers.SFVec3f(value);
+                this._diffuseColor = X3DTypeConverters.SFVec3f(value);
             }
         }
 
@@ -5875,11 +5875,11 @@ namespace X3D
         {
             get
             {
-                return Helpers.ToString(this._emissiveColor);
+                return X3DTypeConverters.ToString(this._emissiveColor);
             }
             set
             {
-                this._emissiveColor = Helpers.SFVec3f(value);
+                this._emissiveColor = X3DTypeConverters.SFVec3f(value);
             }
         }
 
@@ -5903,11 +5903,11 @@ namespace X3D
         {
             get
             {
-                return Helpers.ToString(this._specularColor);
+                return X3DTypeConverters.ToString(this._specularColor);
             }
             set
             {
-                this._specularColor = Helpers.SFVec3f(value);
+                this._specularColor = X3DTypeConverters.SFVec3f(value);
             }
         }
 
@@ -9310,7 +9310,7 @@ namespace X3D
             set
             {
                 this._vec4Rot = value;
-                this._rotation = Helpers.ToString(value);
+                this._rotation = X3DTypeConverters.ToString(value);
             }
         }
 
@@ -9323,7 +9323,7 @@ namespace X3D
             set
             {
                 this._vec3Scale = value;
-                this._scale = Helpers.ToString(value);
+                this._scale = X3DTypeConverters.ToString(value);
             }
         }
 
@@ -9336,7 +9336,7 @@ namespace X3D
             set
             {
                 this._vec4ScaleOrientation = value;
-                this._scaleOrientation = Helpers.ToString(value);
+                this._scaleOrientation = X3DTypeConverters.ToString(value);
             }
         }
 
@@ -9349,7 +9349,7 @@ namespace X3D
             set
             {
                 this._vec3Trans = value;
-                this._translation = Helpers.ToString(value);
+                this._translation = X3DTypeConverters.ToString(value);
             }
         }
 
@@ -9378,7 +9378,7 @@ namespace X3D
             set
             {
                 this._rotation = value;
-                this._vec4Rot = Helpers.SFVec4f(value);
+                this._vec4Rot = X3DTypeConverters.SFVec4f(value);
             }
         }
 
@@ -9393,7 +9393,7 @@ namespace X3D
             set
             {
                 this._scale = value;
-                this._vec3Scale = Helpers.SFVec3f(value);
+                this._vec3Scale = X3DTypeConverters.SFVec3f(value);
             }
         }
 
@@ -9408,7 +9408,7 @@ namespace X3D
             set
             {
                 this._scaleOrientation = value;
-                this._vec4ScaleOrientation = Helpers.SFVec4f(value);
+                this._vec4ScaleOrientation = X3DTypeConverters.SFVec4f(value);
             }
         }
 
@@ -9423,7 +9423,7 @@ namespace X3D
             set
             {
                 this._translation = value;
-                this._vec3Trans = Helpers.SFVec3f(value);
+                this._vec3Trans = X3DTypeConverters.SFVec3f(value);
             }
         }
 
@@ -9669,7 +9669,7 @@ namespace X3D
             set
             {
                 this._centerOfRotation = value;
-                this.CenterOfRotation = Helpers.SFVec3f(value);
+                this.CenterOfRotation = X3DTypeConverters.SFVec3f(value);
             }
         }
 
@@ -9701,7 +9701,7 @@ namespace X3D
             set
             {
                 this._position = value;
-                this.Position = Helpers.SFVec3f(value);
+                this.Position = X3DTypeConverters.SFVec3f(value);
             }
         }
 

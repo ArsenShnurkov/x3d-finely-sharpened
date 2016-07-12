@@ -54,27 +54,27 @@ namespace X3D
 
             if (RGB && !RGBA)
             {
-                color = Helpers.Floats(colorNode.color);
+                color = X3DTypeConverters.Floats(colorNode.color);
             }
             else if (RGBA && !RGB)
             {
-                color = Helpers.Floats(colorRGBANode.color);
+                color = X3DTypeConverters.Floats(colorRGBANode.color);
             }
 
             if (this.texCoordinate != null && !string.IsNullOrEmpty(this.texCoordIndex))
             {
-                _texIndices = Helpers.ParseIndicies(this.texCoordIndex);
-                _texCoords = Helpers.MFVec2f(this.texCoordinate.point);
+                _texIndices = X3DTypeConverters.ParseIndicies(this.texCoordIndex);
+                _texCoords = X3DTypeConverters.MFVec2f(this.texCoordinate.point);
             }
 
             if (this.coordinate != null && !string.IsNullOrEmpty(this.coordIndex))
             {
-                _indices = Helpers.ParseIndicies(this.coordIndex);
-                _coords = Helpers.MFVec3f(this.coordinate.point);
+                _indices = X3DTypeConverters.ParseIndicies(this.coordIndex);
+                _coords = X3DTypeConverters.MFVec3f(this.coordinate.point);
 
                 if (!string.IsNullOrEmpty(this.colorIndex))
                 {
-                    _colorIndicies = Helpers.ParseIndicies(this.colorIndex);
+                    _colorIndicies = X3DTypeConverters.ParseIndicies(this.colorIndex);
                 }
 
                 if (this.coordIndex.Contains(RESTART_INDEX.ToString()))

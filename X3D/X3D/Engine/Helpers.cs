@@ -8,7 +8,7 @@ using X3D.Core.Shading;
 
 namespace X3D.Parser
 {
-    public class Helpers
+    public class X3DTypeConverters
     {
 
         public static Vector3 ToVec3(OpenTK.Graphics.Color4 color)
