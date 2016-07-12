@@ -39,28 +39,10 @@ namespace X3D.Engine
 
         public SceneGraph SceneGraph;
 
-        public const X3DMIMEType Default = X3DMIMEType.X3D;
+        
 
-        public enum X3DMIMEType
-        {
-            X3D,
-            X3DBinary,
-            ClassicVRML,
-            VRML,
-            UNKNOWN
-        }
-
-        public static string BaseURL
-        {
-            get;
-            set;
-        }
-
-        public static X3DMIMEType BaseMIME
-        {
-            get;
-            set;
-        }
+        public static string BaseURL { get; set; }
+        public static X3DMIMEType BaseMIME { get; set; }
 
         public static SceneManager fromURL(string url, X3DMIMEType mime_type)
         {
@@ -111,7 +93,7 @@ namespace X3D.Engine
 
         public static SceneManager fromURL(string url)
         {
-            return fromURL(url, Default);
+            return fromURL(url, X3D.DefaultMimeType);
         }
 
         public static SceneManager fromURL(string url, string mime_type)
@@ -131,7 +113,7 @@ namespace X3D.Engine
 
         public static SceneManager fromStream(Stream data)
         {
-            return fromStream(data, Default);
+            return fromStream(data, X3D.DefaultMimeType);
         }
 
         public static SceneManager fromStream(Stream data, string mime_type)
@@ -598,7 +580,7 @@ namespace X3D.Engine
 
         public static void Draw(SceneManager scene, RenderingContext rc)
         {
-            Render.Scene(scene, rc);
+            Renderer.Scene(scene, rc);
         }
     }
 }

@@ -18,9 +18,19 @@ namespace X3D
     using System.Collections.Generic;
     using OpenTK;
     using System.Linq;
-    using Parser;
+    using Core;
     using System.Drawing;
     using Engine;
+    using Parser;
+    public enum X3DMIMEType
+    {
+        X3D,
+        X3DBinary,
+        ClassicVRML,
+        VRML,
+        UNKNOWN
+    }
+
     /// <summary>
     /// x3dVersion enumeration string constants are used to identify 
     /// the allowed versions for an X3D scene graph

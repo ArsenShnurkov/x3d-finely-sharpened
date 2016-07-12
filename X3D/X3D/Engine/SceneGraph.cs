@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml.XPath;
 using System.Xml.Linq;
+using X3D.Core;
 using X3D.Parser;
 
 namespace X3D.Engine
@@ -16,11 +17,15 @@ namespace X3D.Engine
     public class SceneGraph
     {
         private SceneGraphNode _root;
-        public bool Loaded = false;
+        private int __lastid = 0;
+
+        public bool Loaded { get; set; }
 
         public SceneGraph(XDocument xml)
         {
             XPathNavigator nav;
+
+            Loaded = false;
 
             nav = xml.CreateNavigator();
 
@@ -48,6 +53,8 @@ namespace X3D.Engine
             return _root;
         }
 
+        #region Scene Builder
+
         /// <summary>
         /// Optimises the current scene graph.
         /// Current optimisations include:
@@ -58,7 +65,7 @@ namespace X3D.Engine
             //node_reuser();
         }
 
-        private int __lastid = 0;
+
         private int make_id()
         {
             __lastid++;
@@ -164,6 +171,9 @@ namespace X3D.Engine
             while (nav.NodeType != XPathNodeType.Root && !nav.IsSamePosition(startPosition));
         }
 
+        #endregion
+
+        #region Search
 
         private SceneGraphNode depth_first_search_iterative(int id)
         {
@@ -221,6 +231,8 @@ namespace X3D.Engine
 
             return null;
         }
+
+        #endregion
 
         public override string ToString()
         {

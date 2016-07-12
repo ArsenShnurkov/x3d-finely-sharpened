@@ -178,8 +178,8 @@ namespace x3druntime.ui.opentk
                 rc.matricies.projection = ActiveCamera.projectionMatrix;
                 rc.cam = ActiveCamera;
                 rc.Keyboard = this.Keyboard;
-                
-                scene.Draw(rc);
+
+                Renderer.Draw(scene.SceneGraph, rc);
             }
             else
             {

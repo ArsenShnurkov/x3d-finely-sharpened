@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace X3D.Parser // TODO: put in X3D.Engine namespace
+namespace X3D.Core
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct Vertex

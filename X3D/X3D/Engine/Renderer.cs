@@ -10,9 +10,8 @@ using OpenTK;
 
 namespace X3D.Engine
 {
-    public class Render
-    {//:IX3DRenderer {
-        //TODO: put all this in X3D.Engine.Renderer
+    public class Renderer
+    {
         public static void Scene(SceneManager scene, RenderingContext rc)
         {
 #if DEBUG_SCENE_GRAPH_RENDERING
@@ -78,7 +77,7 @@ namespace X3D.Engine
 
                 if (node.PassthroughAllowed)
                 {
-                    children = x_xReverse(node.Children);
+                    children = reverseList(node.Children);
                     foreach (SceneGraphNode n in children)
                     {
                         if (nodes_visited.Contains(n.id))
@@ -158,10 +157,7 @@ namespace X3D.Engine
             return false;
         }
 
-        /// <summary>
-        /// I prefix stupid code with x_x
-        /// </summary>
-        private static IEnumerable<T> x_xReverse<T>(IEnumerable<T> input)
+        private static IEnumerable<T> reverseList<T>(IEnumerable<T> input)
         {
             return new Stack<T>(input);
         }

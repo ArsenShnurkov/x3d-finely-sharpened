@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using win = System.Drawing;
-using X3D.Parser;
+using X3D.Core;
 
 namespace X3D
 {

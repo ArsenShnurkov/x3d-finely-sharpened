@@ -7,6 +7,7 @@ using OpenTK.Graphics.OpenGL4;
 using X3D.Engine;
 using System.IO;
 using System.Xml.Serialization;
+using X3D.Core;
 using X3D.Parser;
 
 namespace X3D

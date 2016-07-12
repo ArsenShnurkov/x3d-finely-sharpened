@@ -15,7 +15,10 @@ namespace X3D
 
             parentShader = GetParent<ComposedShader>();
 
-            parentShader.Fields.Add(this);
+            if(parentShader != null)
+            {
+                parentShader.Fields.Add(this);
+            }
         }
     }
 }

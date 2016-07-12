@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using OpenTK.Graphics.OpenGL4;
-using X3D.Parser;
+using X3D.Core;
 using X3D.Core;
 
 namespace X3D

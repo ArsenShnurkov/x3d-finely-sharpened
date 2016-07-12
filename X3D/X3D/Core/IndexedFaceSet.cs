@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
-using X3D.Parser;
+using X3D.Core;
 using X3D.Core.Shading;
+using X3D.Parser;
 
 namespace X3D
 {

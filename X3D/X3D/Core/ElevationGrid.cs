@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
-using X3D.Parser;
+using X3D.Core;
 using System.Xml.Serialization;
 using OpenTK.Input;
 using X3D.Core.Shading;
 using X3D.Core.Shading.DefaultUniforms;
+using X3D.Parser;
 
 namespace X3D
 {
