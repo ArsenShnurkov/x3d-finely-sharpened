@@ -9,10 +9,16 @@ using X3D.Parser;
 namespace X3D.Core.Shading
 {
     using Verticies = List<Vertex>;
+    using Mesh = List<List<Vertex>>; // Mesh will contain faces made up of either or Triangles, and Quads
 
+
+    /// <summary>
+    /// Interleave all geometry for single API simplicity for now.
+    /// Later include additional support for indexing geometry.
+    /// </summary>
     public class Buffering
     {
-        public static int BufferShaderGeometry(List<Verticies> geometries, Shape parentShape, out int verts)
+        public static int BufferShaderGeometry(Mesh geometries, Shape parentShape, out int verts)
         {
             GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
 
@@ -104,6 +110,7 @@ namespace X3D.Core.Shading
 
 
             // STRIDE each float is 4 bytes
+            // TC    C          P         N
             // [1 1] [1 1 1 1]  [1 1 1]   [1 1 1]
             //     8        24  28    36  40   48
 
@@ -133,11 +140,6 @@ namespace X3D.Core.Shading
                 GL.EnableVertexAttribArray(parentShape.uniforms.a_texcoord); // vertex texCoordinate
                 GL.VertexAttribPointer(parentShape.uniforms.a_texcoord, 2, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes + Vector4.SizeInBytes));
             }
-
-            //GL.ColorPointer(4, ColorPointerType.Float, InterleavedVertexData.size_in_bytes, (IntPtr)0);
-            //GL.VertexPointer(3, VertexPointerType.Float, InterleavedVertexData.size_in_bytes, (IntPtr)(COLOR_COORD_SIZE * sizeof(float)));
-            //GL.TexCoordPointer(2, TexCoordPointerType.Float, InterleavedVertexData.size_in_bytes, (IntPtr)((COLOR_COORD_SIZE + VERTEX_COORD_SIZE) * sizeof(float)));
-            //GL.NormalPointer(NormalPointerType.Float, InterleavedVertexData.size_in_bytes, (IntPtr)((COLOR_COORD_SIZE + VERTEX_COORD_SIZE + TEXTURE_COORD_SIZE) * sizeof(float)));
 
             NumVerticies = _interleaved3.Length;
 
