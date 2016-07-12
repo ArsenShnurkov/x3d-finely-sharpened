@@ -7,15 +7,22 @@ using System.Text;
 
 namespace X3D.Core
 {
+    /// <summary>
+    /// Vertex structure for Interleaved Geometry and Meshing.
+    /// Mimics InterleavedArrayFormat.T2fC4fN3fV3f
+    /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct Vertex
-    { // mimic InterleavedArrayFormat.T2fC4fN3fV3f
-      /// <summary>
-      /// Required
-      /// </summary>
+    public struct Vertex 
+    { 
+        /// <summary>
+        /// Required
+        /// </summary>
         public Vector3 Position;
+
         public Vector3 Normal;
+
         public Vector4 Color;
+
         public Vector2 TexCoord;
 
         public static Vertex Zero

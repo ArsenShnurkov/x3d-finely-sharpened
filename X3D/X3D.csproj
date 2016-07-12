@@ -98,8 +98,8 @@
     <Compile Include="X3D\Core\X3D.cs" />
     <Compile Include="X3D\Core\SceneGraphNode.cs" />
     <Compile Include="X3D\Parser\X3DTypeConverters.cs" />
-    <Compile Include="X3D\Engine\MathHelpers.cs" />
-    <Compile Include="X3D\Engine\Matricies.cs" />
+    <Compile Include="X3D\Math\MathHelpers.cs" />
+    <Compile Include="X3D\Math\Matricies.cs" />
     <Compile Include="X3D\Core\Shading\Buffering.cs" />
     <Compile Include="X3D\Core\Shading\BuiltIn\DefaultShader.cs" />
     <Compile Include="X3D\Core\Shading\DefaultUniforms.cs" />
