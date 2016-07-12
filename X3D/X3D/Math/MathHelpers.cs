@@ -7,30 +7,10 @@ using X3D.Core;
 
 namespace X3D
 {
-
-    public class BoundingBox
-    {
-        public float Width, Height, Depth;
-
-        public BoundingBox()
-        {
-            this.Width = 0f;
-            this.Height = 0f;
-            this.Depth = 0f;
-        }
-
-        public BoundingBox(float x, float y, float w, float h, float d)
-        {
-            this.Width = w;
-            this.Height = h;
-            this.Depth = d;
-        }
-    }
-
     public class MathHelpers
     {
         public const float PI_OVER_180 = (float)Math.PI / 180.0f;
-        public const float TWO_PI = 2.0f * (float)Math.PI;
+        public const float PI2 = 2.0f * (float)Math.PI;
 
         public static BoundingBox CalcBoundingBox(IndexedTriangleSet its, int? restartIndex)
         {
@@ -313,6 +293,16 @@ namespace X3D
 
 
             return new Vector2(u, v);
+        }
+
+        /// <summary>
+        /// Computes the facet Texture Coordinate for a Sphere given the Sphere's facet normal.
+        /// </summary>
+        [Obsolete("Perform this calculation in a Vertex or Geometry shader for increased performance.")]
+        public static Vector2 uv(Vector3 facetNormal)
+        {
+            return new Vector2((float)(Math.Asin(facetNormal.X) / Math.PI + 0.5),
+                (float)(Math.Asin(facetNormal.Y) / Math.PI + 0.5));
         }
 
         public static Vector3 Perp(Vector3 v)

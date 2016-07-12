@@ -77,7 +77,7 @@
     </Compile>
     <Compile Include="X3D\Core\Appearance.cs" />
     <Compile Include="X3D\Core\Box.cs" />
-    <Compile Include="X3D\Core\Camera.cs" />
+    <Compile Include="X3D\Engine\Camera.cs" />
     <Compile Include="X3D\Core\Shading\ComposedShader.cs" />
     <Compile Include="X3D\Core\Cone.cs" />
     <Compile Include="X3D\Core\Cylinder.cs" />
@@ -86,7 +86,7 @@
     <Compile Include="X3D\Core\IndexedFaceSet.cs" />
     <Compile Include="X3D\Core\IndexedTriangleSet.cs" />
     <Compile Include="X3D\Core\Material.cs" />
-    <Compile Include="X3D\Core\RenderingContext.cs" />
+    <Compile Include="X3D\Engine\RenderingContext.cs" />
     <Compile Include="X3D\Core\field.cs" />
     <Compile Include="X3D\Core\Shading\ShaderPart.cs" />
     <Compile Include="X3D\Core\Shading\ShaderCompiler.cs" />
@@ -96,7 +96,8 @@
     <Compile Include="X3D\Core\Transform.cs" />
     <Compile Include="X3D\Core\Viewpoint.cs" />
     <Compile Include="X3D\Core\X3D.cs" />
-    <Compile Include="X3D\Core\SceneGraphNode.cs" />
+    <Compile Include="X3D\Engine\SceneGraphNode.cs" />
+    <Compile Include="X3D\Math\BoundingBox.cs" />
     <Compile Include="X3D\Parser\X3DTypeConverters.cs" />
     <Compile Include="X3D\Math\MathHelpers.cs" />
     <Compile Include="X3D\Math\Matricies.cs" />
