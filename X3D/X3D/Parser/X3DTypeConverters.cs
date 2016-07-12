@@ -8,12 +8,180 @@ using X3D.Core.Shading;
 
 namespace X3D.Parser
 {
+    using MFString = List<string>;
+
     /// <summary>
     /// A Utility comprising a collection of handy X3D type converters.
     /// Use these converters where XML Serialisation fails and parts of X3D Model need to incorporate additional parse steps.
     /// </summary>
     public class X3DTypeConverters
     {
+
+        public const string DATA_TEXT_PLAIN = "data:text/plain";
+        private static Regex regMFString = new Regex(@"(?:[\""][^\""]+\"")|(?:['][^']+['])", RegexOptions.Compiled);
+
+        private static Regex regMFStringSoubleQuotes = new Regex("([\"][^\"]+[\"]+\\s?[\"][^\"]+[\"]+)?", RegexOptions.Compiled);
+        private static Regex regMFStringSingleQuotes = new Regex("", RegexOptions.Compiled);
+
+        
+        public static MFString MFString(string @string)
+        {
+            List<string> lst = new MFString();
+            Regex r;
+            MatchCollection m;
+
+            string tests = "\"c.jpg\" 'a.jpg' 'b.jpg' \"d.jpg\" 'e.jpg' \"f.jpg\" 'helloworld' "
+                +"\"texture\\generic\\DN.png\\\" \"Figure14.2ElevationGridMountain.x3d\" "
+                +"'http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/Chapter14-ElevationGrid/Figure14.2ElevationGridMountain.x3d' \"http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/Chapter14-ElevationGrid/Figure14.2ElevationGridMountain.x3d\" "
+                +"'texture\\generic\\DN.png'";
+
+            //@string = tests;
+
+            // Single quotes
+            r = new Regex("(?:(\\'.*?\\').*?)",
+                RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline);
+            m = r.Matches(@string);
+            if (m.Count > 0)
+            {
+                foreach(Match mm in m)
+                {
+                    for (int i = 0; i < mm.Groups.Count; i++)
+                    {
+                        String string1 = mm.Groups[i].ToString();
+
+                        lst.Add(removeQuotes(string1));
+                    }
+                }
+               
+            }
+
+            // Double quotes
+            r = new Regex("(?:(\\\".*?\\\").*?)",
+                RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline);
+            m = r.Matches(@string);
+            if (m.Count > 0)
+            {
+                foreach (Match mm in m)
+                {
+                    for (int i = 0; i < mm.Groups.Count; i++)
+                    {
+                        String string1 = mm.Groups[i].ToString();
+
+                        lst.Add(removeQuotes(string1));
+                    }
+                }
+
+            }
+
+            //if (IsMFString(@string))
+            //{
+            //    //string[] mfs = GetMFString(@string);
+            //    //lst.AddRange(mfs);
+
+            //    //MatchCollection mc = regMFString.Matches(@string);
+
+            //    //foreach (Match m in mc)
+            //    //{
+            //    //    lst.Add(removeQuotes(m.Value));
+            //    //}
+
+
+            //}
+            //else
+            //{
+            //    return new List<string>();
+            //}
+
+            lst = lst.Distinct().ToList();
+
+            return lst;
+        }
+
+        public static bool IsMFString(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return false;
+            }
+
+
+
+            if (str.Contains("\""))
+            {
+                str = str.Replace("\"", "");
+            }
+
+            if (str.Contains("'"))
+            {
+                str = str.Replace("'", "");
+            }
+
+            str = Regex.Replace(str, "\\s+", " ");
+
+            return str.Split(' ').Length > 1;
+
+            //if(str.Contains("\"")||str.Contains("'")) {
+            //    return true;
+            //}
+            //return false;
+        }
+
+        public static string[] GetMFString(string str)
+        {
+            if (string.IsNullOrEmpty(str))
+            {
+                return new string[] { };
+            }
+
+            if (str.StartsWith(DATA_TEXT_PLAIN))
+            {
+                string source = str.Remove(0, DATA_TEXT_PLAIN.Length);
+
+                return new string[] { source };
+            }
+
+            if (str.Contains("\""))
+            {
+                str = str.Replace("\"", "");
+            }
+
+            if (str.Contains("'"))
+            {
+                str = str.Replace("'", "");
+            }
+
+            str = Regex.Replace(str, "\\s+", " ");
+
+            return str.Split(' ');
+
+            //MatchCollection mc;
+            //List<string> st;
+
+            //st=new List<string>();
+            //mc=regMFString.Matches(str);
+
+            //foreach(Match m in mc) {
+            //    st.Add(removeQuotes(m.Value));
+            //}
+
+            //return st.ToArray();
+        }
+
+        public static string removeQuotes(string mfstring)
+        {
+            if (mfstring.Length > 0)
+            {
+                if (mfstring[0] == '\'' || mfstring[0] == '"')
+                {
+                    mfstring = mfstring.Remove(0, 1);
+                }
+                if (mfstring.EndsWith("'") || mfstring.EndsWith("\""))
+                {
+                    mfstring = mfstring.Remove(mfstring.Length - 1, 1);
+                }
+            }
+            return mfstring;
+        }
 
         public static Vector3 ToVec3(OpenTK.Graphics.Color4 color)
         {
@@ -79,6 +247,11 @@ namespace X3D.Parser
         {
             return string.Format("{0} {1} {2}", sfVec3f.X, sfVec3f.Y, sfVec3f.Z);
         }
+
+        //internal static string removeQuotes(string url)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public static string ToString(Vector4 sfVec4f)
         {

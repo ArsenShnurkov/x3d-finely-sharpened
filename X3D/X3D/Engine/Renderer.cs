@@ -1,6 +1,17 @@
 ﻿//#define DEBUG_SCENE_GRAPH_RENDERING
 //#define DEBUG_SCENE_GRAPH_RENDERING_VERBOSE
 
+/* There are several ways to perform the rendering..
+ * One way is to get the root node of the scene graph and call its rendering methods,
+ * then each child X3DNode will need to invoke the rendering methods of its children.
+ * This method is simple, but relies heavily on the use of the call stack, and it's algorithm is unchangeable and not relocatable.
+ * 
+ * Another way is to traverse the scene graph by hand to explicitly call each node's rendering methods.
+ * Of course traversing the scene graph by hand can be done recursivily or iterativily, depth first or bredth first.
+ * This method allows more control of the algorithm used, is more future proof, 
+ * and that is why it is being used here.
+ */
+
 using System;
 using OpenTK.Graphics.OpenGL;
 
@@ -20,24 +31,28 @@ namespace X3D.Engine
             Draw(scene.SceneGraph,rc);
         }
 
-        /* There are several ways to perform the rendering..
-         * One way is to get the root node of the scene graph and call its rendering methods,
-         * then each child X3DNode will need to invoke the rendering methods of its children.
-         * This method is simple, but relies heavily on the use of the call stack, and it's algorithm is unchangeable and not relocatable.
-         * 
-         * Another way is to traverse the scene graph by hand to explicitly call each node's rendering methods.
-         * Of course traversing the scene graph by hand can be done recursivily or iterativily, depth first or bredth first.
-         * This method allows more control of the algorithm used, is more future proof, 
-         * and that is why it is being used here.
-         */
-
-
         public static void Draw(SceneGraph sg, RenderingContext rc)
         {
+            if (!X3D.LoaderOnlyEnabled && X3D.RuntimeExecutionEnabled)
+            {
+                // Establish event routes between nodes and their fields ..
 
-            draw_scenegraph_dfs_iterative(sg.GetRoot(),rc);
+                // TODO: Setup and use Event Graph, Event Utilities, and Event Propagation
+
+                
+            }
+
+            if (X3D.RuntimePresentationEnabled)
+            {
+                BufferSystemTextures();
+
+                draw_scenegraph_dfs_iterative(sg.GetRoot(), rc);
+            }
+            
 
         }
+
+        #region Graphing Methods
 
         private static void draw_scenegraph_dfs_iterative(SceneGraphNode root, RenderingContext context)
         {
@@ -161,5 +176,37 @@ namespace X3D.Engine
         {
             return new Stack<T>(input);
         }
+
+        #endregion
+
+        #region System Resource Buffering Methods
+
+        protected static void BufferSystemTextures()
+        {
+            if (SceneManager._texturesToBuffer.Count > 0)
+            {
+                int i = 0;
+                ImageTexture t;
+                SceneManager._texturesBuffered = new int[SceneManager._texturesToBuffer.Count];
+
+                GL.GenTextures(SceneManager._texturesToBuffer.Count, SceneManager._texturesBuffered);
+
+                while(SceneManager._texturesToBuffer.Count > 0)
+                {
+                    t = SceneManager._texturesToBuffer.Dequeue();
+
+                    t.Index = SceneManager._texturesBuffered[i];
+
+                    if (t.IsLoaded == false)
+                        t.LoadTexture();
+
+                    i++;
+                }
+
+                Console.WriteLine("Allocated {0} system textures", i + 1);
+            }
+        }
+
+        #endregion
     }
 }

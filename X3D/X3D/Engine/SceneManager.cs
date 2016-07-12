@@ -14,6 +14,8 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using OpenTK;
+using OpenTK.Graphics.OpenGL4;
+using X3D.Parser;
 
 /*
 createX3DFromStream
@@ -26,6 +28,8 @@ namespace X3D.Engine
 
     public class SceneManager
     {
+        public SceneGraph SceneGraph;
+
 
         ///// <summary>
         ///// Disable DTD validation if you want to gain performance benefits
@@ -37,12 +41,14 @@ namespace X3D.Engine
 
         public static string CurrentLocation;// the cd is set upon every X3D scene fetch
 
-        public SceneGraph SceneGraph;
-
-        
-
         public static string BaseURL { get; set; }
         public static X3DMIMEType BaseMIME { get; set; }
+
+        internal static Queue<ImageTexture> _texturesToBuffer = new Queue<ImageTexture>();
+        internal static int[] _texturesBuffered;
+        private static Regex regProto = new Regex("[a-zA-Z]+[:][/][/]", RegexOptions.Compiled);
+
+        #region Scene Loader Methods
 
         public static SceneManager fromURL(string url, X3DMIMEType mime_type)
         {
@@ -121,11 +127,15 @@ namespace X3D.Engine
             return fromStream(data, GetMIMEType(mime_type));
         }
 
+        #endregion
+
+        #region Asset Resourcing Methods
+
         public static bool Fetch(string url_mfstring, out object resource)
         {
-            if (IsMFString(url_mfstring))
+            if (X3DTypeConverters.IsMFString(url_mfstring))
             {
-                string[] urls = GetMFString(url_mfstring);
+                string[] urls = X3DTypeConverters.GetMFString(url_mfstring);
 
                 foreach (string url in urls)
                 {
@@ -179,7 +189,7 @@ namespace X3D.Engine
                 return false;
             }
 
-            url = removeQuotes(url);
+            url = X3DTypeConverters.removeQuotes(url);
 
             if (!CapabilityEnabled(System.IO.Path.GetExtension(url)))
             {
@@ -353,96 +363,61 @@ namespace X3D.Engine
             CurrentLocation = url.TrimEnd().TrimEnd(System.IO.Path.GetFileName(url).ToCharArray());
         }
 
-        public const string DATA_TEXT_PLAIN = "data:text/plain";
+        #endregion
 
-        private static Regex regMFString = new Regex(@"(?:[\""][^\""]+\"")|(?:['][^']+['])", RegexOptions.Compiled);
-        private static Regex regProto = new Regex("[a-zA-Z]+[:][/][/]", RegexOptions.Compiled);
+        #region MIME Type Helper Methods
 
-        public static bool IsMFString(string str)
+        public static X3DMIMEType GetMIMETypeByURL(string url)
         {
-            if (string.IsNullOrEmpty(str))
+            string file_extension;
+
+            file_extension = System.IO.Path.GetExtension(url);
+
+            switch (file_extension.ToLower().Trim())
             {
-                return false;
+                case ".x3d":
+                    return X3DMIMEType.X3D;
+                case ".xml":
+                    return X3DMIMEType.X3D;
+                case ".x3db":
+                    return X3DMIMEType.X3DBinary;
+                case ".x3dv":
+                    return X3DMIMEType.ClassicVRML;
+                case ".x3dz":
+                    return X3DMIMEType.X3D;
+                case ".x3dbz":
+                    return X3DMIMEType.X3DBinary;
+                case ".x3dvz":
+                    return X3DMIMEType.ClassicVRML;
+                case ".wrl":
+                    return X3DMIMEType.VRML;
+                default:
+                    return X3DMIMEType.UNKNOWN;
             }
-
-
-
-            if (str.Contains("\""))
-            {
-                str = str.Replace("\"", "");
-            }
-
-            if (str.Contains("'"))
-            {
-                str = str.Replace("'", "");
-            }
-
-            str = Regex.Replace(str, "\\s+", " ");
-
-            return str.Split(' ').Length > 1;
-
-            //if(str.Contains("\"")||str.Contains("'")) {
-            //    return true;
-            //}
-            //return false;
         }
 
-        public static string[] GetMFString(string str)
+        public static X3DMIMEType GetMIMEType(string mime_type)
         {
-            if (string.IsNullOrEmpty(str))
+            switch (mime_type.ToLower())
             {
-                return new string[] { };
+                case "model/x3d+xml":
+                    return X3DMIMEType.X3D;
+                case "model/x3d+binary":
+                    return X3DMIMEType.X3DBinary;
+                case "model/x3d+vrml":
+                    return X3DMIMEType.ClassicVRML;
+                case "x-world/x-vrml":
+                    return X3DMIMEType.VRML;
+                case "model/vrml":
+                    return X3DMIMEType.VRML;
+                default:
+                    return X3DMIMEType.UNKNOWN;
             }
-
-            if (str.StartsWith(SceneManager.DATA_TEXT_PLAIN))
-            {
-                string source = str.Remove(0, SceneManager.DATA_TEXT_PLAIN.Length);
-
-                return new string[] { source };
-            }
-
-            if (str.Contains("\""))
-            {
-                str = str.Replace("\"", "");
-            }
-
-            if (str.Contains("'"))
-            {
-                str = str.Replace("'", "");
-            }
-
-            str = Regex.Replace(str, "\\s+", " ");
-
-            return str.Split(' ');
-
-            //MatchCollection mc;
-            //List<string> st;
-
-            //st=new List<string>();
-            //mc=regMFString.Matches(str);
-
-            //foreach(Match m in mc) {
-            //    st.Add(removeQuotes(m.Value));
-            //}
-
-            //return st.ToArray();
         }
 
-        private static string removeQuotes(string mfstring)
-        {
-            if (mfstring.Length > 0)
-            {
-                if (mfstring[0] == '\'' || mfstring[0] == '"')
-                {
-                    mfstring = mfstring.Remove(0, 1);
-                }
-                if (mfstring.EndsWith("'") || mfstring.EndsWith("\""))
-                {
-                    mfstring = mfstring.Remove(mfstring.Length - 1, 1);
-                }
-            }
-            return mfstring;
-        }
+        #endregion
+
+        #region Scene Helper Methods
 
         /// <summary>
         /// Informally: Convert the XML DOM into a X3D DOM by building a tree of X3DNodes.
@@ -525,53 +500,9 @@ namespace X3D.Engine
             }
         }
 
-        public static X3DMIMEType GetMIMETypeByURL(string url)
-        {
-            string file_extension;
+        #endregion
 
-            file_extension = System.IO.Path.GetExtension(url);
-
-            switch (file_extension.ToLower().Trim())
-            {
-                case ".x3d":
-                    return X3DMIMEType.X3D;
-                case ".xml":
-                    return X3DMIMEType.X3D;
-                case ".x3db":
-                    return X3DMIMEType.X3DBinary;
-                case ".x3dv":
-                    return X3DMIMEType.ClassicVRML;
-                case ".x3dz":
-                    return X3DMIMEType.X3D;
-                case ".x3dbz":
-                    return X3DMIMEType.X3DBinary;
-                case ".x3dvz":
-                    return X3DMIMEType.ClassicVRML;
-                case ".wrl":
-                    return X3DMIMEType.VRML;
-                default:
-                    return X3DMIMEType.UNKNOWN;
-            }
-        }
-
-        public static X3DMIMEType GetMIMEType(string mime_type)
-        {
-            switch (mime_type.ToLower())
-            {
-                case "model/x3d+xml":
-                    return X3DMIMEType.X3D;
-                case "model/x3d+binary":
-                    return X3DMIMEType.X3DBinary;
-                case "model/x3d+vrml":
-                    return X3DMIMEType.ClassicVRML;
-                case "x-world/x-vrml":
-                    return X3DMIMEType.VRML;
-                case "model/vrml":
-                    return X3DMIMEType.VRML;
-                default:
-                    return X3DMIMEType.UNKNOWN;
-            }
-        }
+        #region Scene Rendering Methods
 
         public void Draw(RenderingContext rc)
         {
@@ -582,5 +513,18 @@ namespace X3D.Engine
         {
             Renderer.Scene(scene, rc);
         }
+
+        public static int CreateTexture(ImageTexture indexableTexture)
+        {
+            int i;
+
+            i = _texturesToBuffer.Count;
+            
+            _texturesToBuffer.Enqueue(indexableTexture);
+
+            return i;
+        }
+
+        #endregion
     }
 }

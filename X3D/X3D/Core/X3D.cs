@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace X3D
 {
@@ -9,11 +10,14 @@ namespace X3D
     {
         public const X3DMIMEType DefaultMimeType = X3DMIMEType.X3D;
 
+        [XmlIgnore]
         public static double X3DEngineVersionNum = 3.3;
         public static x3dVersion X3DEngineVersion = x3dVersion.X3D_3_3;
         public static profileNames X3DEngineProfile = profileNames.Interchange;
 
         private static bool _runtimeExecutionEnabled = true;
+        private static bool _runtimePresentationEnabled = true;
+        private static bool _loaderOnlyEnabled = false;
 
         /// <summary>
         /// When Runtime execution is enabled, in addition to Geometry in the X3D Scene being presented, 
@@ -28,10 +32,32 @@ namespace X3D
         /// 
         /// See: http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/concepts.html#X3DLoaders
         /// </summary>
+        [XmlIgnore]
         public static bool RuntimeExecutionEnabled
         {
             get { return _runtimeExecutionEnabled; }
             set { _runtimeExecutionEnabled = value; }
+        }
+
+        /// <summary>
+        /// If runtime presentation is enabled, the Renderer displays geometry in the scene.
+        /// </summary>
+        [XmlIgnore]
+        public static bool RuntimePresentationEnabled
+        {
+            get { return _runtimePresentationEnabled; }
+            set { _runtimePresentationEnabled = value; }
+        }
+
+        /// <summary>
+        /// If LoaderOnlyEnabled is enabled, the Renderer only displays geometry in the scene 
+        /// and does not execute any behaviors.
+        /// </summary>
+        [XmlIgnore]
+        public static bool LoaderOnlyEnabled
+        {
+            get { return _loaderOnlyEnabled; }
+            set { _loaderOnlyEnabled = value; }
         }
 
         public X3D()

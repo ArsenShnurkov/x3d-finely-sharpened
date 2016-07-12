@@ -116,13 +116,12 @@ namespace x3druntime.ui.opentk
                 //GL.ShadeModel(ShadingModel.Flat);
                 //GL.ShadeModel(ShadingModel.Smooth);                // Enable Smooth Shading
 
-                GL.ClearColor(0.0f, 0.0f, 0.0f, 0.5f);           // Black Background
+                GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);           // Black Background
                 GL.ClearDepth(1.0f);                 // Depth Buffer Setup
                 GL.Enable(EnableCap.DepthTest);                // Enables Depth Testing
                 GL.DepthFunc(DepthFunction.Lequal);                 // The Type Of Depth Testing To Do
                 //GL.Enable(EnableCap.CullFace); // causes bugs if enabled i.e. nehe10 wont render properly
                 GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);  // Really Nice Perspective Calculations
-
             }
 
             DateTime time_before = DateTime.Now;

@@ -13,6 +13,7 @@ namespace X3D.Core.Shading.DefaultUniforms
         public int a_texcoord;
         public int a_coloringEnabled;
         public int a_texturingEnabled;
+        public int sampler;
     }
 
     public class ShaderMaterialUniforms

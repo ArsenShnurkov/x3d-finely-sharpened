@@ -3599,7 +3599,7 @@ namespace X3D
 
         private bool _horizontal;
 
-        private List<string> _justify;
+        private string _justify;
 
         private string _language;
 
@@ -3617,11 +3617,10 @@ namespace X3D
 
         public FontStyle()
         {
-            this._justify = new List<string>();
             this._family = new List<string>();
             this._family.Add("\"SERIF\"");
             this._horizontal = true;
-            this._justify.Add("\"BEGIN\"");
+            this._justify = "\"BEGIN\"";
             this._leftToRight = true;
             this._size = ((float)(1F));
             this._spacing = ((float)(1F));
@@ -3657,8 +3656,11 @@ namespace X3D
             }
         }
 
+        [XmlIgnore]
+        public List<string> Justify;
+
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public List<string> justify
+        public string justify
         {
             get
             {
@@ -3667,6 +3669,8 @@ namespace X3D
             set
             {
                 this._justify = value;
+
+                Justify = X3DTypeConverters.MFString(value);
             }
         }
 
@@ -8798,7 +8802,11 @@ namespace X3D
 
         private ProtoInstance _protoInstance;
 
-        private List<string> _string;
+        private string _string;
+
+        private List<string> _strings;
+
+        private List<object> _items;
 
         private string _length;
 
@@ -8810,7 +8818,8 @@ namespace X3D
 
         public Text()
         {
-            this._string = new List<string>();
+            this._strings = new List<string>();
+            this._string = string.Empty;
             this._protoInstance = new ProtoInstance();
             this._screenFontStyle = new ScreenFontStyle();
             this._fontStyle = new FontStyle();
@@ -8856,7 +8865,7 @@ namespace X3D
         }
 
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public List<string> @string
+        public string @string
         {
             get
             {
@@ -8865,6 +8874,8 @@ namespace X3D
             set
             {
                 this._string = value;
+
+                this._strings = X3DTypeConverters.MFString(value);
             }
         }
 
@@ -8922,6 +8933,7 @@ namespace X3D
                 this._containerField = value;
             }
         }
+
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -18078,7 +18090,7 @@ namespace X3D
         {
             get
             {
-                return SceneManager.GetMFString(this._url);
+                return X3DTypeConverters.GetMFString(this._url);
             }
         }
 

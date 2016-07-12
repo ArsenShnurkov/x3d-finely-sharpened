@@ -65,7 +65,7 @@ namespace X3D
                 {
                     _url = _url.TrimStart();
 
-                    if (_url.StartsWith(SceneManager.DATA_TEXT_PLAIN))
+                    if (_url.StartsWith(X3DTypeConverters.DATA_TEXT_PLAIN))
                     {
                         ShaderSource = file;
 
@@ -76,11 +76,11 @@ namespace X3D
                         file = file.Replace("\"", "");
                         file = SceneManager.CurrentLocation + "\\" + file;
 
-                        if (SceneManager.IsMFString(file))
+                        if (X3DTypeConverters.IsMFString(file))
                         {
                             object resource;
 
-                            mf_urls = SceneManager.GetMFString(file);
+                            mf_urls = X3DTypeConverters.GetMFString(file);
 
                             foreach (string url in mf_urls)
                             {

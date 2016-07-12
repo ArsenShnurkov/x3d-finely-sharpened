@@ -79,6 +79,7 @@ uniform vec3 AmbientMaterial;
 uniform int coloringEnabled;
 uniform int texturingEnabled;
 
+
 float amplify(float d, float scale, float offset)
 {
     d = scale * d + offset;

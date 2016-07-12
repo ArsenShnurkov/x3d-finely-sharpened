@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN" "http://www.web3d.org/specifications/x3d-3.3.dtd">
+<X3D version="3.3" profile="Immersive">
+ <Scene>
+	<!-- TODO write a skydome background using a Sphere and Background node if possible in spec -->
+  </Scene>
+</X3D>

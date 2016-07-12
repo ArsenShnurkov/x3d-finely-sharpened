@@ -173,19 +173,5 @@ namespace x3druntime.ui.opentk
 
             return _fps;
         }
-
-        private void _DrawText(string text, Font font, System.Drawing.Color color, Point position)
-        {// this method is currently not working
-            float r = (float)color.R / 0xff, g = (float)color.G / 0xff, b = (float)color.B / 0xff;
-            //GL.DrawText(position.X,position.Y,r,g,b,font.FontFamily.Name,font.Size,info);
-
-            //Font fonty=new Font(FontFamily.GenericSansSerif,18.0f);
-            OpenTK.Graphics.TextPrinter printer = new OpenTK.Graphics.TextPrinter(OpenTK.Graphics.TextQuality.High);
-
-            printer.Begin();
-
-            printer.Print(text, font, color);
-            printer.End();
-        }
     }
 }

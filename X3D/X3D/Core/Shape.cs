@@ -125,6 +125,7 @@ namespace X3D
             uniforms.a_texcoord = GL.GetAttribLocation(CurrentShader.ShaderHandle, "texcoord");
             uniforms.a_coloringEnabled = GL.GetUniformLocation(CurrentShader.ShaderHandle, "coloringEnabled");
             uniforms.a_texturingEnabled = GL.GetUniformLocation(CurrentShader.ShaderHandle, "texturingEnabled");
+            uniforms.sampler = GL.GetUniformLocation(CurrentShader.ShaderHandle, "_MainTex");
         }
 
         public void RefreshMaterialUniforms()
@@ -135,6 +136,11 @@ namespace X3D
             Materials.shininess = GL.GetUniformLocation(CurrentShader.ShaderHandle, "shininess");
             Materials.specularColor = GL.GetUniformLocation(CurrentShader.ShaderHandle, "specularColor");
             Materials.transparency = GL.GetUniformLocation(CurrentShader.ShaderHandle, "transparency");
+        }
+
+        public void SetSampler(int sampler)
+        {
+            GL.Uniform1(uniforms.sampler, sampler);
         }
 
         public override void Load()
