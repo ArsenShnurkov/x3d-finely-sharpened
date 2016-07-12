@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml.XPath;
 using System.Xml.Linq;
-
+using X3D.Parser;
 
 namespace X3D.Engine
 {

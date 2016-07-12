@@ -16,7 +16,7 @@ namespace x3druntime.ui.opentk
 
         public void ShowSupportMatrix()
         {
-            Assembly asm = Assembly.GetAssembly(typeof(X3D.Engine.XMLParser));
+            Assembly asm = Assembly.GetAssembly(typeof(X3D.Parser.XMLParser));
 
             Type[] types = (new List<Type>(asm.GetTypes()))
                 .Where(t => t.IsSubclassOf(typeof(SceneGraphNode)))
@@ -100,7 +100,7 @@ namespace x3druntime.ui.opentk
                 AssemblyVersionAttribute ver;
                 AssemblyDescriptionAttribute desc;
 
-                asm = Assembly.GetAssembly(typeof(X3D.Engine.XMLParser));
+                asm = Assembly.GetAssembly(typeof(X3D.Parser.XMLParser));
                 productName = (AssemblyProductAttribute)Attribute.GetCustomAttribute(asm, typeof(AssemblyProductAttribute));
                 //ver=(AssemblyVersionAttribute)Attribute.GetCustomAttribute(asm,typeof(AssemblyVersionAttribute));
                 desc = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(asm, typeof(AssemblyDescriptionAttribute));
