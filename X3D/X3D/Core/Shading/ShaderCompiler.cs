@@ -31,9 +31,34 @@ namespace X3D.Core
             return defaultsh;
         }
 
-        /// <summary>
-        /// Relocate this elsewhere
-        /// </summary>
+        public static ComposedShader ApplyShader(string vertexShaderSource, string fragmentShaderSource)
+        {
+            ComposedShader shader = new ComposedShader();
+
+            shader.IsBuiltIn = true; // specifies this is a built in system shader
+            shader.language = "GLSL";
+
+            if (!string.IsNullOrEmpty(vertexShaderSource))
+            {
+                shader.ShaderParts.Add(new ShaderPart()
+                {
+                    ShaderSource = vertexShaderSource,
+                    Type = shaderPartTypeValues.VERTEX
+                });
+            }
+
+            if (!string.IsNullOrEmpty(fragmentShaderSource))
+            {
+                shader.ShaderParts.Add(new ShaderPart()
+                {
+                    ShaderSource = fragmentShaderSource,
+                    Type = shaderPartTypeValues.FRAGMENT
+                });
+            }
+
+            return shader;
+        }
+
         public static ComposedShader ApplyShader(string vertexShaderSource, string fragmentShaderSource,
             string tessControlSource = "", string tessEvalSource = "", string geometryShaderSource = "")
         {
@@ -90,66 +115,6 @@ namespace X3D.Core
 
 
             return shader;
-
-            //int shaderProgramHandle = GL.CreateProgram();
-
-            //int vertexShaderHandle = GL.CreateShader(ShaderType.VertexShader);
-            //int fragmentShaderHandle = GL.CreateShader(ShaderType.FragmentShader);
-            //int tessControlShaderHandle = -1, tessEvalShaderHandle = -1, geometryShaderHandle = -1;
-
-            //GL.ShaderSource(vertexShaderHandle, vertexShaderSource);
-            //GL.ShaderSource(fragmentShaderHandle, fragmentShaderSource);
-            //GL.CompileShader(vertexShaderHandle);
-            //GL.CompileShader(fragmentShaderHandle);
-
-            //Console.WriteLine(GL.GetShaderInfoLog(vertexShaderHandle).Trim());
-            //Console.WriteLine(GL.GetShaderInfoLog(fragmentShaderHandle).Trim());
-
-            //GL.AttachShader(shaderProgramHandle, vertexShaderHandle);
-
-
-            //if (!string.IsNullOrEmpty(tessControlSource))
-            //{
-            //    tessControlShaderHandle = GL.CreateShader(ShaderType.TessControlShader);
-            //    GL.ShaderSource(tessControlShaderHandle, tessControlSource);
-            //    GL.CompileShader(tessControlShaderHandle);
-            //    Console.WriteLine(GL.GetShaderInfoLog(tessControlShaderHandle).Trim());
-
-            //    GL.AttachShader(shaderProgramHandle, tessControlShaderHandle);
-            //}
-            //if (!string.IsNullOrEmpty(tessEvalSource))
-            //{
-            //    tessEvalShaderHandle = GL.CreateShader(ShaderType.TessEvaluationShader);
-            //    GL.ShaderSource(tessEvalShaderHandle, tessEvalSource);
-            //    GL.CompileShader(tessEvalShaderHandle);
-            //    Console.WriteLine(GL.GetShaderInfoLog(tessEvalShaderHandle).Trim());
-
-            //    GL.AttachShader(shaderProgramHandle, tessEvalShaderHandle);
-            //}
-            //if (!string.IsNullOrEmpty(geometryShaderSource))
-            //{
-            //    geometryShaderHandle = GL.CreateShader(ShaderType.GeometryShader);
-            //    GL.ShaderSource(geometryShaderHandle, geometryShaderSource);
-            //    GL.CompileShader(geometryShaderHandle);
-            //    Console.WriteLine(GL.GetShaderInfoLog(geometryShaderHandle).Trim());
-
-            //    GL.AttachShader(shaderProgramHandle, geometryShaderHandle);
-            //}
-
-            //GL.AttachShader(shaderProgramHandle, fragmentShaderHandle);
-
-            //GL.LinkProgram(shaderProgramHandle);
-
-            //Console.WriteLine(GL.GetProgramInfoLog(shaderProgramHandle).Trim());
-
-            ////GL.UseProgram(shaderProgramHandle);
-
-            //if(GL.GetError() != ErrorCode.NoError)
-            //{
-            //    throw new Exception("Error Linking Shader Program");
-            //}
-
-            //return shaderProgramHandle;
         }
 
         public static int ApplyShaderPart(int shaderProgramHandle, ShaderPart part)

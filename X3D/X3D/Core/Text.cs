@@ -19,16 +19,16 @@ namespace X3D
         private List<Vertex> verts = new List<Vertex>();
         private int NumVerticies;
         private int vbo;
-
+        private string _combined_text;
+        private Vector3 _start_position;
         private Dictionary<string, ImageTexture> stringTextures = new Dictionary<string, ImageTexture>();
-
         private int Width { get; set; }
         private int Height { get; set; }
-
         private Vector3 Offset { get; set; }
         private Font Font { get; set; }
         private System.Drawing.Color ForeColor { get; set; }
         private System.Drawing.Color BackColor { get; set; }
+
 
         #region Rendering Methods
 
@@ -54,7 +54,10 @@ namespace X3D
             }
 
             ForeColor = System.Drawing.Color.FromArgb(255, 255, 255, 255);
+            ForeColor = System.Drawing.Color.Cyan;
             BackColor = System.Drawing.Color.FromArgb(0, 0, 0, 0);
+
+            _start_position = new Vector3(0f, 0.5f, z);
 
             string family;
             float size;
@@ -105,11 +108,73 @@ namespace X3D
                 line++;
             }
 
+            _combined_text = combined;
+
             UpdateString(combined);
 
-            parentShape.CurrentShader.Use();
+            if (parentShape != null)
+            {
+                // TESSELLATION
+                parentShape.IncludeDefaultShader (ColorReplaceShader.vertexShaderSource, 
+                                                  ColorReplaceShader.fragmentShaderSource);
+            }
+
+            parentShape.CurrentShader.Use()
+                .SetFieldValue("threshold", new Vector4(0.1f, 0.1f, 0.1f, 1.0f));
+
+
 
             Buffering.BufferShaderGeometry(geometry, parentShape, out vbo, out NumVerticies);
+        }
+
+        private void UpdateString(String text)
+        {
+            Brush b;
+            PointF p;
+            Rectangle boundingbox;
+            Bitmap bmp;
+
+            boundingbox = CalculateBoundingBox(text);
+
+            bmp = new Bitmap(boundingbox.Width, boundingbox.Height);
+
+            bmp.MakeTransparent(BackColor);
+
+            //if(FontStyle.Justify.FirstOrDefault() == "MIDDLE")
+            //{
+            //p = new PointF((float)Offset.X + (boundingbox.Width / 8.0f), (float)Offset.Y);
+            //}
+            //else
+            //{
+            p = new PointF((float)Offset.X, (float)Offset.Y);
+            //}
+
+
+
+            b = new SolidBrush(ForeColor);
+
+            using (Graphics g2D = Graphics.FromImage(bmp))
+            {
+                //g2D.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+                g2D.Clear(BackColor);
+                g2D.DrawString(text, Font, b, p, StringFormat.GenericDefault);
+            }
+
+            bmp.RotateFlip(RotateFlipType.RotateNoneFlipX);
+
+            ImageTexture texture = ImageTexture.CreateTextureFromImage(bmp, boundingbox);
+
+            if (stringTextures.ContainsKey(text))
+            {
+                stringTextures[text].FreeTexture();
+                stringTextures[text].Dispose();
+
+                stringTextures[text] = texture;
+            }
+            else
+            {
+                stringTextures.Add(text, texture);
+            }
         }
 
         public override void Render(RenderingContext rc)
@@ -139,9 +204,10 @@ namespace X3D
                     GL.Uniform3(uniformScale, scale);
                     rc.matricies.Scale = scale;
 
-                    GL.Enable(EnableCap.Blend);
-                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-
+                    //GL.Enable(EnableCap.Blend);
+                    //GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+                    //GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
+                    //GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
                     //GL.ActiveTexture(TextureUnit.Texture0);
                     //parentShape.SetSampler(0);
@@ -150,8 +216,8 @@ namespace X3D
                     GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies);
 
 
-                    GL.Disable(EnableCap.Blend);
-                    
+                    //GL.Disable(EnableCap.Blend);
+
                     stringTexture.Value.Unbind();
 
                     rc.PopMatricies();
@@ -162,55 +228,6 @@ namespace X3D
         #endregion
 
         #region Private Methods
-
-        private void UpdateString(String text)
-        {
-            Brush b;
-            PointF p;
-            Rectangle boundingbox;
-            Bitmap bmp;
-
-            boundingbox = CalculateBoundingBox(text);
-
-            bmp = new Bitmap(boundingbox.Width, boundingbox.Height);
-
-            bmp.MakeTransparent(BackColor);
-
-            if(FontStyle.Justify.FirstOrDefault() == "MIDDLE")
-            {
-                p = new PointF((float)Offset.X + (boundingbox.Width / 8.0f), (float)Offset.Y);
-            }
-            else
-            {
-                p = new PointF((float)Offset.X, (float)Offset.Y);
-            }
-
-            
-            
-            b = new SolidBrush(ForeColor);
-
-            using (Graphics g2D = Graphics.FromImage(bmp))
-            {
-                g2D.Clear(BackColor);
-                g2D.DrawString(text, Font, b, p, StringFormat.GenericDefault);
-            }
-
-            bmp.RotateFlip(RotateFlipType.RotateNoneFlipX);
-
-            ImageTexture texture = ImageTexture.CreateTextureFromImage(bmp, boundingbox);
-
-            if (stringTextures.ContainsKey(text))
-            {
-                stringTextures[text].FreeTexture();
-                stringTextures[text].Dispose();
-
-                stringTextures[text] = texture;
-            }
-            else
-            {
-                stringTextures.Add(text, texture);
-            }
-        }
 
         private Rectangle CalculateBoundingBox(String text)
         {

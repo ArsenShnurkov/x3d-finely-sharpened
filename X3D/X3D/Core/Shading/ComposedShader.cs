@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 using OpenTK.Graphics.OpenGL4;
 using X3D.Core;
 using X3D.Core;
+using OpenTK;
 
 namespace X3D
 {
@@ -59,6 +60,16 @@ namespace X3D
         {
             GL.UseProgram(this.ShaderHandle);
             return this;
+        }
+
+        public void SetFieldValue(string name, Vector3 value)
+        {
+            GL.Uniform3(GL.GetUniformLocation(this.ShaderHandle, name), ref value);
+        }
+
+        public void SetFieldValue(string name, Vector4 value)
+        {
+            GL.Uniform4(GL.GetUniformLocation(this.ShaderHandle, name), ref value);
         }
 
         public void Deactivate()

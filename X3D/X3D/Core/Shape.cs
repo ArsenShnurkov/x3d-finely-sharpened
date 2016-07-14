@@ -72,6 +72,13 @@ namespace X3D
 
         #region Render Methods
 
+        public void IncludeDefaultShader(string vertexShaderSource, string fragmentShaderSource)
+        {
+            CurrentShader = ShaderCompiler.ApplyShader(vertexShaderSource, fragmentShaderSource);
+
+            IncludeComposedShader(CurrentShader);
+        }
+
         public void IncludeComposedShader(ComposedShader shader)
         {
             shader.Link();
