@@ -44,7 +44,6 @@ void main()
 	gl_Position = model * vec4(vPosition, 1.0);
     vColor = color;
 
-	//gl_TexCoord[0] = gl_MultiTexCoord0; 
 	normalVec = normalize(normal); // gl_Normal
 
 	vec4 eyePos = gl_ModelViewMatrixInverse * vec4(0., 0., 0., 1.); 
@@ -73,10 +72,8 @@ void main()
 
     // color discard threshold
 
-    if (c.r < vColorToDiscard.x 
-        && c.g < vColorToDiscard.y 
-            && c.b < vColorToDiscard.z) 
-            discard;
+    if (c.r < vColorToDiscard.x && c.g < vColorToDiscard.y && c.b < vColorToDiscard.z) 
+        discard;
 }
 ";
     }

@@ -62,6 +62,18 @@ namespace X3D
             return this;
         }
 
+        #region Field Setter Helpers
+
+        public void SetFieldValue(string name, int value)
+        {
+            GL.Uniform1(GL.GetUniformLocation(this.ShaderHandle, name), value);
+        }
+
+        public void SetFieldValue(string name, float value)
+        {
+            GL.Uniform1(GL.GetUniformLocation(this.ShaderHandle, name), value);
+        }
+
         public void SetFieldValue(string name, Vector3 value)
         {
             GL.Uniform3(GL.GetUniformLocation(this.ShaderHandle, name), ref value);
@@ -71,6 +83,14 @@ namespace X3D
         {
             GL.Uniform4(GL.GetUniformLocation(this.ShaderHandle, name), ref value);
         }
+
+
+        public void SetFieldValue(string name, Matrix4 value)
+        {
+            GL.UniformMatrix4(GL.GetUniformLocation(this.ShaderHandle, name), false, ref value);
+        }
+
+        #endregion
 
         public void Deactivate()
         {

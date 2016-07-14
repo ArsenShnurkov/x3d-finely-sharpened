@@ -193,12 +193,12 @@ namespace X3D
                 if (this.CurrentShader.IsTessellator)
                     RefreshTessUniforms();
 
-                GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);
-                GL.UniformMatrix4(uniformProjection, false, ref rc.matricies.projection);
-                GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
-                GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
-                GL.Uniform1(uniforms.a_coloringEnabled, 0);
-                GL.Uniform1(uniforms.a_texturingEnabled, this.texturingEnabled ? 1 : 0);
+                CurrentShader.SetFieldValue("modelview", rc.matricies.modelview); //GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);
+                CurrentShader.SetFieldValue("projection", rc.matricies.projection); //GL.UniformMatrix4(uniformProjection, false, ref rc.matricies.projection);
+                CurrentShader.SetFieldValue("camscale", rc.cam.Scale.X); //GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
+                CurrentShader.SetFieldValue("X3DScale", rc.matricies.Scale); //GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
+                CurrentShader.SetFieldValue("coloringEnabled", 0); //GL.Uniform1(uniforms.a_coloringEnabled, 0);
+                CurrentShader.SetFieldValue("texturingEnabled", this.texturingEnabled ? 1 : 0); //GL.Uniform1(uniforms.a_texturingEnabled, this.texturingEnabled ? 1 : 0);
 
                 if (CurrentShader.IsBuiltIn == false)
                 {
