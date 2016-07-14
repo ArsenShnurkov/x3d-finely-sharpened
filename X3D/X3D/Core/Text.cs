@@ -114,7 +114,7 @@ namespace X3D
 
             if (parentShape != null)
             {
-                // TESSELLATION
+                // 2D Text Shader, used to apply transparancy alpha blending didnt work for some reason
                 parentShape.IncludeDefaultShader (ColorReplaceShader.vertexShaderSource, 
                                                   ColorReplaceShader.fragmentShaderSource);
             }
