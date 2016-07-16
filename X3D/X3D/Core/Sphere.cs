@@ -68,11 +68,8 @@ namespace X3D
                 {
                     parentShape.CurrentShader.Use();
 
-                    int uniformSize = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "size");
-                    int uniformScale = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "scale");
-
-                    GL.Uniform3(uniformSize, size);
-                    GL.Uniform3(uniformScale, scale);
+                    parentShape.CurrentShader.SetFieldValue("size", size);
+                    parentShape.CurrentShader.SetFieldValue("scale", scale);
 
                     if (parentShape.CurrentShader.IsTessellator)
                     {
