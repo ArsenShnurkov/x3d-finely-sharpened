@@ -26,19 +26,29 @@ namespace X3D.Parser
         
         public static MFString MFString(string @string)
         {
+            string tmp = removeQuotes(@string);
+            if (tmp.StartsWith(DATA_TEXT_PLAIN))
+            {
+                //TODO: complete implementation of data:uri as seen in https://developer.mozilla.org/en-US/docs/Web/HTTP/data_URIs
+                return new List<string> { tmp };
+            }
+
+            if(!(@string.TrimStart().StartsWith("\"") || @string.TrimStart().StartsWith("'")))
+            {
+                @string = "'" + @string;
+            }
+            if (!(@string.TrimEnd().EndsWith("\"") || @string.TrimEnd().EndsWith("'")))
+            {
+                @string = @string + "'";
+            }
+
             List<string> lst = new MFString();
             Regex r;
             MatchCollection m;
 
-            string tests = "\"c.jpg\" 'a.jpg' 'b.jpg' \"d.jpg\" 'e.jpg' \"f.jpg\" 'helloworld' "
-                +"\"texture\\generic\\DN.png\\\" \"Figure14.2ElevationGridMountain.x3d\" "
-                +"'http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/Chapter14-ElevationGrid/Figure14.2ElevationGridMountain.x3d' \"http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/Chapter14-ElevationGrid/Figure14.2ElevationGridMountain.x3d\" "
-                +"'texture\\generic\\DN.png'";
-
-            //@string = tests;
-
-            // Single quotes
-            r = new Regex("(?:(\\'.*?\\').*?)",
+            // Single and double quote parenthesis extraction
+            // Order is important in MFString sequences.
+            r = new Regex("(\"([^ \"]+)\" |\'([^\']+)\')\\s?",
                 RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline);
             m = r.Matches(@string);
             if (m.Count > 0)
@@ -50,49 +60,14 @@ namespace X3D.Parser
                         String string1 = mm.Groups[i].ToString();
 
                         lst.Add(removeQuotes(string1));
+
+                        break; // just do first group
                     }
+
+                   
                 }
                
             }
-
-            // Double quotes
-            r = new Regex("(?:(\\\".*?\\\").*?)",
-                RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline);
-            m = r.Matches(@string);
-            if (m.Count > 0)
-            {
-                foreach (Match mm in m)
-                {
-                    for (int i = 0; i < mm.Groups.Count; i++)
-                    {
-                        String string1 = mm.Groups[i].ToString();
-
-                        lst.Add(removeQuotes(string1));
-                    }
-                }
-
-            }
-
-            //if (IsMFString(@string))
-            //{
-            //    //string[] mfs = GetMFString(@string);
-            //    //lst.AddRange(mfs);
-
-            //    //MatchCollection mc = regMFString.Matches(@string);
-
-            //    //foreach (Match m in mc)
-            //    //{
-            //    //    lst.Add(removeQuotes(m.Value));
-            //    //}
-
-
-            //}
-            //else
-            //{
-            //    return new List<string>();
-            //}
-
-            lst = lst.Distinct().ToList();
 
             return lst;
         }
@@ -128,49 +103,55 @@ namespace X3D.Parser
 
         public static string[] GetMFString(string str)
         {
-            if (string.IsNullOrEmpty(str))
-            {
-                return new string[] { };
-            }
+            return MFString(str).ToArray();
 
-            if (str.StartsWith(DATA_TEXT_PLAIN))
-            {
-                string source = str.Remove(0, DATA_TEXT_PLAIN.Length);
-
-                return new string[] { source };
-            }
-
-            if (str.Contains("\""))
-            {
-                str = str.Replace("\"", "");
-            }
-
-            if (str.Contains("'"))
-            {
-                str = str.Replace("'", "");
-            }
-
-            str = Regex.Replace(str, "\\s+", " ");
-
-            return str.Split(' ');
-
-            //MatchCollection mc;
-            //List<string> st;
-
-            //st=new List<string>();
-            //mc=regMFString.Matches(str);
-
-            //foreach(Match m in mc) {
-            //    st.Add(removeQuotes(m.Value));
+            //if (string.IsNullOrEmpty(str))
+            //{
+            //    return new string[] { };
             //}
 
-            //return st.ToArray();
+            //if (str.StartsWith(DATA_TEXT_PLAIN))
+            //{
+            //    string source = str.Remove(0, DATA_TEXT_PLAIN.Length);
+
+            //    return new string[] { source };
+            //}
+
+            //str = str.Trim();
+
+
+            //if (str.StartsWith("'"))
+            //{
+            //    str = str.Remove(0);
+            //}
+            //if (str.EndsWith("'"))
+            //{
+            //    str = str.Substring(0, str.Length - 2);
+            //}
+
+            //if (str.StartsWith("\""))
+            //{
+            //    str = str.Remove(0);
+            //}
+            //if (str.EndsWith("\""))
+            //{
+            //    str = str.Substring(0, str.Length - 2);
+            //}
+
+
+            //str = Regex.Replace(str, "\\s+", " ");
+
+            //return str.Split(' ');
+           
         }
 
         public static string removeQuotes(string mfstring)
         {
             if (mfstring.Length > 0)
             {
+                mfstring = mfstring.TrimEnd();
+                mfstring = mfstring.TrimStart();
+
                 if (mfstring[0] == '\'' || mfstring[0] == '"')
                 {
                     mfstring = mfstring.Remove(0, 1);

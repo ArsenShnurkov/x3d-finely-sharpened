@@ -210,6 +210,24 @@ namespace X3D.Engine
                 resource = null;
                 return false;
             }
+            string tmp = X3DTypeConverters.removeQuotes(url);
+            if (tmp.StartsWith(X3DTypeConverters.DATA_TEXT_PLAIN))
+            {
+                //TODO: complete implementation of data:uri as seen in https://developer.mozilla.org/en-US/docs/Web/HTTP/data_URIs
+
+                string dataTextPlain = tmp.Remove(0, X3DTypeConverters.DATA_TEXT_PLAIN.Length);
+                dataTextPlain = dataTextPlain.TrimStart();
+
+                MemoryStream stream = new MemoryStream();
+                StreamWriter writer = new StreamWriter(stream);
+                writer.Write(dataTextPlain);
+                writer.Flush();
+                stream.Position = 0;
+
+                resource = stream;
+
+                return true;
+            }
 
             url = X3DTypeConverters.removeQuotes(url);
 
@@ -240,6 +258,22 @@ namespace X3D.Engine
                 url.Replace('/', '\\');
             }
 
+            if (GetMIMETypeByURL(url) != X3DMIMEType.UNKNOWN)
+            {
+                // File is an X3D compatible Scene Graph .x3d, .x3db, .vrml etc
+
+                //if (string.IsNullOrEmpty(SceneManager.CurrentLocation))
+                //{
+                    //SceneManager.CurrentLocation = (new System.IO.DirectoryInfo(url)).Parent.FullName;
+                //}
+
+                // get the current path to the html document
+                set_cd(BaseURL);
+                // what if the *.x3d file is a relative address and no CurrentLocation can be found??? SEE THIS X3D example:
+                // http://www.web3d.org/x3d/content/examples/Conformance/Appearance/ImageTexture/_pages/page13.html
+                //http://www.web3d.org/x3d/content/examples/Conformance/Appearance/ImageTexture/ElevationGrid.x3d
+            }
+
             //if(GetMIMETypeByURL(url)!=X3DMIMEType.UNKNOWN) {
             //CurrentLocation=url.TrimEnd().TrimEnd(System.IO.Path.GetFileName(url).ToCharArray());
             //}
@@ -265,25 +299,23 @@ namespace X3D.Engine
                     url = "." + url;
                 }
 
-                //if(CurrentLocation
-                if (GetMIMETypeByURL(url) != X3DMIMEType.UNKNOWN)
-                {
-                    // get the current path to the html document
-                    set_cd(BaseURL);
-                    // what if the *.x3d file is a relative address and no CurrentLocation can be found??? SEE THIS X3D example:
-                    // http://www.web3d.org/x3d/content/examples/Conformance/Appearance/ImageTexture/_pages/page13.html
-                    //http://www.web3d.org/x3d/content/examples/Conformance/Appearance/ImageTexture/ElevationGrid.x3d
-                }
 
                 if(!isWebUrl(CurrentLocation) && isrelative(url))
                 {
                     // Is on the file system. Unix or Windows.
 
-                    url = SceneManager.CurrentLocation + "\\" + url;
+                    url = SceneManager.CurrentLocation 
+                        +(SceneManager.CurrentLocation.EndsWith("\\") ? "" : "\\") 
+                        + url;
 
                 }
                 else if(isWebUrl(CurrentLocation) && isrelative(url))
                 {
+                    if (string.IsNullOrEmpty(SceneManager.CurrentLocation))
+                    {
+                        SceneManager.CurrentLocation = (new System.IO.DirectoryInfo(url)).Parent.FullName;
+                    }
+
                     base_uri = new Uri(CurrentLocation);
 
                     if (Uri.TryCreate(base_uri, url, out www_url))
@@ -316,13 +348,13 @@ namespace X3D.Engine
                 }
                 url.Replace('/', '\\');
             }
+       
 
             uri = new Uri(url);
 
             if (uri.IsFile)
             {
                 // it should be a file on the local file system
-                SceneManager.CurrentLocation = (new System.IO.DirectoryInfo(url)).Parent.FullName;
 
                 if (File.Exists(url))
                 {
