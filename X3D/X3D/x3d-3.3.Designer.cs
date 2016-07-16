@@ -582,7 +582,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute("backUrl")]
         public List<string> backUrl
         {
             get
@@ -3839,25 +3839,27 @@ namespace X3D
     {
 
         private List<string> _url;
+        private string _urlmfstring;
 
         private string _containerField;
 
         public ImageTexture()
         {
             this._url = new List<string>();
+            this._urlmfstring = string.Empty;
             this._containerField = "texture";
         }
 
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public List<string> url
+        public string url
         {
             get
             {
-                return this._url;
+                return this._urlmfstring;
             }
             set
             {
-                this._url = value;
+                this._urlmfstring = value;
             }
         }
 
@@ -9871,16 +9873,12 @@ namespace X3D
     {
     }
 
-    public partial class component : SceneGraphStructureStatement
+    public partial class component : SceneGraphNode, SceneGraphStructureStatement
     {
 
         private componentNames _name;
 
         private string _level;
-
-        public component()
-        {
-        }
 
         [System.Xml.Serialization.XmlAttributeAttribute()]
         public componentNames name

@@ -79,16 +79,12 @@ namespace X3D
         {
             base.Load();
 
-            string _url = url.FirstOrDefault();
-
-            if (!string.IsNullOrEmpty(_url) && _textureID == -1)
+            if (!string.IsNullOrEmpty(url) && _textureID == -1)
             {
-                _url = _url.Replace("\"", "");
-                _url = SceneManager.CurrentLocation + "\\" + _url;
 
                 this._textureID = SceneManager.CreateTexture(this);
 
-                if (GetTextureImageFromWindowsFileSystem(_url) == true)
+                if (GetTextureImageFromMFString(url) == true)
                 {
                     // Upload done later by system automatically
                     //this.LoadTexture();
@@ -197,9 +193,9 @@ namespace X3D
         public void Upload()
         {
 
-            if(_type == InternalImageType.WindowsHandle)
+            if (_type == InternalImageType.WindowsHandle)
             {
-                GL.TexImage2D(textureTarget, 0, PixelInternalFormat.Rgba, this.Width, this.Height, 0, 
+                GL.TexImage2D(textureTarget, 0, PixelInternalFormat.Rgba, this.Width, this.Height, 0,
                     OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, this.pTexImage);
             }
             else if (_type == InternalImageType.Bitmap)
@@ -212,13 +208,13 @@ namespace X3D
                 //    System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
 
-                GL.TexImage2D(textureTarget, 0, PixelInternalFormat.Rgba, this.Width, this.Height, 0, 
+                GL.TexImage2D(textureTarget, 0, PixelInternalFormat.Rgba, this.Width, this.Height, 0,
                     OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, this.pixelData.Scan0);
 
                 image.UnlockBits(this.pixelData);
             }
 
-            
+
 
             //gl.TexImage2D(OpenGL.GL_TEXTURE_2D,0,(int)OpenGL.GL_RGBA,
             //Width,Height,0,OpenGL.GL_BGRA,OpenGL.GL_UNSIGNED_BYTE,pixelData.Scan0);
@@ -259,28 +255,25 @@ namespace X3D
             return TextureImage.pTexImage;
         }
 
-        private bool GetTextureImageFromWindowsFileSystem(string file)
-        { 
+        private bool GetTextureImageFromMFString(string mfstring)
+        {
             Rectangle imgRect;
 
             int[] textureMaxSize;
             int glTexWidth;
             int glTexHeight;
+            string[] urls;
+            object resource;
+            bool actually_loaded_something;
 
-            //TODO: this method might not be "port friendly to something like JSIL/webgl"
+            actually_loaded_something = false;
+            urls = X3DTypeConverters.GetMFString(mfstring);
 
-            if (X3DTypeConverters.IsMFString(file))
+            foreach (string url in urls)
             {
-                string[] urls;
-                object resource;
-                bool actually_loaded_something;
-
-                actually_loaded_something = false;
-                urls = X3DTypeConverters.GetMFString(file);
-
-                foreach (string url in urls)
+                if (SceneManager.FetchSingle(url, out resource))
                 {
-                    if (SceneManager.FetchSingle(url, out resource))
+                    if(resource is Stream)
                     {
                         Stream s;
 
@@ -288,18 +281,19 @@ namespace X3D
                         this.image = new Bitmap(s);
                         s.Close();
                         actually_loaded_something = true;
-                        break;
                     }
-                }
+                    else
+                    {
+                        throw new Exception("Resource is of unknown type, consider returning file streams instead");
+                    }
 
-                if (!actually_loaded_something)
-                {
-                    this.image = Properties.Resources.ErrorTexture;
+                    break;
                 }
             }
-            else
+
+            if (!actually_loaded_something)
             {
-                this.image = new Bitmap(file);
+                this.image = Properties.Resources.ErrorTexture;
             }
 
             if (this.image == null)
@@ -369,7 +363,115 @@ namespace X3D
             return true;
         }
 
-        private bool GetTextureImageFromWindowsFileSystem2(string file)
+        private bool GetTextureImageFromMFString2(string mfstring)
+        {
+            Rectangle imgRect;
+
+            int[] textureMaxSize;
+            int glTexWidth;
+            int glTexHeight;
+            string[] urls;
+            object resource;
+            bool actually_loaded_something;
+
+            if (X3DTypeConverters.IsMFString(mfstring))
+            {
+
+                actually_loaded_something = false;
+                urls = X3DTypeConverters.GetMFString(mfstring);
+
+                foreach (string url in urls)
+                {
+                    if (SceneManager.FetchSingle(url, out resource))
+                    {
+                        Stream s;
+
+                        s = (Stream)resource;
+                        this.image = new Bitmap(s);
+                        s.Close();
+                        actually_loaded_something = true;
+                        break;
+                    }
+                }
+
+                if (!actually_loaded_something)
+                {
+                    this.image = Properties.Resources.ErrorTexture;
+                }
+            }
+            else
+            {
+                this.image = new Bitmap(mfstring);
+            }
+
+            if (this.image == null)
+            {
+                return false;
+            }
+
+            /*	Get the maximum texture size supported by OpenGL: */
+            textureMaxSize = new int[] { 0 };
+            GL.GetInteger(GetPName.MaxTextureSize, textureMaxSize);
+            //gl.GetInteger(OpenGL.GL_MAX_TEXTURE_SIZE,textureMaxSize);
+
+            /*	Find the target width and height sizes, which is just the highest
+             *	posible power of two that'll fit into the image. */
+            glTexWidth = textureMaxSize[0];
+            glTexHeight = textureMaxSize[0];
+            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+            {
+                if (image.Width < size)
+                {
+                    glTexWidth = size / 2;
+                    break;
+                }
+                if (image.Width == size)
+                    glTexWidth = size;
+
+            }
+
+            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+            {
+                if (image.Height < size)
+                {
+                    glTexHeight = size / 2;
+                    break;
+                }
+                if (image.Height == size)
+                    glTexHeight = size;
+            }
+
+            if (image.Width != glTexWidth || image.Height != glTexHeight)
+            {
+                /* Scale the image according to OpenGL requirements */
+                Image newImage = image.GetThumbnailImage(glTexWidth, glTexHeight, null, IntPtr.Zero);
+
+                image.Dispose();
+                image = (Bitmap)newImage;
+            }
+
+            //if(file.ToLower().EndsWith(".bmp")) {
+            image.RotateFlip(RotateFlipType.RotateNoneFlipY); //TODO: figure out more efficient code
+
+            /* Another way to rotate texture on draw()
+            gl.MatrixMode(OpenGL.GL_TEXTURE);
+            gl.LoadIdentity();
+            gl.Scale(1.0f,-1.0f,1.0f);
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);
+             */
+            //}
+            imgRect = new Rectangle(0, 0, image.Width, image.Height);
+            pixelData = image.LockBits(imgRect, ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+            pTexImage = pixelData.Scan0;
+            Width = image.Width;
+            Height = image.Height;
+            _type = InternalImageType.WindowsHandle;
+
+            return true;
+        }
+
+        private bool GetTextureImageFromWindowsFileSystem(string file)
         {
             //  Try and load the bitmap. Return false on failure.
             Bitmap image = new Bitmap(file);

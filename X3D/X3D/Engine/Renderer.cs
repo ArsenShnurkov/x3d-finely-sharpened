@@ -203,7 +203,7 @@ namespace X3D.Engine
                     i++;
                 }
 
-                Console.WriteLine("Allocated {0} system textures", i + 1);
+                Console.WriteLine("Allocated {0} system textures", i);
             }
         }
 

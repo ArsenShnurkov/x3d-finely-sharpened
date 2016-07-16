@@ -164,24 +164,46 @@ namespace X3D.Engine
 
         private static bool isrelative(string url)
         {
-            //TODO: need to determine if and how to handle relative urls
-            //bool has_protocol;
-            //bool is_just_filename;
 
-            //has_protocol=DoesURLHaveProtocol(url);
-            //is_just_filename=(url.Contains("/")||url.Contains("\\"));
+            //return Uri.IsWellFormedUriString(url, UriKind.Absolute) == false;
 
-            //if(is_just_filename&&has_protocol==false) {
+            Uri uri;
 
-            //}
+            Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out uri);
 
-            return Uri.IsWellFormedUriString(url, UriKind.Absolute) == false;
+            return !uri.IsAbsoluteUri;
         }
+
+        public static bool isAbsolute(string url)
+        {
+            //return Uri.IsWellFormedUriString(url, UriKind.Absolute) == true;
+
+            Uri uri = new Uri(url);
+
+            return uri.IsAbsoluteUri;
+        }
+
+        private static bool isWebUrl(string uriString)
+        {
+            Uri uriResult;
+            bool result = Uri.TryCreate(uriString, UriKind.Absolute, out uriResult)
+                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+            return result;
+        }
+
+        //private static bool isFileSystemUri(string uriString)
+        //{
+        //    Uri uriResult;
+
+        //    return result;
+        //}
 
         public static bool FetchSingle(string url, out object resource)
         {
             //TODO: how to handle relative files/paths?
             // use cd to determine exactly how to process relative paths
+            Uri uri;
 
             if (string.IsNullOrEmpty(url))
             {
@@ -228,7 +250,16 @@ namespace X3D.Engine
             {
                 Uri base_uri;
 
-                url = url.Replace("\\", "/");
+                if (isWebUrl(CurrentLocation))
+                {
+                    url = url.Replace("\\", "/");
+                }
+                else
+                {
+                    url = url.Replace("/", "\\");
+                }
+
+                
                 if (url.StartsWith("/"))
                 {
                     url = "." + url;
@@ -244,21 +275,33 @@ namespace X3D.Engine
                     //http://www.web3d.org/x3d/content/examples/Conformance/Appearance/ImageTexture/ElevationGrid.x3d
                 }
 
-                base_uri = new Uri(CurrentLocation);
-
-                if (Uri.TryCreate(base_uri, url, out www_url))
+                if(!isWebUrl(CurrentLocation) && isrelative(url))
                 {
-                    url = www_url.ToString();
-                    if (System.IO.Path.GetFileName(url) == System.IO.Path.GetFileName(BaseURL))
+                    // Is on the file system. Unix or Windows.
+
+                    url = SceneManager.CurrentLocation + "\\" + url;
+
+                }
+                else if(isWebUrl(CurrentLocation) && isrelative(url))
+                {
+                    base_uri = new Uri(CurrentLocation);
+
+                    if (Uri.TryCreate(base_uri, url, out www_url))
                     {
-                        url = BaseURL;//HACK: code something better
+                        url = www_url.ToString();
+                        if (System.IO.Path.GetFileName(url) == System.IO.Path.GetFileName(BaseURL))
+                        {
+                            url = BaseURL;
+                        }
+                    }
+                    else
+                    {
+                        resource = null;
+                        return false;
                     }
                 }
-                else
-                {
-                    resource = null;
-                    return false;
-                }
+
+
             }
 
             if (url.ToLower().StartsWith("file://"))
@@ -274,7 +317,9 @@ namespace X3D.Engine
                 url.Replace('/', '\\');
             }
 
-            if ((new Uri(url)).IsFile)
+            uri = new Uri(url);
+
+            if (uri.IsFile)
             {
                 // it should be a file on the local file system
                 SceneManager.CurrentLocation = (new System.IO.DirectoryInfo(url)).Parent.FullName;

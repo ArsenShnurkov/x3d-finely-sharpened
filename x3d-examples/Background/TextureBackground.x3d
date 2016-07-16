@@ -24,6 +24,7 @@
       <ImageTexture containerField='topTexture' url='"images/top.png" "http://www.web3d.org/x3d/content/examples/Basic/DistributedInteractiveSimulation/images/top.png"'/>
       <ImageTexture containerField='bottomTexture' url='"images/bottom.png" "http://www.web3d.org/x3d/content/examples/Basic/DistributedInteractiveSimulation/images/bottom.png"'/>
     </TextureBackground>
+	<!--
     <Shape>
       <Text string='"TextureBackground node using" "ImageTexture nodes"'>
         <FontStyle justify='"MIDDLE" "MIDDLE"' style='BOLD'/>
@@ -31,6 +32,6 @@
       <Appearance>
         <Material diffuseColor='1 1 1'/>
       </Appearance>
-    </Shape>
+    </Shape>-->
   </Scene>
 </X3D>
