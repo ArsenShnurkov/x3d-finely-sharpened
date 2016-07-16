@@ -358,26 +358,74 @@ namespace X3D.Engine
 
                 request = (HttpWebRequest)WebRequest.Create(url);
 
+                request.KeepAlive = true;
+                request.Timeout = 10000;
+                request.ReadWriteTimeout = 32000;
                 request.Method = "POST";
                 //request.Method="post";
 
-                response = (HttpWebResponse)request.GetResponse();
+                byte[] lnBuffer, lnFile;
+                MemoryStream fileStream = null;
+                string contentType = string.Empty;
 
-                if (response.StatusCode == HttpStatusCode.OK)
-                { // if the Status code == 200
+                try
+                {
+                    using (response = (HttpWebResponse)request.GetResponse())
+                    {
+                        // Handle the response now and buffer quickly into local cache ..
+                        contentType = response.ContentType;
+
+                        using (BinaryReader lxBR = new BinaryReader(response.GetResponseStream()))
+                        {
+                            using (MemoryStream lxMS = new MemoryStream())
+                            {
+                                lnBuffer = lxBR.ReadBytes(1024);
+                                while (lnBuffer.Length > 0)
+                                {
+                                    lxMS.Write(lnBuffer, 0, lnBuffer.Length);
+                                    lnBuffer = lxBR.ReadBytes(1024);
+                                }
+                                lnFile = new byte[(int)lxMS.Length];
+                                lxMS.Position = 0;
+                                lxMS.Read(lnFile, 0, lnFile.Length);
+                            }
+                        }
+
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            fileStream = new MemoryStream(lnFile, false);
+
+                        }
+                        else
+                        {
+                            resource = null;
+                            return false;
+                        }
+                    }
+
+
+                    // Response is closed off and we have now a cached copy of it in a MemoryStream
+                    // This process usually avoids timeouts when requesting say Images or larger files.
+
+                    if (fileStream == null)
+                    {
+                        resource = null;
+                        return false;
+                    }
+
                     m = GetMIMETypeByURL(url);
 
-                    if (string.IsNullOrEmpty(response.ContentType) || m == X3DMIMEType.UNKNOWN)
+                    if (string.IsNullOrEmpty(contentType) || m == X3DMIMEType.UNKNOWN)
                     {
                         if (m == X3DMIMEType.UNKNOWN)
                         {
                             // response is a generic resource
-                            resource = response.GetResponseStream();
+                            resource = fileStream;
                         }
                         else
                         {
                             // response is a scene
-                            resource = fromStream(response.GetResponseStream(), m);
+                            resource = fromStream(fileStream, m);
 
                             set_cd(url);
                         }
@@ -385,17 +433,28 @@ namespace X3D.Engine
                     else
                     {
                         // response is a scene
-                        resource = fromStream(response.GetResponseStream(), m);
+                        resource = fromStream(fileStream, m);
 
                         set_cd(url);
                     }
                     return true;
+
                 }
-                else
+                catch (WebException wex)
                 {
-                    resource = null;
-                    return false;
+                    if(wex.Status == WebExceptionStatus.Timeout)
+                    {
+                        Console.WriteLine(string.Format("Timed out requesting resource '{0}'", url));
+                        resource = null;
+                        return false;
+                    }
+                    else
+                    {
+                        throw wex;
+                    }
                 }
+
+
             }
         }
 
