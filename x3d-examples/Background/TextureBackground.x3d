@@ -16,6 +16,9 @@
     <meta content='../license.html' name='license'/>
   </head>
   <Scene>
+	<!--
+	<Background backUrl='"texture\generic\BK.png"' bottomUrl='"texture\generic\DN.png"' frontUrl='"texture\generic\FR.png"' leftUrl='"texture\generic\LF.png"' rightUrl='"texture\generic\RT.png"' topUrl='"texture\generic\UP.png"' />
+	-->
     <TextureBackground>
       <ImageTexture containerField='leftTexture' url='"images/left.png" "http://www.web3d.org/x3d/content/examples/Basic/DistributedInteractiveSimulation/images/left.png"'/>
       <ImageTexture containerField='rightTexture' url='"images/right.png" "http://www.web3d.org/x3d/content/examples/Basic/DistributedInteractiveSimulation/images/right.png"'/>

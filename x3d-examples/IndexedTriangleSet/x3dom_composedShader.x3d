@@ -13,16 +13,16 @@
 			<Appearance>
 				<Material diffuseColor=".7 .7 .7" specularColor=".5 .5 .5" />
 				<MultiTexture>
-				<ImageTexture url='texture\earth.jpg' />
-				<ComposedCubeMapTexture repeatS="false" repeatT="false">
-					<ImageTexture containerField="back" url="texture\generic\BK.png" />
-					<ImageTexture containerField="bottom" url="texture\generic\DN.png" />
-					<ImageTexture containerField="front" url="texture\generic\FR.png" />
-					<ImageTexture containerField="left" url="texture\generic\LF.png" />
-					<ImageTexture containerField="right" url="texture\generic\RT.png" />
-					<ImageTexture containerField="top" url="texture\generic\UP.png" />
-				</ComposedCubeMapTexture>
-				<ImageTexture url='texture\normalMap.png' />
+					<ImageTexture url='texture\earth.jpg' />
+					<ComposedCubeMapTexture repeatS="false" repeatT="false">
+						<ImageTexture containerField="back" url="texture\generic\BK.png" />
+						<ImageTexture containerField="bottom" url="texture\generic\DN.png" />
+						<ImageTexture containerField="front" url="texture\generic\FR.png" />
+						<ImageTexture containerField="left" url="texture\generic\LF.png" />
+						<ImageTexture containerField="right" url="texture\generic\RT.png" />
+						<ImageTexture containerField="top" url="texture\generic\UP.png" />
+					</ComposedCubeMapTexture>
+					<ImageTexture url='texture\normalMap.png' />
 				</MultiTexture>
 				
 				<ComposedShader DEF='ComposedShader'>

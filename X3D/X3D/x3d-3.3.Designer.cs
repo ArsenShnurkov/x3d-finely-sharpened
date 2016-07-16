@@ -557,33 +557,33 @@ namespace X3D
     public partial class Background : X3DBackgroundNode
     {
 
-        private List<string> _backUrl;
+        private string _backUrl;
 
-        private List<string> _bottomUrl;
+        private string _bottomUrl;
 
-        private List<string> _frontUrl;
+        private string _frontUrl;
 
-        private List<string> _leftUrl;
+        private string _leftUrl;
 
-        private List<string> _rightUrl;
+        private string _rightUrl;
 
-        private List<string> _topUrl;
+        private string _topUrl;
 
         private string _containerField;
 
         public Background()
         {
-            this._topUrl = new List<string>();
-            this._rightUrl = new List<string>();
-            this._leftUrl = new List<string>();
-            this._frontUrl = new List<string>();
-            this._bottomUrl = new List<string>();
-            this._backUrl = new List<string>();
+            this._topUrl = string.Empty;
+            this._rightUrl = string.Empty;
+            this._leftUrl = string.Empty;
+            this._frontUrl = string.Empty;
+            this._bottomUrl = string.Empty;
+            this._backUrl = string.Empty;
             this._containerField = "children";
         }
 
         [System.Xml.Serialization.XmlAttributeAttribute("backUrl")]
-        public List<string> backUrl
+        public string backUrl
         {
             get
             {
@@ -596,7 +596,7 @@ namespace X3D
         }
 
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public List<string> bottomUrl
+        public string bottomUrl
         {
             get
             {
@@ -609,7 +609,7 @@ namespace X3D
         }
 
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public List<string> frontUrl
+        public string frontUrl
         {
             get
             {
@@ -622,7 +622,7 @@ namespace X3D
         }
 
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public List<string> leftUrl
+        public string leftUrl
         {
             get
             {
@@ -635,7 +635,7 @@ namespace X3D
         }
 
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public List<string> rightUrl
+        public string rightUrl
         {
             get
             {
@@ -648,7 +648,7 @@ namespace X3D
         }
 
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public List<string> topUrl
+        public string topUrl
         {
             get
             {
