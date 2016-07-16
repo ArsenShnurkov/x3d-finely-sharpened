@@ -16,7 +16,7 @@ using X3D.Core.Shading;
 
 namespace X3D
 {
-    public partial class Background
+    public partial class TextureBackground
     {
         private int tex_cube;
         private int NumVerticies, NumVerticies4;
@@ -25,13 +25,102 @@ namespace X3D
         private Shape _shape;
         private bool generateSkyAndGround = true;
 
-        private Vector3[] groundColors;
-        private Vector3[] skyColors;
-        private float[] groundAngles;
-        private float[] skyAngles;
-        private float groundDivisor;
-        private float skyDivisor;
-        private bool hemispheresEnabled = false;
+        #region Private Properties
+
+        private string frontUrl
+        {
+            get
+            {
+                ImageTexture tex;
+
+                tex = this.Items
+                    .Where(c => typeof(ImageTexture).IsInstanceOfType(c)) 
+                    .Select(c=> c as ImageTexture)
+                    .FirstOrDefault(c => c.containerField == "frontTexture");
+
+                return tex.url;
+            }
+        }
+
+        private string backUrl
+        {
+            get
+            {
+                ImageTexture tex;
+
+                tex = this.Items
+                    .Where(c => typeof(ImageTexture).IsInstanceOfType(c))
+                    .Select(c => c as ImageTexture)
+                    .FirstOrDefault(c => c.containerField == "backTexture");
+
+                return tex.url;
+            }
+        }
+
+        private string topUrl
+        {
+            get
+            {
+                ImageTexture tex;
+
+                tex = this.Items
+                    .Where(c => typeof(ImageTexture).IsInstanceOfType(c))
+                    .Select(c => c as ImageTexture)
+                    .FirstOrDefault(c => c.containerField == "topTexture");
+
+                return tex.url;
+            }
+        }
+
+        private string bottomUrl
+        {
+            get
+            {
+                ImageTexture tex;
+
+                tex = this.Items
+                    .Where(c => typeof(ImageTexture).IsInstanceOfType(c))
+                    .Select(c => c as ImageTexture)
+                    .FirstOrDefault(c => c.containerField == "bottomTexture");
+
+                return tex.url;
+            }
+        }
+
+        private string leftUrl
+        {
+            get
+            {
+                ImageTexture tex;
+
+                tex = this.Items
+                    .Where(c => typeof(ImageTexture).IsInstanceOfType(c))
+                    .Select(c => c as ImageTexture)
+                    .FirstOrDefault(c => c.containerField == "leftTexture");
+
+                return tex.url;
+            }
+        }
+
+        private string rightUrl
+        {
+            get
+            {
+                ImageTexture tex;
+
+                tex = this.Items
+                    .Where(c => typeof(ImageTexture).IsInstanceOfType(c))
+                    .Select(c => c as ImageTexture)
+                    .FirstOrDefault(c => c.containerField == "rightTexture");
+
+                return tex.url;
+            }
+        }
+
+        #endregion
+
+        //[XmlIgnore]
+        //public ComposedShader CurrentShader = null;
 
         #region Private Methods
 
@@ -100,17 +189,7 @@ namespace X3D
 
             if (generateSkyAndGround)
             {
-                // Sphere
-                // interpolate colors from groundColor and skyColor over hemispheres using specified sky and ground angles
-                this.groundColors = X3DTypeConverters.MFVec3f(groundColor);
-                this.groundAngles = X3DTypeConverters.Floats(groundAngle);
-                this.skyColors = X3DTypeConverters.MFVec3f(skyColor);
-                this.skyAngles = X3DTypeConverters.Floats(skyAngle);
 
-                groundDivisor = (1.0f / groundColors.Length) * (float)Math.PI; // how many colors divided over 90 degrees (lower hemisphere)
-                skyDivisor = (1.0f / groundColors.Length) * (float)Math.PI; // how many colors divided over 90 degrees (upper hemisphere)
-
-                hemispheresEnabled = true;
             }
             else
             {
@@ -120,32 +199,12 @@ namespace X3D
 
             _shape = new Shape();
             _shape.Load();
+            _shape.IncludeDefaultShader(CubeMapBackgroundShader.vertexShaderSource,
+                                        CubeMapBackgroundShader.fragmentShaderSource);
 
-
-            if (hemispheresEnabled)
-            {
-                _shape.IncludeDefaultShader(DefaultShader.vertexShaderSource,
-                            DefaultShader.fragmentShaderSource);
-
-                _shape.CurrentShader.Use();
-
-
-                List<Vertex> geometry = BuildSphereGeometryQuads(60, Vector3.Zero, 10.0f);
-
-                Buffering.BufferShaderGeometry(geometry, _shape, out _vbo_interleaved, out NumVerticies);
-            }
-            else
-            {
-                _shape.IncludeDefaultShader(CubeMapBackgroundShader.vertexShaderSource,
-                            CubeMapBackgroundShader.fragmentShaderSource);
-
-                _shape.CurrentShader.Use();
-
-                Buffering.Interleave(_shape, null, out _vbo_interleaved, out NumVerticies,
-                    out _vbo_interleaved4, out NumVerticies4,
-                    _cube.Indices, _cube.Indices, _cube.Vertices, _cube.Texcoords, _cube.Normals, null, null);
-            }
-
+            Buffering.Interleave(_shape, null, out _vbo_interleaved, out NumVerticies,
+                out _vbo_interleaved4, out NumVerticies4,
+                _cube.Indices, _cube.Indices, _cube.Vertices, _cube.Texcoords, _cube.Normals, null, null);
         }
 
         public override void Render(RenderingContext rc)
@@ -162,8 +221,6 @@ namespace X3D
 #endif
             _shape.CurrentShader.SetFieldValue("scale", scale);
             _shape.CurrentShader.SetFieldValue("size", size);
-            _shape.CurrentShader.SetFieldValue("coloringEnabled", 1);
-            _shape.CurrentShader.SetFieldValue("texturingEnabled", 0);
 
             bool texture2d = GL.IsEnabled(EnableCap.Texture2D);
 
@@ -176,15 +233,7 @@ namespace X3D
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.TextureCubeMap, tex_cube);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
-            if (hemispheresEnabled)
-            {
-                GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies);
-            }
-            else
-            {
-                GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
-            }
-
+            GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
 #if APPLY_BACKDROP
             GL.DepthMask(true);
 #endif
@@ -192,151 +241,7 @@ namespace X3D
             if (!texture2d)
                 GL.Disable(EnableCap.Texture2D);
         }
-        public Vector4 GetLatitudeFillColor(float latitudeRatio, int segments)
-        {
-            //NOT COMPLETED
-            //http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/enveffects.html#Concepts
-            Vector3[] colorPalette;
-            float colorSelectionRatio;
-            int colorIndex = 0;
 
-            if (latitudeRatio < 0.5f)
-            {
-                colorPalette = skyColors;
-
-                foreach(float angle in skyAngles)
-                {
-                    if(angle < (latitudeRatio * MathHelpers.PI2))
-                    {
-                        colorSelectionRatio = angle / MathHelpers.PI;
-                        colorIndex = (int)Math.Round((colorPalette.Length - 1.0f) * colorSelectionRatio);
-                    }
-                }
-            }
-            else
-            {
-                colorPalette = groundColors;
-                colorSelectionRatio = latitudeRatio;
-                colorIndex = (int)Math.Round((colorPalette.Length - 1.0f) * colorSelectionRatio);
-            }
-
-            
-
-            colorSelectionRatio = latitudeRatio;
-
-            
-
-            return new Vector4(colorPalette[colorIndex], 1.0f);
-        }
-        public List<Vertex> BuildSphereGeometryQuads(int n, Vector3 center, float radius)
-        {
-            List<Vertex> geometry = new List<Vertex>();
-
-            float theta = 0.0f;
-            float theta2 = 0.0f;
-            float phi = 0.0f;
-            float phi2 = 0.0f;
-            float segments = n;
-
-            float cosT = 0.0f;
-            float cosT2 = 0.0f;
-            float cosP = 0.0f;
-            float cosP2 = 0.0f;
-
-            float sinT = 0.0f;
-            float sinT2 = 0.0f;
-            float sinP = 0.0f;
-            float sinP2 = 0.0f;
-            int vertexIndex = 0;
-            int expectedNumVerticies = n * n * 4;
-            float latitudeRatio;
-
-            List<Vertex> current = new List<Vertex>(4);
-
-            for (float lat = 0; lat < segments; lat++)
-            {
-                latitudeRatio = (lat / segments);
-                phi = (float)Math.PI * latitudeRatio;
-                phi2 = (float)Math.PI * ((lat + 1.0f) / segments);
-
-                cosP = (float)Math.Cos(phi);
-                cosP2 = (float)Math.Cos(phi2);
-                sinP = (float)Math.Sin(phi);
-                sinP2 = (float)Math.Sin(phi2);
-
-                Vector4 latitudeColor = GetLatitudeFillColor(latitudeRatio, n);
-
-                for (float lon = 0; lon < segments; lon++)
-                {
-                    current = new List<Vertex>(4);
-                    theta = MathHelpers.PI2 * (lon / segments);
-                    theta2 = MathHelpers.PI2 * ((lon + 1.0f) / segments);
-
-                    cosT = (float)Math.Cos(theta);
-                    cosT2 = (float)Math.Cos(theta2);
-                    sinT = (float)Math.Sin(theta);
-                    sinT2 = (float)Math.Sin(theta2);
-
-
-                    current.Add(
-                        new Vertex()
-                        {
-                            Position = new Vector3(
-                                cosT * sinP,
-                                cosP,
-                                sinT * sinP
-                            ),
-                            Color = latitudeColor
-                        }
-                    );
-                    vertexIndex++;
-
-                    current.Add(
-                        new Vertex()
-                        {
-                            Position = new Vector3(
-                                cosT * sinP2,
-                                cosP2,
-                                sinT * sinP2
-                            ),
-                            Color = latitudeColor
-                        }
-                    );
-                    vertexIndex++;
-
-                    current.Add(
-                        new Vertex()
-                        {
-                            Position = new Vector3(
-                                 cosT2 * sinP2,
-                                 cosP2,
-                                 sinT2 * sinP2
-                            ),
-                            Color = latitudeColor
-                        }
-                    );
-                    vertexIndex++;
-
-                    current.Add(
-                        new Vertex()
-                        {
-                            Position = new Vector3(
-                                 cosT2 * sinP,
-                                 cosP,
-                                 sinT2 * sinP
-                            ),
-                            Color = latitudeColor
-                        }
-                    );
-                    vertexIndex++;
-
-                    geometry.AddRange(current);
-                }
-
-            }
-
-            return geometry;
-        }
 
         public sealed class CubeGeometry : ShapeGeometry
         {

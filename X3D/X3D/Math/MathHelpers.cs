@@ -9,7 +9,9 @@ namespace X3D
 {
     public class MathHelpers
     {
+        public const float PI = (float)Math.PI;
         public const float PI_OVER_180 = (float)Math.PI / 180.0f;
+        public const float Zenith = (float)Math.PI / 2.0f;
         public const float PI2 = 2.0f * (float)Math.PI;
 
         public static BoundingBox CalcBoundingBox(IndexedTriangleSet its, int? restartIndex)

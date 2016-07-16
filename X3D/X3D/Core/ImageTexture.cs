@@ -54,6 +54,128 @@ namespace X3D
             return texture;
         }
 
+
+        public static Bitmap CreateBitmap(System.Drawing.Color backgroundColor, int width, int height)
+        {
+            Bitmap bmp;
+
+            bmp = new Bitmap(width, height);
+
+            using (Graphics g2D = Graphics.FromImage(bmp))
+            {
+                g2D.Clear(backgroundColor);
+            }
+
+
+            return bmp;
+        }
+
+        public static bool GetTextureImageFromMFString(string mfstring, out Bitmap image, out int width, out int height)
+        {
+            Rectangle imgRect;
+
+            int[] textureMaxSize;
+            int glTexWidth;
+            int glTexHeight;
+            string[] urls;
+            object resource;
+            bool actually_loaded_something;
+
+            actually_loaded_something = false;
+            urls = X3DTypeConverters.GetMFString(mfstring);
+            image = null;
+            width = 0;
+            height = 0;
+
+            foreach (string url in urls)
+            {
+                if (SceneManager.FetchSingle(url, out resource))
+                {
+                    if (resource is Stream)
+                    {
+                        Stream s;
+
+                        s = (Stream)resource;
+                        image = new Bitmap(s);
+                        s.Close();
+                        actually_loaded_something = true;
+                    }
+                    else
+                    {
+                        throw new Exception("Resource is of unknown type, consider returning file streams instead");
+                    }
+
+                    break;
+                }
+            }
+
+            if (!actually_loaded_something)
+            {
+                image = Properties.Resources.ErrorTexture;
+            }
+
+            if (image == null)
+            {
+                return false;
+            }
+
+            /*	Get the maximum texture size supported by OpenGL: */
+            textureMaxSize = new int[] { 0 };
+            GL.GetInteger(GetPName.MaxTextureSize, textureMaxSize);
+            //gl.GetInteger(OpenGL.GL_MAX_TEXTURE_SIZE,textureMaxSize);
+
+            /*	Find the target width and height sizes, which is just the highest
+             *	posible power of two that'll fit into the image. */
+            glTexWidth = textureMaxSize[0];
+            glTexHeight = textureMaxSize[0];
+            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+            {
+                if (image.Width < size)
+                {
+                    glTexWidth = size / 2;
+                    break;
+                }
+                if (image.Width == size)
+                    glTexWidth = size;
+
+            }
+
+            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+            {
+                if (image.Height < size)
+                {
+                    glTexHeight = size / 2;
+                    break;
+                }
+                if (image.Height == size)
+                    glTexHeight = size;
+            }
+
+            if (image.Width != glTexWidth || image.Height != glTexHeight)
+            {
+                /* Scale the image according to OpenGL requirements */
+                Image newImage = image.GetThumbnailImage(glTexWidth, glTexHeight, null, IntPtr.Zero);
+
+                image.Dispose();
+                image = (Bitmap)newImage;
+            }
+            //image.RotateFlip(RotateFlipType.RotateNoneFlipY); //TODO: figure out more efficient code
+
+            /* Another way to rotate texture on draw()
+            gl.MatrixMode(OpenGL.GL_TEXTURE);
+            gl.LoadIdentity();
+            gl.Scale(1.0f,-1.0f,1.0f);
+            gl.MatrixMode(OpenGL.GL_MODELVIEW);
+             */
+            //}
+            imgRect = new Rectangle(0, 0, image.Width, image.Height);
+
+            width = image.Width;
+            height = image.Height;
+
+            return true;
+        }
+
         #endregion
 
         private int _textureID = -1;
@@ -254,113 +376,6 @@ namespace X3D
         {
             return TextureImage.pTexImage;
         }
-
-        public static bool GetTextureImageFromMFString(string mfstring, out Bitmap image, out int width, out int height)
-        {
-            Rectangle imgRect;
-
-            int[] textureMaxSize;
-            int glTexWidth;
-            int glTexHeight;
-            string[] urls;
-            object resource;
-            bool actually_loaded_something;
-
-            actually_loaded_something = false;
-            urls = X3DTypeConverters.GetMFString(mfstring);
-            image = null;
-            width = 0;
-            height = 0;
-
-            foreach (string url in urls)
-            {
-                if (SceneManager.FetchSingle(url, out resource))
-                {
-                    if (resource is Stream)
-                    {
-                        Stream s;
-
-                        s = (Stream)resource;
-                        image = new Bitmap(s);
-                        s.Close();
-                        actually_loaded_something = true;
-                    }
-                    else
-                    {
-                        throw new Exception("Resource is of unknown type, consider returning file streams instead");
-                    }
-
-                    break;
-                }
-            }
-
-            if (!actually_loaded_something)
-            {
-                image = Properties.Resources.ErrorTexture;
-            }
-
-            if (image == null)
-            {
-                return false;
-            }
-
-            /*	Get the maximum texture size supported by OpenGL: */
-            textureMaxSize = new int[] { 0 };
-            GL.GetInteger(GetPName.MaxTextureSize, textureMaxSize);
-            //gl.GetInteger(OpenGL.GL_MAX_TEXTURE_SIZE,textureMaxSize);
-
-            /*	Find the target width and height sizes, which is just the highest
-             *	posible power of two that'll fit into the image. */
-            glTexWidth = textureMaxSize[0];
-            glTexHeight = textureMaxSize[0];
-            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
-            {
-                if (image.Width < size)
-                {
-                    glTexWidth = size / 2;
-                    break;
-                }
-                if (image.Width == size)
-                    glTexWidth = size;
-
-            }
-
-            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
-            {
-                if (image.Height < size)
-                {
-                    glTexHeight = size / 2;
-                    break;
-                }
-                if (image.Height == size)
-                    glTexHeight = size;
-            }
-
-            if (image.Width != glTexWidth || image.Height != glTexHeight)
-            {
-                /* Scale the image according to OpenGL requirements */
-                Image newImage = image.GetThumbnailImage(glTexWidth, glTexHeight, null, IntPtr.Zero);
-
-                image.Dispose();
-                image = (Bitmap)newImage;
-            }
-            //image.RotateFlip(RotateFlipType.RotateNoneFlipY); //TODO: figure out more efficient code
-
-            /* Another way to rotate texture on draw()
-            gl.MatrixMode(OpenGL.GL_TEXTURE);
-            gl.LoadIdentity();
-            gl.Scale(1.0f,-1.0f,1.0f);
-            gl.MatrixMode(OpenGL.GL_MODELVIEW);
-             */
-            //}
-            imgRect = new Rectangle(0, 0, image.Width, image.Height);
-
-            width = image.Width;
-            height = image.Height;
-
-            return true;
-        }
-
 
         private bool GetTextureImageFromMFString(string mfstring)
         {

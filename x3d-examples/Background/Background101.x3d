@@ -21,6 +21,20 @@
     <meta content='../license.html' name='license'/>
   </head>
   <Scene>
-    <Background groundAngle='1.309 1.570796' groundColor='0.1 0.1 0.0 0.4 0.25 0.2 0.6 0.6 0.6' skyAngle='1.309 1.571' skyColor='0.0 0.2 0.7 0.0 0.5 1.0 1.0 1.0 1.0'/>
+    <Background groundAngle='1.309 1.570796' groundColor='0.0 0.0 0.9 0.4 0.25 0.2 0.6 0.6 0.6' skyAngle='1.309 1.571' skyColor='0.0 0.2 0.7 0.0 0.5 1.0 1.0 1.0 1.0'/>
   </Scene>
 </X3D>
+
+<!-- 
+Hemisphere 1 
+0.0 0.2 0.7 		0 51 178     Blue
+0.0 0.5 1.0 		0 127 255    Light sky blue
+1.0 1.0 1.0			255 255 255  White
+-->	
+
+<!-- 
+Hemisphere 2
+0.1 0.1 0.0 		25 25 0		 Black
+0.4 0.25 0.2 		102 63 51    Shade of brown
+0.6 0.6 0.6			153 153 153  Grey
+-->		
