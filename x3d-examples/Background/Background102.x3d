@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN" "http://www.web3d.org/specifications/x3d-3.3.dtd">
+
+<X3D profile='Interactive' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
+	<Scene>
+		<Viewpoint position='0 5 100' />
+		<Background backUrl='"texture\generic\BK.png"' 
+					bottomUrl='"texture\generic\DN.png"' 
+					frontUrl='"texture\generic\FR.png"' 
+					leftUrl='"texture\generic\LF.png"' 
+					rightUrl='"texture\generic\RT.png"' 
+					topUrl='"texture\generic\UP.png"' />
+	</Scene>
+</X3D>
