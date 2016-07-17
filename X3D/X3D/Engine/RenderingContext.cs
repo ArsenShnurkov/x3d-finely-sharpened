@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK.Input;
+using X3D.Engine;
 
 namespace X3D
 {
     public class RenderingContext
     {
         public Matricies matricies = new Matricies();
-        public Camera cam;
+        public TestCamera cam;
         public double Time;
 
         private Stack<Matricies> transformHierarchy = new Stack<Matricies>();

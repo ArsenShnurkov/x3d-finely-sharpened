@@ -1,4 +1,4 @@
-﻿//#define APPLY_BACKDROP // When defined, sets Background to scene backdrop
+﻿#define APPLY_BACKDROP // When defined, sets Background to scene backdrop
 //#define CULL_FACE
 
 using System;
@@ -218,7 +218,7 @@ namespace X3D
 
             _shape.CurrentShader.Use();
 #if APPLY_BACKDROP
-            _shape.CurrentShader.SetFieldValue("modelview", Matrix4.Identity);
+            _shape.CurrentShader.SetFieldValue("modelview", rc.cam.GetWorldOrientation());
 #endif
             _shape.CurrentShader.SetFieldValue("scale", scale);
             _shape.CurrentShader.SetFieldValue("size", size);

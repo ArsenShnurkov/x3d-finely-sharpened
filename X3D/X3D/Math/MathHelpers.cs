@@ -13,6 +13,7 @@ namespace X3D
         public const float PI_OVER_180 = (float)Math.PI / 180.0f;
         public const float Zenith = (float)Math.PI / 2.0f;
         public const float PI2 = 2.0f * (float)Math.PI;
+        public const float PiOver180 = PI_OVER_180;
 
         public static BoundingBox CalcBoundingBox(IndexedTriangleSet its, int? restartIndex)
         {

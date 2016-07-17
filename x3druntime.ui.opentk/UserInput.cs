@@ -91,9 +91,34 @@ namespace x3druntime.ui.opentk
                     break;
             }
         }
-
+        
         private void UserInput_ScanKeyboard(FrameEventArgs e)
         {
+            Vector3 direction = Vector3.Zero;
+
+            if (Keyboard[Key.W])
+            {
+                ActiveCamera.Walk(playerDirectionMagnitude);
+                //direction += ActiveCamera.Direction * playerDirectionMagnitude;
+            }
+            if (Keyboard[Key.S])
+            {
+                ActiveCamera.Walk(-playerDirectionMagnitude);
+                //direction -= ActiveCamera.Direction * playerDirectionMagnitude;
+            }
+            if (Keyboard[Key.A])
+            {
+                ActiveCamera.Strafe(playerDirectionMagnitude);
+                //ActiveCamera.Right = ActiveCamera.Up.Cross(ActiveCamera.Direction);
+                //direction += ActiveCamera.Right * playerDirectionMagnitude;
+            }
+            if (Keyboard[Key.D])
+            {
+                ActiveCamera.Strafe(-playerDirectionMagnitude);
+                //ActiveCamera.Right = ActiveCamera.Up.Cross(ActiveCamera.Direction);
+                //direction -= ActiveCamera.Right * playerDirectionMagnitude;
+            }
+
             if (Keyboard[Key.Escape])
             {
                 //Exit();
@@ -141,13 +166,18 @@ namespace x3druntime.ui.opentk
             }
             if (Keyboard[Key.Left])
             {
-                this.heading += 1.0f;
-                this.yrot = this.heading;
+                ActiveCamera.ApplyYaw(-10.0f * 0.007f);
+                ActiveCamera.ApplyRotation();
+
+                //this.heading += 1.0f;
+                //this.yrot = this.heading;
             }
             if (Keyboard[Key.Right])
             {
-                this.heading -= 1.0f;
-                this.yrot = this.heading;
+                ActiveCamera.ApplyYaw(10.0f * 0.007f);
+                ActiveCamera.ApplyRotation();
+                //this.heading -= 1.0f;
+                //this.yrot = this.heading;
             }
             if (Keyboard[Key.Up])
             {
@@ -216,6 +246,8 @@ namespace x3druntime.ui.opentk
             {
                 this.ypos -= 0.2f;
             }
+
+            ActiveCamera.move(direction, e.Time);
         }
     }
 }

@@ -8,6 +8,8 @@ namespace x3druntime.ui.opentk
     public partial class X3DApplication
     {
 
+        public static float playerDirectionMagnitude = 0.1f;
+
         bool rotate_enable = true;
         bool fx_enable = true;
         bool wireframe = false;

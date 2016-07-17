@@ -30,6 +30,7 @@ varying vec3 normalVec;
 out vec4 vColor;
 out lowp vec2 uv;
 out vec3 vPosition;
+out vec3 N;
 
 void main()
 {
@@ -41,6 +42,7 @@ void main()
 
 	//gl_TexCoord[0] = gl_MultiTexCoord0; 
 	normalVec = normalize(normal); // gl_Normal
+    N = normalize(gl_NormalMatrix * gl_Normal);
 
 	vec4 eyePos = gl_ModelViewMatrixInverse * vec4(0., 0., 0., 1.); 
 	eyeVec = normalize(eyePos.xyz - position.xyz);
@@ -55,6 +57,8 @@ void main()
         public static string fragmentShaderSource = @"
 #version 420 core
  
+#define MAX_LIGHTS 3
+
 varying vec3 lightVec; 
 varying vec3 eyeVec; 
 varying vec3 normalVec;
@@ -67,6 +71,8 @@ in vec2 gFacetTexCoord;
 
 in vec2 uv;
 in vec4 vColor;
+in vec3 N;
+in vec3 vPosition;
 out vec4 FragColor;
 
 uniform sampler2D _MainTex;
@@ -124,10 +130,12 @@ void main()
 
 
 
+
+
     // TexCoords from tessellation
-    vec3 N = normalize(gFacetNormal);
+    vec3 Nf = normalize(gFacetNormal);
     vec3 L = LightPosition;
-    float df = abs(dot(N, L));
+    float df = abs(dot(Nf, L));
     vec3 color = AmbientMaterial + df * DiffuseMaterial;
 
     float d1 = min(min(gTriDistance.x, gTriDistance.y), gTriDistance.z);
@@ -156,7 +164,49 @@ void main()
         col_accum = vec4(0.0, 0, 0, 1.0);
     }
  
+    
+
+
+    // PHONG SHADING
+    //vec3 Light0 = normalize(gl_LightSource[0].position.xyz - vPosition);   
+    //vec3 E = normalize(-vPosition); // we are in Eye Coordinates, so EyePos is (0,0,0)  
+    //vec3 R = normalize(-reflect(Light0,N));  
+ 
+    //vec4 Iamb = gl_FrontLightProduct[0].ambient;     
+    //vec4 Idiff = gl_FrontLightProduct[0].diffuse * max(dot(N,Light0), 0.0);
+    //Idiff = clamp(Idiff, 0.0, 1.0);     
+   
+    //vec4 Ispec = gl_FrontLightProduct[0].specular * pow(max(dot(R,E),0.0),0.3 * gl_FrontMaterial.shininess);
+    //Ispec = clamp(Ispec, 0.0, 1.0); 
+    //col_accum = col_accum + ( gl_FrontLightModelProduct.sceneColor + Iamb + Idiff + Ispec) / 2;
+
+
+
+
+
+
+    vec4 finalColor = vec4(0.0, 0.0, 0.0, 0.0);
+   
+    for (int i=0; i < MAX_LIGHTS; i++)
+    {
+        vec3 Light0 = normalize(gl_LightSource[i].position.xyz - vPosition); 
+        vec3 E = normalize(-vPosition); // we are in Eye Coordinates, so EyePos is (0,0,0) 
+        vec3 R = normalize(-reflect(Light0,N)); 
+   
+        vec4 Iamb = gl_FrontLightProduct[i].ambient; 
+        vec4 Idiff = gl_FrontLightProduct[i].diffuse * max(dot(N,Light0), 0.0);
+        Idiff = clamp(Idiff, 0.0, 1.0); 
+
+        vec4 Ispec = gl_FrontLightProduct[i].specular * pow(max(dot(R,E),0.0),0.3*gl_FrontMaterial.shininess);
+        Ispec = clamp(Ispec, 0.0, 1.0); 
+   
+        finalColor += Iamb + Idiff + Ispec;
+    }
+
+    col_accum = col_accum + ( gl_FrontLightModelProduct.sceneColor + finalColor ) / 2;
+
     FragColor = col_accum;
+
 }
 
 ";

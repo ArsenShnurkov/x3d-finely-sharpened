@@ -40,9 +40,6 @@ namespace X3D
                                                       TriangleTessShader.geometryShaderSource);
             }
 
-            parentShape.CurrentShader.Use();
-
-
             Buffering.Interleave(null, out vbo, out NumVerticies,
                 out vbo4, out NumVerticies4,
                 Faces, null, Verts, null, null, null, null,

@@ -71,7 +71,7 @@ namespace X3D.Core
             {
                 shader.ShaderParts.Add(new ShaderPart()
                 {
-                    ShaderSource = vertexShaderSource,
+                    ShaderSource = vertexShaderSource.Trim(),
                     Type = shaderPartTypeValues.VERTEX
                 });
             }
@@ -80,7 +80,7 @@ namespace X3D.Core
             {
                 shader.ShaderParts.Add(new ShaderPart()
                 {
-                    ShaderSource = tessControlSource,
+                    ShaderSource = tessControlSource.Trim(),
                     Type = shaderPartTypeValues.TESS_CONTROL
                 });
             }
@@ -89,7 +89,7 @@ namespace X3D.Core
             {
                 shader.ShaderParts.Add(new ShaderPart()
                 {
-                    ShaderSource = tessEvalSource,
+                    ShaderSource = tessEvalSource.Trim(),
                     Type = shaderPartTypeValues.TESS_EVAL
                 });
             }
@@ -99,7 +99,7 @@ namespace X3D.Core
             {
                 shader.ShaderParts.Add(new ShaderPart()
                 {
-                    ShaderSource = geometryShaderSource,
+                    ShaderSource = geometryShaderSource.Trim(),
                     Type = shaderPartTypeValues.GEOMETRY
                 });
             }
@@ -108,7 +108,7 @@ namespace X3D.Core
             {
                 shader.ShaderParts.Add(new ShaderPart()
                 {
-                    ShaderSource = fragmentShaderSource,
+                    ShaderSource = fragmentShaderSource.Trim(),
                     Type = shaderPartTypeValues.FRAGMENT
                 });
             }

@@ -1,4 +1,4 @@
-﻿//#define APPLY_BACKDROP // When defined, sets Background to scene backdrop
+﻿#define APPLY_BACKDROP // When defined, sets Background to scene backdrop
 
 using System;
 using System.Collections.Generic;
@@ -104,6 +104,8 @@ namespace X3D
                 || string.IsNullOrEmpty(topUrl) || string.IsNullOrEmpty(bottomUrl)
                 || string.IsNullOrEmpty(leftUrl) || string.IsNullOrEmpty(rightUrl));
 
+            //TODO: replace cube sides that arent available with transparent sides 
+
             generateSkyAndGround = !(string.IsNullOrEmpty(groundColor) || string.IsNullOrEmpty(skyColor)
                 || string.IsNullOrEmpty(groundAngle) || string.IsNullOrEmpty(skyAngle));
 
@@ -193,8 +195,11 @@ namespace X3D
                 this._shapeOuter.Render(rc);
 
                 _shapeOuter.CurrentShader.Use();
+
+
+
 #if APPLY_BACKDROP
-                _shapeOuter.CurrentShader.SetFieldValue("modelview", Matrix4.Identity);
+                _shapeOuter.CurrentShader.SetFieldValue("modelview", rc.cam.GetWorldOrientation());
 #endif
                 _shapeOuter.CurrentShader.SetFieldValue("scale", scaleSky);
                 _shapeOuter.CurrentShader.SetFieldValue("size", size);
@@ -213,6 +218,7 @@ namespace X3D
 #endif
                 rc.PopMatricies();
 
+
                 rc.PushMatricies();
 
                 // Inner ground Hemisphere
@@ -220,7 +226,7 @@ namespace X3D
 
                 _shapeInner.CurrentShader.Use();
 #if APPLY_BACKDROP
-                _shapeInner.CurrentShader.SetFieldValue("modelview", Matrix4.Identity);
+                _shapeInner.CurrentShader.SetFieldValue("modelview", rc.cam.GetWorldOrientation());
 #endif
                 _shapeInner.CurrentShader.SetFieldValue("scale", scaleGround);
                 _shapeInner.CurrentShader.SetFieldValue("size", size);
@@ -253,7 +259,7 @@ namespace X3D
 
                 _shapeInnerCube.CurrentShader.Use();
 #if APPLY_BACKDROP
-                _shapeInnerCube.CurrentShader.SetFieldValue("modelview", Matrix4.Identity);
+                _shapeInnerCube.CurrentShader.SetFieldValue("modelview", rc.cam.GetWorldOrientation());
 #endif
                 _shapeInnerCube.CurrentShader.SetFieldValue("scale", scaleCube);
                 _shapeInnerCube.CurrentShader.SetFieldValue("size", size);
@@ -337,36 +343,49 @@ namespace X3D
             Vector3[] colorPalette;
             float colorSelectionRatio;
             int colorIndex = 0;
+            float angle;
+            float sphereAngle;
+            float anglePrev = 0.0f;
+            float angleNext;
 
             colorPalette = groundColors;
-
-            if (latitudeRatio < 0.5f)
-            {
-                
-
-                foreach (float angle in skyAngles)
-                {
-                    if (angle < (latitudeRatio * MathHelpers.PI2))
-                    {
-                        colorSelectionRatio = angle / MathHelpers.PI;
-                        colorIndex = (int)Math.Round((colorPalette.Length - 1.0f) * colorSelectionRatio);
-                    }
-                }
-            }
-            else
-            {
-                colorSelectionRatio = latitudeRatio;
-                colorIndex = (int)Math.Round((colorPalette.Length - 1.0f) * colorSelectionRatio);
-            }
-
-
-
-            colorSelectionRatio = latitudeRatio;
 
             if (colorPalette == null || colorPalette.Length == 0)
             {
                 return Vector4.One;
             }
+
+            //latitudeRatio = 0.5f - latitudeRatio;
+            sphereAngle = (latitudeRatio) * MathHelpers.PI;
+
+            angleNext = groundAngles.First();
+
+            if (sphereAngle >= 0 && sphereAngle <= angleNext)
+            {
+                colorIndex = 0;
+            }
+            else
+            {
+                anglePrev = angleNext;
+                float[] gangles = groundAngles.Skip(1).ToArray();
+
+                for (int i = 1; i < gangles.Length; i++)
+                {
+                    angle = (i > 0 ? gangles[i] : 0.0f);
+
+
+                    if (sphereAngle >= anglePrev && sphereAngle <= angle)
+                    {
+                        colorSelectionRatio = angle / MathHelpers.PI2;
+                        colorIndex = (int)Math.Round((colorPalette.Length - 1.0f) * colorSelectionRatio);
+                    }
+
+                    anglePrev = angle;
+                }
+            }
+
+
+
 
             return new Vector4(colorPalette[colorIndex], 1.0f);
         }

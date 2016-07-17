@@ -36,7 +36,8 @@ namespace x3druntime.ui.opentk
         public string BaseMIME { get; set; }
 
         private static SceneManager scene;
-        private Camera ActiveCamera;
+        //private Camera ActiveCamera;
+        private TestCamera ActiveCamera;
         private bool ispanning, iszooming;
         private float mouseScale = 0.01f;
         private bool mouseDragging = false;
@@ -53,7 +54,8 @@ namespace x3druntime.ui.opentk
             this.Keyboard.KeyUp += new EventHandler<OpenTK.Input.KeyboardKeyEventArgs>(Keyboard_KeyUp);
 
 
-            ActiveCamera = new Camera(this.window.Width, this.window.Height);
+            //ActiveCamera = new Camera(this.window.Width, this.window.Height);
+            ActiveCamera = new TestCamera(this.window.Width, this.window.Height);
 
             this.Mouse.WheelChanged += Mouse_WheelChanged;
             this.window.MouseLeave += Window_MouseLeave;
@@ -73,6 +75,7 @@ namespace x3druntime.ui.opentk
             {
                 mouseDragging = false;
             };
+            
             this.Mouse.Move += (object sender, MouseMoveEventArgs e) =>
             {
                 if (mouseDragging)
@@ -87,6 +90,32 @@ namespace x3druntime.ui.opentk
                         ActiveCamera.OrbitXY(e.XDelta, e.YDelta);
                     }
                 }
+
+                // TEST new camera implementation:
+
+                float xAngle = (e.XDelta * 0.00095f);
+                float yAngle = (e.YDelta * 0.00095f);
+
+                //xAngle = MathHelper.ClampCircular(xAngle, 0.0, TwoPi);
+                //yAngle = MathHelper.ClampCircular(yAngle, 0.0, TwoPi);
+
+                //xAngle = MathHelper.ClampCircular(xAngle, 0.0, TwoPi);
+                //yAngle = MathHelper.ClampCircular(yAngle, 0.0, HalfPi);
+
+                //    while (xAngle < 0)
+                //      xAngle += TwoPi;
+                //    while (xAngle >= TwoPi)
+                //      xAngle -= TwoPi;
+                //
+                //    while (yAngle < -HalfPi)
+                //      yAngle = -HalfPi;
+                //    while (yAngle > HalfPi)
+                //      yAngle = HalfPi;
+
+
+                ActiveCamera.ApplyYaw(xAngle);
+                ActiveCamera.ApplyPitch(yAngle);
+                ActiveCamera.ApplyRotation();
             };
         }
 
@@ -108,7 +137,7 @@ namespace x3druntime.ui.opentk
             ConsoleVisibility=true;
 #endif
 
-            modelview = Matrix4.LookAt(Vector3.UnitX, Vector3.UnitZ, Vector3.UnitY);
+            modelview = Matrix4.LookAt(Vector3.UnitX, Vector3.UnitZ, Vector3.UnitY); //TODO: put in Camera
 
             { //TODO: specify code in this code block somewhere somehow in the loading of individual Scenes
 
@@ -167,15 +196,17 @@ namespace x3druntime.ui.opentk
 
             GL.PointSize(6.0f);
 
-            //TODO: replace with better Camera Class
-            ActiveCamera.setupGLRenderMatrix();
+            //TODO: improve current Camera implementation
+            
+            ActiveCamera.ApplyDollyTransformations();
+            //ActiveCamera.ApplyTransformations(); // TEST new camera implementation
 
             if (scene != null && scene.SceneGraph.Loaded)
             {
                 RenderingContext rc = new RenderingContext();
                 rc.Time = e.Time;
-                rc.matricies.modelview = ActiveCamera.cameraViewMatrix;
-                rc.matricies.projection = ActiveCamera.projectionMatrix;
+                rc.matricies.modelview = ActiveCamera.Matrix;
+                rc.matricies.projection = ActiveCamera.Projection;
                 rc.cam = ActiveCamera;
                 rc.Keyboard = this.Keyboard;
 
@@ -203,8 +234,6 @@ namespace x3druntime.ui.opentk
         public void Resize()
         {
             //Matrix4 projection;
-
-            GL.Viewport(this.window.ClientRectangle);
 
 
             //projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, window.Width / (float)window.Height, 1.0f, 500.0f);

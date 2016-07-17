@@ -167,60 +167,54 @@ namespace X3D.Core.Shading
                     {
                         for (int k = 0; k < faceType; k++)
                         {
+                            v = Vertex.Zero;
+                            v.Position = _coords[faceset[k]];
+
+                            // Flip Z and Y
+                            tmp = v.Position.Z;
+                            v.Position.Z = -v.Position.Y;
+                            v.Position.Y = tmp;
+
+                            if (texset != null && texset.Count > 0 && _texCoords != null && _texCoords.Length > 0)
+                            {
+                                v.TexCoord = _texCoords[texset[k]];
+                            }
+                            else if (genTexCoordPerVertex && texturing && _bbox != null)
+                            {
+                                //v.TexCoord = MathHelpers.uv(v.Position.x);
+                                v = MathHelpers.uv(_bbox, new Vertex[] { v }, at_origin: false)[0];
+                            }
+
+                            if (coloring)
+                            {
+                                if (colorPerVertex)
+                                {
+
+                                }
+                                else
+                                {
+                                    // color per face
+
+
+                                }
+                            }
+
+                            if (_normals != null && _normals.Length > 0)
+                            {
+                                v.Normal = _normals[faceset[k]];
+                            }
+
                             switch (faceType)
                             {
                                 case 3:
-                                    v = Vertex.Zero;
-                                    v.Position = _coords[faceset[k]];
-
-                                    // Flip Z and Y
-                                    tmp = v.Position.Z;
-                                    v.Position.Z = -v.Position.Y;
-                                    v.Position.Y = tmp;
-
-                                    if (texset != null && texset.Count > 0 && _texCoords != null && _texCoords.Length > 0)
-                                    {
-                                        v.TexCoord = _texCoords[texset[k]];
-                                    }
-                                    else if (genTexCoordPerVertex && texturing && _bbox != null)
-                                    {
-                                        //v.TexCoord = MathHelpers.uv(v.Position.x);
-                                        v = MathHelpers.uv(_bbox, new Vertex[] { v }, at_origin: false)[0];
-                                    }
-
-                                    if (coloring)
-                                    {
-                                        if (colorPerVertex)
-                                        {
-                                            
-                                        }
-                                        else
-                                        {
-                                            // color per face
-
-                                            
-                                        }
-                                    }
-
-                                    if (_normals != null && _normals.Length > 0)
-                                    {
-                                        v.Normal = _normals[faceset[k]];
-                                    }
-
                                     verticies3.Add(v);
                                     break;
 
                                 case 4:
-                                    v = Vertex.Zero;
-                                    //v.Position = new Vector4(_coords[faceset[k]]);
-
                                     verticies4.Add(v);
                                     break;
 
                                 case 2:
-                                    v = Vertex.Zero;
-                                    //v.Position = new Vector3(_coords[faceset[k]]);
-
                                     verticies2.Add(v);
                                     break;
                             }

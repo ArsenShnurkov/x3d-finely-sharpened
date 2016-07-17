@@ -83,6 +83,8 @@
     <Compile Include="X3D\Core\Text.cs" />
     <Compile Include="X3D\Core\TextureBackground.cs" />
     <Compile Include="X3D\Engine\Camera.cs" />
+    <Compile Include="X3D\Engine\SceneEntity.cs" />
+    <Compile Include="X3D\Engine\SimpleCamera.cs" />
     <Compile Include="X3D\Core\Shading\ComposedShader.cs" />
     <Compile Include="X3D\Core\Cone.cs" />
     <Compile Include="X3D\Core\Cylinder.cs" />
@@ -104,6 +106,9 @@
     <Compile Include="X3D\Engine\SceneGraphNode.cs" />
     <Compile Include="X3D\Math\BoundingBox.cs" />
     <Compile Include="X3D\Math\MatrixCollection.cs" />
+    <Compile Include="X3D\Math\MatrixExtensions.cs" />
+    <Compile Include="X3D\Math\QuaternionExtensions.cs" />
+    <Compile Include="X3D\Math\VectorExtensions.cs" />
     <Compile Include="X3D\Parser\X3DTypeConverters.cs" />
     <Compile Include="X3D\Math\MathHelpers.cs" />
     <Compile Include="X3D\Math\Matricies.cs" />
@@ -165,7 +170,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_AssemblyInfoFilename="" BuildVersion_UseGlobalSettings="False" BuildVersion_IncrementBeforeBuild="True" />
+      <UserProperties BuildVersion_IncrementBeforeBuild="True" BuildVersion_UseGlobalSettings="False" BuildVersion_AssemblyInfoFilename="" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -24,6 +24,7 @@ namespace X3D
         private Vector2[] _texCoords;
         private const int RESTART_INDEX = -1;
         private Shape parentShape;
+        private Shape _shape4;
 
         private BoundingBox _bbox;
         private bool RGBA = false, RGB = false, coloring = false, texturing = false, generateColorMap = false;
@@ -37,6 +38,9 @@ namespace X3D
             int? restartIndex = null;
 
             parentShape = GetParent<Shape>();
+
+            _shape4 = new Shape();
+            _shape4.Load();
 
             texturing = texCoordinate != null || parentShape.texturingEnabled;
 
@@ -93,17 +97,6 @@ namespace X3D
                     this.colorPerVertex, this.coloring, this.texturing);
             }
 
-            GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
-
-            int uniformSize = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "size");
-            int uniformScale = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "scale");
-
-            var size = new Vector3(1, 1, 1);
-            var scale = new Vector3(0.05f, 0.05f, 0.05f);
-
-            GL.Uniform3(uniformSize, size);
-            GL.Uniform3(uniformScale, scale);
-
             Console.WriteLine("IndexedFaceSet [loaded]");
         }
 
@@ -116,21 +109,33 @@ namespace X3D
         {
             base.Render(rc);
 
-            if(this.coordinate != null && !string.IsNullOrEmpty(this.coordIndex))
+            var size = new Vector3(1, 1, 1);
+            var scale = new Vector3(0.05f, 0.05f, 0.05f);
+
+            if (this.coordinate != null && !string.IsNullOrEmpty(this.coordIndex))
             {
-                GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
 
                 if (NumVerticies > 0)
                 {
+                    GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
+
+                    parentShape.CurrentShader.SetFieldValue("size", size);
+                    parentShape.CurrentShader.SetFieldValue("scale", scale);
+
                     GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
                     Buffering.ApplyBufferPointers(parentShape.uniforms);
                     GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
                 }
 
-                if(NumVerticies4 > 0)
+                if (NumVerticies4 > 0)
                 {
+                    GL.UseProgram(_shape4.CurrentShader.ShaderHandle);
+
+                    _shape4.CurrentShader.SetFieldValue("size", size);
+                    _shape4.CurrentShader.SetFieldValue("scale", scale);
+
                     GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved4);
-                    Buffering.ApplyBufferPointers(parentShape.uniforms);
+                    Buffering.ApplyBufferPointers(_shape4.uniforms);
                     GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies4);
                 }
             }
