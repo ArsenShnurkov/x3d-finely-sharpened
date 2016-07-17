@@ -50,7 +50,7 @@ namespace X3D
 
             if(this._strings.Count == 0)
             {
-                combined = "Abc";
+                this._strings.Add("Abc");
             }
 
             ForeColor = System.Drawing.Color.FromArgb(255, 255, 255, 255);
@@ -64,7 +64,7 @@ namespace X3D
 
             foreach (string text in this._strings)
             {
-                family = X3DTypeConverters.removeQuotes(FontStyle.family.First());
+                family = FontStyle.Family.First();
                 family = string.IsNullOrEmpty(family) ? "Times New Roman" : family;
                 size = FontStyle.size * 10;
                 Font = new Font(family, size);
