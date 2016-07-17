@@ -43,7 +43,7 @@ namespace X3D
             parentShape.CurrentShader.Use();
 
 
-            Buffering.Interleave(parentShape, null, out vbo, out NumVerticies,
+            Buffering.Interleave(null, out vbo, out NumVerticies,
                 out vbo4, out NumVerticies4,
                 Faces, null, Verts, null, null, null, null,
                 restartIndex: -1, genTexCoordPerVertex: true);

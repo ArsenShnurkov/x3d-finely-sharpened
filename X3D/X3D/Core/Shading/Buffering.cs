@@ -18,6 +18,9 @@ namespace X3D.Core.Shading
     /// </summary>
     public class Buffering
     {
+        /// <summary>
+        /// Precondition: Apply Buffer Pointers right before GL.DrawArrays or GL.DrawElements
+        /// </summary>
         public static void ApplyBufferPointers(ShaderUniformsPNCT uniforms)
         {
             if (uniforms.a_position != -1)
@@ -46,9 +49,8 @@ namespace X3D.Core.Shading
             }
         }
 
-        public static int BufferShaderGeometry(Mesh geometries, Shape parentShape, out int verts)
+        public static int BufferShaderGeometry(Mesh geometries, out int verts)
         {
-            GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
 
             int numBuffers = geometries.Count;
             int buffers;
@@ -89,20 +91,15 @@ namespace X3D.Core.Shading
 
                 offset += size;
 
-                ApplyBufferPointers(parentShape.uniforms);
-
             }
 
             return buffers;
         }
 
-        public static int BufferShaderGeometry(Verticies geometry, Shape parentShape,
+        public static int BufferShaderGeometry(Verticies geometry,
                                                out int vbo_interleaved3, out int NumVerticies)
         {
             Vertex[] _interleaved3 = geometry.ToArray();
-
-
-            GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
 
 
             Console.WriteLine("Buffering Verticies..");
@@ -121,14 +118,12 @@ namespace X3D.Core.Shading
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_interleaved3); // InterleavedArrayFormat.T2fC4fN3fV3f
 
-            ApplyBufferPointers(parentShape.uniforms);
-
             NumVerticies = _interleaved3.Length;
 
             return vbo_interleaved3;
         }
 
-        public static void Interleave(Shape parentShape, BoundingBox _bbox,
+        public static void Interleave(BoundingBox _bbox,
             out int vbo_interleaved3, out int NumVerticies,
             out int vbo_interleaved4, out int NumVerticies4,
             int[] _indices, int[] _texIndices,
@@ -357,8 +352,8 @@ namespace X3D.Core.Shading
             vbo_interleaved3 = vbo_interleaved4 = - 1;
 
             // BUFFER GEOMETRY
-            if (verticies3.Count > 0) BufferShaderGeometry(verticies3, parentShape, out vbo_interleaved3, out NumVerticies);
-            if(verticies4.Count > 0) BufferShaderGeometry(verticies4, parentShape, out vbo_interleaved4, out NumVerticies4);
+            if (verticies3.Count > 0) BufferShaderGeometry(verticies3, out vbo_interleaved3, out NumVerticies);
+            if(verticies4.Count > 0) BufferShaderGeometry(verticies4, out vbo_interleaved4, out NumVerticies4);
 
             Console.WriteLine("Expanded to {0}", NumVerticies + NumVerticies4);
         }

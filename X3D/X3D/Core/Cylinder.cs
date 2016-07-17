@@ -60,7 +60,7 @@ namespace X3D
 
             parentShape = GetParent<Shape>();
 
-            Buffering.BufferShaderGeometry(geometry, parentShape, out vbo, out verts);
+            Buffering.BufferShaderGeometry(geometry, out vbo, out verts);
         }
 
         public override void Render(RenderingContext rc)

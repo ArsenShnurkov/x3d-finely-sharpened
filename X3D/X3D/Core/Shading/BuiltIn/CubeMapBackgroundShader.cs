@@ -26,10 +26,7 @@ namespace X3D.Core.Shading
         void main()
         {
             mat4 model = projection * modelview;
-            //mat4 model = projection;
-
-
-            vPosition = position;
+            vPosition = scale * size * position;
 
 	        gl_Position = model * vec4(vPosition, 1.0);
         }

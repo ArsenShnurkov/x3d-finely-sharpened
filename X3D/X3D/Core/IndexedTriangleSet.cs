@@ -71,7 +71,7 @@ namespace X3D
 
                 this._bbox = MathHelpers.CalcBoundingBox(this, restartIndex);
 
-                Buffering.Interleave(parentShape, this._bbox,
+                Buffering.Interleave(this._bbox,
                     out _vbo_interleaved, out NumVerticies,
                     out _vbo_interleaved4, out NumVerticies4, 
                     this._indicies, null, _coords,

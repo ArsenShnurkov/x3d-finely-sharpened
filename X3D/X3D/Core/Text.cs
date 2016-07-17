@@ -124,7 +124,7 @@ namespace X3D
 
 
 
-            Buffering.BufferShaderGeometry(geometry, parentShape, out vbo, out NumVerticies);
+            Buffering.BufferShaderGeometry(geometry, out vbo, out NumVerticies);
         }
 
         private void UpdateString(String text)

@@ -1,4 +1,5 @@
 ﻿//#define APPLY_BACKDROP // When defined, sets Background to scene backdrop
+//#define CULL_FACE
 
 using System;
 using System.Collections.Generic;
@@ -160,7 +161,7 @@ namespace X3D
             win.Rectangle imgRect;
             IntPtr pTexImage;
 
-            if (ImageTexture.GetTextureImageFromMFString(url, out image, out width, out height))
+            if (ImageTexture.GetTextureImageFromMFString(url, out image, out width, out height, flipX: true))
             {
                 imgRect = new win.Rectangle(0, 0, width, height);
                 pixelData = image.LockBits(imgRect, win.Imaging.ImageLockMode.ReadOnly,
@@ -202,7 +203,7 @@ namespace X3D
             _shape.IncludeDefaultShader(CubeMapBackgroundShader.vertexShaderSource,
                                         CubeMapBackgroundShader.fragmentShaderSource);
 
-            Buffering.Interleave(_shape, null, out _vbo_interleaved, out NumVerticies,
+            Buffering.Interleave(null, out _vbo_interleaved, out NumVerticies,
                 out _vbo_interleaved4, out NumVerticies4,
                 _cube.Indices, _cube.Indices, _cube.Vertices, _cube.Texcoords, _cube.Normals, null, null);
         }
@@ -230,13 +231,24 @@ namespace X3D
 #if APPLY_BACKDROP
             GL.DepthMask(false);
 #endif
+#if CULL_FACE
+            GL.Enable(EnableCap.CullFace);
+            GL.CullFace(CullFaceMode.Back);
+#endif
+            
+            //GL.FrontFace(FrontFaceDirection.Cw);
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.TextureCubeMap, tex_cube);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
+            Buffering.ApplyBufferPointers(_shape.uniforms);
             GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
 #if APPLY_BACKDROP
             GL.DepthMask(true);
 #endif
+#if CULL_FACE
+            GL.Disable(EnableCap.CullFace);
+#endif
+            //GL.FrontFace(FrontFaceDirection.Ccw);
 
             if (!texture2d)
                 GL.Disable(EnableCap.Texture2D);

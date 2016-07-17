@@ -70,7 +70,7 @@ namespace X3D
             return bmp;
         }
 
-        public static bool GetTextureImageFromMFString(string mfstring, out Bitmap image, out int width, out int height)
+        public static bool GetTextureImageFromMFString(string mfstring, out Bitmap image, out int width, out int height, bool flipX = false)
         {
             Rectangle imgRect;
 
@@ -160,6 +160,11 @@ namespace X3D
                 image = (Bitmap)newImage;
             }
             //image.RotateFlip(RotateFlipType.RotateNoneFlipY); //TODO: figure out more efficient code
+            if (flipX)
+            {
+                image.RotateFlip(RotateFlipType.RotateNoneFlipX);
+            }
+
 
             /* Another way to rotate texture on draw()
             gl.MatrixMode(OpenGL.GL_TEXTURE);

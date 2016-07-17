@@ -37,7 +37,7 @@ namespace X3D
         {
             this.parentShape = parentShape;
 
-            Buffering.Interleave(parentShape, null, out _vbo_interleaved, out NumVerticies,
+            Buffering.Interleave(null, out _vbo_interleaved, out NumVerticies,
                 out _vbo_interleaved4, out NumVerticies4,
                 this.Indices, this.Indices, this.Vertices, this.Texcoords, this.Normals, null, null);
         }

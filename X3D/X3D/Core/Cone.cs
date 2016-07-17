@@ -100,7 +100,7 @@ namespace X3D
 
             parentShape = GetParent<Shape>();
 
-            Buffering.BufferShaderGeometry(geometry, parentShape,  out handles, out verts);
+            Buffering.BufferShaderGeometry(geometry,  out handles, out verts);
         }
 
         public override unsafe void Render(RenderingContext rc)

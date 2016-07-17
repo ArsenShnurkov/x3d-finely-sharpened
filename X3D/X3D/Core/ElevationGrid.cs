@@ -166,7 +166,7 @@ namespace X3D
                 GL.UniformMatrix4(TransposedPatchMatrix, true, ref bezier);
             }
 
-            Buffering.BufferShaderGeometry(geometry, parentShape, out _vbo_interleaved, out NumVerticies);
+            Buffering.BufferShaderGeometry(geometry, out _vbo_interleaved, out NumVerticies);
         }
 
         public override void Render(RenderingContext rc)
