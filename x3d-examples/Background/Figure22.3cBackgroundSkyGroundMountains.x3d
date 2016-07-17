@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile='Interchange' version='3.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.0.xsd'>
+  <head>
+    <meta content='Figure22.3cBackgroundSkyGroundMountains.x3d' name='title'/>
+    <meta content='Figure 22.3c, The VRML 2.0 Sourcebook, Copyright [1997] By Andrea L. Ames, David R. Nadeau, and John L. Moreland' name='creator'/>
+    <meta content='http://www.wiley.com/legacy/compbooks/vrml2sbk/ch22/22fig03c.htm' name='reference'/>
+    <meta content='Don Brutzman' name='translator'/>
+    <meta content='22 August 2000' name='created'/>
+    <meta content='8 February 2014' name='modified'/>
+    <meta content='A mountain-panorama background created with the color and pixel transparency parts of a mountain image.' name='description'/>
+    <meta content='http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/Chapter22-Background/Figure22.3cBackgroundSkyGroundMountains.x3d' name='identifier'/>
+    <meta content='X3D-Edit 3.3, https://savage.nps.edu/X3D-Edit' name='generator'/>
+    <meta content='../../license.html' name='license'/>
+  </head>
+  <Scene>
+    <Background backUrl='"mountns.png" "http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/mountns.png"' frontUrl='"mountns.png" "http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/mountns.png"' groundAngle='1.309 1.570796' groundColor='0.1 0.1 0 0.4 0.25 0.2 0.6 0.6 0.6' leftUrl='"mountns.png" "http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/mountns.png"' rightUrl='"mountns.png" "http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/mountns.png"' skyAngle='1.309 1.571' skyColor='0 0.2 0.7 0 0.5 1 1 1 1'/>
+    <!-- Note that navigation mode doesn't matter much here, since you cannot approach the backround, it always stays at maximum (horizon) distance -->
+    <!-- At least EXAMINE mode lets you easily look up/down/around. -->
+  </Scene>
+</X3D>

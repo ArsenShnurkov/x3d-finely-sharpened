@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile='Interactive' version='3.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.0.xsd'>
+  <head>
+    <meta content='Figure22.4BackgroundBinding.x3d' name='title'/>
+    <meta content='Figure 22.4, The VRML 2.0 Sourcebook, Copyright [1997] By Andrea L. Ames, David R. Nadeau, and John L. Moreland' name='creator'/>
+    <meta content='http://www.wiley.com/legacy/compbooks/vrml2sbk/ch22/22fig04.htm' name='reference'/>
+    <meta content='Don Brutzman' name='translator'/>
+    <meta content='22 August 2000' name='created'/>
+    <meta content='15 January 2011' name='modified'/>
+    <meta content='Backgrounds bound and unbound by touching a red cube or a blue sphere.' name='description'/>
+    <meta content='http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/Chapter22-Background/Figure22.4BackgroundBinding.x3d' name='identifier'/>
+    <meta content='X3D-Edit 3.3, https://savage.nps.edu/X3D-Edit' name='generator'/>
+    <meta content='../../license.html' name='license'/>
+  </head>
+  <Scene>
+    <!-- Note that navigation mode doesn't matter much here, since you cannot approach the backround, it always stays at maximum (horizon) distance -->
+    <!-- At least EXAMINE mode lets you easily look up/down/around. -->
+    <Group>
+      <Background groundAngle='1.309 1.570796' groundColor='0.1 0.1 0 0.4 0.25 0.2 0.6 0.6 0.6' skyAngle='1.309 1.571' skyColor='0 0.2 0.7 0 0.5 1 1 1 1'/>
+      <Background DEF='AlternateBackground1' groundAngle='1.309 1.570796' groundColor='0.1 0.1 0 0.5 0.25 0.2 0.6 0.6 0.2' skyAngle='1.309 1.571' skyColor='1 0 0 1 0.4 0 1 1 0'/>
+      <Background DEF='AlternateBackground2' groundAngle='1.309 1.570796' groundColor='0 0 0.1 0 0.1 0.3 0.3 0.3 0.6' skyAngle='1.309 1.571' skyColor='1 0 0.8 0.5 0 0.8 0 0 0.8'/>
+    </Group>
+    <!-- Shapes to act as buttons -->
+    <Transform translation='2 0 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='1 0 0'/>
+        </Appearance>
+        <Box/>
+      </Shape>
+      <TouchSensor DEF='TouchBox' description='Alternate reddish-orange background'/>
+    </Transform>
+    <Transform translation='-2 0 0'>
+      <Shape>
+        <Appearance>
+          <Material diffuseColor='0 0 0.8'/>
+        </Appearance>
+        <Sphere/>
+      </Shape>
+      <TouchSensor DEF='TouchSphere' description='Alternate blueish-purple background'/>
+    </Transform>
+    <ROUTE fromField='isActive' fromNode='TouchBox' toField='set_bind' toNode='AlternateBackground1'/>
+    <ROUTE fromField='isActive' fromNode='TouchSphere' toField='set_bind' toNode='AlternateBackground2'/>
+  </Scene>
+</X3D>
