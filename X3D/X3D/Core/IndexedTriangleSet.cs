@@ -109,6 +109,7 @@ namespace X3D
                 if (NumVerticies > 0)
                 {
                     GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
+                    Buffering.ApplyBufferPointers(parentShape.uniforms);
                     GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
                 }
             }

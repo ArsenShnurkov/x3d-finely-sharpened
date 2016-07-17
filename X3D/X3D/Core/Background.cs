@@ -1,4 +1,4 @@
-﻿//#define APPLY_BACKDROP // When defined, sets Background to scene backdrop
+﻿#define APPLY_BACKDROP // When defined, sets Background to scene backdrop
 
 using System;
 using System.Collections.Generic;
@@ -13,17 +13,21 @@ using X3D.Parser;
 using X3D.Engine;
 using X3D.Core;
 using X3D.Core.Shading;
+using X3D.Core.Shading.DefaultUniforms;
 
 namespace X3D
 {
     public partial class Background
     {
         private int tex_cube;
-        private int NumVerticies, NumVerticies4;
-        private int _vbo_interleaved, _vbo_interleaved4;
+        private int NumVerticiesCube, NumVerticiesOuter, NumVerticiesInner;
+        private int _vbo_interleaved_cube, _vbo_interleaved_inner, _vbo_interleaved_outer;
         private CubeGeometry _cube = new CubeGeometry();
-        private Shape _shape;
+        private Shape _shapeOuter;
+        private Shape _shapeInner;
+        private Shape _shapeInnerCube;
         private bool generateSkyAndGround = true;
+        private bool generateCube = false;
 
         private Vector3[] groundColors;
         private Vector3[] skyColors;
@@ -31,7 +35,6 @@ namespace X3D
         private float[] skyAngles;
         private float groundDivisor;
         private float skyDivisor;
-        private bool hemispheresEnabled = false;
 
         #region Private Methods
 
@@ -94,9 +97,18 @@ namespace X3D
         {
             base.Load();
 
-            generateSkyAndGround = string.IsNullOrEmpty(frontUrl) || string.IsNullOrEmpty(backUrl)
+            generateCube = !(string.IsNullOrEmpty(frontUrl) || string.IsNullOrEmpty(backUrl)
                 || string.IsNullOrEmpty(topUrl) || string.IsNullOrEmpty(bottomUrl)
-                || string.IsNullOrEmpty(leftUrl) || string.IsNullOrEmpty(rightUrl);
+                || string.IsNullOrEmpty(leftUrl) || string.IsNullOrEmpty(rightUrl));
+
+            generateSkyAndGround = !(string.IsNullOrEmpty(groundColor) || string.IsNullOrEmpty(skyColor)
+                || string.IsNullOrEmpty(groundAngle) || string.IsNullOrEmpty(skyAngle));
+
+
+            // TODO: later render both skydome and skybox together
+            // Alpha values in skybox should provide a way to see through to skydome.
+            // Skycolor sphere should be slightly larger than groundcolor hemisphere
+            // and finally skybox should fit and be smaller than groundcolor hemisphere.
 
             if (generateSkyAndGround)
             {
@@ -110,39 +122,46 @@ namespace X3D
                 groundDivisor = (1.0f / groundColors.Length) * (float)Math.PI; // how many colors divided over 90 degrees (lower hemisphere)
                 skyDivisor = (1.0f / groundColors.Length) * (float)Math.PI; // how many colors divided over 90 degrees (upper hemisphere)
 
-                hemispheresEnabled = true;
+                // SKYDOME
+                // outer sphere (sky)
+
+                _shapeOuter = new Shape();
+                _shapeOuter.Load();
+                _shapeOuter.IncludeDefaultShader(DefaultShader.vertexShaderSource,
+                                                 DefaultShader.fragmentShaderSource);
+                _shapeOuter.CurrentShader.Use();
+                List<Vertex> geometryOuterSphere = BuildSphereGeometryQuads(60, Vector3.Zero, 10.0f);
+                Buffering.BufferShaderGeometry(geometryOuterSphere, _shapeOuter, out _vbo_interleaved_outer, out NumVerticiesOuter);
+
+                // inner hemisphere (ground)
+
+                _shapeInner = new Shape();
+                _shapeInner.Load();
+                _shapeInner.IncludeDefaultShader(DefaultShader.vertexShaderSource,
+                                                 DefaultShader.fragmentShaderSource);
+                _shapeInner.CurrentShader.Use();
+                List<Vertex> geometryInnerHemisphere = BuildHemisphereGeometryQuads(60, new Vector3(0,-5,0), 5.0f, false);
+                Buffering.BufferShaderGeometry(geometryInnerHemisphere, _shapeInner, out _vbo_interleaved_inner, out NumVerticiesInner);
             }
-            else
+
+            if (generateCube)
             {
                 tex_cube = createCubeMapFromURIs();
-            }
 
+                // SKYBOX
+                // innermost skybox
 
-            _shape = new Shape();
-            _shape.Load();
+                _shapeInnerCube = new Shape();
+                _shapeInnerCube.Load();
 
-
-            if (hemispheresEnabled)
-            {
-                _shape.IncludeDefaultShader(DefaultShader.vertexShaderSource,
-                            DefaultShader.fragmentShaderSource);
-
-                _shape.CurrentShader.Use();
-
-
-                List<Vertex> geometry = BuildSphereGeometryQuads(60, Vector3.Zero, 10.0f);
-
-                Buffering.BufferShaderGeometry(geometry, _shape, out _vbo_interleaved, out NumVerticies);
-            }
-            else
-            {
-                _shape.IncludeDefaultShader(CubeMapBackgroundShader.vertexShaderSource,
+                _shapeInnerCube.IncludeDefaultShader(CubeMapBackgroundShader.vertexShaderSource,
                             CubeMapBackgroundShader.fragmentShaderSource);
 
-                _shape.CurrentShader.Use();
+                _shapeInnerCube.CurrentShader.Use();
 
-                Buffering.Interleave(_shape, null, out _vbo_interleaved, out NumVerticies,
-                    out _vbo_interleaved4, out NumVerticies4,
+                int a, b;
+                Buffering.Interleave(_shapeInnerCube, null, out _vbo_interleaved_cube, out NumVerticiesCube,
+                    out a, out b,
                     _cube.Indices, _cube.Indices, _cube.Vertices, _cube.Texcoords, _cube.Normals, null, null);
             }
 
@@ -151,48 +170,119 @@ namespace X3D
         public override void Render(RenderingContext rc)
         {
             base.Render(rc);
-            this._shape.Render(rc);
 
+            bool texture2d;
             var size = new Vector3(1, 1, 1);
             var scale = new Vector3(1, 1, 1);
 
-            _shape.CurrentShader.Use();
-#if APPLY_BACKDROP
-            _shape.CurrentShader.SetFieldValue("modelview", Matrix4.Identity);
-#endif
-            _shape.CurrentShader.SetFieldValue("scale", scale);
-            _shape.CurrentShader.SetFieldValue("size", size);
-            _shape.CurrentShader.SetFieldValue("coloringEnabled", 1);
-            _shape.CurrentShader.SetFieldValue("texturingEnabled", 0);
-
-            bool texture2d = GL.IsEnabled(EnableCap.Texture2D);
-
-            if (!texture2d)
-                GL.Enable(EnableCap.Texture2D);
-
-#if APPLY_BACKDROP
-            GL.DepthMask(false);
-#endif
-            GL.ActiveTexture(TextureUnit.Texture0);
-            GL.BindTexture(TextureTarget.TextureCubeMap, tex_cube);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
-            if (hemispheresEnabled)
+            if (generateSkyAndGround)
             {
-                GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies);
-            }
-            else
-            {
-                GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
-            }
+                rc.PushMatricies();
+
+                texture2d = GL.IsEnabled(EnableCap.Texture2D);
+
+                if (texture2d)
+                    GL.Disable(EnableCap.Texture2D);
+
+                // Outer sky Sphere
+                this._shapeOuter.Render(rc);
+
+                _shapeOuter.CurrentShader.Use();
+#if APPLY_BACKDROP
+                _shapeOuter.CurrentShader.SetFieldValue("modelview", Matrix4.Identity);
+#endif
+                _shapeOuter.CurrentShader.SetFieldValue("scale", scale);
+                _shapeOuter.CurrentShader.SetFieldValue("size", size);
+                _shapeOuter.CurrentShader.SetFieldValue("coloringEnabled", 1);
+                _shapeOuter.CurrentShader.SetFieldValue("texturingEnabled", 0);
 
 #if APPLY_BACKDROP
-            GL.DepthMask(true);
+                GL.DepthMask(false);
+#endif
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved_outer);
+                Buffering.ApplyBufferPointers(_shapeOuter.uniforms);
+                GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticiesOuter);
+
+#if APPLY_BACKDROP
+                GL.DepthMask(true);
+#endif
+                rc.PopMatricies();
+
+                rc.PushMatricies();
+
+                // Inner ground Hemisphere
+                this._shapeInner.Render(rc);
+
+                _shapeInner.CurrentShader.Use();
+#if APPLY_BACKDROP
+                _shapeInner.CurrentShader.SetFieldValue("modelview", Matrix4.Identity);
+#endif
+                _shapeInner.CurrentShader.SetFieldValue("scale", scale);
+                _shapeInner.CurrentShader.SetFieldValue("size", size);
+                _shapeInner.CurrentShader.SetFieldValue("coloringEnabled", 1);
+                _shapeInner.CurrentShader.SetFieldValue("texturingEnabled", 0);
+
+#if APPLY_BACKDROP
+                GL.DepthMask(false);
+#endif
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved_inner);
+                Buffering.ApplyBufferPointers(_shapeInner.uniforms);
+                GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticiesInner);
+
+#if APPLY_BACKDROP
+                GL.DepthMask(true);
 #endif
 
-            if (!texture2d)
-                GL.Disable(EnableCap.Texture2D);
+                if (texture2d)
+                    GL.Enable(EnableCap.Texture2D);
+
+                rc.PopMatricies();
+            }
+
+            if (generateCube)
+            {
+                rc.PushMatricies();
+
+                // Inner cubemapped skybox 
+                this._shapeInnerCube.Render(rc);
+
+                _shapeInnerCube.CurrentShader.Use();
+#if APPLY_BACKDROP
+                _shapeInnerCube.CurrentShader.SetFieldValue("modelview", Matrix4.Identity);
+#endif
+                _shapeInnerCube.CurrentShader.SetFieldValue("scale", scale);
+                _shapeInnerCube.CurrentShader.SetFieldValue("size", size);
+                _shapeInnerCube.CurrentShader.SetFieldValue("coloringEnabled", 0);
+                _shapeInnerCube.CurrentShader.SetFieldValue("texturingEnabled", 1);
+
+
+                texture2d = GL.IsEnabled(EnableCap.Texture2D);
+
+                if (!texture2d)
+                    GL.Enable(EnableCap.Texture2D);
+
+#if APPLY_BACKDROP
+                GL.DepthMask(false);
+#endif
+
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.TextureCubeMap, tex_cube);
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved_cube);
+                Buffering.ApplyBufferPointers(_shapeInnerCube.uniforms);
+                GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticiesCube);
+
+#if APPLY_BACKDROP
+                GL.DepthMask(true);
+#endif
+
+                if (!texture2d)
+                    GL.Disable(EnableCap.Texture2D);
+
+                rc.PopMatricies();
+            }
         }
-        public Vector4 GetLatitudeFillColor(float latitudeRatio, int segments)
+
+        public Vector4 GetLatitudeFillColor(float latitudeRatio, int segments, bool hemisphere)
         {
             //NOT COMPLETED
             //http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/enveffects.html#Concepts
@@ -224,10 +314,133 @@ namespace X3D
 
             colorSelectionRatio = latitudeRatio;
 
-            
+            if(colorPalette == null || colorPalette.Length == 0)
+            {
+                return Vector4.One;
+            }
 
             return new Vector4(colorPalette[colorIndex], 1.0f);
         }
+
+        public List<Vertex> BuildHemisphereGeometryQuads(int n, Vector3 center, float radius, bool up = false)
+        {
+            List<Vertex> geometry = new List<Vertex>();
+
+            float theta = 0.0f;
+            float theta2 = 0.0f;
+            float phi = 0.0f;
+            float phi2 = 0.0f;
+            float segments = n;
+
+            float cosT = 0.0f;
+            float cosT2 = 0.0f;
+            float cosP = 0.0f;
+            float cosP2 = 0.0f;
+
+            float sinT = 0.0f;
+            float sinT2 = 0.0f;
+            float sinP = 0.0f;
+            float sinP2 = 0.0f;
+            int vertexIndex = 0;
+            int expectedNumVerticies = n * n * 4;
+            float latitudeRatio;
+
+            
+
+            List<Vertex> current = new List<Vertex>(4);
+
+            for (float lat = 0; lat < segments; lat++)
+            {
+                latitudeRatio = (lat / segments);
+
+                if (latitudeRatio >= 0.5) break;
+
+                phi = (float)Math.PI * latitudeRatio;
+                phi2 = (float)Math.PI * ((lat + 1.0f) / segments);
+
+                cosP = (float)Math.Cos(phi) * radius *  (up ? 1f : -1f);
+                cosP2 = (float)Math.Cos(phi2) * radius * (up ? 1f : -1f);
+                sinP = (float)Math.Sin(phi) * radius;
+                sinP2 = (float)Math.Sin(phi2) * radius;
+
+                //Vector3 a = new Vector3((float)Math.Cos(phi), 0, 0);
+                //Vector3 b = new Vector3(0, 0, (float)Math.Sin(phi));
+                Vector3 height = new Vector3(0, 3.0f, 0);
+
+                Vector4 latitudeColor = GetLatitudeFillColor(latitudeRatio, n, true);
+
+                for (float lon = 0; lon < segments; lon++)
+                {
+                    current = new List<Vertex>(4);
+                    theta = MathHelpers.PI2 * (lon / segments);
+                    theta2 = MathHelpers.PI2 * ((lon + 1.0f) / segments);
+
+                    cosT = (float)Math.Cos(theta) * radius;
+                    cosT2 = (float)Math.Cos(theta2) * radius;
+                    sinT = (float)Math.Sin(theta) * radius;
+                    sinT2 = (float)Math.Sin(theta2) * radius;
+
+
+                    current.Add(
+                        new Vertex()
+                        {
+                            Position = (new Vector3(
+                                cosT * sinP,
+                                cosP,
+                                sinT * sinP
+                            ))+ height,
+                            Color = latitudeColor
+                        }
+                    );
+                    vertexIndex++;
+
+                    current.Add(
+                        new Vertex()
+                        {
+                            Position = (new Vector3(
+                                cosT * sinP2,
+                                cosP2,
+                                sinT * sinP2
+                            )) + height,
+                            Color = latitudeColor
+                        }
+                    );
+                    vertexIndex++;
+
+                    current.Add(
+                        new Vertex()
+                        {
+                            Position = (new Vector3(
+                                 cosT2 * sinP2,
+                                 cosP2,
+                                 sinT2 * sinP2
+                            )) + height,
+                            Color = latitudeColor
+                        }
+                    );
+                    vertexIndex++;
+
+                    current.Add(
+                        new Vertex()
+                        {
+                            Position = (new Vector3(
+                                 cosT2 * sinP,
+                                 cosP,
+                                 sinT2 * sinP
+                            ))+height,
+                            Color = latitudeColor
+                        }
+                    );
+                    vertexIndex++;
+
+                    geometry.AddRange(current);
+                }
+
+            }
+
+            return geometry;
+        }
+
         public List<Vertex> BuildSphereGeometryQuads(int n, Vector3 center, float radius)
         {
             List<Vertex> geometry = new List<Vertex>();
@@ -259,12 +472,12 @@ namespace X3D
                 phi = (float)Math.PI * latitudeRatio;
                 phi2 = (float)Math.PI * ((lat + 1.0f) / segments);
 
-                cosP = (float)Math.Cos(phi);
-                cosP2 = (float)Math.Cos(phi2);
-                sinP = (float)Math.Sin(phi);
-                sinP2 = (float)Math.Sin(phi2);
+                cosP = (float)Math.Cos(phi) * radius;
+                cosP2 = (float)Math.Cos(phi2) * radius;
+                sinP = (float)Math.Sin(phi) * radius;
+                sinP2 = (float)Math.Sin(phi2) * radius;
 
-                Vector4 latitudeColor = GetLatitudeFillColor(latitudeRatio, n);
+                Vector4 latitudeColor = GetLatitudeFillColor(latitudeRatio, n, false);
 
                 for (float lon = 0; lon < segments; lon++)
                 {
@@ -272,10 +485,10 @@ namespace X3D
                     theta = MathHelpers.PI2 * (lon / segments);
                     theta2 = MathHelpers.PI2 * ((lon + 1.0f) / segments);
 
-                    cosT = (float)Math.Cos(theta);
-                    cosT2 = (float)Math.Cos(theta2);
-                    sinT = (float)Math.Sin(theta);
-                    sinT2 = (float)Math.Sin(theta2);
+                    cosT = (float)Math.Cos(theta) * radius;
+                    cosT2 = (float)Math.Cos(theta2) * radius;
+                    sinT = (float)Math.Sin(theta) * radius;
+                    sinT2 = (float)Math.Sin(theta2) * radius;
 
 
                     current.Add(

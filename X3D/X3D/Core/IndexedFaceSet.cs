@@ -123,12 +123,14 @@ namespace X3D
                 if (NumVerticies > 0)
                 {
                     GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
+                    Buffering.ApplyBufferPointers(parentShape.uniforms);
                     GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
                 }
 
                 if(NumVerticies4 > 0)
                 {
                     GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved4);
+                    Buffering.ApplyBufferPointers(parentShape.uniforms);
                     GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies4);
                 }
             }

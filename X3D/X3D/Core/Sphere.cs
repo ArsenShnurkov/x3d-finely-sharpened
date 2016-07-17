@@ -96,11 +96,13 @@ namespace X3D
 
                         GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
                         GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+                        Buffering.ApplyBufferPointers(parentShape.uniforms);
                         GL.DrawArrays(PrimitiveType.Patches, 0, NumVerticies);
                     }
                     else
                     {
                         GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+                        Buffering.ApplyBufferPointers(parentShape.uniforms);
                         GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
                     }
                 }

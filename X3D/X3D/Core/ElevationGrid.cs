@@ -235,7 +235,7 @@ namespace X3D
                         GL.Uniform3(parentShape.Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f);
 
                         GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
-
+                        Buffering.ApplyBufferPointers(parentShape.uniforms);
 
                         GL.PatchParameter(PatchParameterInt.PatchVertices, 16); 
                         GL.DrawArrays(PrimitiveType.Patches, 0, NumVerticies);
@@ -243,6 +243,7 @@ namespace X3D
                     else
                     {
                         GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
+                        Buffering.ApplyBufferPointers(parentShape.uniforms);
                         GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies);
                     }
                 }

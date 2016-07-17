@@ -3595,7 +3595,7 @@ namespace X3D
     public partial class FontStyle : X3DFontStyleNode
     {
 
-        private List<string> _family;
+        private string _family;
 
         private bool _horizontal;
 
@@ -3617,10 +3617,9 @@ namespace X3D
 
         public FontStyle()
         {
-            this._family = new List<string>();
-            this._family.Add("\"SERIF\"");
+            this.family = "\"SERIF\"";
             this._horizontal = true;
-            this._justify = "\"BEGIN\"";
+            this.justify = "\"BEGIN\"";
             this._leftToRight = true;
             this._size = ((float)(1F));
             this._spacing = ((float)(1F));
@@ -3629,8 +3628,13 @@ namespace X3D
             this._containerField = "fontStyle";
         }
 
+        [XmlIgnore]
+        public List<string> Justify;
+        [XmlIgnore]
+        public List<string> Family;
+
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public List<string> family
+        public string family
         {
             get
             {
@@ -3639,6 +3643,7 @@ namespace X3D
             set
             {
                 this._family = value;
+                Family = X3DTypeConverters.MFString(value);
             }
         }
 
@@ -3655,9 +3660,6 @@ namespace X3D
                 this._horizontal = value;
             }
         }
-
-        [XmlIgnore]
-        public List<string> Justify;
 
         [System.Xml.Serialization.XmlAttributeAttribute()]
         public string justify

@@ -10,7 +10,7 @@ namespace X3D.Core.Shading
 {
     using Verticies = List<Vertex>;
     using Mesh = List<List<Vertex>>; // Mesh will contain faces made up of either or Triangles, and Quads
-
+    using DefaultUniforms;
 
     /// <summary>
     /// Interleave all geometry for single API simplicity for now.
@@ -18,6 +18,34 @@ namespace X3D.Core.Shading
     /// </summary>
     public class Buffering
     {
+        public static void ApplyBufferPointers(ShaderUniformsPNCT uniforms)
+        {
+            if (uniforms.a_position != -1)
+            {
+                GL.EnableVertexAttribArray(uniforms.a_position); // vertex position
+                GL.VertexAttribPointer(uniforms.a_position, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)0);
+            }
+
+            if (uniforms.a_normal != -1)
+            {
+                GL.EnableVertexAttribArray(uniforms.a_normal); // vertex normal
+                GL.VertexAttribPointer(uniforms.a_normal, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes));
+            }
+
+            if (uniforms.a_color != -1)
+            {
+                GL.EnableVertexAttribArray(uniforms.a_color); // vertex color
+                GL.VertexAttribPointer(uniforms.a_color, 4, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes));
+            }
+
+
+            if (uniforms.a_texcoord != -1)
+            {
+                GL.EnableVertexAttribArray(uniforms.a_texcoord); // vertex texCoordinate
+                GL.VertexAttribPointer(uniforms.a_texcoord, 2, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes + Vector4.SizeInBytes));
+            }
+        }
+
         public static int BufferShaderGeometry(Mesh geometries, Shape parentShape, out int verts)
         {
             GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
@@ -61,30 +89,7 @@ namespace X3D.Core.Shading
 
                 offset += size;
 
-                if (parentShape.uniforms.a_position != -1)
-                {
-                    GL.EnableVertexAttribArray(parentShape.uniforms.a_position); // vertex position
-                    GL.VertexAttribPointer(parentShape.uniforms.a_position, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)0);
-                }
-
-                if (parentShape.uniforms.a_normal != -1)
-                {
-                    GL.EnableVertexAttribArray(parentShape.uniforms.a_normal); // vertex normal
-                    GL.VertexAttribPointer(parentShape.uniforms.a_normal, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes));
-                }
-
-                if (parentShape.uniforms.a_color != -1)
-                {
-                    GL.EnableVertexAttribArray(parentShape.uniforms.a_color); // vertex color
-                    GL.VertexAttribPointer(parentShape.uniforms.a_color, 4, VertexAttribPointerType.Float, false, Vertex.Stride, 0);
-                }
-
-
-                if (parentShape.uniforms.a_texcoord != -1)
-                {
-                    GL.EnableVertexAttribArray(parentShape.uniforms.a_texcoord); // vertex texCoordinate
-                    GL.VertexAttribPointer(parentShape.uniforms.a_texcoord, 2, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes));
-                }
+                ApplyBufferPointers(parentShape.uniforms);
 
             }
 
@@ -116,30 +121,7 @@ namespace X3D.Core.Shading
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_interleaved3); // InterleavedArrayFormat.T2fC4fN3fV3f
 
-            if (parentShape.uniforms.a_position != -1)
-            {
-                GL.EnableVertexAttribArray(parentShape.uniforms.a_position); // vertex position
-                GL.VertexAttribPointer(parentShape.uniforms.a_position, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)0);
-            }
-
-            if (parentShape.uniforms.a_normal != -1)
-            {
-                GL.EnableVertexAttribArray(parentShape.uniforms.a_normal); // vertex normal
-                GL.VertexAttribPointer(parentShape.uniforms.a_normal, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes));
-            }
-
-            if (parentShape.uniforms.a_color != -1)
-            {
-                GL.EnableVertexAttribArray(parentShape.uniforms.a_color); // vertex color
-                GL.VertexAttribPointer(parentShape.uniforms.a_color, 4, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes));
-            }
-
-
-            if (parentShape.uniforms.a_texcoord != -1)
-            {
-                GL.EnableVertexAttribArray(parentShape.uniforms.a_texcoord); // vertex texCoordinate
-                GL.VertexAttribPointer(parentShape.uniforms.a_texcoord, 2, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes + Vector4.SizeInBytes));
-            }
+            ApplyBufferPointers(parentShape.uniforms);
 
             NumVerticies = _interleaved3.Length;
 
