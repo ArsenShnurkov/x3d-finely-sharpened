@@ -126,46 +126,47 @@ namespace x3druntime.ui.opentk
             }
             if (Keyboard[Key.PageUp])
             {// On page up, move out
-                this.z -= 0.02f;
-                this.lookupdown -= 1.0f;
+                //this.z -= 0.02f;
+                //this.lookupdown -= 1.0f;
             }
             if (Keyboard[Key.PageDown])
             {// On page down, move in
-                this.z += 0.02f;
-                this.lookupdown += 1.0f;
+                //this.z += 0.02f;
+                //this.lookupdown += 1.0f;
             }
             if (Keyboard[Key.W])
             {
-                this.xpos += (float)Math.Sin(this.heading * Math.PI / 180.0) * 1.05f;
-                this.zpos += (float)Math.Cos(this.heading * Math.PI / 180.0) * 1.05f;
-                if (this.walkbiasangle >= 359.0f)
-                    this.walkbiasangle = 0.0f;
-                else
-                    this.walkbiasangle -= 10.0f;
-                this.walkbias = (float)Math.Sin(this.walkbiasangle * Math.PI / 180.0) / 20.0f;
+                //this.xpos += (float)Math.Sin(this.heading * Math.PI / 180.0) * 1.05f;
+                //this.zpos += (float)Math.Cos(this.heading * Math.PI / 180.0) * 1.05f;
+                //if (this.walkbiasangle >= 359.0f)
+                //    this.walkbiasangle = 0.0f;
+                //else
+                //    this.walkbiasangle -= 10.0f;
+                //this.walkbias = (float)Math.Sin(this.walkbiasangle * Math.PI / 180.0) / 20.0f;
             }
             if (Keyboard[Key.S])
             {
-                this.xpos -= (float)Math.Sin(this.heading * Math.PI / 180.0) * 1.05f;
-                this.zpos -= (float)Math.Cos(this.heading * Math.PI / 180.0) * 1.05f;
-                if (this.walkbiasangle >= 359.0f)
-                    this.walkbiasangle = 0.0f;
-                else
-                    this.walkbiasangle += 10.0f;
-                this.walkbias = (float)Math.Sin(this.walkbiasangle * Math.PI / 180.0) / 20.0f;
+                //this.xpos -= (float)Math.Sin(this.heading * Math.PI / 180.0) * 1.05f;
+                //this.zpos -= (float)Math.Cos(this.heading * Math.PI / 180.0) * 1.05f;
+                //if (this.walkbiasangle >= 359.0f)
+                //    this.walkbiasangle = 0.0f;
+                //else
+                //    this.walkbiasangle += 10.0f;
+                //this.walkbias = (float)Math.Sin(this.walkbiasangle * Math.PI / 180.0) / 20.0f;
             }
             if (Keyboard[Key.A])
             {
-                this.heading += 10.0f;
-                this.yrot = this.heading;
+                //this.heading += 10.0f;
+                //this.yrot = this.heading;
             }
             if (Keyboard[Key.D])
             {
-                this.heading -= 10.0f;
-                this.yrot = this.heading;
+                //this.heading -= 10.0f;
+                //this.yrot = this.heading;
             }
             if (Keyboard[Key.Left])
             {
+                ActiveCamera.Horizon();
                 ActiveCamera.ApplyYaw(-10.0f * 0.007f);
                 ActiveCamera.ApplyRotation();
 
@@ -174,6 +175,7 @@ namespace x3druntime.ui.opentk
             }
             if (Keyboard[Key.Right])
             {
+                ActiveCamera.Horizon();
                 ActiveCamera.ApplyYaw(10.0f * 0.007f);
                 ActiveCamera.ApplyRotation();
                 //this.heading -= 1.0f;
@@ -181,34 +183,34 @@ namespace x3druntime.ui.opentk
             }
             if (Keyboard[Key.Up])
             {
-                this.xpos += (float)Math.Sin(this.heading * Math.PI / 180.0) * 0.05f;
-                this.zpos += (float)Math.Cos(this.heading * Math.PI / 180.0) * 0.05f;
-                if (this.walkbiasangle >= 359.0f)
-                    this.walkbiasangle = 0.0f;
-                else
-                    this.walkbiasangle -= 5.0f;
-                this.walkbias = (float)Math.Sin(this.walkbiasangle * Math.PI / 180.0) / 10.0f;
+                //this.xpos += (float)Math.Sin(this.heading * Math.PI / 180.0) * 0.05f;
+                //this.zpos += (float)Math.Cos(this.heading * Math.PI / 180.0) * 0.05f;
+                //if (this.walkbiasangle >= 359.0f)
+                //    this.walkbiasangle = 0.0f;
+                //else
+                //    this.walkbiasangle -= 5.0f;
+                //this.walkbias = (float)Math.Sin(this.walkbiasangle * Math.PI / 180.0) / 10.0f;
             }
             if (Keyboard[Key.Down])
             {
-                this.xpos -= (float)Math.Sin(this.heading * Math.PI / 180.0) * 0.05f;
-                this.zpos -= (float)Math.Cos(this.heading * Math.PI / 180.0) * 0.05f;
-                if (this.walkbiasangle >= 359.0f)
-                    this.walkbiasangle = 0.0f;
-                else
-                    this.walkbiasangle += 10.0f;
-                this.walkbias = (float)Math.Sin(this.walkbiasangle * Math.PI / 180.0) / 10.0f;
+                //this.xpos -= (float)Math.Sin(this.heading * Math.PI / 180.0) * 0.05f;
+                //this.zpos -= (float)Math.Cos(this.heading * Math.PI / 180.0) * 0.05f;
+                //if (this.walkbiasangle >= 359.0f)
+                //    this.walkbiasangle = 0.0f;
+                //else
+                //    this.walkbiasangle += 10.0f;
+                //this.walkbias = (float)Math.Sin(this.walkbiasangle * Math.PI / 180.0) / 10.0f;
             }
             if (Keyboard[Key.C])
             {
 
-                this.lookleftright -= 1.0f;
+                //this.lookleftright -= 1.0f;
                 //this.lookupdown-=1.0f;
             }
             if (Keyboard[Key.V])
             {
 
-                this.lookleftright += 1.0f;
+                //this.lookleftright += 1.0f;
                 //this.lookupdown+=1.0f;
             }
             if (Keyboard[Key.E])
@@ -240,11 +242,11 @@ namespace x3druntime.ui.opentk
             }
             if (Keyboard[Key.I])
             {
-                this.ypos += 0.2f;
+                //this.ypos += 0.2f;
             }
             if (Keyboard[Key.K])
             {
-                this.ypos -= 0.2f;
+                //this.ypos -= 0.2f;
             }
 
             ActiveCamera.move(direction, e.Time);

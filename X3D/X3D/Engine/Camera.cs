@@ -103,6 +103,16 @@ namespace X3D.Engine
 
         }
 
+        /// <summary>
+        /// Reset camera to point at horizon
+        /// </summary>
+        public void Horizon()
+        {
+            this.Forward = Vector3.UnitZ;
+            this.Up = Vector3.UnitY;
+            this.Right = Vector3.UnitX;
+        }
+
         public Vector3 getMovement() { return Position; }
 		public Vector3 applyMovement(Vector3 direction) 
 		{
@@ -166,8 +176,9 @@ namespace X3D.Engine
 			Vector3 PlayerPosition = new Vector3(Position.X, Position.Y, Position.Z + this.playerHeight);
 
 			Look = PlayerPosition + (Direction) * 1.0f;
+            //Look += DollyDirection;
 
-			Matrix4 outm = Matrix4.Identity;
+            Matrix4 outm = Matrix4.Identity;
 
             outm = Matrix4.LookAt(PlayerPosition, Look, Up);
 
