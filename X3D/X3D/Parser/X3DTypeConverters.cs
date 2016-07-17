@@ -48,8 +48,9 @@ namespace X3D.Parser
 
             // Single and double quote parenthesis extraction
             // Order is important in MFString sequences.
-            r = new Regex("(\"([^ \"]+)\" |\'([^\']+)\')\\s?",
-                RegexOptions.IgnorePatternWhitespace | RegexOptions.Multiline);
+            r = new Regex("(\"([^\"]+)\"|'([^']+)')\\s?",
+                //RegexOptions.IgnorePatternWhitespace | 
+                RegexOptions.Multiline | RegexOptions.ExplicitCapture);
             m = r.Matches(@string);
             if (m.Count > 0)
             {
@@ -246,6 +247,11 @@ namespace X3D.Parser
         }
         public static Vector3 SFVec3f(string value)
         {
+            if (string.IsNullOrEmpty(value))
+            {
+                return Vector3.Zero;
+            }
+
             //Regex regMFInt32 = new Regex("[+-]?\\d+\\.\\d+");
             //MatchCollection mc = regMFInt32.Matches(value);
 
@@ -260,6 +266,10 @@ namespace X3D.Parser
         }
         public static Vector4 SFVec4f(string value)
         {
+            if (string.IsNullOrEmpty(value))
+            {
+                return Vector4.Zero;
+            }
             //Regex regMFInt32 = new Regex("[+-]?\\d+\\.\\d+");
             //MatchCollection mc = regMFInt32.Matches(value);
             float[] f = Floats(value);
@@ -276,6 +286,10 @@ namespace X3D.Parser
         }
         public static float[] Floats(string value)
         {
+            if (string.IsNullOrEmpty(value))
+            {
+                return new float[] { };
+            }
             Regex regMFInt32 = new Regex("([+-]?[0-9]+[.]?[0-9]?)+"); // [+-]?\\d+\\.\\d+
             MatchCollection mc = regMFInt32.Matches(value);
             List<float> floats = new List<float>();
@@ -290,6 +304,10 @@ namespace X3D.Parser
 
         public static float SFVec1f(string value)
         {
+            if (string.IsNullOrEmpty(value))
+            {
+                return 0.0f;
+            }
             Regex regMFInt32 = new Regex("[+-]?\\d+\\.\\d+");
             MatchCollection mc = regMFInt32.Matches(value);
 
@@ -299,6 +317,10 @@ namespace X3D.Parser
         public static Vector2[] MFVec2f(string value)
         {
             List<Vector2> coords = new List<Vector2>();
+            if (string.IsNullOrEmpty(value))
+            {
+                return coords.ToArray();
+            }
 
             Regex regMFInt32 = new Regex("[+-]?\\d+\\.\\d?[^,]+");
             var mc = regMFInt32.Matches(value);
@@ -316,6 +338,11 @@ namespace X3D.Parser
         public static Vector3[] MFVec3f(string value)
         {
             List<Vector3> coords = new List<Vector3>();
+            if (string.IsNullOrEmpty(value))
+            {
+                return coords.ToArray();
+            }
+
             Regex regMFInt32 = new Regex(value.Contains(',') ? "\\S+\\S?\\s+\\S+\\S?\\s+\\S+\\S?" : "\\S+\\S?\\s+\\S+\\S?\\s+\\S+\\S?\\s+");
             var mc = regMFInt32.Matches(value + " ");
 
