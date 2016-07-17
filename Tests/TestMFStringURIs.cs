@@ -15,6 +15,42 @@ namespace Tests
     {
         public static string X3DExamplesDirectory = System.IO.Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "..\\..\\..\\..\\x3d-examples\\");
 
+        #region X3D Text
+
+        [TestMethod]
+        public void TestX3DTextMFString()
+        {
+            string text;
+            string[] @strings;
+
+            text = "\"Textnodeusing\" \"diffuseColorappearance\"";
+            @strings = X3DTypeConverters.GetMFString(text);
+            Assert.IsTrue(@strings.Length == 2);
+
+            text = "\"SERIF\"";
+            @strings = X3DTypeConverters.GetMFString(text);
+            Assert.IsTrue(@strings.Length == 1);
+
+            text = "\"Text node using\" \"diffuseColor appearance\"";
+            @strings = X3DTypeConverters.GetMFString(text);
+            Assert.IsTrue(@strings.Length == 2);
+
+            text = "'Text node using' 'diffuseColor appearance'";
+            @strings = X3DTypeConverters.GetMFString(text);
+            Assert.IsTrue(@strings.Length == 2);
+
+
+            text = "'Text node using' 'diffuseColor \nappearance'";
+            @strings = X3DTypeConverters.GetMFString(text);
+            Assert.IsTrue(@strings.Length == 2);
+
+            text = "'Text node     \n  using' '     diffuseColor \nappearance'";
+            @strings = X3DTypeConverters.GetMFString(text);
+            Assert.IsTrue(@strings.Length == 2);
+        }
+
+        #endregion
+
         #region Mixed MFString URI
 
         [TestMethod]
@@ -238,9 +274,7 @@ namespace Tests
             object resource;
             bool success;
 
-            dataUri = @"'data:text/plain
-#version 420 core &#13;
-layout(location = 0) in vec3 position; &#13;'";
+            dataUri = "'data:text/plain\n#version 420 core &#13;\nlayout(location = 0) in vec3 position; &#13;'";
 
 
             uris = X3DTypeConverters.GetMFString(dataUri);
