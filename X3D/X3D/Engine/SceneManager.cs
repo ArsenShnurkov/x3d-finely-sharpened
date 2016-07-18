@@ -16,6 +16,7 @@ using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using X3D.Parser;
+using System.Text;
 
 /*
 createX3DFromStream
@@ -358,16 +359,33 @@ namespace X3D.Engine
 
                 if (File.Exists(url))
                 {
-                    FileStream fs = File.OpenRead(url);
+                    //FileStream fs = File.OpenRead(url);
+                    //string txt = File.ReadAllText(url);
+
+                    // Replace line endings because XDocument, and XMLDocument dont handle them well inside attribute values
+                    //txt = txt.Replace("\r\n", "\n")
+                    //         .Replace("\r", "\n")
+                    //         .Replace("\n", "&#xA;"); // &#13;   &#xA;
+
+
+
+                    byte[] bytes;
+
+                    //bytes = UTF8Encoding.UTF8.GetBytes(txt);
+                    bytes = File.ReadAllBytes(url);
+
+                    // Read all bytes now so that we quickly loose lock to file
+                    MemoryStream ms = new MemoryStream(bytes);
+
                     //try {
                     //using() {
                     if (GetMIMETypeByURL(url) == X3DMIMEType.UNKNOWN)
                     {
-                        resource = (Stream)fs;
+                        resource = (Stream)ms;
                     }
                     else
                     {
-                        resource = fromStream((Stream)fs);
+                        resource = fromStream((Stream)ms);
                     }
                     //}
                     return true;
@@ -569,8 +587,16 @@ namespace X3D.Engine
             XDocument xml;
 
             s = new SceneManager();
+            // defaulted back to legacy XmlTextReader so we can change whitespace processing
+            using (XmlTextReader xtr = new XmlTextReader(xml_stream))
+            {
+                xtr.WhitespaceHandling = WhitespaceHandling.All; // preserve line endings in attribute values
+                                                                 //xtr.Normalization = false; // another way to preserve line endings in attribute values
+                                                                 // however turning off normalization makes processing much slower
+                xml = XDocument.Load(xtr, LoadOptions.PreserveWhitespace);
+            }
 
-            xml = XDocument.Load(xml_stream);
+            //xml = XDocument.Load(xml_stream, LoadOptions.PreserveWhitespace);
 
             s.SceneGraph = new SceneGraph(xml);
 
@@ -584,7 +610,16 @@ namespace X3D.Engine
 
             s = new SceneManager();
 
-            xml = XDocument.Load(xml_string);
+            // defaulted back to legacy XmlTextReader so we can change whitespace processing
+            using (XmlTextReader xtr = new XmlTextReader(new StringReader(xml_string)))
+            {
+                xtr.WhitespaceHandling = WhitespaceHandling.All; // preserve line endings in attribute values
+                                                                 //xtr.Normalization = false; // another way to preserve line endings in attribute values
+                                                                 // however turning off normalization makes processing much slower
+                xml = XDocument.Load(xtr, LoadOptions.PreserveWhitespace);
+            }
+
+            //xml = XDocument.Load(xml_string,LoadOptions.PreserveWhitespace);
 
             s.SceneGraph = new SceneGraph(xml);
 
