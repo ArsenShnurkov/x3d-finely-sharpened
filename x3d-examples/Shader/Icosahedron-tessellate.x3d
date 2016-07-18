@@ -6,6 +6,8 @@
     <meta content='Icosahedron shape composed using IndexedTriangleSet or IndexedFaceSet node with tesselation shader for X3D spec consideration' name='description'/>
     <meta content='Gerallt Franke' name='creator'/>
     <meta content='18 June 2016' name='created'/>
+	<meta content='X3DBrowser' name='Recommended browser for viewing is x3d-finely-sharpened'/>
+	<meta content='License' name='GPLv3'/>
   </head>
   <Scene>
 		
