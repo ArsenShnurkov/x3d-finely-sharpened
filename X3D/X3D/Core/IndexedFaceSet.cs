@@ -31,6 +31,9 @@ namespace X3D
         private int _vbo_interleaved, _vbo_interleaved4;
         private int NumVerticies, NumVerticies4;
 
+        private readonly float tessLevelInner = 137; // 3
+        private readonly float tessLevelOuter = 115; // 2
+
         public override void PreRenderOnce(RenderingContext rc)
         {
             base.PreRenderOnce(rc);
@@ -115,28 +118,120 @@ namespace X3D
             if (this.coordinate != null && !string.IsNullOrEmpty(this.coordIndex))
             {
 
-                if (NumVerticies > 0)
+                Shape shape;
+                PrimitiveType type;
+                int vbo;
+                int verticies_num;
+
+                // Refactor tessellation 
+
+                if (parentShape.ComposedShaders.Any(s => s.Linked))
                 {
-                    GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
+                    if (parentShape.CurrentShader != null)
+                    {
+                        parentShape.CurrentShader.Use();
 
-                    parentShape.CurrentShader.SetFieldValue("size", size);
-                    parentShape.CurrentShader.SetFieldValue("scale", scale);
+                        parentShape.CurrentShader.SetFieldValue("size", size);
+                        parentShape.CurrentShader.SetFieldValue("scale", scale);
 
-                    GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
-                    Buffering.ApplyBufferPointers(parentShape.uniforms);
-                    GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
-                }
+                        if (parentShape.CurrentShader.IsTessellator)
+                        {
+                            Vector4 lightPosition = new Vector4(0.25f, 0.25f, 1f, 0f);
 
-                if (NumVerticies4 > 0)
-                {
-                    GL.UseProgram(_shape4.CurrentShader.ShaderHandle);
+                            if (parentShape.CurrentShader.IsBuiltIn)
+                            {
+                                // its a built in system shader so we are using the the fixed variable inbuilt tesselator
+                                parentShape.CurrentShader.SetFieldValue("TessLevelInner", this.tessLevelInner);
+                                parentShape.CurrentShader.SetFieldValue("TessLevelOuter", this.tessLevelOuter);
+                            }
+                            else
+                            {
+                                parentShape.CurrentShader.SetFieldValue("TessLevelInner", parentShape.TessLevelInner);
+                                parentShape.CurrentShader.SetFieldValue("TessLevelOuter", parentShape.TessLevelOuter);
+                            }
 
-                    _shape4.CurrentShader.SetFieldValue("size", size);
-                    _shape4.CurrentShader.SetFieldValue("scale", scale);
+                            parentShape.CurrentShader.SetFieldValue("normalmatrix", ref parentShape.NormalMatrix);
+                            //GL.UniformMatrix3(parentShape.Uniforms.NormalMatrix, false, ref parentShape.NormalMatrix);
+                            GL.Uniform3(parentShape.Uniforms.LightPosition, 1, ref lightPosition.X);
+                            GL.Uniform3(parentShape.Uniforms.AmbientMaterial, X3DTypeConverters.ToVec3(OpenTK.Graphics.Color4.Aqua)); // 0.04f, 0.04f, 0.04f
+                            GL.Uniform3(parentShape.Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f);
 
-                    GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved4);
-                    Buffering.ApplyBufferPointers(_shape4.uniforms);
-                    GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies4);
+
+
+
+                            shape = parentShape;
+                            vbo = _vbo_interleaved;
+                            verticies_num = NumVerticies;
+
+                            if (verticies_num > 0)
+                            {
+                                GL.UseProgram(shape.CurrentShader.ShaderHandle);
+
+                                shape.CurrentShader.SetFieldValue("size", size);
+                                shape.CurrentShader.SetFieldValue("scale", scale);
+
+                                GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
+                                GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+                                Buffering.ApplyBufferPointers(shape.uniforms);
+                                GL.DrawArrays(PrimitiveType.Patches, 0, verticies_num);
+                            }
+
+
+                            shape = _shape4;
+                            vbo = _vbo_interleaved4;
+                            verticies_num = NumVerticies4;
+
+                            if (verticies_num > 0)
+                            {
+                                GL.UseProgram(shape.CurrentShader.ShaderHandle);
+
+                                shape.CurrentShader.SetFieldValue("size", size);
+                                shape.CurrentShader.SetFieldValue("scale", scale);
+
+                                GL.PatchParameter(PatchParameterInt.PatchVertices, 16);
+                                GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+                                Buffering.ApplyBufferPointers(shape.uniforms);
+                                GL.DrawArrays(PrimitiveType.Patches, 0, verticies_num);
+                            }
+                        }
+                        else
+                        {
+                            shape = parentShape;
+                            type = PrimitiveType.Triangles;
+                            vbo = _vbo_interleaved;
+                            verticies_num = NumVerticies;
+
+                            if (verticies_num > 0)
+                            {
+                                GL.UseProgram(shape.CurrentShader.ShaderHandle);
+
+                                shape.CurrentShader.SetFieldValue("size", size);
+                                shape.CurrentShader.SetFieldValue("scale", scale);
+
+                                GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+                                Buffering.ApplyBufferPointers(shape.uniforms);
+                                GL.DrawArrays(type, 0, verticies_num);
+                            }
+
+
+                            shape = _shape4;
+                            type = PrimitiveType.Quads;
+                            vbo = _vbo_interleaved4;
+                            verticies_num = NumVerticies4;
+
+                            if (verticies_num > 0)
+                            {
+                                GL.UseProgram(shape.CurrentShader.ShaderHandle);
+
+                                shape.CurrentShader.SetFieldValue("size", size);
+                                shape.CurrentShader.SetFieldValue("scale", scale);
+
+                                GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+                                Buffering.ApplyBufferPointers(shape.uniforms);
+                                GL.DrawArrays(type, 0, verticies_num);
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -61,7 +61,9 @@ namespace X3D
             var scale = new Vector3(1, 1, 1);
             //var scale = new Vector3(0.04f, 0.04f, 0.04f);
 
-            if(parentShape.ComposedShaders.Any(s => s.Linked))
+            // Refactor tessellation 
+
+            if (parentShape.ComposedShaders.Any(s => s.Linked))
             {
                 if (parentShape.CurrentShader != null)
                 {
