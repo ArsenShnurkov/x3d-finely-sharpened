@@ -67,29 +67,31 @@ namespace X3D.Parser
         public static SceneGraphNode DeserialiseSGN(string xml, Type type)
         {
             XmlSerializer ser;
-            StreamWriter stw;
+            //StreamWriter stw;
             MemoryStream stm;
-            //XmlReaderSettings xs;
-            //XmlReader xr;
+            XmlReaderSettings xs;
+            XmlReader xr;
 
             ser = new XmlSerializer(type);
+            
 
-            stm = new MemoryStream();
-            stw = new StreamWriter(stm);
-            stw.Write(xml);
-            stw.Flush();
-            stm.Position = 0;
-            return (SceneGraphNode)ser.Deserialize(stm);
+            //stm = new MemoryStream();
+            //stw = new StreamWriter(stm);
+            //stw.Write(xml);
+            //stw.Flush();
+            //stm.Position = 0;
+            //return (SceneGraphNode)ser.Deserialize(stm);
 
-            //xs = new XmlReaderSettings();
-            //xs.DtdProcessing = DtdProcessing.Ignore;
-            //xs.ValidationType = ValidationType.None;
-            //xs.IgnoreProcessingInstructions = true;
-            //xs.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.None;
+            xs = new XmlReaderSettings();
+            xs.DtdProcessing = DtdProcessing.Ignore;
+            xs.ValidationType = ValidationType.None;
+            xs.IgnoreProcessingInstructions = true;
+            xs.ValidationFlags = System.Xml.Schema.XmlSchemaValidationFlags.None;
+            xs.IgnoreWhitespace = true;
+            stm = new MemoryStream(UTF8Encoding.UTF8.GetBytes(xml));
+            xr = XmlReader.Create((Stream)stm, xs);
 
-            //stm = new MemoryStream(ASCIIEncoding.ASCII.GetBytes(xml));
-            //xr = XmlReader.Create((Stream)stm, xs);
-            //return (T)ser.Deserialize(xr);
+            return (SceneGraphNode)ser.Deserialize(xr);
         }
 
         #endregion
