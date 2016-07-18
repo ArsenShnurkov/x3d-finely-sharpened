@@ -67,7 +67,7 @@ namespace X3D
 
                     if (_url.StartsWith(X3DTypeConverters.DATA_TEXT_PLAIN))
                     {
-                        ShaderSource = file;
+                        ShaderSource = _url.Remove(0, X3DTypeConverters.DATA_TEXT_PLAIN.Length).TrimStart();
 
                         LinkShaderSource(ShaderSource);
                     }

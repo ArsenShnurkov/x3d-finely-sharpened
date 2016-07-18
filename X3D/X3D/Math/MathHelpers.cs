@@ -14,6 +14,18 @@ namespace X3D
         public const float Zenith = (float)Math.PI / 2.0f;
         public const float PI2 = 2.0f * (float)Math.PI;
         public const float PiOver180 = PI_OVER_180;
+        public const float TwoPi = PI2;
+
+        public static float Clamp(float value, float min, float max)
+        {
+            return value > max ? max : (value < min ? min : value);
+        }
+        public static float ClampCircular(float n, float min, float max)
+        {
+            if (n >= max) n -= max;
+            if (n < min) n += max;
+            return n;
+        }
 
         public static BoundingBox CalcBoundingBox(IndexedTriangleSet its, int? restartIndex)
         {

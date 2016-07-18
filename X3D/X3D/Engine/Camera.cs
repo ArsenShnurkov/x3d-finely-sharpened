@@ -144,7 +144,7 @@ namespace X3D.Engine
             // setup projection
             GL.Viewport(0, 0, Width, Height);
 
-            //Matrix = Matrix4.LookAt(Position, Position + DollyDirection, Up); /*   // Test code put in quickly just for Mouse Navigation merged here
+            Matrix = Matrix4.LookAt(Position, Position + DollyDirection, Up); /*   // Test code put in quickly just for Mouse Navigation merged here
             ApplyTransformations(); // */
 
             
@@ -401,35 +401,35 @@ namespace X3D.Engine
 		public void ApplyYaw(float degrees) 
 		{
             //Check bounds with the max heading rate so that we aren't moving too fast
-            if (degrees < -max_yaw)
-            {
-                degrees = -max_yaw;
-            }
-            else if (degrees > max_yaw)
-            {
-                degrees = max_yaw;
-            }
-            //This controls how the heading is changed if the camera is pointed straight up or down
-            //The heading delta direction changes
-            if (camera_pitch > 90 && camera_pitch < 270 || (camera_pitch < -90 && camera_pitch > -270))
-            {
-                camera_yaw -= degrees;
-            }
-            else
-            {
-                camera_yaw += degrees;
-            }
-            //Check bounds for the camera heading
-            if (camera_yaw > 360.0f)
-            {
-                camera_yaw -= 360.0f;
-            }
-            else if (camera_yaw < -360.0f)
-            {
-                camera_yaw += 360.0f;
-            }
+            //if (degrees < -max_yaw)
+            //{
+            //    degrees = -max_yaw;
+            //}
+            //else if (degrees > max_yaw)
+            //{
+            //    degrees = max_yaw;
+            //}
+            ////This controls how the heading is changed if the camera is pointed straight up or down
+            ////The heading delta direction changes
+            //if (camera_pitch > 90 && camera_pitch < 270 || (camera_pitch < -90 && camera_pitch > -270))
+            //{
+            //    camera_yaw -= degrees;
+            //}
+            //else
+            //{
+            //    camera_yaw += degrees;
+            //}
+            ////Check bounds for the camera heading
+            //if (camera_yaw > 360.0f)
+            //{
+            //    camera_yaw -= 360.0f;
+            //}
+            //else if (camera_yaw < -360.0f)
+            //{
+            //    camera_yaw += 360.0f;
+            //}
 
-            //camera_yaw += degrees ;
+            camera_yaw += degrees ;
 				//* PiOver180
 
 		}

@@ -196,10 +196,11 @@ namespace X3D
 
                 _shapeOuter.CurrentShader.Use();
 
-
+                Matrix4 mat4;
 
 #if APPLY_BACKDROP
-                _shapeOuter.CurrentShader.SetFieldValue("modelview", rc.cam.GetWorldOrientation());
+                mat4 = rc.cam.GetWorldOrientation();
+                _shapeOuter.CurrentShader.SetFieldValue("modelview", ref mat4);
 #endif
                 _shapeOuter.CurrentShader.SetFieldValue("scale", scaleSky);
                 _shapeOuter.CurrentShader.SetFieldValue("size", size);
@@ -226,7 +227,8 @@ namespace X3D
 
                 _shapeInner.CurrentShader.Use();
 #if APPLY_BACKDROP
-                _shapeInner.CurrentShader.SetFieldValue("modelview", rc.cam.GetWorldOrientation());
+                mat4 = rc.cam.GetWorldOrientation();
+                _shapeInner.CurrentShader.SetFieldValue("modelview", ref mat4);
 #endif
                 _shapeInner.CurrentShader.SetFieldValue("scale", scaleGround);
                 _shapeInner.CurrentShader.SetFieldValue("size", size);
@@ -259,7 +261,8 @@ namespace X3D
 
                 _shapeInnerCube.CurrentShader.Use();
 #if APPLY_BACKDROP
-                _shapeInnerCube.CurrentShader.SetFieldValue("modelview", rc.cam.GetWorldOrientation());
+                Matrix4 mat4 = rc.cam.GetWorldOrientation();
+                _shapeInnerCube.CurrentShader.SetFieldValue("modelview", ref mat4);
 #endif
                 _shapeInnerCube.CurrentShader.SetFieldValue("scale", scaleCube);
                 _shapeInnerCube.CurrentShader.SetFieldValue("size", size);

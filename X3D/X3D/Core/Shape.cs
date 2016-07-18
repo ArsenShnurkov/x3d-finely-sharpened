@@ -97,8 +97,11 @@ namespace X3D
         public void IncludeTesselationShaders(string tessControlShaderSource, string tessEvalShaderSource,
                                               string geometryShaderSource)
         {
-            CurrentShader = ShaderCompiler.ApplyShader(DefaultShader.vertexShaderSource, DefaultShader.fragmentShaderSource,
-                tessControlShaderSource, tessEvalShaderSource, geometryShaderSource);
+            CurrentShader = ShaderCompiler.ApplyShader(DefaultShader.vertexShaderSource, 
+                                                       DefaultShader.fragmentShaderSource,
+                                                       tessControlShaderSource, 
+                                                       tessEvalShaderSource, 
+                                                       geometryShaderSource);
 
 
 
@@ -193,8 +196,8 @@ namespace X3D
                 if (this.CurrentShader.IsTessellator)
                     RefreshTessUniforms();
 
-                CurrentShader.SetFieldValue("modelview", rc.matricies.modelview); //GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);
-                CurrentShader.SetFieldValue("projection", rc.matricies.projection); //GL.UniformMatrix4(uniformProjection, false, ref rc.matricies.projection);
+                CurrentShader.SetFieldValue("modelview", ref rc.matricies.modelview); //GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);
+                CurrentShader.SetFieldValue("projection", ref rc.matricies.projection); //GL.UniformMatrix4(uniformProjection, false, ref rc.matricies.projection);
                 CurrentShader.SetFieldValue("camscale", rc.cam.Scale.X); //GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
                 CurrentShader.SetFieldValue("X3DScale", rc.matricies.Scale); //GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
                 CurrentShader.SetFieldValue("coloringEnabled", 0); //GL.Uniform1(uniforms.a_coloringEnabled, 0);

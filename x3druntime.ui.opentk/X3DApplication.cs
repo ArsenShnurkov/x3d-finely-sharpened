@@ -42,6 +42,8 @@ namespace x3druntime.ui.opentk
         private float mouseScale = 0.01f;
         private bool mouseDragging = false;
 
+        private float dx = 0, dy = 0;
+
         /// <param name="window">
         /// A window or display which is used to render the X3D application
         /// </param>
@@ -93,11 +95,23 @@ namespace x3druntime.ui.opentk
 
                 // TEST new camera implementation:
 
-                float xAngle = (e.XDelta * 0.00095f);
-                float yAngle = (e.YDelta * 0.00095f);
+                dx = ((float)e.X) - dx;
+                dy = ((float)e.Y) - dy;
 
-                //xAngle = MathHelper.ClampCircular(xAngle, 0.0, TwoPi);
-                //yAngle = MathHelper.ClampCircular(yAngle, 0.0, TwoPi);
+                Vector3 direction = Vector3.Zero;
+
+                if (Math.Abs(dx) > Math.Abs(dy))
+                    direction = (dx > 0) ? new Vector3(0.01f, 0, 0) : new Vector3(-0.01f, 0, 0);
+                else
+                    direction = (dy > 0) ? new Vector3(0, -0.01f, 0) : new Vector3(0, 0.01f, 0);
+
+
+
+                float xAngle = (direction.X);
+                float yAngle = (direction.Y);
+
+                //xAngle = MathHelpers.ClampCircular(xAngle, 0.0f, MathHelpers.TwoPi);
+                //yAngle = MathHelpers.ClampCircular(yAngle, 0.0f, MathHelpers.TwoPi);
 
                 //xAngle = MathHelper.ClampCircular(xAngle, 0.0, TwoPi);
                 //yAngle = MathHelper.ClampCircular(yAngle, 0.0, HalfPi);
@@ -113,9 +127,9 @@ namespace x3druntime.ui.opentk
                 //      yAngle = HalfPi;
 
 
-                ActiveCamera.ApplyYaw(xAngle);
-                ActiveCamera.ApplyPitch(yAngle);
-                ActiveCamera.ApplyRotation();
+                //ActiveCamera.ApplyYaw(xAngle);
+                //ActiveCamera.ApplyPitch(yAngle);
+                //ActiveCamera.ApplyRotation();
             };
         }
 
@@ -193,7 +207,6 @@ namespace x3druntime.ui.opentk
             GL.Enable(EnableCap.DepthTest);
             GL.DepthMask(true);
             GL.DepthFunc(DepthFunction.Lequal);
-
             GL.PointSize(6.0f);
 
             //TODO: improve current Camera implementation

@@ -84,8 +84,12 @@ namespace X3D
             GL.Uniform4(GL.GetUniformLocation(this.ShaderHandle, name), ref value);
         }
 
+        public void SetFieldValue(string name, ref Matrix3 value)
+        {
+            GL.UniformMatrix3(GL.GetUniformLocation(this.ShaderHandle, name), false, ref value);
+        }
 
-        public void SetFieldValue(string name, Matrix4 value)
+        public void SetFieldValue(string name, ref Matrix4 value)
         {
             GL.UniformMatrix4(GL.GetUniformLocation(this.ShaderHandle, name), false, ref value);
         }

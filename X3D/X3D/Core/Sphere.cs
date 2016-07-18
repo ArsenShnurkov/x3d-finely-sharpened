@@ -40,6 +40,8 @@ namespace X3D
                                                       TriangleTessShader.geometryShaderSource);
             }
 
+            
+
             Buffering.Interleave(null, out vbo, out NumVerticies,
                 out vbo4, out NumVerticies4,
                 Faces, null, Verts, null, null, null, null,
@@ -75,17 +77,17 @@ namespace X3D
                         if (parentShape.CurrentShader.IsBuiltIn)
                         {
                             // its a built in system shader so we are using the the fixed variable inbuilt tesselator
-                            GL.Uniform1(parentShape.Uniforms.TessLevelInner, this.tessLevelInner);
-                            GL.Uniform1(parentShape.Uniforms.TessLevelOuter, this.tessLevelOuter);
+                            parentShape.CurrentShader.SetFieldValue("TessLevelInner", this.tessLevelInner);
+                            parentShape.CurrentShader.SetFieldValue("TessLevelOuter", this.tessLevelOuter);
                         }
                         else
                         {
-                            GL.Uniform1(parentShape.Uniforms.TessLevelInner, parentShape.TessLevelInner);
-                            GL.Uniform1(parentShape.Uniforms.TessLevelOuter, parentShape.TessLevelOuter);
+                            parentShape.CurrentShader.SetFieldValue("TessLevelInner", parentShape.TessLevelInner);
+                            parentShape.CurrentShader.SetFieldValue("TessLevelOuter", parentShape.TessLevelOuter);
                         }
-                        
 
-                        GL.UniformMatrix3(parentShape.Uniforms.NormalMatrix, false, ref parentShape.NormalMatrix);
+                        parentShape.CurrentShader.SetFieldValue("normalmatrix", ref parentShape.NormalMatrix);
+                        //GL.UniformMatrix3(parentShape.Uniforms.NormalMatrix, false, ref parentShape.NormalMatrix);
                         GL.Uniform3(parentShape.Uniforms.LightPosition, 1, ref lightPosition.X);
                         GL.Uniform3(parentShape.Uniforms.AmbientMaterial, X3DTypeConverters.ToVec3(OpenTK.Graphics.Color4.Aqua)); // 0.04f, 0.04f, 0.04f
                         GL.Uniform3(parentShape.Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f);

@@ -105,7 +105,7 @@ namespace X3D.Core.Shading
             Console.WriteLine("Buffering Verticies..");
 
             GL.GenBuffers(1, out vbo_interleaved3);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_interleaved3);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_interleaved3); // InterleavedArrayFormat.T2fC4fN3fV3f
             GL.BufferData<Vertex>(BufferTarget.ArrayBuffer, (IntPtr)(_interleaved3.Length * Vertex.SizeInBytes), _interleaved3, BufferUsageHint.StaticDraw);
 
             Console.WriteLine("[done]");
@@ -115,8 +115,6 @@ namespace X3D.Core.Shading
             // TC    C          P         N
             // [1 1] [1 1 1 1]  [1 1 1]   [1 1 1]
             //     8        24  28    36  40   48
-
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_interleaved3); // InterleavedArrayFormat.T2fC4fN3fV3f
 
             NumVerticies = _interleaved3.Length;
 

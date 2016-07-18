@@ -218,7 +218,8 @@ namespace X3D
 
             _shape.CurrentShader.Use();
 #if APPLY_BACKDROP
-            _shape.CurrentShader.SetFieldValue("modelview", rc.cam.GetWorldOrientation());
+            Matrix4 mat4 = rc.cam.GetWorldOrientation();
+            _shape.CurrentShader.SetFieldValue("modelview", ref mat4);
 #endif
             _shape.CurrentShader.SetFieldValue("scale", scale);
             _shape.CurrentShader.SetFieldValue("size", size);
