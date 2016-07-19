@@ -18,6 +18,9 @@ namespace X3D.Parser
     {
 
         public const string DATA_TEXT_PLAIN = "data:text/plain";
+        public const string URN_WEB3D_MEDIA = "urn:web3d:media:"; // http://www.web3d.org/WorkingGroups/media/
+        public const string URN = "urn:";
+
         private static Regex regMFString = new Regex(@"(?:[\""][^\""]+\"")|(?:['][^']+['])", RegexOptions.Compiled);
 
         private static Regex regMFStringSoubleQuotes = new Regex("([\"][^\"]+[\"]+\\s?[\"][^\"]+[\"]+)?", RegexOptions.Compiled);

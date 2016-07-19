@@ -211,6 +211,24 @@ namespace X3D.Engine
                 resource = null;
                 return false;
             }
+
+            if (url.StartsWith(X3DTypeConverters.URN_WEB3D_MEDIA))
+            {
+                //TODO: database drive common URNs 
+                //TODO: make an assett store making use of URNs
+
+                url = url.Remove(0, X3DTypeConverters.URN_WEB3D_MEDIA.Length);
+                url = url.TrimStart();
+
+                url = "http://www.web3d.org/WorkingGroups/media/" + url; // bad to hard code URNs
+            }
+            else if (url.StartsWith(X3DTypeConverters.URN))
+            {
+                Console.WriteLine("TODO: cant handle this URN {0}", url);
+                resource = null;
+                return false;
+            }
+
             string tmp = X3DTypeConverters.removeQuotes(url);
             if (tmp.StartsWith(X3DTypeConverters.DATA_TEXT_PLAIN))
             {
@@ -328,6 +346,7 @@ namespace X3D.Engine
                     }
                     else
                     {
+                        Console.WriteLine("** panic ** cant handle this url {0}", url);
                         resource = null;
                         return false;
                     }
@@ -376,8 +395,6 @@ namespace X3D.Engine
                     // Read all bytes now so that we quickly loose lock to file
                     MemoryStream ms = new MemoryStream(bytes);
 
-                    //try {
-                    //using() {
                     if (GetMIMETypeByURL(url) == X3DMIMEType.UNKNOWN)
                     {
                         resource = (Stream)ms;
@@ -386,12 +403,7 @@ namespace X3D.Engine
                     {
                         resource = fromStream((Stream)ms);
                     }
-                    //}
                     return true;
-                    //}
-                    //finally {
-                    //fs.Close();
-                    //}
                 }
                 else
                 {
@@ -503,7 +515,12 @@ namespace X3D.Engine
                     }
                     else
                     {
-                        throw wex;
+                        // Skip download. If MFString was used, there should hopefully be a URL that works
+
+                        Console.WriteLine("** skipping ** url {0}", url);
+
+                        resource = null;
+                        return false;
                     }
                 }
 
