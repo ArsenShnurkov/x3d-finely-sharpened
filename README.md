@@ -103,6 +103,8 @@ Info
 
 [Web3D X3D V3.3 Specification Part1/Component Index][6]
 
+[Mixed Augmented Reality X3D V4.1 Web3D MAR Application goals][7]
+
 Licence
 
 ```
@@ -151,3 +153,4 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 [4]: http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/concepts.html
 [5]: http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/components/core.html
 [6]: http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/componentIndex.html
+[7]: http://www.web3d.org/working-groups/mixed-augmented-reality-mar
