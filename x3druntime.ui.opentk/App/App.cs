@@ -30,7 +30,6 @@ namespace x3druntime.ui.opentk
             var hHook = SetWinEventHook(EVENT_OBJECT_VALUECHANGE, EVENT_OBJECT_INVOKED, 
                                         IntPtr.Zero, CallWinEventProc, pid, tid, WINEVENT_OUTOFCONTEXT);
 
-
             #endregion
 
             fileui = new OpenFileDialog();
@@ -45,6 +44,10 @@ namespace x3druntime.ui.opentk
             {
                 fileui.InitialDirectory = "C:\\";
             }
+
+            OpenFileCancelButtonPressed = false;
+            OpenFileCancelURLDownload = false;
+            OpenFileDialogURL = "";
 
             //fileui.ShowDialog(X3DProgram.CurrentProgram); // the Console is the owner of the dialog
 
@@ -80,7 +83,7 @@ namespace x3druntime.ui.opentk
             UnhookWinEvent(hHook);
             fileui.Dispose();
 
-            if (string.IsNullOrEmpty(url.Trim()))
+            if (OpenFileCancelButtonPressed || string.IsNullOrEmpty(url.Trim()))
             {
                 url = null;
             }
@@ -128,6 +131,7 @@ namespace x3druntime.ui.opentk
 
         private static String OpenFileDialogURL = "";
         private static bool OpenFileCancelURLDownload = false;
+        private static bool OpenFileCancelButtonPressed = false;
         private static WinEventProc CallWinEventProc = new WinEventProc(EventCallback);
         private delegate void WinEventProc(IntPtr hWinEventHook, int iEvent, IntPtr hWnd, int idObject, int idChild, int dwEventThread, int dwmsEventTime);
 
@@ -169,6 +173,10 @@ namespace x3druntime.ui.opentk
 
                         // Cancel window quickly to prevent download and cache of URL that OpenFileDialog does
                         CloseWindow(winHwnd);
+                    }
+                    else if (label.Contains("cancel"))
+                    {
+                        OpenFileCancelButtonPressed = true;
                     }
 
                     break;
