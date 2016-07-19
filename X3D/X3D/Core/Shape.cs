@@ -208,10 +208,10 @@ namespace X3D
                     // TODO: later put this logic inside X3D shader examples /sphere-with-tessellation.x3d
                     
                     // The ability to incorporate and vary the amount of tesselation should be a X3D scriptable feature
-                    if (rc.Keyboard[Key.Right]) TessLevelInner++;
-                    if (rc.Keyboard[Key.Left]) TessLevelInner = TessLevelInner > 1 ? TessLevelInner - 1 : 1;
-                    if (rc.Keyboard[Key.Up]) TessLevelOuter++;
-                    if (rc.Keyboard[Key.Down]) TessLevelOuter = TessLevelOuter > 1 ? TessLevelOuter - 1 : 1;
+                    if (rc.Keyboard[Key.L]) TessLevelInner++;
+                    if (rc.Keyboard[Key.J]) TessLevelInner = TessLevelInner > 1 ? TessLevelInner - 1 : 1;
+                    if (rc.Keyboard[Key.I]) TessLevelOuter++;
+                    if (rc.Keyboard[Key.K]) TessLevelOuter = TessLevelOuter > 1 ? TessLevelOuter - 1 : 1;
                 }
             }
 
