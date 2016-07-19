@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile='Immersive' version='3.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.0.xsd'>
+  <head>
+    <meta content='SweetHome.x3d' name='title'/>
+    <meta content='La Mesa Military Housing Model, Engin UZUNCAOVA [August, 2001]' name='creator'/>
+    <meta content='Engin UZUNCAOVA' name='translator'/>
+    <meta content='16 September 2001' name='created'/>
+    <meta content='13 January 2014' name='modified'/>
+    <meta content='Model of one of the housing types in La Mesa Housing Area.The model is mostly in scale.' name='description'/>
+    <meta content='http://www.web3d.org/x3d/content/examples/Basic/StudentProjects/SweetHome.x3d' name='identifier'/>
+    <meta content='http://www.web3d.org/x3d/content/examples/Basic/StudentProjects/SweetHome.x3d' name='reference'/>
+    <meta content='http://www.web3d.org/x3d/content/examples/Basic/StudentProjects/SweetHomeFullDetail.x3d' name='reference'/>
+    <meta content='http://www.web3d.org/x3d/content/examples/Basic/StudentProjects/SweetHomeLowDetail.x3d' name='reference'/>
+    <meta content='X3D-Edit 3.3, https://savage.nps.edu/X3D-Edit' name='generator'/>
+    <meta content='../license.html' name='license'/>
+  </head>
+  <Scene>
+    <NavigationInfo type='"EXAMINE"'/>
+    <Background backUrl='"urn:web3d:media:textures/panoramas/ocean_3_back.jpg" "ocean_3_back.jpg" "http://www.web3d.org/WorkingGroups/media/textures/panoramas/ocean_3_back.jpg" "http://www.web3d.org/x3d/content/examples/Basic/UniversalMediaPanoramas/ocean_3_back.jpg" "http://www.web3dmedia.com/UniversalMedia/textures/panoramas/ocean_3_back.jpg" "http://www.officetowers.com/UniversalMedia/textures/panoramas/ocean_3_back.jpg" "http://geometrek.com/UniversalMedia/textures/panoramas/ocean_3_back.jpg" "http://www.sc.ehu.es/ccwgamoa/UniversalMedia/textures/panoramas/ocean_3_back.jpg"' bottomUrl='"urn:web3d:media:textures/panoramas/ocean_3_bottom.jpg" "ocean_3_bottom.jpg" "http://www.web3d.org/WorkingGroups/media/textures/panoramas/ocean_3_bottom.jpg" "http://www.web3d.org/x3d/content/examples/Basic/UniversalMediaPanoramas/ocean_3_bottom.jpg" "http://www.web3dmedia.com/UniversalMedia/textures/panoramas/ocean_3_bottom.jpg" "http://www.officetowers.com/UniversalMedia/textures/panoramas/ocean_3_bottom.jpg" "http://geometrek.com/UniversalMedia/textures/panoramas/ocean_3_bottom.jpg" "http://www.sc.ehu.es/ccwgamoa/UniversalMedia/textures/panoramas/ocean_3_bottom.jpg"' frontUrl='"urn:web3d:media:textures/panoramas/ocean_3_front.jpg" "ocean_3_front.jpg" "http://www.web3d.org/WorkingGroups/media/textures/panoramas/ocean_3_front.jpg" "http://www.web3d.org/x3d/content/examples/Basic/UniversalMediaPanoramas/ocean_3_front.jpg" "http://www.web3dmedia.com/UniversalMedia/textures/panoramas/ocean_3_front.jpg" "http://www.officetowers.com/UniversalMedia/textures/panoramas/ocean_3_front.jpg" "http://geometrek.com/UniversalMedia/textures/panoramas/ocean_3_front.jpg" "http://www.sc.ehu.es/ccwgamoa/UniversalMedia/textures/panoramas/ocean_3_front.jpg"' groundAngle='0.1 1.309 1.570796' groundColor='0 0 0 0 0.1 0.3 0 0.2 0.5 0 0.3 0.8' leftUrl='"urn:web3d:media:textures/panoramas/ocean_3_left.jpg" "ocean_3_left.jpg" "http://www.web3d.org/WorkingGroups/media/textures/panoramas/ocean_3_left.jpg" "http://www.web3d.org/x3d/content/examples/Basic/UniversalMediaPanoramas/ocean_3_left.jpg" "http://www.web3dmedia.com/UniversalMedia/textures/panoramas/ocean_3_left.jpg" "http://www.officetowers.com/UniversalMedia/textures/panoramas/ocean_3_left.jpg" "http://geometrek.com/UniversalMedia/textures/panoramas/ocean_3_left.jpg" "http://www.sc.ehu.es/ccwgamoa/UniversalMedia/textures/panoramas/ocean_3_left.jpg"' rightUrl='"urn:web3d:media:textures/panoramas/ocean_3_right.jpg" "ocean_3_right.jpg" "http://www.web3d.org/WorkingGroups/media/textures/panoramas/ocean_3_right.jpg" "http://www.web3d.org/x3d/content/examples/Basic/UniversalMediaPanoramas/ocean_3_right.jpg" "http://www.web3dmedia.com/UniversalMedia/textures/panoramas/ocean_3_right.jpg" "http://www.officetowers.com/UniversalMedia/textures/panoramas/ocean_3_right.jpg" "http://geometrek.com/UniversalMedia/textures/panoramas/ocean_3_right.jpg" "http://www.sc.ehu.es/ccwgamoa/UniversalMedia/textures/panoramas/ocean_3_right.jpg"' skyAngle='0.1 0.15 1.309 1.571' skyColor='0.4 0.4 0.1 0.4 0.4 0.1 0 0.1 0.3 0 0.2 0.6 0.8 0.8 0.8' topUrl='"urn:web3d:media:textures/panoramas/ocean_3_top.jpg" "ocean_3_top.jpg" "http://www.web3d.org/WorkingGroups/media/textures/panoramas/ocean_3_top.jpg" "http://www.web3d.org/x3d/content/examples/Basic/UniversalMediaPanoramas/ocean_3_top.jpg" "http://www.web3dmedia.com/UniversalMedia/textures/panoramas/ocean_3_top.jpg" "http://www.officetowers.com/UniversalMedia/textures/panoramas/ocean_3_top.jpg" "http://geometrek.com/UniversalMedia/textures/panoramas/ocean_3_top.jpg" "http://www.sc.ehu.es/ccwgamoa/UniversalMedia/textures/panoramas/ocean_3_top.jpg"'/>
+    <Viewpoint description='FRONT SIDE' orientation='-1 0.02 0 0.25' position='0 3 20'/>
+    <Viewpoint description='LEFT SIDE' orientation='-0.12 -0.99 -0.12 1.58' position='-20 3 0'/>
+    <Viewpoint description='BACK SIDE' orientation='-0 0.99 0.12 3.14' position='0 5 -20'/>
+    <Viewpoint description='RIGHT SIDE' orientation='-0.12 0.99 0.12 1.58' position='20 3 0'/>
+    <Viewpoint description='WALKING' position='2 1.7 10'/>
+    <LOD range='15'>
+      <Inline url='"SweetHomeFullDetail.wrl" "http://www.web3d.org/x3d/content/examples/Basic/StudentProjects/SweetHomeFullDetail.wrl" "SweetHomeFullDetail.x3d" "http://www.web3d.org/x3d/content/examples/Basic/StudentProjects/SweetHomeFullDetail.x3d"'/>
+      <Inline url='"SweetHomeLowDetail.wrl" "http://www.web3d.org/x3d/content/examples/Basic/StudentProjects/SweetHomeLowDetail.wrl" "SweetHomeLowDetail.x3d" "http://www.web3d.org/x3d/content/examples/Basic/StudentProjects/SweetHomeLowDetail.x3d"'/>
+    </LOD>
+    <Group DEF='FENCE_STRUCT'>
+      <Transform DEF='FENCE' translation='-8.26 1.05 -3.0'>
+        <Transform DEF='BOTTOM' translation='0.905 -0.895 0.0'>
+          <Shape>
+            <Appearance DEF='BOTTOM_COLOR'>
+              <ImageTexture DEF='woodTexture' url='"woodTexture.jpg" "http://www.web3d.org/x3d/content/examples/Basic/StudentProjects/woodTexture.jpg"'/>
+              <Material diffuseColor='1.0 0.6 0.2'/>
+            </Appearance>
+            <Box size='1.96 0.3 0.03'/>
+          </Shape>
+        </Transform>
+        <Transform DEF='POST' translation='1.96 -0.05 0.0'>
+          <Shape>
+            <Appearance USE='BOTTOM_COLOR'/>
+            <Box size='0.15 2.0 0.15'/>
+          </Shape>
+        </Transform>
+        <Group DEF='FENCE1'>
+          <Shape>
+            <Appearance DEF='WOOD_COLOR1'>
+              <ImageTexture USE='woodTexture'/>
+              <Material diffuseColor='1.0 0.6 0.2'/>
+            </Appearance>
+            <Box size='0.16 1.5 0.05'/>
+          </Shape>
+          <Transform translation='0 0.749 0'>
+            <Shape DEF='TOP1'>
+              <Appearance USE='WOOD_COLOR1'/>
+              <Extrusion ccw='false' crossSection='0.08 0.025 0.08 -0.025 -0.08 -0.025 -0.08 0.025 0.08 0.025' scale='1.0 1.0 0.01 1.0' solid='false' spine='0.0 0.0 0.0 0.0 0.1 0.0'/>
+            </Shape>
+          </Transform>
+        </Group>
+        <Transform translation='0.16 0.0 0.0'>
+          <Group DEF='FENCE2'>
+            <Shape>
+              <Appearance DEF='WOOD_COLOR2'>
+                <ImageTexture USE='woodTexture'/>
+                <Material diffuseColor='1.0 0.585 0.2'/>
+              </Appearance>
+              <Box size='0.16 1.5 0.03'/>
+            </Shape>
+            <Transform translation='0 0.749 0'>
+              <Shape DEF='TOP2'>
+                <Appearance USE='WOOD_COLOR2'/>
+                <Extrusion ccw='false' crossSection='0.08 0.015 0.08 -0.015 -0.08 -0.015 -0.08 0.015 0.08 0.015' scale='1.0 1.0 0.01 1.0' solid='false' spine='0.0 0.0 0.0 0.0 0.1 0.0'/>
+              </Shape>
+            </Transform>
+          </Group>
+        </Transform>
+        <Transform translation='0.31 0.0 0.0'>
+          <Group USE='FENCE1'/>
+        </Transform>
+        <Transform translation='0.46 0.0 0.0'>
+          <Group USE='FENCE2'/>
+        </Transform>
+        <Transform translation='0.61 0.0 0.0'>
+          <Group USE='FENCE1'/>
+        </Transform>
+        <Transform translation='0.76 0.0 0.0'>
+          <Group USE='FENCE2'/>
+        </Transform>
+        <Transform translation='0.91 0.0 0.0'>
+          <Group USE='FENCE1'/>
+        </Transform>
+        <Transform translation='1.06 0.0 0.0'>
+          <Group USE='FENCE2'/>
+        </Transform>
+        <Transform translation='1.21 0.0 0.0'>
+          <Group USE='FENCE1'/>
+        </Transform>
+        <Transform translation='1.36 0.0 0.0'>
+          <Group USE='FENCE2'/>
+        </Transform>
+        <Transform translation='1.51 0.0 0.0'>
+          <Group USE='FENCE1'/>
+        </Transform>
+        <Transform translation='1.66 0.0 0.0'>
+          <Group USE='FENCE2'/>
+        </Transform>
+        <Transform translation='1.81 0.0 0.0'>
+          <Group USE='FENCE1'/>
+        </Transform>
+      </Transform>
+      <Transform DEF='FENCE_ROTATE1' center='-6.3 0.0 -3.0' rotation='0 1 0 -1.57' translation='-2.1 0.0 0.0'>
+        <Transform USE='FENCE'/>
+      </Transform>
+      <Transform translation='0.0 0.0 -1.96'>
+        <Transform USE='FENCE_ROTATE1'/>
+      </Transform>
+      <Transform translation='0.0 0.0 -3.92'>
+        <Transform USE='FENCE_ROTATE1'/>
+      </Transform>
+      <Transform translation='0.0 0.0 -5.88'>
+        <Transform USE='FENCE_ROTATE1'/>
+      </Transform>
+      <Transform DEF='FENCE_ROTATE2' center='-6.3 0.0 -6.86' rotation='0 1 0 -1.57' translation='1.75 0.0 -2.03'>
+        <Transform USE='FENCE_ROTATE1'/>
+      </Transform>
+      <Transform translation='1.96 0.0 0.0'>
+        <Transform USE='FENCE_ROTATE2'/>
+      </Transform>
+      <Transform translation='3.92 0.0 0.0'>
+        <Transform USE='FENCE_ROTATE2'/>
+      </Transform>
+      <Transform translation='5.88 0.0 0.0'>
+        <Transform USE='FENCE_ROTATE2'/>
+      </Transform>
+      <Transform translation='7.84 0.0 0.0'>
+        <Transform USE='FENCE_ROTATE2'/>
+      </Transform>
+      <Transform translation='9.8 0.0 0.0'>
+        <Transform USE='FENCE_ROTATE2'/>
+      </Transform>
+      <Transform translation='11.76 0.0 0.0'>
+        <Transform USE='FENCE_ROTATE2'/>
+      </Transform>
+      <Transform DEF='FENCE_ROTATE3' center='-1.5 0.0 -4.2' rotation='0 1 0 -1.57' translation='0.17 0.0 0.11'>
+        <Transform USE='FENCE_ROTATE2'/>
+      </Transform>
+      <Transform translation='0.0 0.0 2.07'>
+        <Transform USE='FENCE_ROTATE3'/>
+      </Transform>
+      <Transform rotation='0 1 0 0.04' translation='0.45 0.0 4.38'>
+        <Transform USE='FENCE_ROTATE3'/>
+      </Transform>
+    </Group>
+    <Transform DEF='LAWN' scale='2 1 4' translation='0 0.01 0'>
+      <Transform scale='2 1 2' translation='-9 0.1 -6'>
+        <Shape>
+          <Appearance>
+            <ImageTexture url='"lawnGrass.jpg" "http://www.web3d.org/x3d/content/examples/Basic/StudentProjects/lawnGrass.jpg"'/>
+            <TextureTransform scale='160 80'/>
+          </Appearance>
+          <ElevationGrid creaseAngle='0.785' height='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0' xDimension='8' xSpacing='1.4285714' zDimension='8' zSpacing='0.7142857'/>
+        </Shape>
+      </Transform>
+    </Transform>
+    <Transform DEF='TREE' translation='-2.0 0.0 8.0'>
+      <Shape DEF='HALF_TREE'>
+        <Appearance>
+          <ImageTexture url='"tree1.png" "http://www.web3d.org/x3d/content/examples/Basic/Vrml2.0Sourcebook/tree1.png"'/>
+        </Appearance>
+        <IndexedFaceSet coordIndex='0 1 2 3' solid='false'>
+          <Coordinate point='-1.51 0 0 1.51 0 0 1.51 3 0 -1.51 3 0'/>
+        </IndexedFaceSet>
+      </Shape>
+      <Transform rotation='0 1 0 1.57'>
+        <Shape USE='HALF_TREE'/>
+      </Transform>
+    </Transform>
+  </Scene>
+</X3D>
