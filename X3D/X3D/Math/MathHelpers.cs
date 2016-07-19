@@ -16,7 +16,43 @@ namespace X3D
         public const float PiOver180 = PI_OVER_180;
         public const float TwoPi = PI2;
 
-        public static float Clamp(float value, float min, float max)
+        /// <summary>
+        /// Build a rotation matrix from the specified quaternion.
+        /// </summary>
+        /// <param name="q">Quaternion to translate.</param>
+        /// <returns>A matrix instance.</returns>
+        public static Matrix4 CreateRotation(ref Quaternion q)
+        {
+            Matrix4 result = Matrix4.Identity;
+
+			float X = q.X;
+			float Y = q.Y;
+			float Z = q.Z;
+			float W = q.W;
+			
+			float xx = X * X;
+			float xy = X * Y;
+			float xz = X * Z;
+			float xw = X * W;
+			float yy = Y * Y;
+			float yz = Y * Z;
+			float yw = Y * W;
+			float zz = Z * Z;
+			float zw = Z * W;
+			
+			result.M11 = 1 - 2 * (yy + zz);
+			result.M21 = 2 * (xy - zw);
+			result.M31 = 2 * (xz + yw);
+			result.M12 = 2 * (xy + zw);
+			result.M22 = 1 - 2 * (xx + zz);
+			result.M32 = 2 * (yz - xw);
+			result.M13 = 2 * (xz - yw);
+			result.M23 = 2 * (yz + xw);
+			result.M33 = 1 - 2 * (xx + yy);
+           return result;
+        }
+
+    public static float Clamp(float value, float min, float max)
         {
             return value > max ? max : (value < min ? min : value);
         }
