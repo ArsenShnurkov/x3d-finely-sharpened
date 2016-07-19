@@ -279,12 +279,11 @@ namespace X3D.Engine
             //CurrentLocation=url.TrimEnd().TrimEnd(System.IO.Path.GetFileName(url).ToCharArray());
             //}
             Uri www_url;
+            Uri base_uri;
             //MessageBox.Show("for debugging purposes..");
 
             if (isrelative(url))
             {
-                Uri base_uri;
-
                 if (isWebUrl(CurrentLocation))
                 {
                     url = url.Replace("\\", "/");
@@ -407,12 +406,16 @@ namespace X3D.Engine
                 X3DMIMEType m;
 
                 request = (HttpWebRequest)WebRequest.Create(url);
-
+                
+                request.AuthenticationLevel = System.Net.Security.AuthenticationLevel.None;
+                request.CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.BypassCache);
                 request.KeepAlive = true;
                 request.Timeout = 10000;
                 request.ReadWriteTimeout = 32000;
-                request.Method = "POST";
+                request.Method = "GET";
                 //request.Method="post";
+                //request.ContentType = "text/plain";
+                //request.UserAgent = "x3d-finely-sharpened-3.3";
 
                 byte[] lnBuffer, lnFile;
                 MemoryStream fileStream = null;
