@@ -78,12 +78,18 @@ namespace X3D.Engine
 
             
             Right = Vector3.UnitX;
-            Forward = Vector3.UnitZ;
+
+            //Forward = Vector3.UnitY; /*
+            Forward = Vector3.UnitZ; // */
+
             Direction = Forward;
 
             //Mouse Navigation parameters
-            Up = Vector3.UnitY; //Up = Vector3.UnitZ;
-            Position = Origin = movement = new Vector3(0, 0, -2); //Position = Origin = movement = Vector3.Zero; // Q3
+            //Up = Vector3.UnitZ; /*
+            Up = Vector3.UnitY;  // */
+
+            //Position = Origin = movement = new Vector3(0, 0, -2); /*
+            Position = Origin = movement = Vector3.Zero; // Q3 // */
 
             this.Width = viewportWidth;
             this.Height = viewportHeight;
@@ -108,9 +114,9 @@ namespace X3D.Engine
         /// </summary>
         public void Horizon()
         {
-            this.Forward = Vector3.UnitZ;
-            this.Up = Vector3.UnitY;
-            this.Right = Vector3.UnitX;
+            //this.Forward = Vector3.UnitY;
+            //this.Up = Vector3.UnitZ; // UnitZ UnitY
+            //this.Right = Vector3.UnitX;
         }
 
         public Vector3 getMovement() { return Position; }
@@ -144,7 +150,7 @@ namespace X3D.Engine
             // setup projection
             GL.Viewport(0, 0, Width, Height);
 
-            Matrix = Matrix4.LookAt(Position, Position + DollyDirection, Up); /*   // Test code put in quickly just for Mouse Navigation merged here
+            //Matrix = Matrix4.LookAt(Position, Position + DollyDirection, Up); /*   // Test code put in quickly just for Mouse Navigation merged here
             ApplyTransformations(); // */
 
             
@@ -156,12 +162,17 @@ namespace X3D.Engine
         public Matrix4 GetWorldOrientation()
         {
             Matrix4 worldView;
+            Vector3 worldPosition;
 
-            Vector3 worldPosition = Vector3.Zero ;
-
+            // Set translation to world origin
+            worldPosition = Vector3.Zero ;
             Look = worldPosition + (Direction) * 1.0f;
-
             worldView = Matrix4.LookAt(worldPosition, Look, Up);
+
+            // Apply Orientation
+            Quaternion q = Orientation; //.Inverted();
+            
+             worldView *= MathHelpers.CreateRotation(ref q);
 
             return worldView;
         } 
@@ -182,7 +193,10 @@ namespace X3D.Engine
 
             outm = Matrix4.LookAt(PlayerPosition, Look, Up);
 
-            Matrix = outm;
+            Quaternion q = Orientation.Inverted();
+
+
+            Matrix = outm * MathHelpers.CreateRotation(ref q);
 
 			PrevPosition = Position;
 		}
@@ -194,16 +208,28 @@ namespace X3D.Engine
 			//MakeOrthogonal();
 
 			Vector3 pitch_axis = Vector3.Cross(direction, Up);
+            Vector3 roll_axis = Right + Up;
 
-			pitch = Quaternion.FromAxisAngle(pitch_axis, camera_pitch  ); // radians
+            //pitch_axis = roll_axis;
+
+
+
+            pitch = Quaternion.FromAxisAngle(pitch_axis, camera_pitch  ); // radians
 			yaw = Quaternion.FromAxisAngle(Up, camera_yaw); // PiOver180
-			//roll = Quaternion.FromAxisAngle(Right+Up, roll_angle);
+            //roll = Quaternion.FromAxisAngle(roll_axis, roll_angle);
 
-			Orientation = yaw * pitch  /* roll */ ;
+            Orientation = yaw * pitch  /* roll */ ;
+            //Orientation = pitch  /* roll */ ;
+            //Orientation = yaw;
+
+            
+            Orientation *= pitch;
 
             Orientation.Normalize();
 
-			this.Direction = QuaternionExtensions.Rotate(Orientation, Vector3.UnitX);
+            // Update Direction
+
+			//this.Direction = QuaternionExtensions.Rotate(Orientation, Vector3.UnitX);
 		}
 
 		//Matrix4 lookAt(Vector3 eye, Vector3 center, Vector3 up) 
@@ -280,16 +306,21 @@ namespace X3D.Engine
 
 		public void Yaw(float angle)
 		{
-			// Up
-			Matrix4 m = Matrix4.CreateFromAxisAngle(Up, angle);
+            //angle = MathHelpers.ClampCircular(angle, 0f, MathHelpers.PI2);
+
+            // Up
+            Matrix4 m = Matrix4.CreateFromAxisAngle(Up, angle);
 
 			// Transform vector by matrix, project result back into w = 1.0f
 			Right = MatrixExtensions.Transform(m,Right); // TransformVectorCoord
 			Up = MatrixExtensions.Transform(m,Look);
 		}
 
+        //private float pitchAngle = 0f, yawAngle = 0f;
 		public void Pitch(float angle)
 		{
+            //angle = MathHelpers.ClampCircular(angle, 0f, MathHelpers.PI2);
+
             // Right
             Matrix4 m = Matrix4.CreateFromAxisAngle(Right, angle);
 
@@ -378,24 +409,28 @@ namespace X3D.Engine
 
 		public void ApplyPitch(float degrees) 
 		{
-			//Check bounds with the max pitch rate so that we aren't moving too fast
-			//    if (degrees < -max_pitch) {
-			//      degrees = -max_pitch;
-			//    } else if (degrees > max_pitch) {
-			//      degrees = max_pitch;
-			//    }
-			//    camera_pitch += degrees;
-			//
-			//    //Check bounds for the camera pitch
-			//    if (camera_pitch > 360.0) {
-			//      camera_pitch -= 360.0;
-			//    } else if (camera_pitch < -360.0) {
-			//      camera_pitch += 360.0;
-			//    }
+            //Check bounds with the max pitch rate so that we aren't moving too fast
+            //if (degrees < -max_pitch)
+            //{
+            //    degrees = -max_pitch;
+            //}
+            //else if (degrees > max_pitch)
+            //{
+            //    degrees = max_pitch;
+            //}
+            //camera_pitch += degrees;
 
-			camera_pitch += degrees 
-				//* PiOver180
-				;
+            ////Check bounds for the camera pitch
+            //if (camera_pitch > MathHelpers.PI2)
+            //{
+            //    camera_pitch -= MathHelpers.PI2;
+            //}
+            //else if (camera_pitch < -MathHelpers.PI2)
+            //{
+            //    camera_pitch += MathHelpers.PI2;
+            //}
+
+            camera_pitch += degrees;
 		}
 
 		public void ApplyYaw(float degrees) 
