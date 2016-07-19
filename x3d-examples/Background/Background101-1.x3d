@@ -21,7 +21,7 @@
     <meta content='../license.html' name='license'/>
   </head>
   <Scene>
-    <Background skyAngle='1.309 1.571' skyColor='0.0 0.2 0.7 0.0 0.5 1.0 1.0 1.0 1.0'/>
+    <Background skyAngle='1.309 1.571' skyColor='0.0 0.2 0.7 0.0 0.5 1.0 1.0 1.0 1.0' groundAngle='1.309 1.570796' groundColor='0.1 0.1 0.0 0.4 0.25 0.2 0.6 0.6 0.6' />
   </Scene>
 </X3D>
 

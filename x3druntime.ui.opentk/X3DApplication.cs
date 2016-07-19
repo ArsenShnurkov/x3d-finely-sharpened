@@ -80,35 +80,44 @@ namespace x3druntime.ui.opentk
             
             this.Mouse.Move += (object sender, MouseMoveEventArgs e) =>
             {
-                if (mouseDragging)
-                {
+                //if (mouseDragging)
+                //{
 
-                    if (ispanning)
-                    {
-                        ActiveCamera.PanXY(e.XDelta * mouseScale, e.YDelta * mouseScale);
-                    }
-                    else if (iszooming)
-                    {
-                        ActiveCamera.OrbitXY(e.XDelta, e.YDelta);
-                    }
-                }
+                //    if (ispanning)
+                //    {
+                //        ActiveCamera.PanXY(e.XDelta * mouseScale, e.YDelta * mouseScale);
+                //    }
+                //    else if (iszooming)
+                //    {
+                //        ActiveCamera.OrbitXY(e.XDelta, e.YDelta);
+                //    }
+                //}
 
                 // TEST new camera implementation:
 
-                dx = ((float)e.X) - dx;
-                dy = ((float)e.Y) - dy;
+                //dx = ((float)e.X) - dx;
+                //dy = ((float)e.Y) - dy;
+                dx = ((float)e.XDelta);
+                dy = ((float)e.YDelta);
+
+
+                LockMouseCursor();
+
 
                 Vector3 direction = Vector3.Zero;
 
                 if (Math.Abs(dx) > Math.Abs(dy))
-                    direction = (dx > 0) ? new Vector3(0.01f, 0, 0) : new Vector3(-0.01f, 0, 0);
+                    direction.X = (dx > 0) ? 0.1f : -0.1f;
                 else
-                    direction = (dy > 0) ? new Vector3(0, -0.01f, 0) : new Vector3(0, 0.01f, 0);
+                    direction.Y = (dy > 0) ? 0.1f : -0.1f;
 
 
 
                 float xAngle = (direction.X);
                 float yAngle = (direction.Y);
+
+                //float xAngle = dx * 0.0001f;
+                //float yAngle = dy * 0.0001f;
 
                 //xAngle = MathHelpers.ClampCircular(xAngle, 0.0f, MathHelpers.TwoPi);
                 //yAngle = MathHelpers.ClampCircular(yAngle, 0.0f, MathHelpers.TwoPi);
@@ -127,9 +136,9 @@ namespace x3druntime.ui.opentk
                 //      yAngle = HalfPi;
 
 
-                //ActiveCamera.ApplyYaw(xAngle);
-                //ActiveCamera.ApplyPitch(yAngle);
-                //ActiveCamera.ApplyRotation();
+                ActiveCamera.ApplyYaw(xAngle);
+                ActiveCamera.ApplyPitch(yAngle);
+                ActiveCamera.ApplyRotation();
             };
         }
 
@@ -151,22 +160,20 @@ namespace x3druntime.ui.opentk
             ConsoleVisibility=true;
 #endif
 
-            modelview = Matrix4.LookAt(Vector3.UnitX, Vector3.UnitZ, Vector3.UnitY); //TODO: put in Camera
+            // INITILISE SCENE
 
-            { //TODO: specify code in this code block somewhere somehow in the loading of individual Scenes
+            GL.Disable(EnableCap.Normalize);
+            // shade model upgraded from fixed function to shader side
+            //GL.ShadeModel(ShadingModel.Flat);
+            //GL.ShadeModel(ShadingModel.Smooth);                // Enable Smooth Shading
 
-                GL.Disable(EnableCap.Normalize);
-                //GL.ShadeModel(ShadingModel.Flat);
-                //GL.ShadeModel(ShadingModel.Smooth);                // Enable Smooth Shading
-
-                GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);           // Black Background
-                GL.ClearDepth(1.0f);                 // Depth Buffer Setup
-                GL.Enable(EnableCap.DepthTest);                // Enables Depth Testing
-                //GL.DepthMask(false);
-                GL.DepthFunc(DepthFunction.Lequal);                 // The Type Of Depth Testing To Do
-                //GL.Enable(EnableCap.CullFace); // causes bugs if enabled i.e. nehe10 wont render properly
-                GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);  // Really Nice Perspective Calculations
-            }
+            GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);           // Black Background
+            GL.ClearDepth(1.0f);                 // Depth Buffer Setup
+            GL.Enable(EnableCap.DepthTest);                // Enables Depth Testing
+            //GL.DepthMask(false);
+            GL.DepthFunc(DepthFunction.Lequal);                 // The Type Of Depth Testing To Do
+            //GL.Enable(EnableCap.CullFace); // causes bugs if enabled i.e. nehe10 wont render properly
+            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);  // Really Nice Perspective Calculations
 
             DateTime time_before = DateTime.Now;
 
@@ -184,7 +191,7 @@ namespace x3druntime.ui.opentk
 
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("loading time: " + DateTime.Now.Subtract(time_before).TotalMilliseconds.ToString() + "ms");
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.Yellow;
 
 #if GAME_INIT_MODE&&FULLSCREEN
             Console.ForegroundColor=ConsoleColor.DarkGreen;
@@ -266,6 +273,12 @@ namespace x3druntime.ui.opentk
         {
             UserInput_ScanKeyboard(e);
             //fps=GetFps(e.Time);
+        }
+
+        private void LockMouseCursor()
+        {
+            System.Windows.Forms.Cursor.Position = new System.Drawing.Point(window.Bounds.Left + (window.Bounds.Width / 2),
+                    window.Bounds.Top + (window.Bounds.Height / 2));
         }
 
         #region test orbital control

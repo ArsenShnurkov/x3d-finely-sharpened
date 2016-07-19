@@ -12,32 +12,57 @@ using System.Windows.Forms;
 using OpenTK;
 using System.Text;
 using OpenTK.Graphics;
+using System.Runtime.InteropServices;
 
 namespace x3druntime.ui.opentk
 {
 
-    public class X3DProgram
+    public class X3DProgram : IWin32Window
     {
         private const int EXIT_SUCCESS = 0;
         private static VSyncMode VSync;
         private static BackgroundWorker bw;
         private static AutoResetEvent closureEvent;
         private static bool restartRequired = false;
+        private static bool quitRequired = false;
         private static X3DBrowser browser;
         private static string url;
+
+        #region WINDOWS PLATFORM
+
+        public static X3DProgram CurrentProgram = new X3DProgram();
+
+        [DllImport("kernel32.dll")]
+        private static extern IntPtr GetConsoleWindow();
+
+        public IntPtr Handle
+        {
+            get { return GetConsoleWindow(); }
+        }
+
+        #endregion
 
         [STAThread]
         public static int Main(string[] args)
         {
+
 #if VSYNC_ACTIVE
             VSync=VSyncMode.Off;
 #else
             VSync = VSyncMode.On;
 #endif
-
+            
             LoadBrowser();
 
             return EXIT_SUCCESS;
+        }
+
+        public static void Quit()
+        {
+            quitRequired = true;
+            restartRequired = false;
+            browser.Close();
+            closureEvent.Set();
         }
 
         public static void Restart()
@@ -45,11 +70,6 @@ namespace x3druntime.ui.opentk
             restartRequired = true;
             browser.Close();
             closureEvent.Set();
-        }
-
-        private static void restart()
-        {
-            LoadBrowser();
         }
 
         private static void LoadBrowser()
@@ -80,9 +100,17 @@ namespace x3druntime.ui.opentk
             bw.RunWorkerAsync();
             closureEvent.WaitOne();
 
-            if (restartRequired)
+            if (!quitRequired && restartRequired)
             {
-                restart();
+                restartRequired = false;
+                LoadBrowser();
+            }
+
+            if (quitRequired)
+            {
+                bw.CancelAsync();
+                //System.Windows.Forms.Application.Exit();
+                System.Threading.Thread.CurrentThread.Abort();
             }
         }
     }

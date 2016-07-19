@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
+using OpenTK;
 
 namespace x3druntime.ui.opentk
 {
@@ -11,13 +13,11 @@ namespace x3druntime.ui.opentk
 
         public static string SelectFile()
         {
-            System.Windows.Forms.OpenFileDialog fileui;
+            OpenFileDialog fileui;
 
-            fileui = new System.Windows.Forms.OpenFileDialog();
+            fileui = new OpenFileDialog();
             fileui.Title = "Open Scene File";
             fileui.Filter = "X3D Files (*.x3d)|*.x3d|XML Files (*.xml)|*.xml|X3D Binary Files (*.x3db)|*.x3db|Classic VRML Files (*.x3dv)|*.x3dv|VRML Files (*.wrl)|*.wrl|All Files (*.*)|*.*";
-
-            
 
             if (System.IO.Directory.Exists(X3DExamplesDirectory))
             {
@@ -27,8 +27,8 @@ namespace x3druntime.ui.opentk
             {
                 fileui.InitialDirectory = "C:\\";
             }
-
-            fileui.ShowDialog();
+            
+            fileui.ShowDialog(X3DProgram.CurrentProgram); // the Console is the owner of the dialog
 
             return fileui.FileName;
         }

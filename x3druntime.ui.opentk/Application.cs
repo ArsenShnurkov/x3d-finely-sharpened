@@ -164,7 +164,14 @@ namespace x3druntime.ui.opentk
 
             // update world time a bit faster:
             WorldTime = DateTime.Now.Subtract(time_at_init);
-            this.window.Title = "X3D Runtime " + title + " " + WorldTime.ToString() + "vwt";
+
+            string pos = string.Format("{0}, {1}, {2}", ActiveCamera.Position.X, ActiveCamera.Position.Y, ActiveCamera.Position.Z);
+
+            string view = string.Format("{0}", 
+                (Viewpoint.CurrentViewpoint == null ? Viewpoint.VIEWPOINT_DEFAULT_DESCRIPTION  
+                                                    : Viewpoint.CurrentViewpoint.description));
+
+            this.window.Title = string.Format("X3D Runtime {0} {1} vwt [{2}] Viewpoint: {3}", title, WorldTime.ToString(), pos, view);
         }
 
         private int GetFps(double time)
