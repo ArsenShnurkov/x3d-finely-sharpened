@@ -34,6 +34,10 @@ Example 4 - test of tessellated ElevationGrid: X3D Runtime 3.3 Core using OpenGL
 
 
 
+Example 5 - test Viewpoint and Background implementation: X3D Runtime 3.3 Core using OpenGL Version 4
+![alt text](screenshots/screenshot5.png "X3D Runtime Viewer Example 5")
+
+
 
 Notices
 ```
