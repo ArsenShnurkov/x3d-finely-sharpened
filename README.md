@@ -38,6 +38,14 @@ Example 5 - test Viewpoint and Background implementation: X3D Runtime 3.3 Core u
 ![alt text](screenshots/screenshot5.png "X3D Runtime Viewer Example 5")
 
 
+Example 5 - #2
+![alt text](screenshots/screenshot6.png "X3D Runtime Viewer Example 5")
+
+
+Example 5 - #3
+![alt text](screenshots/screenshot7.png "X3D Runtime Viewer Example 5")
+
+
 
 Notices
 ```
