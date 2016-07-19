@@ -550,6 +550,23 @@ namespace X3D.Engine
             }
         }
 
+        public static string GetMIMETypeString(X3DMIMEType mime_type)
+        {
+            switch (mime_type)
+            {
+                case X3DMIMEType.X3D:
+                    return "model/x3d+xml";
+                case X3DMIMEType.X3DBinary:
+                    return  "model/x3d+binary";
+                case X3DMIMEType.ClassicVRML:
+                    return  "model/x3d+vrml";
+                case X3DMIMEType.VRML:
+                    return "model/vrml";
+                default:
+                    return string.Empty;
+            }
+        }
+
         public static X3DMIMEType GetMIMEType(string mime_type)
         {
             switch (mime_type.ToLower())

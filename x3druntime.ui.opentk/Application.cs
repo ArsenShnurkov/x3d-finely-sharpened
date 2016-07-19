@@ -8,6 +8,7 @@ using OpenTK;
 using X3D;
 using System.Collections.Generic;
 using System.Linq;
+using X3D.Engine;
 
 namespace x3druntime.ui.opentk
 {
@@ -171,7 +172,16 @@ namespace x3druntime.ui.opentk
                 (Viewpoint.CurrentViewpoint == null ? Viewpoint.VIEWPOINT_DEFAULT_DESCRIPTION  
                                                     : Viewpoint.CurrentViewpoint.description));
 
-            this.window.Title = string.Format("X3D Runtime {0} {1} vwt [{2}] Viewpoint: {3}", title, WorldTime.ToString(), pos, view);
+
+            string fileName = System.IO.Path.GetFileName(SceneManager.BaseURL);
+            string @base = string.Format("({0}) ({1})", fileName, SceneManager.GetMIMETypeString(SceneManager.BaseMIME));
+
+            this.window.Title = string.Format("X3D Runtime {0} {1} vwt [{2}] Viewpoint: {3} {4}", 
+                title, 
+                WorldTime.ToString(), 
+                pos, 
+                view,
+                @base);
         }
 
         private int GetFps(double time)

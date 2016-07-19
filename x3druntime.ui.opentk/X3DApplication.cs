@@ -80,6 +80,7 @@ namespace x3druntime.ui.opentk
             
             this.Mouse.Move += (object sender, MouseMoveEventArgs e) =>
             {
+                // MOUSE ORBIT/PAN NAVIGATION
                 //if (mouseDragging)
                 //{
 

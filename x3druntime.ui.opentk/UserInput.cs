@@ -267,6 +267,8 @@ namespace x3druntime.ui.opentk
             }
             if (Keyboard[Key.T])
             {
+                ActiveCamera.Fly(0.1f);
+
                 //this.tmr_enabled=!this.tmr_enabled;
                 //if(this.tmr_enabled) {
                 //    timer_init();
@@ -275,6 +277,10 @@ namespace x3druntime.ui.opentk
                 //    tmrDMCycle.Dispose();
                 //    tmrDMCycle=null;
                 //}
+            }
+            if (Keyboard[Key.G])
+            {
+                ActiveCamera.Fly(-0.1f);
             }
             if (Keyboard[Key.I])
             {
