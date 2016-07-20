@@ -78,6 +78,7 @@
     <Compile Include="X3D\Core\Appearance.cs" />
     <Compile Include="X3D\Core\Background.cs" />
     <Compile Include="X3D\Core\Box.cs" />
+    <Compile Include="X3D\Core\NavigationInfo.cs" />
     <Compile Include="X3D\Core\Shading\BuiltIn\ColorDiscardShader.cs" />
     <Compile Include="X3D\Core\Shading\BuiltIn\CubeMapBackgroundShader.cs" />
     <Compile Include="X3D\Core\Text.cs" />
