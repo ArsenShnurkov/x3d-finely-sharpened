@@ -68,9 +68,9 @@ Use Visual Studio 2015 for development and compilation.
 Task list
 ```
 
-PARTLY: URL/URI/filesys/data:text/plain resource fetching
-TODO: Viewpoint and ViewpointGroup implementation and decent-scalable Camera model
-TODO: Background, MultiTexturing, CubeMapping, ..
+COMPLETED: URL/URI/filesys/data:text/plain assett & resource fetching (partial URN support)
+PARTLY: Viewpoint and ViewpointGroup implementation and decent-scalable Camera model
+PARTLY: Background, MultiTexturing, CubeMapping, ..
 TODO: Scripting using JavaScript (JIT compiled using the V8 Engine)
 TODO: Node Prototyping
 MOSTLY: abstract types defined according to X3D 3.3 spec, see x3d-3.3.Designer.cs
@@ -83,7 +83,9 @@ PARTLY: transformations, and better conformance with standard
 PARTLY: all texturing related nodes esp. TextureProperties, and refactor ImageTexturing
 TODO: animations & interpolators and VW timing
 TODO: lighting; phong shading, lit and unlit models, X3D Materials
-TODO: global scene nodes like Viewpoint
+TODO: Navigation component; LOD, Billboard, Collision, ..
+TODO: Binary space partition, quadtree, or octtree optimisations
+TODO: Raycasting engine component
 PARTLY: geometry nodes
 PARTLY: shaders
 TODO: Simple volume rendering using slices fetched from sets of image files e.g. *.png, *.jpg
