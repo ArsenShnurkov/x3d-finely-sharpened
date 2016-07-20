@@ -163,6 +163,18 @@ namespace X3D.Engine
 
             Projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 0.01f, 1000.0f);
 
+
+            //Matrix4 projection;
+
+
+            //projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, window.Width / (float)window.Height, 1.0f, 500.0f);
+            //GL.MatrixMode(MatrixMode.Projection);
+            //GL.LoadMatrix(ref projection);
+
+
+            //GL.MatrixMode(MatrixMode.Projection);
+            //GL.LoadIdentity();
+            //GL.Ortho(-10.0 - zoom - panX, 10.0 + zoom - panX, -10.0 - zoom + panY, 10.0 + zoom + panY, -50.0, 50.0);
         }
 
         #endregion

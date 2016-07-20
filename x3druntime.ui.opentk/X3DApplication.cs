@@ -269,18 +269,6 @@ namespace x3druntime.ui.opentk
         /// </summary>
         public void Resize()
         {
-            //Matrix4 projection;
-
-
-            //projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, window.Width / (float)window.Height, 1.0f, 500.0f);
-            //GL.MatrixMode(MatrixMode.Projection);
-            //GL.LoadMatrix(ref projection);
-
-
-            //GL.MatrixMode(MatrixMode.Projection);
-            //GL.LoadIdentity();
-            //GL.Ortho(-10.0 - zoom - panX, 10.0 + zoom - panX, -10.0 - zoom + panY, 10.0 + zoom + panY, -50.0, 50.0);
-
             if (Viewpoint.CurrentViewpoint == null)
             {
                 // No viewpoint assigned in X3D
@@ -292,9 +280,6 @@ namespace x3druntime.ui.opentk
                 ActiveCamera.ApplyViewportProjection(Viewpoint.CurrentViewpoint, 
                                             View.CreateViewFromWindow(this.window));
             }
-
-
-            //ActiveCamera.ApplyViewport(window.Width, window.Height);
         }
 
 
@@ -307,7 +292,8 @@ namespace x3druntime.ui.opentk
         {
             if (NavigationInfo.NavigationType != NavigationType.Examine && lockMouseCursor.HasValue == false)
             {
-                var result = System.Windows.Forms.MessageBox.Show("Do you want to allow this application to lock the mouse cursor?\n Note if you allow the lock, you can quit the application by pressing 'q'",
+                var result = System.Windows.Forms.MessageBox.Show(
+                    "Do you want to allow this application to lock the mouse cursor?\n (Note if you allow the lock, you can quit the application by pressing 'q')",
                     "Lock Mouse Cursor",
                     System.Windows.Forms.MessageBoxButtons.YesNo);
 

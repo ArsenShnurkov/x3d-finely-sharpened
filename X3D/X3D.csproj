@@ -107,6 +107,7 @@
     <Compile Include="X3D\Core\X3D.cs" />
     <Compile Include="X3D\Engine\SceneGraphNode.cs" />
     <Compile Include="X3D\Engine\View.cs" />
+    <Compile Include="X3D\Extrusion.cs" />
     <Compile Include="X3D\Math\BoundingBox.cs" />
     <Compile Include="X3D\Math\MatrixCollection.cs" />
     <Compile Include="X3D\Math\MatrixExtensions.cs" />
