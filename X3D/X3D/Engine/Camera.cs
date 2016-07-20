@@ -232,7 +232,11 @@ namespace X3D.Engine
 
             HasChanges = PositionChanged() || OrientationChanged();
 
-			Vector3 PlayerPosition = new Vector3(Position.X, Position.Y, Position.Z + this.playerHeight);
+            Vector3 PlayerPosition = new Vector3(Position.X + NavigationInfo.AvatarSize.X, 
+                        Position.Y + NavigationInfo.AvatarSize.Y, 
+                        Position.Z + this.playerHeight + NavigationInfo.AvatarSize.Z
+            );
+
             Matrix4 outm = Matrix4.Identity;
 
             if(NavigationInfo.NavigationType == NavigationType.Examine)
