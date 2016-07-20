@@ -36,8 +36,7 @@ namespace x3druntime.ui.opentk
         public string BaseMIME { get; set; }
 
         private static SceneManager scene;
-        //private Camera ActiveCamera;
-        private TestCamera ActiveCamera;
+        private TestCamera ActiveCamera; //private Camera ActiveCamera;
         private bool ispanning, iszooming;
         private float mouseScale = 0.01f;
         private bool mouseDragging = false;
@@ -163,6 +162,8 @@ namespace x3druntime.ui.opentk
 
             // INITILISE SCENE
 
+            
+
             GL.Disable(EnableCap.Normalize);
             // shade model upgraded from fixed function to shader side
             //GL.ShadeModel(ShadingModel.Flat);
@@ -180,10 +181,14 @@ namespace x3druntime.ui.opentk
 
             if (!string.IsNullOrEmpty(url) && !string.IsNullOrEmpty(mime_type))
             {
+                Viewpoint.ViewpointList.Clear();
+
                 SceneManager.BaseURL = BaseURL;
                 SceneManager.BaseMIME = SceneManager.GetMIMEType(BaseMIME);
 
                 scene = SceneManager.fromURL(url, mime_type);
+
+                Viewpoint.Initilize(ActiveCamera, View.CreateViewFromWindow(this.window));
             }
             else
             {
@@ -222,14 +227,20 @@ namespace x3druntime.ui.opentk
             ActiveCamera.ApplyDollyTransformations();
             //ActiveCamera.ApplyTransformations(); // TEST new camera implementation
 
+            // TODO: steroscopic mode
+
             if (scene != null && scene.SceneGraph.Loaded)
             {
                 RenderingContext rc = new RenderingContext();
+                rc.View = View.CreateViewFromWindow(this.window);
                 rc.Time = e.Time;
                 rc.matricies.modelview = ActiveCamera.Matrix;
                 rc.matricies.projection = ActiveCamera.Projection;
                 rc.cam = ActiveCamera;
                 rc.Keyboard = this.Keyboard;
+
+                // Apply the current Viewpoint
+                Viewpoint.Apply(rc, Viewpoint.CurrentViewpoint);
 
                 Renderer.Draw(scene.SceneGraph, rc);
             }
@@ -266,13 +277,25 @@ namespace x3druntime.ui.opentk
             //GL.LoadIdentity();
             //GL.Ortho(-10.0 - zoom - panX, 10.0 + zoom - panX, -10.0 - zoom + panY, 10.0 + zoom + panY, -50.0, 50.0);
 
-            ActiveCamera.viewportSize(window.Width, window.Height);
+            if (Viewpoint.CurrentViewpoint == null)
+            {
+                // No viewpoint assigned in X3D
+
+                ActiveCamera.ApplyViewport(window.Width, window.Height);
+            }
+            else
+            {
+                ActiveCamera.ApplyViewportProjection(Viewpoint.CurrentViewpoint, View.CreateViewFromWindow(this.window));
+            }
+
+
+            //ActiveCamera.ApplyViewport(window.Width, window.Height);
         }
 
 
         public void FrameUpdated(FrameEventArgs e)
         {
-            UserInput_ScanKeyboard(e);
+            ApplyKeyBindings(e);
             //fps=GetFps(e.Time);
         }
 

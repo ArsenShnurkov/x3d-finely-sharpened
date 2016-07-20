@@ -94,10 +94,60 @@ namespace X3D.Engine
             this.Width = viewportWidth;
             this.Height = viewportHeight;
 
-            viewportSize(viewportWidth, viewportHeight);
+            ApplyViewport(viewportWidth, viewportHeight);
         }
 
-        public void viewportSize(int viewportWidth, int viewportHeight)
+        #region Viewport
+
+        public void ApplyViewportProjection(Viewpoint viewpoint, View viewport)
+        {
+            if (!(viewpoint.fieldOfView > 0.0f && viewpoint.fieldOfView < MathHelpers.PI))
+            {
+                Console.WriteLine("Viewpoint {1} fov '{0}' is out of range. Must be between 0 and PI", 
+                    viewpoint.fieldOfView, 
+                    viewpoint.description);
+                return;
+            }
+
+            float FOVhorizontal, FOVvertical = FOVhorizontal = viewpoint.fieldOfView;
+
+            float dispWidth = (float)Math.Tan(FOVhorizontal / 2.0f);
+            float dispHeight = (float)Math.Tan(FOVvertical / 2.0f);
+
+            /* According to spec:
+               display width    tan(FOVhorizontal/2)
+               -------------- = -------------------
+               display height   tan(FOVvertical/2)
+             */
+
+            dispWidth = viewport.Width;
+            dispHeight = viewport.Height;
+
+            ApplyViewportProjection((int)dispWidth, (int)dispHeight, viewpoint.fieldOfView);
+        }
+        public void ApplyViewportProjection(int width, int height, float fovy = MathHelper.PiOver4)
+        {
+            if (!(fovy > 0.0f && fovy < MathHelpers.PI))
+            {
+                Console.WriteLine("Viewpoint fov '{0}' is out of range. Must be between 0 and PI",
+                    fovy);
+                return;
+            }
+
+            // TODO: define new field-of-view and correct aspect ratio as specified in the Viewpoint specification
+
+            // make use of the camera in the context to define the new viewpoint
+
+            this.Width = width;
+            this.Height = height;
+            float aspectRatio = Width / (float)Height;
+
+            GL.Viewport(0, 0, Width, Height);
+
+            Projection = Matrix4.CreatePerspectiveFieldOfView(fovy, aspectRatio, zNear: 0.01f, zFar: 1000.0f);
+        }
+
+        public void ApplyViewport(int viewportWidth, int viewportHeight)
         {
             this.Width = viewportWidth;
             this.Height = viewportHeight;
@@ -108,6 +158,8 @@ namespace X3D.Engine
             Projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 0.01f, 1000.0f);
 
         }
+
+        #endregion
 
         /// <summary>
         /// Reset camera to point at horizon

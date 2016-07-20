@@ -163,22 +163,27 @@ namespace x3druntime.ui.opentk
             }
 #endif
 
+            string view;
+
+            if (Viewpoint.CurrentViewpoint == null)
+            {
+                view = Viewpoint.VIEWPOINT_DEFAULT_DESCRIPTION;
+            }
+            else
+            {
+                view = Viewpoint.CurrentViewpoint.description;
+            }
+
             // update world time a bit faster:
             WorldTime = DateTime.Now.Subtract(time_at_init);
 
             string pos = string.Format("{0}, {1}, {2}", ActiveCamera.Position.X, ActiveCamera.Position.Y, ActiveCamera.Position.Z);
-
-            string view = string.Format("{0}", 
-                (Viewpoint.CurrentViewpoint == null ? Viewpoint.VIEWPOINT_DEFAULT_DESCRIPTION  
-                                                    : Viewpoint.CurrentViewpoint.description));
-
-
             string fileName = System.IO.Path.GetFileName(SceneManager.BaseURL);
             string @base = string.Format("({0}) ({1})", fileName, SceneManager.GetMIMETypeString(SceneManager.BaseMIME));
 
             this.window.Title = string.Format("X3D Runtime {0} {1} vwt [{2}] Viewpoint: {3} {4}", 
                 title, 
-                WorldTime.ToString(), 
+                WorldTime, 
                 pos, 
                 view,
                 @base);

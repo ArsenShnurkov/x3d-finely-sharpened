@@ -24,26 +24,7 @@ namespace x3druntime.ui.opentk
                 case Key.F3: // halt special effects
                     fx_enable = !fx_enable;
                     break;
-                case Key.F5:
-                    //if(dmIndex-1>=0) {
-                    //    this.dmIndex--;
-                    //    currentDrawingMethod=drawingMethods[dmIndex];
-                    //}
-                    //else {
-                    //    dmIndex=drawingMethods.Length-1;
-                    //    currentDrawingMethod=drawingMethods[dmIndex];
-                    //}
-                    break;
-                case Key.F6:
-                    //if(dmIndex+1<drawingMethods.Length-1) {
-                    //    this.dmIndex++;
-                    //    currentDrawingMethod=drawingMethods[dmIndex];
-                    //}
-                    //else {
-                    //    dmIndex=0;
-                    //    currentDrawingMethod=drawingMethods[dmIndex];
-                    //}
-                    break;
+
                 case Key.F1:
                     wireframe = !wireframe;
                     if (wireframe)
@@ -62,6 +43,7 @@ namespace x3druntime.ui.opentk
                         }
                     }
                     break;
+
                 case Key.F2:
                     points_only = !points_only;
                     if (points_only)
@@ -80,6 +62,7 @@ namespace x3druntime.ui.opentk
                         }
                     }
                     break;
+
                 case Key.F:
                     if (window.WindowState == OpenTK.WindowState.Normal)
                     {
@@ -90,10 +73,68 @@ namespace x3druntime.ui.opentk
                         window.WindowState = WindowState.Normal;
                     }
                     break;
+
+                case Key.V:
+                    // View all viewpoints
+                    string text = "";
+                    foreach (Viewpoint v in Viewpoint.ViewpointList) { text += "[" + v.description + "] "; }
+
+                    // Integrate this into HUD
+                    System.Windows.Forms.MessageBox.Show(text.TrimEnd());
+                    break;
+
+                #region Viewpoint Key Bindings
+
+                case Key.Home:
+                    // Goto Initial Viewpoint
+                    Viewpoint.CurrentIndex = (Viewpoint.InitialViewpoint == null ? -1 : 0);
+                    Viewpoint.CurrentViewpoint = Viewpoint.InitialViewpoint;
+                    break;
+
+                case Key.PageDown:
+                    // Goto Next Viewpoint
+                    if (Viewpoint.ViewpointList.Count > 0)
+                    {
+                        if (Viewpoint.CurrentIndex + 1 == Viewpoint.ViewpointList.Count)
+                        {
+                            Viewpoint.CurrentIndex = 0;
+                        }
+                        else
+                        {
+                            Viewpoint.CurrentIndex++;
+                        }
+                        Viewpoint.CurrentViewpoint = Viewpoint.ViewpointList[Viewpoint.CurrentIndex];
+                    }
+                    break;
+
+                case Key.PageUp:
+                    // Goto Previous viewpoint
+                    if (Viewpoint.ViewpointList.Count > 0)
+                    {
+                        if (Viewpoint.CurrentIndex - 1 < 0)
+                        {
+                            Viewpoint.CurrentIndex = Viewpoint.ViewpointList.Count - 1;
+                        }
+                        else
+                        {
+                            Viewpoint.CurrentIndex--;
+                        }
+                        Viewpoint.CurrentViewpoint = Viewpoint.ViewpointList[Viewpoint.CurrentIndex];
+                    }
+                    break;
+
+                case Key.End:
+                    // Goto Final Viewpoint
+                    Viewpoint.CurrentIndex = Viewpoint.ViewpointList.Count - 1;
+                    Viewpoint.CurrentViewpoint = Viewpoint.FinalViewpoint;
+                    break;
+
+
+                    #endregion
             }
         }
         
-        private void UserInput_ScanKeyboard(FrameEventArgs e)
+        private void ApplyKeyBindings(FrameEventArgs e)
         {
             Vector3 direction = Vector3.Zero;
             bool rotated = false;
@@ -141,6 +182,9 @@ namespace x3druntime.ui.opentk
                 //ActiveCamera.Right = ActiveCamera.Up.Cross(ActiveCamera.Direction);
                 //direction -= ActiveCamera.Right * playerDirectionMagnitude;
             }
+
+            #region G.3 Emulate pointing device Key Bindings
+
             if (Keyboard[Key.Left])
             {
                 //ActiveCamera.Horizon();
@@ -196,16 +240,9 @@ namespace x3druntime.ui.opentk
 
                 rotated = true;
             }
-            if (Keyboard[Key.PageUp])
-            {// On page up, move out
-                //this.z -= 0.02f;
-                //this.lookupdown -= 1.0f;
-            }
-            if (Keyboard[Key.PageDown])
-            {// On page down, move in
-                //this.z += 0.02f;
-                //this.lookupdown += 1.0f;
-            }
+
+            #endregion
+
             if (Keyboard[Key.W])
             {
                 //this.xpos += (float)Math.Sin(this.heading * Math.PI / 180.0) * 1.05f;
@@ -290,6 +327,8 @@ namespace x3druntime.ui.opentk
             {
                 //this.ypos -= 0.2f;
             }
+
+
 
             if (rotated)
             {

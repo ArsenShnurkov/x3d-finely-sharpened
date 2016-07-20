@@ -14,9 +14,18 @@ namespace X3D
         public TestCamera cam;
         public double Time;
 
-        private Stack<Matricies> transformHierarchy = new Stack<Matricies>();
+        /// <summary>
+        /// Monoscopic View
+        /// </summary>
+        public View View;
+        public View StereoscopicLeft = null;
+        public View StereoscopicRight = null;
 
         public KeyboardDevice Keyboard { get; set; }
+
+        private Stack<Matricies> transformHierarchy = new Stack<Matricies>();
+
+        #region Public Methods
 
         public void Translate(Vector3 translation)
         {
@@ -53,6 +62,6 @@ namespace X3D
             matricies = transformHierarchy.Pop();
         }
 
-
+        #endregion
     }
 }
