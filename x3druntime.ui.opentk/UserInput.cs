@@ -7,6 +7,7 @@ using OpenTK;
 using OpenTK.Input;
 using OpenTK.Graphics.OpenGL;
 using X3D;
+using X3D.Engine;
 
 namespace x3druntime.ui.opentk
 {
@@ -160,175 +161,106 @@ namespace x3druntime.ui.opentk
                 X3DProgram.Restart();
             }
 
-            if (Keyboard[Key.W])
-            {
-                ActiveCamera.Walk(playerDirectionMagnitude);
-                //direction += ActiveCamera.Direction * playerDirectionMagnitude;
-            }
-            if (Keyboard[Key.S])
-            {
-                ActiveCamera.Walk(-playerDirectionMagnitude);
-                //direction -= ActiveCamera.Direction * playerDirectionMagnitude;
-            }
-            if (Keyboard[Key.A])
-            {
-                ActiveCamera.Strafe(playerDirectionMagnitude);
-                //ActiveCamera.Right = ActiveCamera.Up.Cross(ActiveCamera.Direction);
-                //direction += ActiveCamera.Right * playerDirectionMagnitude;
-            }
-            if (Keyboard[Key.D])
-            {
-                ActiveCamera.Strafe(-playerDirectionMagnitude);
-                //ActiveCamera.Right = ActiveCamera.Up.Cross(ActiveCamera.Direction);
-                //direction -= ActiveCamera.Right * playerDirectionMagnitude;
-            }
-
-            #region G.3 Emulate pointing device Key Bindings
-
-            if (Keyboard[Key.Left])
-            {
-                //ActiveCamera.Horizon();
-                //ActiveCamera.Yaw(-10.0f * 0.007f);
-                ActiveCamera.ApplyYaw(-0.1f);
-                //ActiveCamera.ApplyRotation();
-
-                //this.heading += 1.0f;
-                //this.yrot = this.heading;
-
-                rotated = true;
-            }
-            if (Keyboard[Key.Right])
-            {
-                //ActiveCamera.Horizon();
-                //ActiveCamera.Yaw(10.0f * 0.007f);
-                ActiveCamera.ApplyYaw(0.1f);
-                //ActiveCamera.ApplyRotation();
-                //this.heading -= 1.0f;
-                //this.yrot = this.heading;
-
-                rotated = true;
-            }
-            if (Keyboard[Key.Up])
-            {
-                //ActiveCamera.Pitch(10.0f * 0.007f);
-                ActiveCamera.ApplyPitch(-0.1f);
-                //ActiveCamera.ApplyRotation();
-
-                //this.xpos += (float)Math.Sin(this.heading * Math.PI / 180.0) * 0.05f;
-                //this.zpos += (float)Math.Cos(this.heading * Math.PI / 180.0) * 0.05f;
-                //if (this.walkbiasangle >= 359.0f)
-                //    this.walkbiasangle = 0.0f;
-                //else
-                //    this.walkbiasangle -= 5.0f;
-                //this.walkbias = (float)Math.Sin(this.walkbiasangle * Math.PI / 180.0) / 10.0f;
-
-                rotated = true;
-            }
-            if (Keyboard[Key.Down])
-            {
-                //ActiveCamera.Pitch(-10.0f * 0.007f);
-                ActiveCamera.ApplyPitch(0.1f);
-                //ActiveCamera.ApplyRotation();
-
-                //this.xpos -= (float)Math.Sin(this.heading * Math.PI / 180.0) * 0.05f;
-                //this.zpos -= (float)Math.Cos(this.heading * Math.PI / 180.0) * 0.05f;
-                //if (this.walkbiasangle >= 359.0f)
-                //    this.walkbiasangle = 0.0f;
-                //else
-                //    this.walkbiasangle += 10.0f;
-                //this.walkbias = (float)Math.Sin(this.walkbiasangle * Math.PI / 180.0) / 10.0f;
-
-                rotated = true;
-            }
-
-            #endregion
-
-            if (Keyboard[Key.W])
-            {
-                //this.xpos += (float)Math.Sin(this.heading * Math.PI / 180.0) * 1.05f;
-                //this.zpos += (float)Math.Cos(this.heading * Math.PI / 180.0) * 1.05f;
-                //if (this.walkbiasangle >= 359.0f)
-                //    this.walkbiasangle = 0.0f;
-                //else
-                //    this.walkbiasangle -= 10.0f;
-                //this.walkbias = (float)Math.Sin(this.walkbiasangle * Math.PI / 180.0) / 20.0f;
-            }
-            if (Keyboard[Key.S])
-            {
-                //this.xpos -= (float)Math.Sin(this.heading * Math.PI / 180.0) * 1.05f;
-                //this.zpos -= (float)Math.Cos(this.heading * Math.PI / 180.0) * 1.05f;
-                //if (this.walkbiasangle >= 359.0f)
-                //    this.walkbiasangle = 0.0f;
-                //else
-                //    this.walkbiasangle += 10.0f;
-                //this.walkbias = (float)Math.Sin(this.walkbiasangle * Math.PI / 180.0) / 20.0f;
-            }
-            if (Keyboard[Key.A])
-            {
-                //this.heading += 10.0f;
-                //this.yrot = this.heading;
-            }
-            if (Keyboard[Key.D])
-            {
-                //this.heading -= 10.0f;
-                //this.yrot = this.heading;
-            }
-
-            if (Keyboard[Key.C])
-            {
-
-                //this.lookleftright -= 1.0f;
-                //this.lookupdown-=1.0f;
-            }
-            if (Keyboard[Key.V])
-            {
-
-                //this.lookleftright += 1.0f;
-                //this.lookupdown+=1.0f;
-            }
-            if (Keyboard[Key.E])
-            {
-
-            }
-            if (Keyboard[Key.F])
-            {
-
-            }
             if (Keyboard[Key.R])
             {
+                // RESET CAMERA POSITION+ORIENTATION
                 ActiveCamera.Reset();
             }
-            if (Keyboard[Key.Space])
-            {
 
-            }
-            if (Keyboard[Key.T])
+            if (NavigationInfo.NavigationType != NavigationType.Examine)
             {
-                ActiveCamera.Fly(0.1f);
+                if (Keyboard[Key.T])
+                {
+                    ActiveCamera.Fly(0.1f);
+                }
+                if (Keyboard[Key.G])
+                {
+                    ActiveCamera.Fly(-0.1f);
+                }
 
-                //this.tmr_enabled=!this.tmr_enabled;
-                //if(this.tmr_enabled) {
-                //    timer_init();
-                //}
-                //else {
-                //    tmrDMCycle.Dispose();
-                //    tmrDMCycle=null;
-                //}
-            }
-            if (Keyboard[Key.G])
-            {
-                ActiveCamera.Fly(-0.1f);
-            }
-            if (Keyboard[Key.I])
-            {
-                //this.ypos += 0.2f;
-            }
-            if (Keyboard[Key.K])
-            {
-                //this.ypos -= 0.2f;
-            }
+                if (Keyboard[Key.W])
+                {
+                    ActiveCamera.Walk(playerDirectionMagnitude);
+                    //direction += ActiveCamera.Direction * playerDirectionMagnitude;
+                }
+                if (Keyboard[Key.S])
+                {
+                    ActiveCamera.Walk(-playerDirectionMagnitude);
+                    //direction -= ActiveCamera.Direction * playerDirectionMagnitude;
+                }
+                if (Keyboard[Key.A])
+                {
+                    ActiveCamera.Strafe(playerDirectionMagnitude);
+                    //ActiveCamera.Right = ActiveCamera.Up.Cross(ActiveCamera.Direction);
+                    //direction += ActiveCamera.Right * playerDirectionMagnitude;
+                }
+                if (Keyboard[Key.D])
+                {
+                    ActiveCamera.Strafe(-playerDirectionMagnitude);
+                    //ActiveCamera.Right = ActiveCamera.Up.Cross(ActiveCamera.Direction);
+                    //direction -= ActiveCamera.Right * playerDirectionMagnitude;
+                }
 
+                #region G.3 Emulate pointing device Key Bindings
 
+                if (Keyboard[Key.Left])
+                {
+                    //ActiveCamera.Horizon();
+                    //ActiveCamera.Yaw(-10.0f * 0.007f);
+                    ActiveCamera.ApplyYaw(-0.1f);
+                    //ActiveCamera.ApplyRotation();
+
+                    //this.heading += 1.0f;
+                    //this.yrot = this.heading;
+
+                    rotated = true;
+                }
+                if (Keyboard[Key.Right])
+                {
+                    //ActiveCamera.Horizon();
+                    //ActiveCamera.Yaw(10.0f * 0.007f);
+                    ActiveCamera.ApplyYaw(0.1f);
+                    //ActiveCamera.ApplyRotation();
+                    //this.heading -= 1.0f;
+                    //this.yrot = this.heading;
+
+                    rotated = true;
+                }
+                if (Keyboard[Key.Up])
+                {
+                    //ActiveCamera.Pitch(10.0f * 0.007f);
+                    ActiveCamera.ApplyPitch(-0.1f);
+                    //ActiveCamera.ApplyRotation();
+
+                    //this.xpos += (float)Math.Sin(this.heading * Math.PI / 180.0) * 0.05f;
+                    //this.zpos += (float)Math.Cos(this.heading * Math.PI / 180.0) * 0.05f;
+                    //if (this.walkbiasangle >= 359.0f)
+                    //    this.walkbiasangle = 0.0f;
+                    //else
+                    //    this.walkbiasangle -= 5.0f;
+                    //this.walkbias = (float)Math.Sin(this.walkbiasangle * Math.PI / 180.0) / 10.0f;
+
+                    rotated = true;
+                }
+                if (Keyboard[Key.Down])
+                {
+                    //ActiveCamera.Pitch(-10.0f * 0.007f);
+                    ActiveCamera.ApplyPitch(0.1f);
+                    //ActiveCamera.ApplyRotation();
+
+                    //this.xpos -= (float)Math.Sin(this.heading * Math.PI / 180.0) * 0.05f;
+                    //this.zpos -= (float)Math.Cos(this.heading * Math.PI / 180.0) * 0.05f;
+                    //if (this.walkbiasangle >= 359.0f)
+                    //    this.walkbiasangle = 0.0f;
+                    //else
+                    //    this.walkbiasangle += 10.0f;
+                    //this.walkbias = (float)Math.Sin(this.walkbiasangle * Math.PI / 180.0) / 10.0f;
+
+                    rotated = true;
+                }
+
+                #endregion
+            }
 
             if (rotated)
             {
