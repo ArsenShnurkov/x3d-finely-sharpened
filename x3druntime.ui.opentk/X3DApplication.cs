@@ -40,7 +40,7 @@ namespace x3druntime.ui.opentk
         private bool ispanning, iszooming;
         private float mouseScale = 0.01f;
         private bool mouseDragging = false;
-
+        private bool? lockMouseCursor = null;
         private float dx = 0, dy = 0;
 
         /// <param name="window">
@@ -79,66 +79,71 @@ namespace x3druntime.ui.opentk
             
             this.Mouse.Move += (object sender, MouseMoveEventArgs e) =>
             {
-                // MOUSE ORBIT/PAN NAVIGATION
-                //if (mouseDragging)
-                //{
-
-                //    if (ispanning)
-                //    {
-                //        ActiveCamera.PanXY(e.XDelta * mouseScale, e.YDelta * mouseScale);
-                //    }
-                //    else if (iszooming)
-                //    {
-                //        ActiveCamera.OrbitXY(e.XDelta, e.YDelta);
-                //    }
-                //}
-
-                // TEST new camera implementation:
-
-                //dx = ((float)e.X) - dx;
-                //dy = ((float)e.Y) - dy;
                 dx = ((float)e.XDelta);
                 dy = ((float)e.YDelta);
-
 
                 LockMouseCursor();
 
 
-                Vector3 direction = Vector3.Zero;
+                if (NavigationInfo.NavigationType == NavigationType.Examine)
+                {
+                    // MOUSE ORBIT/PAN NAVIGATION
+                    if (mouseDragging)
+                    {
 
-                if (Math.Abs(dx) > Math.Abs(dy))
-                    direction.X = (dx > 0) ? 0.1f : -0.1f;
-                else
-                    direction.Y = (dy > 0) ? 0.1f : -0.1f;
+                        if (ispanning)
+                        {
+                            ActiveCamera.PanXY(dx * mouseScale, dy * mouseScale);
+                        }
+                        else if (iszooming)
+                        {
+                            ActiveCamera.OrbitXY(dx, dy);
+                        }
+                    }
+                }
 
+                if (NavigationInfo.NavigationType == NavigationType.Fly || NavigationInfo.NavigationType == NavigationType.Walk)
+                {
+                    // TEST new camera walk/fly implementation:
 
+                    Vector3 direction = Vector3.Zero;
 
-                float xAngle = (direction.X);
-                float yAngle = (direction.Y);
-
-                //float xAngle = dx * 0.0001f;
-                //float yAngle = dy * 0.0001f;
-
-                //xAngle = MathHelpers.ClampCircular(xAngle, 0.0f, MathHelpers.TwoPi);
-                //yAngle = MathHelpers.ClampCircular(yAngle, 0.0f, MathHelpers.TwoPi);
-
-                //xAngle = MathHelper.ClampCircular(xAngle, 0.0, TwoPi);
-                //yAngle = MathHelper.ClampCircular(yAngle, 0.0, HalfPi);
-
-                //    while (xAngle < 0)
-                //      xAngle += TwoPi;
-                //    while (xAngle >= TwoPi)
-                //      xAngle -= TwoPi;
-                //
-                //    while (yAngle < -HalfPi)
-                //      yAngle = -HalfPi;
-                //    while (yAngle > HalfPi)
-                //      yAngle = HalfPi;
+                    if (Math.Abs(dx) > Math.Abs(dy))
+                        direction.X = (dx > 0) ? 0.1f : -0.1f;
+                    else
+                        direction.Y = (dy > 0) ? 0.1f : -0.1f;
 
 
-                ActiveCamera.ApplyYaw(xAngle);
-                ActiveCamera.ApplyPitch(yAngle);
-                ActiveCamera.ApplyRotation();
+
+                    float xAngle = (direction.X);
+                    float yAngle = (direction.Y);
+
+                    //float xAngle = dx * 0.0001f;
+                    //float yAngle = dy * 0.0001f;
+
+                    //xAngle = MathHelpers.ClampCircular(xAngle, 0.0f, MathHelpers.TwoPi);
+                    //yAngle = MathHelpers.ClampCircular(yAngle, 0.0f, MathHelpers.TwoPi);
+
+                    //xAngle = MathHelper.ClampCircular(xAngle, 0.0, TwoPi);
+                    //yAngle = MathHelper.ClampCircular(yAngle, 0.0, HalfPi);
+
+                    //    while (xAngle < 0)
+                    //      xAngle += TwoPi;
+                    //    while (xAngle >= TwoPi)
+                    //      xAngle -= TwoPi;
+                    //
+                    //    while (yAngle < -HalfPi)
+                    //      yAngle = -HalfPi;
+                    //    while (yAngle > HalfPi)
+                    //      yAngle = HalfPi;
+
+
+                    ActiveCamera.ApplyYaw(xAngle);
+                    ActiveCamera.ApplyPitch(yAngle);
+                    ActiveCamera.ApplyRotation();
+                }
+
+
             };
         }
 
@@ -224,8 +229,7 @@ namespace x3druntime.ui.opentk
 
             //TODO: improve current Camera implementation
             
-            ActiveCamera.ApplyDollyTransformations();
-            //ActiveCamera.ApplyTransformations(); // TEST new camera implementation
+            ActiveCamera.ApplyTransformations(); // TEST new camera implementation
 
             // TODO: steroscopic mode
 
@@ -285,7 +289,8 @@ namespace x3druntime.ui.opentk
             }
             else
             {
-                ActiveCamera.ApplyViewportProjection(Viewpoint.CurrentViewpoint, View.CreateViewFromWindow(this.window));
+                ActiveCamera.ApplyViewportProjection(Viewpoint.CurrentViewpoint, 
+                                            View.CreateViewFromWindow(this.window));
             }
 
 
@@ -296,27 +301,36 @@ namespace x3druntime.ui.opentk
         public void FrameUpdated(FrameEventArgs e)
         {
             ApplyKeyBindings(e);
-            //fps=GetFps(e.Time);
         }
 
         private void LockMouseCursor()
         {
-            System.Windows.Forms.Cursor.Position = new System.Drawing.Point(window.Bounds.Left + (window.Bounds.Width / 2),
-                    window.Bounds.Top + (window.Bounds.Height / 2));
+            if (NavigationInfo.NavigationType != NavigationType.Examine && lockMouseCursor.HasValue == false)
+            {
+                var result = System.Windows.Forms.MessageBox.Show("Do you want to allow this application to lock the mouse cursor?\n Note if you allow the lock, you can quit the application by pressing 'q'",
+                    "Lock Mouse Cursor",
+                    System.Windows.Forms.MessageBoxButtons.YesNo);
+
+                lockMouseCursor = (result == System.Windows.Forms.DialogResult.Yes);
+            }
+
+            if (lockMouseCursor.HasValue && lockMouseCursor.Value == true)
+            {
+                System.Windows.Forms.Cursor.Position = new System.Drawing.Point(window.Bounds.Left + (window.Bounds.Width / 2),
+        window.Bounds.Top + (window.Bounds.Height / 2));
+            }
         }
 
         #region test orbital control
 
         private void Mouse_WheelChanged(object sender, MouseWheelEventArgs e)
         {
-            //base.OnMouseWheel(e);
             ActiveCamera.Dolly(e.DeltaPrecise * mouseScale * 10);
         }
 
 
         private void Window_MouseLeave(object sender, EventArgs e)
         {
-
             mouseDragging = false;
         }
 
