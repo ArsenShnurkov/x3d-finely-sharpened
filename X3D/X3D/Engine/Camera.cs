@@ -233,10 +233,6 @@ namespace X3D.Engine
             HasChanges = PositionChanged() || OrientationChanged();
 
 			Vector3 PlayerPosition = new Vector3(Position.X, Position.Y, Position.Z + this.playerHeight);
-
-			Look = PlayerPosition + (Direction) * 1.0f;
-            //Look += DollyDirection;
-
             Matrix4 outm = Matrix4.Identity;
 
             if(NavigationInfo.NavigationType == NavigationType.Examine)
@@ -245,13 +241,12 @@ namespace X3D.Engine
             }
             else if(NavigationInfo.NavigationType == NavigationType.Walk || NavigationInfo.NavigationType == NavigationType.Fly)
             {
+                Look = PlayerPosition + (Direction) * 1.0f;
+
                 outm = Matrix4.LookAt(PlayerPosition, Look, Up);
             }
 
-            
-
             Quaternion q = Orientation.Inverted();
-
 
             Matrix = outm * MathHelpers.CreateRotation(ref q);
 

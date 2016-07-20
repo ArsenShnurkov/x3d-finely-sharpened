@@ -17,8 +17,13 @@
 -->
 	
 	
-    <Transform translation='0 0 0'>
-		<Extrusion ccw='false' crossSection='0.08 0.025 0.08 -0.025 -0.08 -0.025 -0.08 0.025 0.08 0.025' scale='1.0 1.0 0.01 1.0' solid='false' spine='0.0 0.0 0.0 0.0 0.1 0.0'/>
+    <Transform translation='0 0 0' scale="10 10 10 ">
+		<Shape>
+			<Appearance>
+				<Material diffuseColor="1 0 0" />
+			</Appearance>
+			<Extrusion ccw='false' crossSection='0.08 0.025 0.08 -0.025 -0.08 -0.025 -0.08 0.025 0.08 0.025' scale='1.0 1.0 1.01 1.0' solid='false' spine='0.0 0.0 0.0 0.0 0.1 0.0'/>
+		</Shape>
     </Transform>
   </Scene>
 </X3D>
