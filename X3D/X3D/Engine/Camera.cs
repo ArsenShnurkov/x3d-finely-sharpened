@@ -15,11 +15,17 @@ using X3D;
 
 namespace X3D.Engine
 {
+    public enum NavigationType
+    {
+        Walk,
+        Fly,
+        Examine
+    }
+
 	public class TestCamera
 	{
-		//public Q3Movement playerMover;
-
-		public bool HasChanges = false;
+        //public Q3Movement playerMover;
+        public bool HasChanges = false;
 		public bool noclip = false; // TODO: implement no clipping (turn off object collision)
 		public Vector3 velocity;
 		public bool onGround;
@@ -195,19 +201,6 @@ namespace X3D.Engine
 			//		|| PrevOrientation.W != Orientation.W;
 		}
 
-        public void ApplyDollyTransformations()
-        {
-            
-
-            // setup projection
-            GL.Viewport(0, 0, Width, Height);
-
-            //Matrix = Matrix4.LookAt(Position, Position + DollyDirection, Up); /*   // Test code put in quickly just for Mouse Navigation merged here
-            ApplyTransformations(); // */
-
-            
-        }
-
         /// <summary>
         /// Get the current orientation and return it in a Matrix with no translations applied.
         /// </summary>
@@ -234,7 +227,10 @@ namespace X3D.Engine
         /// </summary>
         public void ApplyTransformations()
 		{
-			HasChanges = PositionChanged() || OrientationChanged();
+            GL.Viewport(0, 0, Width, Height);
+
+
+            HasChanges = PositionChanged() || OrientationChanged();
 
 			Vector3 PlayerPosition = new Vector3(Position.X, Position.Y, Position.Z + this.playerHeight);
 
@@ -243,7 +239,16 @@ namespace X3D.Engine
 
             Matrix4 outm = Matrix4.Identity;
 
-            outm = Matrix4.LookAt(PlayerPosition, Look, Up);
+            if(NavigationInfo.NavigationType == NavigationType.Examine)
+            {
+                outm = Matrix4.LookAt(Position, Position + DollyDirection, Up); // Test code put in quickly just for Mouse Navigation merged here
+            }
+            else if(NavigationInfo.NavigationType == NavigationType.Walk || NavigationInfo.NavigationType == NavigationType.Fly)
+            {
+                outm = Matrix4.LookAt(PlayerPosition, Look, Up);
+            }
+
+            
 
             Quaternion q = Orientation.Inverted();
 
@@ -270,7 +275,8 @@ namespace X3D.Engine
 			yaw = Quaternion.FromAxisAngle(Up, camera_yaw); // PiOver180
             //roll = Quaternion.FromAxisAngle(roll_axis, roll_angle);
 
-            Orientation = yaw * pitch  /* roll */ ;
+            Orientation = yaw * pitch  /* roll */
+                ;
             //Orientation = pitch  /* roll */ ;
             //Orientation = yaw;
 
