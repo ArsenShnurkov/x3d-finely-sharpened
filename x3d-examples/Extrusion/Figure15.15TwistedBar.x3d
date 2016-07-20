@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile='Immersive' version='3.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.0.xsd'>
+  <head>
+    <meta content='Figure15.15TwistedBar.x3d' name='title'/>
+    <meta content='Figure 15.15, The VRML 2.0 Sourcebook, Copyright [1997] By Andrea L. Ames, David R. Nadeau, and John L. Moreland' name='creator'/>
+    <meta content='http://www.wiley.com/legacy/compbooks/vrml2sbk/ch15/15fig15.htm' name='reference'/>
+    <meta content='Don Brutzman' name='translator'/>
+    <meta content='20 August 2000' name='created'/>
+    <meta content='14 January 2010' name='modified'/>
+    <meta content='A bar twisted using Y-axis, cross-section rotation at each spine coordinate.' name='description'/>
+    <meta content='http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/Chapter15-Extrusion/Figure15.15TwistedBar.x3d' name='identifier'/>
+    <meta content='X3D-Edit 3.3, https://savage.nps.edu/X3D-Edit' name='generator'/>
+    <meta content='../../license.html' name='license'/>
+  </head>
+  <Scene>
+    <!-- Computational cost of Extrusion compared to IndexedFaceSet: quicker to download, takes time to calculate polygonal faces and normals during initial loading, equally fast at run time. -->
+    <!-- Authoring capabilities of Extrusion compared to IndexedFaceSet: can be more complicated to express, but also can provide great detail with much less effort. -->
+    <!-- First position and rotate viewpoint into positive-X-Y-Z octant using a Transform -->
+    <Transform rotation='0 1 0 0.758' translation='10 5 10'>
+      <Viewpoint description='Twisted bar using extrusion orientations' orientation='1 0 0 -0.3' position='0 0 0'/>
+    </Transform>
+    <Shape>
+      <Appearance>
+        <Material diffuseColor='1 0.5 0'/>
+      </Appearance>
+      <Extrusion creaseAngle='0.785' 
+			crossSection='-1 1 1 1 1 -1 -1 -1 -1 1' 
+			orientation='0 1 0 0 0 1 0 0.175 0 1 0 0.349 0 1 0 0.524 0 1 0 0.698 0 1 0 0.873 0 1 0 1.047 0 1 0 1.222 0 1 0 1.396' 
+			spine='0 0.0 0 0 0.5 0 0 1.0 0 0 1.5 0 0 2.0 0 0 2.5 0 0 3.0 0 0 3.5 0 0 4.0 0'/>
+    </Shape>
+  </Scene>
+</X3D>
