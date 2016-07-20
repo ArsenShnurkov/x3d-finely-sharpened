@@ -1,14 +1,17 @@
-﻿using System;
+﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using X3D.Engine;
+using X3D.Parser;
 
 namespace X3D
 {
     public partial class NavigationInfo
     {
         public static NavigationType NavigationType = NavigationType.Examine;
+        public static Vector3 AvatarSize = Vector3.Zero;
 
         public override void Load()
         {
@@ -32,6 +35,8 @@ namespace X3D
             {
                 NavigationType = NavigationType.Fly;
             }
+
+            AvatarSize = X3DTypeConverters.SFVec3f(avatarSize);
         }
     }
 }
