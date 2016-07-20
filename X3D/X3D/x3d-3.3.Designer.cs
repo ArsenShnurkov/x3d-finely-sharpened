@@ -6967,7 +6967,7 @@ namespace X3D
 
         private float _speed;
 
-        private List<string> _type;
+        private string _type;
 
         private List<string> _transitionType;
 
@@ -6980,12 +6980,10 @@ namespace X3D
         public NavigationInfo()
         {
             this._transitionType = new List<string>();
-            this._type = new List<string>();
             this._avatarSize = "0.25 1.6 0.75";
             this._headlight = true;
             this._speed = ((float)(1F));
-            this._type.Add("\"EXAMINE\"");
-            this._type.Add("\"ANY\"");
+            this._type = "\"EXAMINE\" \"ANY\"";
             this._transitionType.Add("\"LINEAR\"");
             this._transitionTime = 1D;
             this._visibilityLimit = ((float)(0F));
@@ -7035,7 +7033,7 @@ namespace X3D
         }
 
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public List<string> type
+        public string type
         {
             get
             {
