@@ -9,6 +9,7 @@
 		
 		<Script>
 			<![CDATA[
+				var times = 0;
 				var current_choice = 0;
 				var maxChoice = 2;
 				/**
@@ -34,7 +35,7 @@
 
 					dirLight.setAttribute("whichChoice", current_choice);
 					
-					console.log("Switch node choice set to: " + dirLight.getAttribute("whichChoice"));
+					//console.log("Switch node choice set to: " + dirLight.getAttribute("whichChoice"));
 					
 					if(current_choice +1 == maxChoice){
 						current_choice = 0;
@@ -46,15 +47,16 @@
 					
 				}
 				
-				//public class A
-				//{
-				//	public string Hello(string msg)
-				//	{
-				//		return msg + " Franke";
-				//	}
-				//}
-				//var a = new A();
-				//console.log(a.Hello('Gerallt'));
+				
+				var timerId = setInterval(function(){
+					console.log('hi every 2 secs');
+					times++;
+					
+					if(times == 4){
+						window.clearInterval(timerId);
+						console.log('stopped timer');
+					}
+				},2000);
 				
 			]]>
 		</Script>

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-
+using System.Threading;
 using V8.Net;
 
 namespace X3D.Engine
@@ -11,7 +11,7 @@ namespace X3D.Engine
     public class ScriptingEngine : IDisposable
     {
         public const string SOURCE_NAME = "X3D 3.3";
-        private V8Engine v8;
+        internal static V8Engine v8;
         public static ScriptingEngine CurrentContext = null;
         private bool isDisposing = false;       
 
@@ -57,9 +57,17 @@ namespace X3D.Engine
             v8.GlobalObject.SetProperty("console", X3DConsole.Current);
             v8.GlobalObject.SetProperty("window", X3DWindow.Current);
             v8.GlobalObject.SetProperty("document", document);
-            
+
+            var funcTemplate1 = v8.CreateFunctionTemplate("setInterval");
+            var funcTemplate2 = v8.CreateFunctionTemplate("clearInterval");
+
+            v8.DynamicGlobalObject.setInterval = funcTemplate1.GetFunctionObject(X3DWindow.setInterval);
+            v8.DynamicGlobalObject.clearInterval = funcTemplate2.GetFunctionObject(X3DWindow.clearInterval);
+
             Console.WriteLine("X3D Scripting [enabled]");
         }
+        
+
 
         private void HookTypeSystem()
         {
