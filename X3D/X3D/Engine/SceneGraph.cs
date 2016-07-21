@@ -95,7 +95,7 @@ namespace X3D.Engine
                     Console.ForegroundColor=ConsoleColor.White;
                     Console.WriteLine("".PadLeft(current_depth,'»')+nav.Name+" "+child.DEF+" "+current_depth.ToString()+"/"+node_id.ToString());
 #endif
-                    child.id = make_id();
+                    child._id = make_id();
                     child.Depth = current_depth;
 
                     if (parent != null)
@@ -189,7 +189,7 @@ namespace X3D.Engine
             {
                 node = work_items.Pop();
 
-                if (node.id == id)
+                if (node._id == id)
                 {
                     return node;
                 }
@@ -217,7 +217,7 @@ namespace X3D.Engine
             {
                 node = work_items.Dequeue();
 
-                if (node.id == id)
+                if (node._id == id)
                 {
                     return node;
                 }
@@ -250,7 +250,7 @@ namespace X3D.Engine
             {
                 node = work_items.Pop();
                 // TODO: display DEF attribute value and node name
-                graph += "".PadLeft(node.Depth, ' ') + node.ToString() + " " + node.Depth.ToString() + "/" + node.id.ToString() + "\n";
+                graph += "".PadLeft(node.Depth, ' ') + node.ToString() + " " + node.Depth.ToString() + "/" + node._id.ToString() + "\n";
 
                 foreach (X3DNode child in node.Children)
                 {

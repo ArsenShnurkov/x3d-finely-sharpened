@@ -76,9 +76,9 @@ namespace X3D.Engine
                 node = work_items.Peek();
                 num_children_visited = 0;
 
-                if (!nodes_visited.Contains(node.id))
+                if (!nodes_visited.Contains(node._id))
                 {
-                    nodes_visited.Add(node.id);
+                    nodes_visited.Add(node._id);
 
                     visit(node,context);
 
@@ -95,7 +95,7 @@ namespace X3D.Engine
                     children = reverseList(node.Children);
                     foreach (SceneGraphNode n in children)
                     {
-                        if (nodes_visited.Contains(n.id))
+                        if (nodes_visited.Contains(n._id))
                         {
                             num_children_visited++;
                         }
@@ -164,7 +164,7 @@ namespace X3D.Engine
 
             foreach (SceneGraphNode parent in node.Parents)
             {
-                if (work_items.Any(n => n.id == parent.id))
+                if (work_items.Any(n => n._id == parent._id))
                 {
                     return true;
                 }

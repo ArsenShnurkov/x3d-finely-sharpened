@@ -186,6 +186,8 @@ namespace x3druntime.ui.opentk
 
             if (!string.IsNullOrEmpty(url) && !string.IsNullOrEmpty(mime_type))
             {
+                View view = View.CreateViewFromWindow(this.window);
+                
                 Viewpoint.ViewpointList.Clear();
 
                 SceneManager.BaseURL = BaseURL;
@@ -193,7 +195,7 @@ namespace x3druntime.ui.opentk
 
                 scene = SceneManager.fromURL(url, mime_type);
 
-                Viewpoint.Initilize(ActiveCamera, View.CreateViewFromWindow(this.window));
+                Viewpoint.Initilize(ActiveCamera, view);
             }
             else
             {

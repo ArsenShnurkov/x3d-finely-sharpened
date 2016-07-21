@@ -10024,12 +10024,54 @@ namespace X3D
 
     }
 
-    public abstract partial class X3DScriptNode
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [System.SerializableAttribute()]
+    //[System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    public partial class Script : X3DScriptNode
+    {
+        private string _url = string.Empty;
+        private string _source;
+
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string url
+        {
+            get
+            {
+                return this._url;
+            }
+            set
+            {
+                this._url = value;
+            }
+        }
+
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string src
+        {
+            get
+            {
+                return this._url;
+            }
+            set
+            {
+                this._url = value;
+            }
+        }
+
+        [XmlText]
+        public string ScriptSource
+        {
+            get { return _source; }
+            set { _source = value; }
+        }
+    }
+
+    public abstract partial class X3DScriptNode : X3DChildNode
     {
 
-        public X3DScriptNode()
-        {
-        }
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -10749,9 +10791,6 @@ namespace X3D
     public partial class Scene : SceneGraphNode, SceneGraphStructureStatement
     {
 
-        public Scene()
-        {
-        }
     }
 
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -18072,9 +18111,8 @@ namespace X3D
     {
 
         private string _url;
-
+        private string _source = string.Empty;
         private shaderPartTypeValues _type;
-
         private string _containerField;
 
         public ShaderPart()
@@ -18103,6 +18141,13 @@ namespace X3D
             {
                 this._url = value;
             }
+        }
+
+        [XmlText]
+        public string ScriptSource
+        {
+            get { return _source; }
+            set { _source = value; }
         }
 
         [System.Xml.Serialization.XmlAttributeAttribute()]

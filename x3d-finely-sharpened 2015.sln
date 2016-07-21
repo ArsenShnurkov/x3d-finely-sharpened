@@ -10,9 +10,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "X3D", "X3D\X3D.csproj", "{0742E4E9-D1BA-41F1-B161-33CD3A3D4D33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "x3druntime.ui.opentk", "x3druntime.ui.opentk\x3druntime.ui.opentk.csproj", "{C0AA1245-092C-480D-9963-7B03DDA63794}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{77438DAB-52F9-42CC-BD51-90EE16555A08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "x3druntime.ui.opentk", "x3druntime.ui.opentk\x3druntime.ui.opentk.csproj", "{C0AA1245-092C-480D-9963-7B03DDA63794}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,20 +39,6 @@ Global
 		{0742E4E9-D1BA-41F1-B161-33CD3A3D4D33}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0742E4E9-D1BA-41F1-B161-33CD3A3D4D33}.Release|Win32.ActiveCfg = Release|Any CPU
 		{0742E4E9-D1BA-41F1-B161-33CD3A3D4D33}.Release|x86.ActiveCfg = Release|Any CPU
-		{C0AA1245-092C-480D-9963-7B03DDA63794}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C0AA1245-092C-480D-9963-7B03DDA63794}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C0AA1245-092C-480D-9963-7B03DDA63794}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{C0AA1245-092C-480D-9963-7B03DDA63794}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{C0AA1245-092C-480D-9963-7B03DDA63794}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{C0AA1245-092C-480D-9963-7B03DDA63794}.Debug|x86.ActiveCfg = Debug|x86
-		{C0AA1245-092C-480D-9963-7B03DDA63794}.Debug|x86.Build.0 = Debug|x86
-		{C0AA1245-092C-480D-9963-7B03DDA63794}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C0AA1245-092C-480D-9963-7B03DDA63794}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C0AA1245-092C-480D-9963-7B03DDA63794}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{C0AA1245-092C-480D-9963-7B03DDA63794}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{C0AA1245-092C-480D-9963-7B03DDA63794}.Release|Win32.ActiveCfg = Release|Any CPU
-		{C0AA1245-092C-480D-9963-7B03DDA63794}.Release|x86.ActiveCfg = Release|x86
-		{C0AA1245-092C-480D-9963-7B03DDA63794}.Release|x86.Build.0 = Release|x86
 		{77438DAB-52F9-42CC-BD51-90EE16555A08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{77438DAB-52F9-42CC-BD51-90EE16555A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77438DAB-52F9-42CC-BD51-90EE16555A08}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -69,14 +55,30 @@ Global
 		{77438DAB-52F9-42CC-BD51-90EE16555A08}.Release|Win32.Build.0 = Release|Any CPU
 		{77438DAB-52F9-42CC-BD51-90EE16555A08}.Release|x86.ActiveCfg = Release|Any CPU
 		{77438DAB-52F9-42CC-BD51-90EE16555A08}.Release|x86.Build.0 = Release|Any CPU
+		{C0AA1245-092C-480D-9963-7B03DDA63794}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0AA1245-092C-480D-9963-7B03DDA63794}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0AA1245-092C-480D-9963-7B03DDA63794}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{C0AA1245-092C-480D-9963-7B03DDA63794}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{C0AA1245-092C-480D-9963-7B03DDA63794}.Debug|Win32.ActiveCfg = Debug|x86
+		{C0AA1245-092C-480D-9963-7B03DDA63794}.Debug|Win32.Build.0 = Debug|x86
+		{C0AA1245-092C-480D-9963-7B03DDA63794}.Debug|x86.ActiveCfg = Debug|x86
+		{C0AA1245-092C-480D-9963-7B03DDA63794}.Debug|x86.Build.0 = Debug|x86
+		{C0AA1245-092C-480D-9963-7B03DDA63794}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0AA1245-092C-480D-9963-7B03DDA63794}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0AA1245-092C-480D-9963-7B03DDA63794}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{C0AA1245-092C-480D-9963-7B03DDA63794}.Release|Mixed Platforms.Build.0 = Release|x86
+		{C0AA1245-092C-480D-9963-7B03DDA63794}.Release|Win32.ActiveCfg = Release|x86
+		{C0AA1245-092C-480D-9963-7B03DDA63794}.Release|Win32.Build.0 = Release|x86
+		{C0AA1245-092C-480D-9963-7B03DDA63794}.Release|x86.ActiveCfg = Release|x86
+		{C0AA1245-092C-480D-9963-7B03DDA63794}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_UpdateAssemblyVersion = False
-		BuildVersion_UpdateFileVersion = False
 		BuildVersion_BuildVersioningStyle = None.None.None.None
+		BuildVersion_UpdateFileVersion = False
+		BuildVersion_UpdateAssemblyVersion = False
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = x3d-finely-sharpened.vsmdi

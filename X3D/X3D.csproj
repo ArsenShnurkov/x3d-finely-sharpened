@@ -68,6 +68,15 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xml" />
+    <Reference Include="V8.Net">
+      <HintPath>..\Tests\bin\Debug\V8.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="V8.Net.Proxy.Interface.x64">
+      <HintPath>..\Tests\bin\Debug\V8.Net.Proxy.Interface.x64.dll</HintPath>
+    </Reference>
+    <Reference Include="V8.Net.SharedTypes">
+      <HintPath>..\Tests\bin\Debug\V8.Net.SharedTypes.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\Resources.Designer.cs">
@@ -86,6 +95,8 @@
     <Compile Include="X3D\Core\ViewpointGroup.cs" />
     <Compile Include="X3D\Engine\Camera.cs" />
     <Compile Include="X3D\Engine\SceneEntity.cs" />
+    <Compile Include="X3D\Engine\Scripting\ScriptingEngine.cs" />
+    <Compile Include="X3D\Engine\Scripting\X3DWindow.cs" />
     <Compile Include="X3D\Engine\SimpleCamera.cs" />
     <Compile Include="X3D\Core\Shading\ComposedShader.cs" />
     <Compile Include="X3D\Core\Cone.cs" />
@@ -107,7 +118,8 @@
     <Compile Include="X3D\Core\X3D.cs" />
     <Compile Include="X3D\Engine\SceneGraphNode.cs" />
     <Compile Include="X3D\Engine\View.cs" />
-    <Compile Include="X3D\Extrusion.cs" />
+    <Compile Include="X3D\Engine\Scripting\X3DConsole.cs" />
+    <Compile Include="X3D\Core\Extrusion.cs" />
     <Compile Include="X3D\Math\BoundingBox.cs" />
     <Compile Include="X3D\Math\MatrixCollection.cs" />
     <Compile Include="X3D\Math\MatrixExtensions.cs" />
@@ -122,6 +134,7 @@
     <Compile Include="X3D\Core\Shading\BuiltIn\QuadTessShader.cs" />
     <Compile Include="X3D\Core\Shading\BuiltIn\TriangleTessShader.cs" />
     <Compile Include="X3D\Engine\Vertex.cs" />
+    <Compile Include="X3D\Core\Script.cs" />
     <Compile Include="X3D\x3d-3.3.Designer.cs" />
     <Compile Include="X3D\Parser\XMLParser.cs" />
     <Compile Include="X3D\Engine\SceneGraph.cs" />

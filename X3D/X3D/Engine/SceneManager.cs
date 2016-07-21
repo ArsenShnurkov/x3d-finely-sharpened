@@ -30,7 +30,7 @@ namespace X3D.Engine
     public class SceneManager
     {
         public SceneGraph SceneGraph;
-
+        public ScriptingEngine ScriptingEngine;
 
         ///// <summary>
         ///// Disable DTD validation if you want to gain performance benefits
@@ -636,6 +636,7 @@ namespace X3D.Engine
             //xml = XDocument.Load(xml_stream, LoadOptions.PreserveWhitespace);
 
             s.SceneGraph = new SceneGraph(xml);
+            s.ScriptingEngine = ScriptingEngine.Initilize(s);
 
             return s;
         }
@@ -659,6 +660,7 @@ namespace X3D.Engine
             //xml = XDocument.Load(xml_string,LoadOptions.PreserveWhitespace);
 
             s.SceneGraph = new SceneGraph(xml);
+            s.ScriptingEngine = ScriptingEngine.Initilize(s);
 
             return s;
         }

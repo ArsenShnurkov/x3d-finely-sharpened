@@ -46,13 +46,17 @@ namespace X3D.Engine
 
         public static View CreateViewFromWindow(INativeWindow window)
         {
-            return new View()
+            View view = new View()
             {
                 X = window.Bounds.X,
                 Y = window.Bounds.Y,
                 Width = window.Bounds.Width,
                 Height = window.Bounds.Height
             };
+
+            X3DWindow.SetView(view);
+
+            return view;
         }
 
         //TODO: create left and right steroscopic methods
