@@ -10,7 +10,7 @@
 		<Script>
 			<![CDATA[
 				var current_choice = 0;
-				
+				var maxChoice = 2;
 				/**
 				 * Change the selected object of the swichting node
 				 * 
@@ -30,16 +30,32 @@
 				
 				function incrementChoice()
 				{
-					current_choice += 1;
-				
 					var dirLight = document.getElementById("switcher");
 
 					dirLight.setAttribute("whichChoice", current_choice);
 					
 					console.log("Switch node choice set to: " + dirLight.getAttribute("whichChoice"));
 					
+					if(current_choice +1 == maxChoice){
+						current_choice = 0;
+					}
+					else{
+						current_choice += 1;
+					}
+					
 					
 				}
+				
+				//public class A
+				//{
+				//	public string Hello(string msg)
+				//	{
+				//		return msg + " Franke";
+				//	}
+				//}
+				//var a = new A();
+				//console.log(a.Hello('Gerallt'));
+				
 			]]>
 		</Script>
 	</head>

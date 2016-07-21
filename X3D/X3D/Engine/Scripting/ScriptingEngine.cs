@@ -8,12 +8,12 @@ using V8.Net;
 
 namespace X3D.Engine
 {
-    public class ScriptingEngine
+    public class ScriptingEngine : IDisposable
     {
         public const string SOURCE_NAME = "X3D 3.3";
         private V8Engine v8;
         public static ScriptingEngine CurrentContext = null;
-
+        private bool isDisposing = false;       
 
         private ScriptingEngine() { }
 
@@ -42,7 +42,6 @@ namespace X3D.Engine
                 document = manager.SceneGraph.GetRoot();
 
                 engine.StartV8(document);
-
             }
 
             CurrentContext = engine;
@@ -58,6 +57,8 @@ namespace X3D.Engine
             v8.GlobalObject.SetProperty("console", X3DConsole.Current);
             v8.GlobalObject.SetProperty("window", X3DWindow.Current);
             v8.GlobalObject.SetProperty("document", document);
+            
+            Console.WriteLine("X3D Scripting [enabled]");
         }
 
         private void HookTypeSystem()
@@ -75,6 +76,20 @@ namespace X3D.Engine
             }
         }
 
+
+        public void CompileAndExecute(string script)
+        {
+            using (InternalHandle handle = v8.Compile(script, SOURCE_NAME, false).AsInternalHandle)
+            {
+                if (!handle.IsError)
+                {
+                    v8.Execute(handle, false);
+
+                    handle.Dispose();
+                }
+            }
+        }
+
         public string Execute(string script)
         {
             string result;
@@ -85,6 +100,18 @@ namespace X3D.Engine
             }
 
             return result;
+        }
+
+        public void Dispose()
+        {
+            if(!isDisposing && !v8.IsDisposed)
+            {
+                isDisposing = true;
+
+                v8.Dispose();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+            }
         }
     }
 }

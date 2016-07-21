@@ -636,8 +636,12 @@ namespace X3D.Engine
             //xml = XDocument.Load(xml_stream, LoadOptions.PreserveWhitespace);
 
             s.SceneGraph = new SceneGraph(xml);
-            s.ScriptingEngine = ScriptingEngine.Initilize(s);
 
+            if (Script.ScriptingEnabled)
+            {
+                s.ScriptingEngine = ScriptingEngine.Initilize(s);
+            }
+            
             return s;
         }
 
@@ -660,7 +664,11 @@ namespace X3D.Engine
             //xml = XDocument.Load(xml_string,LoadOptions.PreserveWhitespace);
 
             s.SceneGraph = new SceneGraph(xml);
-            s.ScriptingEngine = ScriptingEngine.Initilize(s);
+
+            if (Script.ScriptingEnabled)
+            {
+                s.ScriptingEngine = ScriptingEngine.Initilize(s);
+            }
 
             return s;
         }
