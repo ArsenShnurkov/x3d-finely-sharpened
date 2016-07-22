@@ -71,7 +71,7 @@ Task list
 COMPLETED: URL/URI/filesys/data:text/plain assett & resource fetching (partial URN support)
 PARTLY: Viewpoint and ViewpointGroup implementation and decent-scalable Camera model
 PARTLY: Background, MultiTexturing, CubeMapping, ..
-PARTLY: Scripting using JavaScript (JIT compiled using the V8 Engine)
+MOSTLY: Scripting using JavaScript (JIT compiled using the V8 Engine)
 TODO: Node Prototyping
 MOSTLY: abstract types defined according to X3D 3.3 spec, see x3d-3.3.Designer.cs
 PARTLY: DEF and USE
