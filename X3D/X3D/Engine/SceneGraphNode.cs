@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace X3D
 {
@@ -12,7 +13,7 @@ namespace X3D
         internal string __id;
         internal int _id = -1;
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string id
         {
             get
@@ -24,7 +25,6 @@ namespace X3D
                 this.__id = value;
             }
         }
-
 
         public bool PassthroughAllowed = true;
 
@@ -145,6 +145,7 @@ namespace X3D
         /// </summary>
         public SceneGraphNode getElementById(string id)
         {
+            //TODO: cache nodes and IDs
             return SearchBFS(id);
         }
 
@@ -153,7 +154,6 @@ namespace X3D
         /// </summary>
         public void setAttribute(string name, object value)
         {
-            // TODO: expose graph to Scripting interface
 
             Type type;
             PropertyInfo propertyInfo;
@@ -194,7 +194,6 @@ namespace X3D
         /// </summary>
         public object getAttribute(string name)
         {
-            // TODO: expose graph to Scripting interface
             Type type;
             PropertyInfo propertyInfo;
             FieldInfo fieldInfo;
@@ -233,4 +232,5 @@ namespace X3D
 
         #endregion
     }
+
 }

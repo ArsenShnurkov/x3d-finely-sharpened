@@ -135,6 +135,21 @@ namespace X3D.Engine
 
         #region Internal Methods
 
+        internal void OnKeyDown(int keyCode, int charCode)
+        {
+            using (Handle functHandle = v8.Execute("document.onkeydown", SOURCE_NAME, false))
+            {
+                if (functHandle.ValueType != JSValueType.CompilerError && functHandle.IsFunction)
+                {
+                    InternalHandle obj = v8.CreateObject();
+                    obj.SetProperty("keyCode", keyCode);
+                    obj.SetProperty("charCode", charCode);
+
+                    functHandle.AsInternalHandle.StaticCall(obj);
+                }
+            }
+        }
+
         internal void OnFirstHeadScript()
         {
             // First head script loaded
@@ -152,7 +167,7 @@ namespace X3D.Engine
         {
             using (Handle functHandle = v8.Execute(name, SOURCE_NAME, false))
             {
-                if (functHandle.ValueType != JSValueType.CompilerError)
+                if (functHandle.ValueType != JSValueType.CompilerError && functHandle.IsFunction)
                 {
                     functHandle.AsInternalHandle.StaticCall();
                 }
@@ -163,7 +178,7 @@ namespace X3D.Engine
 
         #region Private Methods
 
-        private void StartV8(SceneGraphNode document)
+        private void StartV8(SceneGraphNode root)
         {
             v8 = new V8Engine();
             v8.RegisterType(typeof(X3DConsole), null, true, ScriptMemberSecurity.Locked);
@@ -174,7 +189,7 @@ namespace X3D.Engine
             HookTypeSystem();
 
             v8.GlobalObject.SetProperty("console", X3DConsole.Current);
-            v8.GlobalObject.SetProperty("document", document);
+            v8.GlobalObject.SetProperty("document", root);
 
             v8.DynamicGlobalObject.window = v8.CreateFunctionTemplate("window").GetFunctionObject<WindowFunction>();
             v8.DynamicGlobalObject.browser = v8.CreateFunctionTemplate("browser").GetFunctionObject<BrowserFunction>();

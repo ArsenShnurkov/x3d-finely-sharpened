@@ -6,13 +6,20 @@ using System.Xml.Serialization;
 
 namespace X3D
 {
+    /// <summary>
+    /// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/Architecture.html
+    /// </summary>
     public partial class X3D
     {
         public const X3DMIMEType DefaultMimeType = X3DMIMEType.X3D;
 
         [XmlIgnore]
         public static double X3DEngineVersionNum = 3.3;
+
+        [XmlIgnore]
         public static x3dVersion X3DEngineVersion = x3dVersion.X3D_3_3;
+
+        [XmlIgnore]
         public static profileNames X3DEngineProfile = profileNames.Interchange;
 
         private static bool _runtimeExecutionEnabled = true;

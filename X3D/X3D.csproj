@@ -94,10 +94,11 @@
     <Compile Include="X3D\Core\TextureBackground.cs" />
     <Compile Include="X3D\Core\ViewpointGroup.cs" />
     <Compile Include="X3D\Engine\Camera.cs" />
+    <Compile Include="X3D\Engine\Consts.cs" />
     <Compile Include="X3D\Engine\SceneEntity.cs" />
-    <Compile Include="X3D\Engine\Scripting\Browser.cs" />
+    <Compile Include="X3D\Engine\Scripting\BrowserFunction.cs" />
     <Compile Include="X3D\Engine\Scripting\ScriptingEngine.cs" />
-    <Compile Include="X3D\Engine\Scripting\X3DWindow.cs" />
+    <Compile Include="X3D\Engine\Scripting\WindowFunction.cs" />
     <Compile Include="X3D\Engine\SimpleCamera.cs" />
     <Compile Include="X3D\Core\Shading\ComposedShader.cs" />
     <Compile Include="X3D\Core\Cone.cs" />

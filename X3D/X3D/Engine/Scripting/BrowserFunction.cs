@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using V8.Net;
-using System.Reflection;
 
 namespace X3D.Engine
 {

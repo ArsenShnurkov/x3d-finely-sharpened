@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 using X3D.Engine;
 
 namespace X3D
@@ -18,6 +19,8 @@ namespace X3D
         private bool executed = false;
         private int headScriptIndex = -1;
         private int numHeadScripts = 0;
+
+        private bool documentEventsBound = false;
 
         #region Rendering Methods
 
@@ -74,9 +77,42 @@ namespace X3D
                     {
                         engine.OnHeadScriptsLoaded();
                     }
+
+                    if (!documentEventsBound)
+                    {
+                        // Bind events, then when they occur, call associated dom javascript events
+
+                        // KEYBINDINGS
+                        rc.Keyboard.KeyDown += (object sender, OpenTK.Input.KeyboardKeyEventArgs e) =>
+                        {
+                            int charCode = (int)e.ScanCode;
+                            int keyCode;
+
+                            if (Consts.ScanCodeToKeyCodeMap.ContainsKey(charCode))
+                            {
+                                // Convert scan code to javascript keyCode
+                                keyCode = Consts.ScanCodeToKeyCodeMap[charCode];
+
+                                // Send both scan code an javascript keyCode
+                                ScriptingEngine.CurrentContext.OnKeyDown(keyCode, charCode);
+                            }
+                            else
+                            {
+                                Console.WriteLine("*** key {0} not bound *** ", charCode);
+                            }
+                            
+                        };
+
+                        // MOUSE POINTER BINDINGS
+                        // TODO
+
+                        documentEventsBound = true;
+                    }
                 }
             }
         }
+
+
 
         public override void Render(RenderingContext rc)
         {
