@@ -95,6 +95,7 @@
     <Compile Include="X3D\Core\ViewpointGroup.cs" />
     <Compile Include="X3D\Engine\Camera.cs" />
     <Compile Include="X3D\Engine\SceneEntity.cs" />
+    <Compile Include="X3D\Engine\Scripting\Browser.cs" />
     <Compile Include="X3D\Engine\Scripting\ScriptingEngine.cs" />
     <Compile Include="X3D\Engine\Scripting\X3DWindow.cs" />
     <Compile Include="X3D\Engine\SimpleCamera.cs" />
@@ -187,7 +188,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_AssemblyInfoFilename="" BuildVersion_UseGlobalSettings="False" BuildVersion_IncrementBeforeBuild="True" />
+      <UserProperties BuildVersion_IncrementBeforeBuild="True" BuildVersion_UseGlobalSettings="False" BuildVersion_AssemblyInfoFilename="" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

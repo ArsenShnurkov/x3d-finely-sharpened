@@ -59,6 +59,8 @@ namespace x3druntime.ui.opentk
 
         public static void Quit()
         {
+            browser.Dispose();
+
             quitRequired = true;
             restartRequired = false;
             browser.Close();
@@ -67,6 +69,8 @@ namespace x3druntime.ui.opentk
 
         public static void Restart()
         {
+            browser.Dispose();
+
             restartRequired = true;
             browser.Close();
             closureEvent.Set();

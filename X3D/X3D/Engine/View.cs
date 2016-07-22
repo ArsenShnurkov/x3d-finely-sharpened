@@ -54,7 +54,7 @@ namespace X3D.Engine
                 Height = window.Bounds.Height
             };
 
-            X3DWindow.SetView(view);
+            WindowFunction.SetView(view);
 
             return view;
         }

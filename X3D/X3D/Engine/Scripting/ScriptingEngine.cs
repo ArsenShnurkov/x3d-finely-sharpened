@@ -8,14 +8,22 @@ using V8.Net;
 
 namespace X3D.Engine
 {
+    public delegate void ScriptingInitilizeDelegate(ScriptingEngine engine);
+    public delegate void ScriptingShutdownDelegate(ScriptingEngine engine);
+
     public class ScriptingEngine : IDisposable
     {
         public const string SOURCE_NAME = "X3D 3.3";
-        internal static V8Engine v8;
+        private bool isDisposing = false;
+        private static V8Engine v8;
         public static ScriptingEngine CurrentContext = null;
-        private bool isDisposing = false;       
+
+        public event ScriptingInitilizeDelegate InitilizeEventHandler;
+        public event ScriptingInitilizeDelegate ShutdownEventHandler;
 
         private ScriptingEngine() { }
+
+        #region Public Static Methods
 
         public static ScriptingEngine CreateFromDocument(SceneGraphNode document)
         {
@@ -30,7 +38,7 @@ namespace X3D.Engine
             return engine;
         }
 
-        public static ScriptingEngine Initilize(SceneManager manager)
+        public static ScriptingEngine CreateFromManager(SceneManager manager)
         {
             SceneGraphNode document;
             ScriptingEngine engine;
@@ -43,31 +51,136 @@ namespace X3D.Engine
 
                 engine.StartV8(document);
             }
-
+            
             CurrentContext = engine;
 
             return engine;
         }
 
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Called when the scene is unloading.
+        /// </summary>
+        public void OnShutdown()
+        {
+            if (ShutdownEventHandler != null)
+            {
+                ShutdownEventHandler(this);
+            }
+        }
+
+        /// <summary>
+        /// Called on Initilization of Head scripts.
+        /// </summary>
+        public void OnInitilize()
+        {
+            if (InitilizeEventHandler != null)
+            {
+                InitilizeEventHandler(this);
+            }
+        }
+
+        public void CompileAndExecute(string script)
+        {
+            if (isDisposing) return;
+
+            using (InternalHandle handle = v8.Compile(script, SOURCE_NAME, false).AsInternalHandle)
+            {
+                if (!handle.IsError)
+                {
+                    v8.Execute(handle, false);
+
+                    handle.Dispose();
+                }
+            }
+        }
+
+        public string Execute(string script)
+        {
+            if (isDisposing) return null;
+
+            string result;
+
+            using (Handle handle = v8.Execute(script, SOURCE_NAME, false))
+            {
+                result = handle.AsString;
+            }
+
+            return result;
+        }
+
+        public void Dispose()
+        {
+            if (!isDisposing && !v8.IsDisposed)
+            {
+                isDisposing = true;
+
+                ExecuteGlobalScriptFunction("shutdown");
+
+                // SHUTDOWN all scripts
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+                v8.ForceV8GarbageCollection();
+                v8.Dispose();
+
+                // Notify engine that we have terminated
+                OnShutdown();
+            }
+        }
+
+        #endregion
+
+        #region Internal Methods
+
+        internal void OnFirstHeadScript()
+        {
+            // First head script loaded
+        }
+
+        internal void OnHeadScriptsLoaded()
+        {
+            ExecuteGlobalScriptFunction("initilize");
+
+            // Notify engine that we have initilized
+            OnInitilize();
+        }
+
+        internal void ExecuteGlobalScriptFunction(string name)
+        {
+            using (Handle functHandle = v8.Execute(name, SOURCE_NAME, false))
+            {
+                if (functHandle.ValueType != JSValueType.CompilerError)
+                {
+                    functHandle.AsInternalHandle.StaticCall();
+                }
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
         private void StartV8(SceneGraphNode document)
         {
             v8 = new V8Engine();
             v8.RegisterType(typeof(X3DConsole), null, true, ScriptMemberSecurity.Locked);
+
+            // Scene Access Interface
+            // See: http://www.web3d.org/documents/specifications/19775-2/V3.3/Part02/servRef.html
+
             HookTypeSystem();
+
             v8.GlobalObject.SetProperty("console", X3DConsole.Current);
-            v8.GlobalObject.SetProperty("window", X3DWindow.Current);
             v8.GlobalObject.SetProperty("document", document);
 
-            var funcTemplate1 = v8.CreateFunctionTemplate("setInterval");
-            var funcTemplate2 = v8.CreateFunctionTemplate("clearInterval");
-
-            v8.DynamicGlobalObject.setInterval = funcTemplate1.GetFunctionObject(X3DWindow.setInterval);
-            v8.DynamicGlobalObject.clearInterval = funcTemplate2.GetFunctionObject(X3DWindow.clearInterval);
-
+            v8.DynamicGlobalObject.window = v8.CreateFunctionTemplate("window").GetFunctionObject<WindowFunction>();
+            v8.DynamicGlobalObject.browser = v8.CreateFunctionTemplate("browser").GetFunctionObject<BrowserFunction>();
+            
             Console.WriteLine("X3D Scripting [enabled]");
         }
-        
-
 
         private void HookTypeSystem()
         {
@@ -82,44 +195,11 @@ namespace X3D.Engine
             {
                 v8.RegisterType(x3dType, null, true, ScriptMemberSecurity.Locked);
             }
+
+            //TODO: hook X3D simple types such as SFVec3, MFString, etc. 
+            // Note that for some types there is a translation SFVec3 is interchanged to OpenTK.Vector3 internally
         }
 
-
-        public void CompileAndExecute(string script)
-        {
-            using (InternalHandle handle = v8.Compile(script, SOURCE_NAME, false).AsInternalHandle)
-            {
-                if (!handle.IsError)
-                {
-                    v8.Execute(handle, false);
-
-                    handle.Dispose();
-                }
-            }
-        }
-
-        public string Execute(string script)
-        {
-            string result;
-
-            using (Handle handle = v8.Execute(script, SOURCE_NAME, false))
-            {
-                result = handle.AsString;
-            }
-
-            return result;
-        }
-
-        public void Dispose()
-        {
-            if(!isDisposing && !v8.IsDisposed)
-            {
-                isDisposing = true;
-
-                v8.Dispose();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-            }
-        }
+        #endregion
     }
 }

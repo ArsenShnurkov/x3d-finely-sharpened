@@ -21,7 +21,7 @@ namespace X3D.Engine
         {
             LastMessage = message;
 
-            Console.WriteLine(message);
+            Console.WriteLine("(SCRIPT) {0}", message);
         }
     }
 }

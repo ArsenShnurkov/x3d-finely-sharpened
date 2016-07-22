@@ -16,6 +16,8 @@ namespace X3D
         private head parentHead = null;
         private bool executeOnce = false;
         private bool executed = false;
+        private int headScriptIndex = -1;
+        private int numHeadScripts = 0;
 
         #region Rendering Methods
 
@@ -24,9 +26,12 @@ namespace X3D
             base.Load();
 
             parentHead = GetParent<head>();
-
             executeOnce = parentHead != null;
 
+            numHeadScripts = parentHead == null ? 0 : parentHead.Children.Count(n => n.GetType() == typeof(Script));
+
+            if (executeOnce && !executed)
+                headScriptIndex++;
 
             if (!string.IsNullOrEmpty(url))
             {
@@ -51,11 +56,24 @@ namespace X3D
 
             if (!string.IsNullOrEmpty(this.ScriptSource))
             {
+                var engine = ScriptingEngine.CurrentContext;
+                
                 // COMPILE
 
-                if (ScriptingEngine.CurrentContext != null && executeOnce && !executed)
+                if (engine != null && executeOnce && !executed)
                 {
-                    ScriptingEngine.CurrentContext.CompileAndExecute(this.ScriptSource);
+                    engine.CompileAndExecute(this.ScriptSource);
+
+                    executed = true;
+
+                    if (headScriptIndex == 0)
+                    {
+                        engine.OnFirstHeadScript();
+                    }
+                    if ((headScriptIndex == numHeadScripts - 1))
+                    {
+                        engine.OnHeadScriptsLoaded();
+                    }
                 }
             }
         }
@@ -66,18 +84,18 @@ namespace X3D
 
             if (!executeOnce && !string.IsNullOrEmpty(this.ScriptSource))
             {
+                var engine = ScriptingEngine.CurrentContext;
+
                 // EXECUTE
 
-                if(ScriptingEngine.CurrentContext != null)
+                if (engine != null)
                 {
-                    ScriptingEngine.CurrentContext.Execute(this.ScriptSource);
+                    engine.Execute(this.ScriptSource);
                 }
 
                 executed = true;
             }
         }
-
-
 
         #endregion
     }

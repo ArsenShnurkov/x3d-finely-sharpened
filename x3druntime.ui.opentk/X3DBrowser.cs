@@ -5,7 +5,7 @@ using OpenTK.Graphics;
 
 namespace x3druntime.ui.opentk
 {
-    public class X3DBrowser : GameWindow
+    public class X3DBrowser : GameWindow, IDisposable
     {
 
         public X3DBrowser(VSyncMode VSync, string url, Resolution res, GraphicsMode mode) : base(res.Width, res.Height, mode)
@@ -43,6 +43,12 @@ namespace x3druntime.ui.opentk
             app.BaseURL = URL;
             app.BaseMIME = "model/x3d+xml";
             app.Init(URL, app.BaseMIME);
+        }
+
+        public new void Dispose()
+        {
+            //base.Dispose();
+            this.app.Dispose();
         }
     }
 }

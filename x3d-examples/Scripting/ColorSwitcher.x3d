@@ -12,6 +12,8 @@
 				var times = 0;
 				var current_choice = 0;
 				var maxChoice = 2;
+				var interval;
+				
 				/**
 				 * Change the selected object of the swichting node
 				 * 
@@ -47,13 +49,12 @@
 					
 				}
 				
-				
-				var timerId = setInterval(function(){
+				interval = window.setInterval(function(){
 					console.log('hi every 2 secs');
 					times++;
 					
 					if(times == 4){
-						window.clearInterval(timerId);
+						clearInterval(interval);
 						console.log('stopped timer');
 					}
 				},2000);
@@ -81,12 +82,12 @@
 				</Shape>
 	        </Transform>
 		</Switch>
+		
+		<Script>
+		<![CDATA[
+			// changeVisibleNode(0);
+			incrementChoice();
+		]]>
+		</Script>
 	</Scene>
-
-	<Script>
-	<![CDATA[
-		// changeVisibleNode(0);
-		incrementChoice();
-	]]>
-	</Script>
 </X3D>

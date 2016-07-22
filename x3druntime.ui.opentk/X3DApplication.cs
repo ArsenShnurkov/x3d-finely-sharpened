@@ -29,7 +29,7 @@ using System.Reflection;
 
 namespace x3druntime.ui.opentk
 {
-    public partial class X3DApplication
+    public partial class X3DApplication : IDisposable
     {
 
         public string BaseURL { get; set; }
@@ -288,6 +288,21 @@ namespace x3druntime.ui.opentk
         public void FrameUpdated(FrameEventArgs e)
         {
             ApplyKeyBindings(e);
+        }
+
+        public void Dispose()
+        {
+            // Perform a shutdown of the scene and its resources
+            if(scene != null)
+            {
+                if(scene.ScriptingEngine != null)
+                {
+                    // Cleanup loaded scripts from scripting engine 
+                    scene.ScriptingEngine.Dispose();
+                }
+
+                scene.Dispose();
+            }
         }
 
         private void LockMouseCursor()

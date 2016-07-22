@@ -27,20 +27,12 @@ createX3DFromUrl
 namespace X3D.Engine
 {
 
-    public class SceneManager
+    public class SceneManager : IDisposable
     {
         public SceneGraph SceneGraph;
         public ScriptingEngine ScriptingEngine;
 
-        ///// <summary>
-        ///// Disable DTD validation if you want to gain performance benefits
-        ///// or are confident in the input markup.
-        ///// 
-        ///// Enable validation if you want to validate markup according to its specified dtd.
-        ///// </summary>
-        //private static bool DTD_Validate=false;
-
-        public static string CurrentLocation;// the cd is set upon every X3D scene fetch
+        public static string CurrentLocation; // the cd is set upon every X3D scene fetch
 
         public static string BaseURL { get; set; }
         public static X3DMIMEType BaseMIME { get; set; }
@@ -48,6 +40,14 @@ namespace X3D.Engine
         internal static Queue<ImageTexture> _texturesToBuffer = new Queue<ImageTexture>();
         internal static int[] _texturesBuffered;
         private static Regex regProto = new Regex("[a-zA-Z]+[:][/][/]", RegexOptions.Compiled);
+
+        public void Dispose()
+        {
+            //TODO: implement shutdown cleanup of scene
+
+            //GL.DeleteTexture()
+            //GL.DeleteBuffer()
+        }
 
         #region Scene Loader Methods
 
@@ -639,7 +639,7 @@ namespace X3D.Engine
 
             if (Script.ScriptingEnabled)
             {
-                s.ScriptingEngine = ScriptingEngine.Initilize(s);
+                s.ScriptingEngine = ScriptingEngine.CreateFromManager(s);
             }
             
             return s;
@@ -667,7 +667,7 @@ namespace X3D.Engine
 
             if (Script.ScriptingEnabled)
             {
-                s.ScriptingEngine = ScriptingEngine.Initilize(s);
+                s.ScriptingEngine = ScriptingEngine.CreateFromManager(s);
             }
 
             return s;

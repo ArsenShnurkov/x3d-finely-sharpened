@@ -10,46 +10,34 @@ namespace X3D.Engine
     /// Window used by Scripting component 
     /// (via V8.Net Engine)
     /// </summary>
-    public class X3DWindow
+    public class WindowFunction : V8Function
     {
-        public static X3DWindow Current;
+        public override ObjectHandle Initialize(bool isConstructCall, params InternalHandle[] args)
+        {
+            SetProperty("screen", screen);
+            SetProperty("setInterval", Engine.CreateFunctionTemplate().GetFunctionObject(this.setInterval));
+            SetProperty("clearInterval", Engine.CreateFunctionTemplate().GetFunctionObject(this.clearInterval));
 
-        internal static List<System.Timers.Timer> timers = new List<System.Timers.Timer>();
+            Engine.DynamicGlobalObject.setInterval = Engine.CreateFunctionTemplate().GetFunctionObject(this.setInterval);
+            Engine.DynamicGlobalObject.clearInterval = Engine.CreateFunctionTemplate().GetFunctionObject(this.clearInterval);
 
-        public View screen { get; set; }
+            return base.Initialize(isConstructCall, args);
+        }
+
+        public static View screen { get; set; }
+        private static List<System.Timers.Timer> timers = new List<System.Timers.Timer>();
 
         internal static void SetView(View view)
         {
-            Current = new X3DWindow();
-            Current.screen = view;
+            screen = view;
         }
 
-        public int setInterval(string sourceFragment, int milliseconds)
-        {
-            if(!string.IsNullOrEmpty(sourceFragment) && milliseconds > 0)
-            {
-                System.Timers.Timer tmr = new System.Timers.Timer();
-                tmr.Interval = milliseconds;
+        #region setInterval
 
-                tmr.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) =>
-                {
-                    try
-                    {
-                        ScriptingEngine.v8.Execute("____$=" + sourceFragment + ";____$();", ScriptingEngine.SOURCE_NAME, false);
-                    }
-                    catch (Exception ex) { }
-                };
-
-                tmr.Start();
-
-                timers.Add(tmr);
-
-                return timers.Count -1;
-            }
-            return -1;
-        }
-
-        public static InternalHandle setInterval(V8Engine engine, bool isConstructCall, InternalHandle _this, params InternalHandle[] args)
+        public InternalHandle setInterval(V8Engine engine,
+                                                 bool isConstructCall,
+                                                 InternalHandle _this,
+                                                 params InternalHandle[] args)
         {
             if (isConstructCall)
             {
@@ -57,7 +45,7 @@ namespace X3D.Engine
             }
             else
             {
-                if (args.Length == 2)
+                if (args != null && args.Length == 2)
                 {
                     InternalHandle timerCallback = args[0];
                     InternalHandle milliseconds = args[1];
@@ -72,18 +60,27 @@ namespace X3D.Engine
 
                         tmr.Elapsed += (object sender, System.Timers.ElapsedEventArgs e) =>
                         {
-                            try
+                            if (!engine.IsDisposed)
                             {
-                                ScriptingEngine.v8.Execute("____$=" + sourceFragment + ";____$();", ScriptingEngine.SOURCE_NAME, false);
+                                try
+                                {
+                                    engine.Execute("____$=" + sourceFragment + ";____$();", ScriptingEngine.SOURCE_NAME, false);
+                                }
+                                catch (Exception ex) { }
                             }
-                            catch (Exception ex) { }
+                            else
+                            {
+                                tmr.Stop();
+                            }
                         };
 
                         tmr.Start();
 
-                        X3DWindow.timers.Add(tmr);
+                        timers.Add(tmr);
 
-                        return ScriptingEngine.v8.CreateValue(X3DWindow.timers.Count - 1);
+                        Handle timerHandle = engine.CreateValue(timers.Count - 1);
+
+                        return timerHandle;
                     }
                 }
             }
@@ -91,19 +88,14 @@ namespace X3D.Engine
             return InternalHandle.Empty;
         }
 
-        public void clearInterval(int timer)
-        {
-            if (timer > -1)
-            {
-                System.Timers.Timer tmr = timers[timer];
+        #endregion
 
-                tmr.Stop();
-                tmr.Dispose();
-                tmr = null;
-            }
-        }
+        #region clearInterval
 
-        public static InternalHandle clearInterval(V8Engine engine, bool isConstructCall, InternalHandle _this, params InternalHandle[] args)
+        public InternalHandle clearInterval(V8Engine engine,
+                                                   bool isConstructCall,
+                                                   InternalHandle _this,
+                                                   params InternalHandle[] args)
         {
             if (isConstructCall)
             {
@@ -111,13 +103,13 @@ namespace X3D.Engine
             }
             else
             {
-                if (args.Length == 1)
+                if (args != null && args.Length == 1)
                 {
                     InternalHandle timerId = args[0];
 
                     if (timerId != null && timerId.IsInt32)
                     {
-                        System.Timers.Timer tmr = X3DWindow.timers[timerId.AsInt32];
+                        System.Timers.Timer tmr = timers[timerId.AsInt32];
 
                         tmr.Stop();
                     }
@@ -126,5 +118,7 @@ namespace X3D.Engine
 
             return InternalHandle.Empty;
         }
+
+        #endregion
     }
 }
