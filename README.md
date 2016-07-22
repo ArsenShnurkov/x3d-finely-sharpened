@@ -12,9 +12,12 @@ With software like Blender as well as libraries like OpenTK, X3D as a markup for
 A copy of the OpenTK library ships along as the engine uses it at the moment as a point of reference to OpenGL. Currently we're a bit low on documentation but I have included a few X3D examples pulled from random sources on the www.
 ```
 
+This engine has had a massive overhaul, now we support shader and script programming - because of this IMAO we nearly have implemented both the Interchange and Interactive profiles... Event routing and a bunch of fixing is still in the works though so stay tuned!
 
 
-Example 1 - test of tessellated Sphere X3D node: X3D Runtime 3.3 Core using OpenGL Version 4 
+
+Example 1 - test of tessellated Icosahedron IndexedTriangleSet textured geometry
+Written in pure X3D using GLSL shader scripts, as well as ECMAScript for user interactivity.
 ![alt text](screenshots/screenshot1.png "X3D Runtime Viewer Example 1")
 
 
