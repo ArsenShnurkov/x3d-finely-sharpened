@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -135,6 +136,21 @@ namespace X3D.Engine
 
         #region Internal Methods
 
+        public void UpdateKeyboardState(KeyboardDevice currentKeyboard)
+        {
+            if (v8.IsDisposed) return;
+
+            // Copy keyboard state
+            InternalHandle[] keyboard = new InternalHandle[(int)Key.LastKey];
+            for (int i = 0; i < keyboard.Length; i++)
+            {
+                int k = currentKeyboard[(Key)i] ? 1 : 0;
+                keyboard[i] = v8.CreateValue(k);
+            }
+
+            v8.GlobalObject.SetProperty("Keyboard", v8.CreateArray(keyboard));
+        }
+
         internal void OnKeyDown(int keyCode, int charCode)
         {
             using (Handle functHandle = v8.Execute("document.onkeydown", SOURCE_NAME, false))
@@ -142,6 +158,7 @@ namespace X3D.Engine
                 if (functHandle.ValueType != JSValueType.CompilerError && functHandle.IsFunction)
                 {
                     InternalHandle obj = v8.CreateObject();
+
                     obj.SetProperty("keyCode", keyCode);
                     obj.SetProperty("charCode", charCode);
 
@@ -193,8 +210,27 @@ namespace X3D.Engine
 
             v8.DynamicGlobalObject.window = v8.CreateFunctionTemplate("window").GetFunctionObject<WindowFunction>();
             v8.DynamicGlobalObject.browser = v8.CreateFunctionTemplate("browser").GetFunctionObject<BrowserFunction>();
-            
+
+            MapKeyValues();
+
             Console.WriteLine("X3D Scripting [enabled]");
+        }
+
+        private void MapKeyValues()
+        {
+            Type type = typeof(Key);
+            string[] keyNames = Enum.GetNames(type);
+            Array values = Enum.GetValues(type);
+            InternalHandle key = v8.CreateObject();
+
+            for (int i = 0; i < keyNames.Length; i++)
+            {
+                InternalHandle value = v8.CreateValue(values.GetValue(i));
+
+                key.SetProperty(keyNames[i], value);
+            }
+
+            v8.GlobalObject.SetProperty("Key", key);
         }
 
         private void HookTypeSystem()

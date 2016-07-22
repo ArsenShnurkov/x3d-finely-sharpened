@@ -13,7 +13,8 @@ namespace X3D.Engine
         {
             Dictionary<int, int> k = new Dictionary<int, int>();
 
-            // OpenTK Scan Codes -> Javascript keycode map
+            // ~~~ OpenTK Scan Codes -> Javascript keycode map ~~~
+
             k.Add(0, 0);    // Unknown
             k.Add(1, 16);   // LShift
             k.Add(2, 16);   // RShift

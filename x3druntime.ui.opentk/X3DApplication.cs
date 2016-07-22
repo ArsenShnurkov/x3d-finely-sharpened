@@ -247,7 +247,7 @@ namespace x3druntime.ui.opentk
 
                 // Apply the current Viewpoint
                 Viewpoint.Apply(rc, Viewpoint.CurrentViewpoint);
-
+                
                 Renderer.Draw(scene.SceneGraph, rc);
             }
             else

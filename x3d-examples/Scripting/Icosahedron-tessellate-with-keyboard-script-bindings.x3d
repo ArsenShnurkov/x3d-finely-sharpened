@@ -14,10 +14,35 @@
 
 		// This header script is executed once
 		
-		var TessLevelInner = 137; // 3
-		var TessLevelOuter = 115; // 2
+		var tessLevelInner = 3;
+		var tessLevelOuter = 2; 
 		
+		var shaderTess01 = document.getElementById('shaderTess01');
 		
+		document.onkeydown = updateTessLevels; // TWO different ways to bind to the keyboard
+
+		function updateTessLevels(e) 
+		{
+			var event = window.event ? window.event : e;
+			
+			if (event.keyCode == '38') { // up arrow
+				//tessLevelOuter++;
+			}
+			else if (event.keyCode == '40') { // down arrow
+				//tessLevelOuter = tessLevelOuter > 1 ? tessLevelOuter - 1 : 1;
+			}
+			else if (event.keyCode == '37') { // left arrow
+			   //tessLevelInner = tessLevelInner > 1 ? tessLevelInner - 1 : 1;
+			}
+			else if (event.keyCode == '39') { // right arrow
+			   //tessLevelInner++;
+			}
+		
+			//console.log('~~~ Tessellation Settings ~~~');
+			//console.log('Inner: ' + tessLevelInner);
+			//console.log('Outer: ' + tessLevelOuter);
+			
+		}
 		
 	]]>
 	</Script>
@@ -30,41 +55,38 @@
 	<![CDATA[
 
 		// This script is executed every frame
-		
-		
-		
-		//if (rc.Keyboard[Key.L]) TessLevelInner++;
-		//if (rc.Keyboard[Key.J]) TessLevelInner = TessLevelInner > 1 ? TessLevelInner - 1 : 1;
-		//if (rc.Keyboard[Key.I]) TessLevelOuter++;
-		//if (rc.Keyboard[Key.K]) TessLevelOuter = TessLevelOuter > 1 ? TessLevelOuter - 1 : 1;
-		
-		
-		//Update tessellation uniforms
-		
-		
-		document.onkeydown = checkKey;
-		
-		function checkKey(e) {
-			var event = window.event ? window.event : e;
-			console.log(event.keyCode);
+
+		function update(){
+			console.log('~~~ Tessellation Settings ~~~');
+			console.log('Inner: ' + tessLevelInner);
+			console.log('Outer: ' + tessLevelOuter);
 			
-			if (event.keyCode == '38') {
-				// up arrow
-				console.log('up');
-			}
-			else if (event.keyCode == '40') {
-				// down arrow
-				console.log('down');
-			}
-			else if (event.keyCode == '37') {
-			   // left arrow
-			   console.log('left');
-			}
-			else if (event.keyCode == '39') {
-			   // right arrow
-			   console.log('right');
-			}
+			// Update tessellation uniform variables
+			shaderTess01.setFieldValue('TessLevelInner', tessLevelInner);
+			shaderTess01.setFieldValue('TessLevelOuter', tessLevelOuter);
 		}
+		
+		if(Keyboard[Key.Left]) // efficient Keyboard map to manage key state
+		{
+			tessLevelInner = tessLevelInner > 1 ? tessLevelInner - 1 : 1;
+			update();
+		}
+		if(Keyboard[Key.Right])
+		{
+			tessLevelInner++;
+			update();
+		}
+		if(Keyboard[Key.Up])
+		{
+			tessLevelOuter++;
+			update();
+		}
+		if(Keyboard[Key.Down])
+		{
+			tessLevelOuter = tessLevelOuter > 1 ? tessLevelOuter - 1 : 1;
+			update();
+		}
+
 	]]>
 	</Script>
 		
@@ -84,12 +106,12 @@
 			<Material diffuseColor='0 1.0 1.0' />
 			<ImageTexture url='"spectrum.jpg"'/>
 			
-			<ComposedShader language='GLSL'>
-				<field accessType='inputOnly' name='TessLevelInner' type='SFFloat' value="3"/>
+			<ComposedShader id="shaderTess01" language='GLSL'>
+				<field accessType='inputOnly' name='TessLevelInner' type='SFFloat' value="3" /> 
 				<field accessType='inputOnly' name='TessLevelOuter' type='SFFloat' value="2" />
 				
 				
-				<ShaderPart type='VERTEX' url='data:text/plain
+				<ShaderPart type='VERTEX'><![CDATA[
 #version 420 core 
 layout(location = 0) in vec3 position;
 layout(location = 1) in vec3 normal;
@@ -121,9 +143,11 @@ void main()
 	vec4 lightPos = modelview * vec4(1.0, 0.0, 0.0, 1.0);
 	lightVec = normalize(lightPos.xyz - position.xyz);
     uv = texcoord;
-}' />
+}
+]]> 
+</ShaderPart>
 					  
-				<ShaderPart type='TESS_CONTROL' url='data:text/plain
+				<ShaderPart type='TESS_CONTROL'><![CDATA[	
 #version 420 core 
 layout(vertices = 3) out; 
 in vec3 vPosition[]; 
@@ -140,8 +164,10 @@ void main()
         gl_TessLevelOuter[1] = TessLevelOuter; 
         gl_TessLevelOuter[2] = TessLevelOuter; 
     } 
-} ' />
-				<ShaderPart type='TESS_EVAL' url='data:text/plain
+}
+]]> 
+</ShaderPart>
+				<ShaderPart type='TESS_EVAL'><![CDATA[	
 #version 420 core 
 layout(triangles, equal_spacing, cw) in; 
 in vec3 tcPosition[]; 
@@ -161,8 +187,10 @@ void main()
     tePatchDistance = gl_TessCoord; 
     tePosition = X3DScale * camscale * scale * size * normalize(p0 + p1 + p2); 
     gl_Position = projection * modelview * vec4(tePosition, 1); 
-} ' />
-				<ShaderPart type='GEOMETRY' url='data:text/plain
+}
+]]> 
+</ShaderPart>
+				<ShaderPart type='GEOMETRY'><![CDATA[
 #version 420 core 
 uniform mat4 modelview; 
 uniform mat3 normalmatrix; 
@@ -194,8 +222,10 @@ void main()
     gl_Position = gl_in[2].gl_Position; 
     EmitVertex(); 
     EndPrimitive(); 
-} ' />
-				<ShaderPart type='FRAGMENT' url='data:text/plain
+} 
+]]> 
+</ShaderPart>
+				<ShaderPart type='FRAGMENT'><![CDATA[
 #version 420 core 
 varying vec3 lightVec; 
 varying vec3 eyeVec; 
@@ -264,7 +294,9 @@ void main()
         col_accum = vec4(0.0, 0, 0, 1.0); 
     } 
     FragColor = col_accum; 
-} ' />
+} 
+]]> 
+</ShaderPart>
 			</ComposedShader>
 		</Appearance>
     </Shape>

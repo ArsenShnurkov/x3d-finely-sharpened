@@ -146,8 +146,8 @@ namespace X3D
                             }
                             else
                             {
-                                parentShape.CurrentShader.SetFieldValue("TessLevelInner", parentShape.TessLevelInner);
-                                parentShape.CurrentShader.SetFieldValue("TessLevelOuter", parentShape.TessLevelOuter);
+                                //parentShape.CurrentShader.SetFieldValue("TessLevelInner", parentShape.TessLevelInner);
+                                //parentShape.CurrentShader.SetFieldValue("TessLevelOuter", parentShape.TessLevelOuter);
                             }
 
                             parentShape.CurrentShader.SetFieldValue("normalmatrix", ref parentShape.NormalMatrix);

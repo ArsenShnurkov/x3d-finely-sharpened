@@ -42,8 +42,8 @@ namespace X3D
             }
         }
 
-        [XmlIgnore]
-        public string ShaderSource;
+        //[XmlIgnore]
+        //public string ShaderSource;
 
         #region Rendering Methods
 
@@ -57,7 +57,11 @@ namespace X3D
             string file;
             string[] mf_urls;
 
-            if (Urls != null)
+            if (!string.IsNullOrEmpty(ShaderSource))
+            {
+                LinkShaderSource(ShaderSource);
+            }
+            else if (Urls != null)
             {
                 file = Urls.FirstOrDefault();
                 

@@ -10325,6 +10325,10 @@ namespace X3D
         [System.Xml.Serialization.XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("")]
         public string value { get; set; }
+
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute("")]
+        public string accessType { get; set; }
     }
 
     public partial class fieldValue : SceneGraphNode, SceneGraphStructureStatement
@@ -18144,7 +18148,7 @@ namespace X3D
         }
 
         [XmlText]
-        public string ScriptSource
+        public string ShaderSource
         {
             get { return _source; }
             set { _source = value; }

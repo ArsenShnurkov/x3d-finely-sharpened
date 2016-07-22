@@ -27,6 +27,53 @@ namespace X3D.Parser
         private static Regex regMFStringSingleQuotes = new Regex("", RegexOptions.Compiled);
 
         
+        public static object StringToX3DSimpleTypeInstance(string value, string x3dType, out Type type)
+        {
+            type = X3DTypeConverters.X3DSimpleTypeToManagedType(x3dType);
+
+            if (type == typeof(int)) return int.Parse(value);
+            else if (type == typeof(float)) return float.Parse(value);
+            else if (type == typeof(Vector3)) return X3DTypeConverters.SFVec3f(value);
+            else if (type == typeof(Vector4)) return X3DTypeConverters.SFVec4f(value);
+            else if (type == typeof(Matrix3))
+            {
+                Console.WriteLine("X3D type '{0}' not implemented", x3dType);
+            }
+            else if (type == typeof(Matrix4))
+            {
+                Console.WriteLine("X3D type '{0}' not implemented", x3dType);
+            }
+            else
+            {
+                Console.WriteLine("X3D type '{0}' not implemented",x3dType);
+            }
+            return null;
+        }
+
+        public static Type X3DSimpleTypeToManagedType(string x3dSimpleType)
+        {
+            Type t = typeof(string);
+
+            switch (x3dSimpleType.ToUpper())
+            {
+                case "SFINT":
+                    t = typeof(int);
+                    break;
+                case "SFFLOAT":
+                    t = typeof(float);
+                    break;
+                case "SFVEC3":
+                    t = typeof(Vector3);
+                    break;
+                case "SFVEC4":
+                    t = typeof(Vector4);
+                    break;
+            }
+            //TODO: mat3, mat4, ..
+
+            return t;
+        }
+
         public static MFString MFString(string @string)
         {
             string tmp = removeQuotes(@string);
@@ -228,19 +275,34 @@ namespace X3D.Parser
             return indicies.ToArray();
         }
 
+        public static string ToString(int @int)
+        {
+            return string.Format("{0}", @int);
+        }
+
+        public static string ToString(float @float)
+        {
+            return string.Format("{0}", @float);
+        }
+
         public static string ToString(Vector3 sfVec3f)
         {
             return string.Format("{0} {1} {2}", sfVec3f.X, sfVec3f.Y, sfVec3f.Z);
         }
 
-        //internal static string removeQuotes(string url)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
         public static string ToString(Vector4 sfVec4f)
         {
             return string.Format("{0} {1} {2} {3}", sfVec4f.X, sfVec4f.Y, sfVec4f.Z, sfVec4f.W);
+        }
+
+        public static string ToString(Matrix3 mat3)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static string ToString(Matrix4 mat4)
+        {
+            throw new NotImplementedException();
         }
 
         public static Vector3 SFVec3(string value)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -83,6 +84,9 @@ namespace X3D
                         // Bind events, then when they occur, call associated dom javascript events
 
                         // KEYBINDINGS
+                        
+                        
+                        
                         rc.Keyboard.KeyDown += (object sender, OpenTK.Input.KeyboardKeyEventArgs e) =>
                         {
                             int charCode = (int)e.ScanCode;
@@ -112,8 +116,6 @@ namespace X3D
             }
         }
 
-
-
         public override void Render(RenderingContext rc)
         {
             base.Render(rc);
@@ -126,6 +128,8 @@ namespace X3D
 
                 if (engine != null)
                 {
+                    engine.UpdateKeyboardState(rc.Keyboard);
+
                     engine.Execute(this.ScriptSource);
                 }
 
