@@ -1,4 +1,9 @@
-﻿using System;
+﻿//TODO: dont unpack indicies or transform them if it is not required. we want to save both time and space if at all possible.
+// todo implememt optimisations; minimal unpacking/transformation of geometry.
+// todo: primativeRestartIndex()
+
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

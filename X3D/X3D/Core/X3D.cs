@@ -81,9 +81,13 @@ namespace X3D
             {
                 Console.WriteLine("X3D Document requires version {0} which is not available current browser version is X3D v{1}", this.version, X3DEngineVersionNum);
             }
-            if (!(profile == profileNames.Core || profile == profileNames.Interchange))
+            if (!(profile == profileNames.Core || profile == profileNames.Interchange || profile == profileNames.Interactive))
             {
                 Console.WriteLine("X3D Document requires profile {0} which is not available current browser supports {1} profile", this.profile, X3DEngineProfile);
+            }
+            else
+            {
+                Console.WriteLine("Browser supports {0} profile", X3DEngineProfile);
             }
 
         }

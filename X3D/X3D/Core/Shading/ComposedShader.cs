@@ -101,7 +101,7 @@ namespace X3D
 
         }
 
-        public void SetFieldValueSTR(string name, string value, string x3dType)
+        internal void SetFieldValueSTR(string name, string value, string x3dType)
         {
             object v;
             Type type;
@@ -124,14 +124,14 @@ namespace X3D
             }
         }
 
-        public void SetFieldValue(string name, int value)
+        internal void SetFieldValue(string name, int value)
         {
             GL.Uniform1(GL.GetUniformLocation(this.ShaderHandle, name), value);
 
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
 
-        public void SetFieldValue(string name, float value)
+        internal void SetFieldValue(string name, float value)
         {
             var loc = GL.GetUniformLocation(this.ShaderHandle, name);
             GL.Uniform1(loc, value);
@@ -139,21 +139,21 @@ namespace X3D
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
 
-        public void SetFieldValue(string name, Vector3 value)
+        internal void SetFieldValue(string name, Vector3 value)
         {
             GL.Uniform3(GL.GetUniformLocation(this.ShaderHandle, name), ref value);
 
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
 
-        public void SetFieldValue(string name, Vector4 value)
+        internal void SetFieldValue(string name, Vector4 value)
         {
             GL.Uniform4(GL.GetUniformLocation(this.ShaderHandle, name), ref value);
 
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
 
-        public void SetFieldValue(string name, ref Matrix3 value)
+        internal void SetFieldValue(string name, ref Matrix3 value)
         {
             GL.UniformMatrix3(GL.GetUniformLocation(this.ShaderHandle, name), false, ref value);
 
@@ -161,7 +161,7 @@ namespace X3D
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
 
-        public void SetFieldValue(string name, ref Matrix4 value)
+        internal void SetFieldValue(string name, ref Matrix4 value)
         {
             GL.UniformMatrix4(GL.GetUniformLocation(this.ShaderHandle, name), false, ref value);
 
@@ -169,7 +169,7 @@ namespace X3D
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
 
-        private void UpdateField(string name, string value)
+        internal void UpdateField(string name, string value)
         {
             List<field> fields = this.Children
                 .Where(n => n.GetType() == typeof(field) && n.getAttribute("name").ToString() == name)
@@ -225,7 +225,7 @@ namespace X3D
             }
         }
 
-        public void ApplyFieldsAsUniforms(RenderingContext rc)
+        internal void ApplyFieldsAsUniforms(RenderingContext rc)
         {
             field[] fields = this.Children.Where(n => n.GetType() == typeof(field)).Select(n => (field)n) .ToArray();
 

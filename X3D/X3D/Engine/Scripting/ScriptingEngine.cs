@@ -139,7 +139,7 @@ namespace X3D.Engine
         public void UpdateKeyboardState(KeyboardDevice currentKeyboard)
         {
             if (v8.IsDisposed) return;
-
+            
             // Copy keyboard state
             InternalHandle[] keyboard = new InternalHandle[(int)Key.LastKey];
             for (int i = 0; i < keyboard.Length; i++)

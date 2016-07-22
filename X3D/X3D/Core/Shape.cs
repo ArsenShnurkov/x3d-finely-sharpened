@@ -1,23 +1,4 @@
-﻿//TODO: buffer all geometric properties
-//TODO: implement ADS shading using materials instantiated from Shape Appearance. 
-//      Hardcode ADS Shader model if no shader is specified.
-//TODO: implement and instantiate Shader model. implement test scene graph with phong shader.
-//TODO: dynamically select shader program for each Shape instance.
-
-//TODO: what if these children have USE lookup requirements?
-
-//TODO: dont unpack indicies or transform them if it is not required. we want to save both time and space if at all possible.
-// todo implement ifs geometry shader. ensure colors, texcoords,normals,and verticies render. test using primativiēs.
-// todo implement creaseAngle: flat and smooth shading
-// todo implememt phong shading. doēs x3d specify this?
-// todo implememt optimisations; minimal unpacking/transformation of geometry, go direct to webgl datastructs.
-// todo implememt node instancing 
-// todo implement dynamic buffers, dynamic attributes, node disposal/scene cleanup, 
-// todo īmplememt SAI, scene graph debugger, and UI
-// todo implememt ccw, solid, concave tesselator, dynamic polygon types/dynamic faceset capability
-// todo: webgl currently lacks support for primativeRestartIndex(), but even then if webgl did support this, i dont think that a restart index can be a signed integer. (-1)
-
-using OpenTK;
+﻿using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Input;
 using System;
@@ -28,7 +9,6 @@ using System.Xml.Serialization;
 using X3D.Core;
 using X3D.Core.Shading;
 using X3D.Core.Shading.DefaultUniforms;
-using X3D.Core;
 
 namespace X3D
 {
@@ -205,14 +185,6 @@ namespace X3D
 
                 if (CurrentShader.IsBuiltIn == false)
                 {
-                    // TODO: later put this logic inside X3D shader examples /sphere-with-tessellation.x3d
-
-                    // The ability to incorporate and vary the amount of tesselation should be a X3D scriptable feature
-                    //if (rc.Keyboard[Key.L]) TessLevelInner++;
-                    //if (rc.Keyboard[Key.J]) TessLevelInner = TessLevelInner > 1 ? TessLevelInner - 1 : 1;
-                    //if (rc.Keyboard[Key.I]) TessLevelOuter++;
-                    //if (rc.Keyboard[Key.K]) TessLevelOuter = TessLevelOuter > 1 ? TessLevelOuter - 1 : 1;
-
                     CurrentShader.ApplyFieldsAsUniforms(rc);
                 }
 
