@@ -1,10 +1,20 @@
-﻿using OpenTK.Input;
+﻿// V8.Net, the Google V8 Wrapper for .NET on codeplex: https://v8dotnet.codeplex.com
+//
+// If using the windows platform and there are any issues referencing this dependancy 
+// then try going into the context menu for each *.dll and unblock each on in the properties dialog
+//
+// If you are not using the windows platform, then another wrapper might be required to work in mono
+// Portability will be under investigation.
+
+using OpenTK.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+
+// Google V8 Engine via V8.Net wrapper
 using V8.Net;
 
 namespace X3D.Engine
@@ -140,7 +150,8 @@ namespace X3D.Engine
         {
             if (v8.IsDisposed) return;
             
-            // Copy keyboard state
+            // Copy keyboard state 
+            //TODO: copy state quicker. Should be able to transfer over in O(1)
             InternalHandle[] keyboard = new InternalHandle[(int)Key.LastKey];
             for (int i = 0; i < keyboard.Length; i++)
             {
@@ -187,6 +198,21 @@ namespace X3D.Engine
                 if (functHandle.ValueType != JSValueType.CompilerError && functHandle.IsFunction)
                 {
                     functHandle.AsInternalHandle.StaticCall();
+                }
+            }
+        }
+
+        internal void OnRenderFrame(RenderingContext rc)
+        {
+            using (Handle functHandle = v8.Execute("onRenderFrame", SOURCE_NAME, false))
+            {
+                if (functHandle.ValueType != JSValueType.CompilerError && functHandle.IsFunction)
+                {
+                    InternalHandle obj = v8.CreateObject();
+
+                    obj.SetProperty("time", rc.Time);
+
+                    functHandle.AsInternalHandle.StaticCall(obj);
                 }
             }
         }

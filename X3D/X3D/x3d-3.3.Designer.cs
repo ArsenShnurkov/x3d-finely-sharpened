@@ -1,5 +1,10 @@
 ﻿/* 
-Manual fixes made by Gerallt Franke 2016 all models preserved and represent the entire X3D 3.3 model.
+Manual fixes made by Gerallt Franke 2016 
+All models comprising the entire X3D Version 3.3 model for eXtensible 3D computer graphics.
+
+OpenTK, The Open Toolkit Library on github https://github.com/opentk/opentk
+x3d-finely-sharpened on github: https://github.com/RealityDaemon/x3d-finely-sharpened
+
 
  Description: 
 ~~~~ It seems that C# model generation using xsd.exe or svcutil does not get around cyclic references in the input XSD.
@@ -27,12 +32,18 @@ namespace X3D
     using System.ComponentModel;
     using System.Xml;
     using System.Collections.Generic;
-    using OpenTK;
     using System.Linq;
-    using Core;
     using System.Drawing;
-    using Engine;
+
+    // The Open Toolkit Library
+    using OpenTK;
+
+    // x3d-finely-sharpened X3D engine 
     using Parser;
+    using Engine;
+    using Core;
+    using System.CodeDom.Compiler;
+
     public enum X3DMIMEType
     {
         X3D,
@@ -46,8 +57,8 @@ namespace X3D
     /// x3dVersion enumeration string constants are used to identify 
     /// the allowed versions for an X3D scene graph
     /// </summary>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum x3dVersion
     {
         X3D_3_0,
@@ -56,8 +67,8 @@ namespace X3D
         X3D_3_3
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum profileNames
     {
         Core,
@@ -81,7 +92,7 @@ namespace X3D
             this._containerField = "appearance";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("appearance")]
         public string containerField
         {
@@ -120,7 +131,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float radius
         {
@@ -134,7 +145,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float startAngle
         {
@@ -148,7 +159,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1.570796")]
         public float endAngle
         {
@@ -162,7 +173,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -177,51 +188,51 @@ namespace X3D
         }
     }
 
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DParametricGeometryNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DNurbsSurfaceGeometryNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DComposedGeometryNode))]
+    [XmlIncludeAttribute(typeof(X3DParametricGeometryNode))]
+    [XmlIncludeAttribute(typeof(X3DNurbsSurfaceGeometryNode))]
+    [XmlIncludeAttribute(typeof(X3DComposedGeometryNode))]
     public abstract partial class X3DGeometryNode : X3DNode
     {
 
     }
 
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DGeometricPropertyNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DVertexAttributeNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DTextureCoordinateNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DNormalNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DCoordinateNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DColorNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DGeometryNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DParametricGeometryNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DNurbsSurfaceGeometryNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DComposedGeometryNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DAppearanceChildNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DTextureNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DTexture2DNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DEnvironmentTextureNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DShaderNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DMaterialNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DAppearanceNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DChildNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DShapeNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DLightNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DInterpolatorNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DGroupingNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DBindableNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DViewpointNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DBackgroundNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DMetadataObject))]
+    [XmlIncludeAttribute(typeof(X3DGeometricPropertyNode))]
+    [XmlIncludeAttribute(typeof(X3DVertexAttributeNode))]
+    [XmlIncludeAttribute(typeof(X3DTextureCoordinateNode))]
+    [XmlIncludeAttribute(typeof(X3DNormalNode))]
+    [XmlIncludeAttribute(typeof(X3DCoordinateNode))]
+    [XmlIncludeAttribute(typeof(X3DColorNode))]
+    [XmlIncludeAttribute(typeof(X3DGeometryNode))]
+    [XmlIncludeAttribute(typeof(X3DParametricGeometryNode))]
+    [XmlIncludeAttribute(typeof(X3DNurbsSurfaceGeometryNode))]
+    [XmlIncludeAttribute(typeof(X3DComposedGeometryNode))]
+    [XmlIncludeAttribute(typeof(X3DAppearanceChildNode))]
+    [XmlIncludeAttribute(typeof(X3DTextureNode))]
+    [XmlIncludeAttribute(typeof(X3DTexture2DNode))]
+    [XmlIncludeAttribute(typeof(X3DEnvironmentTextureNode))]
+    [XmlIncludeAttribute(typeof(X3DShaderNode))]
+    [XmlIncludeAttribute(typeof(X3DMaterialNode))]
+    [XmlIncludeAttribute(typeof(X3DAppearanceNode))]
+    [XmlIncludeAttribute(typeof(X3DChildNode))]
+    [XmlIncludeAttribute(typeof(X3DShapeNode))]
+    [XmlIncludeAttribute(typeof(X3DLightNode))]
+    [XmlIncludeAttribute(typeof(X3DInterpolatorNode))]
+    [XmlIncludeAttribute(typeof(X3DGroupingNode))]
+    [XmlIncludeAttribute(typeof(X3DBindableNode))]
+    [XmlIncludeAttribute(typeof(X3DViewpointNode))]
+    [XmlIncludeAttribute(typeof(X3DBackgroundNode))]
+    [XmlIncludeAttribute(typeof(X3DMetadataObject))]
     public abstract partial class X3DNode : SceneGraphNode
     {
 
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ArcClose2D : X3DGeometryNode
     {
 
@@ -247,7 +258,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float radius
         {
@@ -261,7 +272,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float startAngle
         {
@@ -275,7 +286,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1.570796")]
         public float endAngle
         {
@@ -289,7 +300,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(ArcClose2dTypeValues.PIE)]
         public ArcClose2dTypeValues closureType
         {
@@ -303,7 +314,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool solid
         {
@@ -317,7 +328,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -332,8 +343,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum ArcClose2dTypeValues
     {
 
@@ -357,7 +368,7 @@ namespace X3D
             this._containerField = "source";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> url
         {
             get
@@ -370,7 +381,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("source")]
         public string containerField
         {
@@ -397,7 +408,7 @@ namespace X3D
             this._pitch = ((float)(1F));
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string description
         {
             get
@@ -410,7 +421,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float pitch
         {
@@ -425,7 +436,7 @@ namespace X3D
         }
     }
 
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DSoundSourceNode))]
+    [XmlIncludeAttribute(typeof(X3DSoundSourceNode))]
     public abstract partial class X3DTimeDependentNode : X3DChildNode
     {
 
@@ -448,7 +459,7 @@ namespace X3D
             this._stopTime = 0D;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool loop
         {
@@ -462,7 +473,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(0D)]
         public double pauseTime
         {
@@ -476,7 +487,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(0D)]
         public double resumeTime
         {
@@ -490,7 +501,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(0D)]
         public double startTime
         {
@@ -504,7 +515,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(0D)]
         public double stopTime
         {
@@ -519,15 +530,15 @@ namespace X3D
         }
     }
 
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DTimeDependentNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DSoundSourceNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DShapeNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DLightNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DInterpolatorNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DGroupingNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DBindableNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DViewpointNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DBackgroundNode))]
+    [XmlIncludeAttribute(typeof(X3DTimeDependentNode))]
+    [XmlIncludeAttribute(typeof(X3DSoundSourceNode))]
+    [XmlIncludeAttribute(typeof(X3DShapeNode))]
+    [XmlIncludeAttribute(typeof(X3DLightNode))]
+    [XmlIncludeAttribute(typeof(X3DInterpolatorNode))]
+    [XmlIncludeAttribute(typeof(X3DGroupingNode))]
+    [XmlIncludeAttribute(typeof(X3DBindableNode))]
+    [XmlIncludeAttribute(typeof(X3DViewpointNode))]
+    [XmlIncludeAttribute(typeof(X3DBackgroundNode))]
     public abstract partial class X3DChildNode : X3DNode
     {
 
@@ -548,12 +559,12 @@ namespace X3D
         //TODO: Shape's bounding box
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Background : X3DBackgroundNode
     {
 
@@ -582,7 +593,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("backUrl")]
+        [XmlAttributeAttribute("backUrl")]
         public string backUrl
         {
             get
@@ -595,7 +606,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string bottomUrl
         {
             get
@@ -608,7 +619,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string frontUrl
         {
             get
@@ -621,7 +632,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string leftUrl
         {
             get
@@ -634,7 +645,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string rightUrl
         {
             get
@@ -647,7 +658,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string topUrl
         {
             get
@@ -660,7 +671,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -675,8 +686,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DBackgroundNode : X3DBindableNode
@@ -698,7 +709,7 @@ namespace X3D
             this._transparency = ((float)(0F));
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string groundAngle
         {
             get
@@ -711,7 +722,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string groundColor
         {
             get
@@ -724,7 +735,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string skyAngle
         {
             get
@@ -737,7 +748,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string skyColor
         {
@@ -751,7 +762,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float transparency
         {
@@ -766,18 +777,18 @@ namespace X3D
         }
     }
 
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DViewpointNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DBackgroundNode))]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [XmlIncludeAttribute(typeof(X3DViewpointNode))]
+    [XmlIncludeAttribute(typeof(X3DBackgroundNode))]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DBindableNode : X3DChildNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DViewpointNode : X3DBindableNode
@@ -802,7 +813,7 @@ namespace X3D
             this._retainUserOffsets = false;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string description
         {
             get
@@ -815,7 +826,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool jump
         {
@@ -829,7 +840,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string orientation
         {
@@ -844,7 +855,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool retainUserOffsets
         {
@@ -872,7 +883,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0")]
         public string axisOfRotation
         {
@@ -886,7 +897,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -909,12 +920,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class BooleanFilter : X3DChildNode
     {
 
@@ -925,7 +936,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -940,12 +951,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class BooleanSequencer : X3DSequencerNode
     {
 
@@ -959,7 +970,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<bool> keyValue
         {
             get
@@ -972,7 +983,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -987,8 +998,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DSequencerNode : X3DChildNode
@@ -996,7 +1007,7 @@ namespace X3D
 
         private string _key;
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string key
         {
             get
@@ -1010,12 +1021,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class BooleanToggle : X3DChildNode
     {
 
@@ -1029,7 +1040,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool toggle
         {
@@ -1043,7 +1054,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -1058,12 +1069,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class BooleanTrigger : X3DTriggerNode
     {
 
@@ -1074,7 +1085,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -1089,20 +1100,20 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DTriggerNode : X3DChildNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Box : X3DGeometryNode
     {
 
@@ -1121,7 +1132,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("2 2 2")]
         public string size
         {
@@ -1149,7 +1160,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool solid
         {
@@ -1163,7 +1174,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -1178,12 +1189,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Circle2D : X3DGeometryNode
     {
 
@@ -1197,7 +1208,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float radius
         {
@@ -1211,7 +1222,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -1226,12 +1237,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ClipPlane : X3DChildNode
     {
 
@@ -1248,7 +1259,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool enabled
         {
@@ -1262,7 +1273,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0 0")]
         public string plane
         {
@@ -1276,7 +1287,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -1291,12 +1302,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Collision : X3DGroupingNode
     {
 
@@ -1310,7 +1321,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool enabled
         {
@@ -1324,7 +1335,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -1339,12 +1350,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Color : X3DColorNode
     {
 
@@ -1357,7 +1368,7 @@ namespace X3D
             this._containerField = "color";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string color
         {
             get
@@ -1370,7 +1381,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("color")]
         public string containerField
         {
@@ -1392,29 +1403,29 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DColorNode : X3DGeometricPropertyNode
     {
     }
 
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DVertexAttributeNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DTextureCoordinateNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DNormalNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DCoordinateNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DColorNode))]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [XmlIncludeAttribute(typeof(X3DVertexAttributeNode))]
+    [XmlIncludeAttribute(typeof(X3DTextureCoordinateNode))]
+    [XmlIncludeAttribute(typeof(X3DNormalNode))]
+    [XmlIncludeAttribute(typeof(X3DCoordinateNode))]
+    [XmlIncludeAttribute(typeof(X3DColorNode))]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DGeometricPropertyNode : X3DNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DVertexAttributeNode : X3DGeometricPropertyNode
@@ -1422,7 +1433,7 @@ namespace X3D
 
         private string _name;
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string name
         {
             get
@@ -1436,36 +1447,36 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DTextureCoordinateNode : X3DGeometricPropertyNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DNormalNode : X3DGeometricPropertyNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DCoordinateNode : X3DGeometricPropertyNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ColorRGBA : X3DColorNode
     {
 
@@ -1478,7 +1489,7 @@ namespace X3D
             this._containerField = "color";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string color
         {
             get
@@ -1491,7 +1502,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("color")]
         public string containerField
         {
@@ -1506,12 +1517,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ColorInterpolator : X3DInterpolatorNode
     {
 
@@ -1524,7 +1535,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string keyValue
         {
             get
@@ -1537,7 +1548,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -1552,8 +1563,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DInterpolatorNode : X3DChildNode
@@ -1561,7 +1572,7 @@ namespace X3D
 
         private string _key;
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string key
         {
             get
@@ -1575,12 +1586,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Cone : X3DGeometryNode
     {
 
@@ -1606,7 +1617,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float bottomRadius
         {
@@ -1620,7 +1631,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "2")]
         public float height
         {
@@ -1634,7 +1645,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool side
         {
@@ -1648,7 +1659,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool bottom
         {
@@ -1662,7 +1673,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool solid
         {
@@ -1676,7 +1687,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -1691,12 +1702,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Coordinate : X3DCoordinateNode
     {
 
@@ -1709,7 +1720,7 @@ namespace X3D
             this._containerField = "coord";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string point
         {
             get
@@ -1722,7 +1733,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("coord")]
         public string containerField
         {
@@ -1737,12 +1748,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class CoordinateDouble : X3DCoordinateNode
     {
 
@@ -1755,7 +1766,7 @@ namespace X3D
             this._containerField = "coord";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string point
         {
             get
@@ -1768,7 +1779,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("coord")]
         public string containerField
         {
@@ -1783,12 +1794,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class CoordinateInterpolator : X3DInterpolatorNode
     {
 
@@ -1801,7 +1812,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string keyValue
         {
             get
@@ -1814,7 +1825,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -1829,12 +1840,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class CoordinateInterpolator2D : X3DInterpolatorNode
     {
 
@@ -1847,7 +1858,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string keyValue
         {
             get
@@ -1860,7 +1871,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -1875,12 +1886,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Cylinder : X3DGeometryNode
     {
 
@@ -1909,7 +1920,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool bottom
         {
@@ -1923,7 +1934,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "2")]
         public float height
         {
@@ -1937,7 +1948,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float radius
         {
@@ -1951,7 +1962,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool side
         {
@@ -1965,7 +1976,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool top
         {
@@ -1979,7 +1990,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool solid
         {
@@ -1993,7 +2004,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -2008,12 +2019,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class CylinderSensor : X3DDragSensorNode
     {
 
@@ -2039,7 +2050,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0 0")]
         public string axisRotation
         {
@@ -2053,7 +2064,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.2617917")]
         public float diskAngle
         {
@@ -2067,7 +2078,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "-1")]
         public float maxAngle
         {
@@ -2081,7 +2092,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float minAngle
         {
@@ -2095,7 +2106,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float offset
         {
@@ -2109,7 +2120,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -2124,8 +2135,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DDragSensorNode : X3DPointingDeviceSensorNode
@@ -2138,7 +2149,7 @@ namespace X3D
             this._autoOffset = true;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool autoOffset
         {
@@ -2153,10 +2164,10 @@ namespace X3D
         }
     }
 
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DTouchSensorNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DDragSensorNode))]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [XmlIncludeAttribute(typeof(X3DTouchSensorNode))]
+    [XmlIncludeAttribute(typeof(X3DDragSensorNode))]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DPointingDeviceSensorNode : X3DSensorNode
@@ -2164,7 +2175,7 @@ namespace X3D
 
         private string _description;
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string description
         {
             get
@@ -2178,15 +2189,15 @@ namespace X3D
         }
     }
 
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DPickSensorNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DPointingDeviceSensorNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DTouchSensorNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DDragSensorNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DNetworkSensorNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DKeyDeviceSensorNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DEnvironmentalSensorNode))]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [XmlIncludeAttribute(typeof(X3DPickSensorNode))]
+    [XmlIncludeAttribute(typeof(X3DPointingDeviceSensorNode))]
+    [XmlIncludeAttribute(typeof(X3DTouchSensorNode))]
+    [XmlIncludeAttribute(typeof(X3DDragSensorNode))]
+    [XmlIncludeAttribute(typeof(X3DNetworkSensorNode))]
+    [XmlIncludeAttribute(typeof(X3DKeyDeviceSensorNode))]
+    [XmlIncludeAttribute(typeof(X3DEnvironmentalSensorNode))]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DSensorNode : X3DChildNode
@@ -2199,7 +2210,7 @@ namespace X3D
             this._enabled = true;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool enabled
         {
@@ -2214,8 +2225,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DPickSensorNode : X3DSensorNode
@@ -2241,7 +2252,7 @@ namespace X3D
             this._sortOrder = X3DPickSensorNodeSortOrder.CLOSEST;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("BOUNDS")]
         public string intersectionType
         {
@@ -2255,7 +2266,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(X3DPickSensorNodeMatchCriterion.MATCH_ANY)]
         public X3DPickSensorNodeMatchCriterion matchCriterion
         {
@@ -2269,7 +2280,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> objectType
         {
             get
@@ -2282,7 +2293,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(X3DPickSensorNodeSortOrder.CLOSEST)]
         public X3DPickSensorNodeSortOrder sortOrder
         {
@@ -2297,9 +2308,9 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
+    [XmlTypeAttribute(AnonymousType = true)]
     public enum X3DPickSensorNodeMatchCriterion
     {
 
@@ -2313,9 +2324,9 @@ namespace X3D
         MATCH_ONLY_ONE,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
+    [XmlTypeAttribute(AnonymousType = true)]
     public enum X3DPickSensorNodeSortOrder
     {
 
@@ -2332,24 +2343,24 @@ namespace X3D
         ALL_SORTED,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DNetworkSensorNode : X3DSensorNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DKeyDeviceSensorNode : X3DSensorNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DEnvironmentalSensorNode : X3DSensorNode
@@ -2362,7 +2373,7 @@ namespace X3D
             this._size = "0 0 0";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string size
         {
@@ -2377,20 +2388,20 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DTouchSensorNode : X3DPointingDeviceSensorNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class DirectionalLight : X3DLightNode
     {
 
@@ -2407,7 +2418,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 -1")]
         public string direction
         {
@@ -2421,7 +2432,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool global
         {
@@ -2435,7 +2446,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -2450,8 +2461,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DLightNode : X3DChildNode
@@ -2473,7 +2484,7 @@ namespace X3D
             this._on = true;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float ambientIntensity
         {
@@ -2487,7 +2498,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1 1")]
         public string color
         {
@@ -2501,7 +2512,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float intensity
         {
@@ -2515,7 +2526,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool on
         {
@@ -2530,12 +2541,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Disk2D : X3DGeometryNode
     {
 
@@ -2555,7 +2566,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float innerRadius
         {
@@ -2569,7 +2580,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float outerRadius
         {
@@ -2583,7 +2594,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool solid
         {
@@ -2597,7 +2608,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -2654,19 +2665,19 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Color", typeof(Color))]
-        [System.Xml.Serialization.XmlElementAttribute("ColorRGBA", typeof(ColorRGBA))]
-        [System.Xml.Serialization.XmlElementAttribute("FloatVertexAttribute", typeof(FloatVertexAttribute))]
-        [System.Xml.Serialization.XmlElementAttribute("FogCoordinate", typeof(FogCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("Matrix3VertexAttribute", typeof(Matrix3VertexAttribute))]
-        [System.Xml.Serialization.XmlElementAttribute("Matrix4VertexAttribute", typeof(Matrix4VertexAttribute))]
-        [System.Xml.Serialization.XmlElementAttribute("MultiTextureCoordinate", typeof(MultiTextureCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("Normal", typeof(Normal))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureCoordinate", typeof(TextureCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureCoordinate3D", typeof(TextureCoordinate3D))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureCoordinate4D", typeof(TextureCoordinate4D))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureCoordinateGenerator", typeof(TextureCoordinateGenerator))]
+        [XmlElementAttribute("Color", typeof(Color))]
+        [XmlElementAttribute("ColorRGBA", typeof(ColorRGBA))]
+        [XmlElementAttribute("FloatVertexAttribute", typeof(FloatVertexAttribute))]
+        [XmlElementAttribute("FogCoordinate", typeof(FogCoordinate))]
+        [XmlElementAttribute("Matrix3VertexAttribute", typeof(Matrix3VertexAttribute))]
+        [XmlElementAttribute("Matrix4VertexAttribute", typeof(Matrix4VertexAttribute))]
+        [XmlElementAttribute("MultiTextureCoordinate", typeof(MultiTextureCoordinate))]
+        [XmlElementAttribute("Normal", typeof(Normal))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("TextureCoordinate", typeof(TextureCoordinate))]
+        [XmlElementAttribute("TextureCoordinate3D", typeof(TextureCoordinate3D))]
+        [XmlElementAttribute("TextureCoordinate4D", typeof(TextureCoordinate4D))]
+        [XmlElementAttribute("TextureCoordinateGenerator", typeof(TextureCoordinateGenerator))]
         public object Item
         {
             get
@@ -2682,7 +2693,7 @@ namespace X3D
         [XmlIgnore]
         public float[] heights;
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0 0")]
         public string height
         {
@@ -2698,7 +2709,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool ccw
         {
@@ -2712,7 +2723,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool colorPerVertex
         {
@@ -2726,7 +2737,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float creaseAngle
         {
@@ -2740,7 +2751,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool normalPerVertex
         {
@@ -2754,7 +2765,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool solid
         {
@@ -2768,7 +2779,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("2")]
         public string xDimension
         {
@@ -2782,7 +2793,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float xSpacing
         {
@@ -2796,7 +2807,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("2")]
         public string zDimension
         {
@@ -2810,7 +2821,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float zSpacing
         {
@@ -2824,7 +2835,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -2839,12 +2850,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class FloatVertexAttribute : X3DVertexAttributeNode
     {
 
@@ -2860,7 +2871,7 @@ namespace X3D
             this._containerField = "attrib";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string value
         {
             get
@@ -2873,7 +2884,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("4")]
         public string numComponents
         {
@@ -2887,7 +2898,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("attrib")]
         public string containerField
         {
@@ -2902,12 +2913,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class FogCoordinate : X3DGeometricPropertyNode
     {
 
@@ -2920,7 +2931,7 @@ namespace X3D
             this._containerField = "fogCoord";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string depth
         {
             get
@@ -2933,7 +2944,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("fogCoord")]
         public string containerField
         {
@@ -2948,12 +2959,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Matrix3VertexAttribute : X3DVertexAttributeNode
     {
 
@@ -2966,7 +2977,7 @@ namespace X3D
             this._containerField = "attrib";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string value
         {
             get
@@ -2979,7 +2990,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("attrib")]
         public string containerField
         {
@@ -2994,12 +3005,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Matrix4VertexAttribute : X3DVertexAttributeNode
     {
 
@@ -3012,7 +3023,7 @@ namespace X3D
             this._containerField = "attrib";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string value
         {
             get
@@ -3025,7 +3036,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("attrib")]
         public string containerField
         {
@@ -3053,9 +3064,9 @@ namespace X3D
             this._containerField = "texCoord";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureCoordinate", typeof(TextureCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureCoordinateGenerator", typeof(TextureCoordinateGenerator))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("TextureCoordinate", typeof(TextureCoordinate))]
+        [XmlElementAttribute("TextureCoordinateGenerator", typeof(TextureCoordinateGenerator))]
         public List<object> Items
         {
             get
@@ -3068,7 +3079,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("texCoord")]
         public string containerField
         {
@@ -3101,7 +3112,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "ID")]
+        [XmlAttributeAttribute(DataType = "ID")]
         public string DEF
         {
             get
@@ -3114,7 +3125,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "IDREF")]
+        [XmlAttributeAttribute(DataType = "IDREF")]
         public string USE
         {
             get
@@ -3127,7 +3138,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         public string name
         {
             get
@@ -3140,7 +3151,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKENS")]
+        [XmlAttributeAttribute(DataType = "NMTOKENS")]
         public string @class
         {
             get
@@ -3153,7 +3164,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -3176,12 +3187,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Extrusion : X3DGeometryNode
     {
 
@@ -3222,7 +3233,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool beginCap
         {
@@ -3236,7 +3247,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool ccw
         {
@@ -3250,7 +3261,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool convex
         {
@@ -3264,7 +3275,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float creaseAngle
         {
@@ -3278,7 +3289,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1 1 -1 -1 -1 -1 1 1 1")]
         public string crossSection
         {
@@ -3292,7 +3303,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool endCap
         {
@@ -3306,7 +3317,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string orientation
         {
@@ -3320,7 +3331,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1")]
         public string scale
         {
@@ -3334,7 +3345,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool solid
         {
@@ -3348,7 +3359,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0 0 1 0")]
         public string spine
         {
@@ -3362,7 +3373,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -3399,7 +3410,7 @@ namespace X3D
             this._containerField = "fillProperties";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool filled
         {
@@ -3413,7 +3424,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool hatched
         {
@@ -3427,7 +3438,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("1")]
         public string hatchStyle
         {
@@ -3441,7 +3452,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1 1")]
         public string hatchColor
         {
@@ -3455,7 +3466,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("fillProperties")]
         public string containerField
         {
@@ -3470,18 +3481,18 @@ namespace X3D
         }
     }
 
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DTextureNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DTexture2DNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DEnvironmentTextureNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DShaderNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DMaterialNode))]
+    [XmlIncludeAttribute(typeof(X3DTextureNode))]
+    [XmlIncludeAttribute(typeof(X3DTexture2DNode))]
+    [XmlIncludeAttribute(typeof(X3DEnvironmentTextureNode))]
+    [XmlIncludeAttribute(typeof(X3DShaderNode))]
+    [XmlIncludeAttribute(typeof(X3DMaterialNode))]
     public abstract partial class X3DAppearanceChildNode : X3DNode
     {
 
     }
 
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DTexture2DNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DEnvironmentTextureNode))]
+    [XmlIncludeAttribute(typeof(X3DTexture2DNode))]
+    [XmlIncludeAttribute(typeof(X3DEnvironmentTextureNode))]
     public abstract partial class X3DTextureNode : X3DAppearanceChildNode
     {
 
@@ -3492,12 +3503,12 @@ namespace X3D
 
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Fog : X3DBindableNode
     {
 
@@ -3517,7 +3528,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1 1")]
         public string color
         {
@@ -3531,7 +3542,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(fogTypeValues.LINEAR)]
         public fogTypeValues fogType
         {
@@ -3545,7 +3556,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float visibilityRange
         {
@@ -3559,7 +3570,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -3574,8 +3585,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum fogTypeValues
     {
 
@@ -3586,12 +3597,12 @@ namespace X3D
         EXPONENTIAL,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class FontStyle : X3DFontStyleNode
     {
 
@@ -3633,7 +3644,7 @@ namespace X3D
         [XmlIgnore]
         public List<string> Family;
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string family
         {
             get
@@ -3647,7 +3658,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool horizontal
         {
@@ -3661,7 +3672,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string justify
         {
             get
@@ -3676,7 +3687,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string language
         {
             get
@@ -3689,7 +3700,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool leftToRight
         {
@@ -3703,7 +3714,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float size
         {
@@ -3717,7 +3728,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float spacing
         {
@@ -3731,7 +3742,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(fontStyleValues.PLAIN)]
         public fontStyleValues style
         {
@@ -3745,7 +3756,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool topToBottom
         {
@@ -3759,7 +3770,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("fontStyle")]
         public string containerField
         {
@@ -3774,8 +3785,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum fontStyleValues
     {
 
@@ -3792,20 +3803,20 @@ namespace X3D
         BOLDITALIC,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DFontStyleNode : X3DNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Group : X3DGroupingNode
     {
 
@@ -3816,7 +3827,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -3831,12 +3842,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     ////[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ImageTexture : X3DTexture2DNode
     {
 
@@ -3852,7 +3863,7 @@ namespace X3D
             this._containerField = "texture";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string url
         {
             get
@@ -3865,7 +3876,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("texture")]
         public string containerField
         {
@@ -3880,12 +3891,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class IndexedFaceSet : X3DComposedGeometryNode
     {
 
@@ -3910,7 +3921,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool convex
         {
@@ -3924,7 +3935,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float creaseAngle
         {
@@ -3938,7 +3949,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string colorIndex
         {
             get
@@ -3951,7 +3962,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string coordIndex
         {
             get
@@ -3964,7 +3975,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string normalIndex
         {
             get
@@ -3977,7 +3988,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string texCoordIndex
         {
             get
@@ -3990,7 +4001,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -4005,8 +4016,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DComposedGeometryNode : X3DGeometryNode
@@ -4031,23 +4042,23 @@ namespace X3D
             this._solid = true;
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Color", typeof(Color))]
-        [System.Xml.Serialization.XmlElementAttribute("ColorRGBA", typeof(ColorRGBA))]
-        [System.Xml.Serialization.XmlElementAttribute("Coordinate", typeof(Coordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
-        [System.Xml.Serialization.XmlElementAttribute("FloatVertexAttribute", typeof(FloatVertexAttribute))]
-        [System.Xml.Serialization.XmlElementAttribute("FogCoordinate", typeof(FogCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("GeoCoordinate", typeof(GeoCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("Matrix3VertexAttribute", typeof(Matrix3VertexAttribute))]
-        [System.Xml.Serialization.XmlElementAttribute("Matrix4VertexAttribute", typeof(Matrix4VertexAttribute))]
-        [System.Xml.Serialization.XmlElementAttribute("MultiTextureCoordinate", typeof(MultiTextureCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("Normal", typeof(Normal))]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsTextureCoordinate", typeof(NurbsTextureCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureCoordinate", typeof(TextureCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureCoordinate3D", typeof(TextureCoordinate3D))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureCoordinate4D", typeof(TextureCoordinate4D))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureCoordinateGenerator", typeof(TextureCoordinateGenerator))]
+        [XmlElementAttribute("Color", typeof(Color))]
+        [XmlElementAttribute("ColorRGBA", typeof(ColorRGBA))]
+        [XmlElementAttribute("Coordinate", typeof(Coordinate))]
+        [XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
+        [XmlElementAttribute("FloatVertexAttribute", typeof(FloatVertexAttribute))]
+        [XmlElementAttribute("FogCoordinate", typeof(FogCoordinate))]
+        [XmlElementAttribute("GeoCoordinate", typeof(GeoCoordinate))]
+        [XmlElementAttribute("Matrix3VertexAttribute", typeof(Matrix3VertexAttribute))]
+        [XmlElementAttribute("Matrix4VertexAttribute", typeof(Matrix4VertexAttribute))]
+        [XmlElementAttribute("MultiTextureCoordinate", typeof(MultiTextureCoordinate))]
+        [XmlElementAttribute("Normal", typeof(Normal))]
+        [XmlElementAttribute("NurbsTextureCoordinate", typeof(NurbsTextureCoordinate))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("TextureCoordinate", typeof(TextureCoordinate))]
+        [XmlElementAttribute("TextureCoordinate3D", typeof(TextureCoordinate3D))]
+        [XmlElementAttribute("TextureCoordinate4D", typeof(TextureCoordinate4D))]
+        [XmlElementAttribute("TextureCoordinateGenerator", typeof(TextureCoordinateGenerator))]
         public List<object> Items
         {
             get
@@ -4060,7 +4071,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool ccw
         {
@@ -4074,7 +4085,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool colorPerVertex
         {
@@ -4088,7 +4099,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool normalPerVertex
         {
@@ -4102,7 +4113,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool solid
         {
@@ -4117,12 +4128,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class GeoCoordinate : X3DCoordinateNode
     {
 
@@ -4155,7 +4166,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> geoSystem
         {
             get
@@ -4168,7 +4179,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string point
         {
             get
@@ -4181,7 +4192,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("coord")]
         public string containerField
         {
@@ -4196,12 +4207,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class GeoOrigin : X3DNode
     {
 
@@ -4223,7 +4234,7 @@ namespace X3D
             this._containerField = "geoOrigin";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> geoSystem
         {
             get
@@ -4236,7 +4247,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string geoCoords
         {
@@ -4250,7 +4261,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool rotateYUp
         {
@@ -4264,7 +4275,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geoOrigin")]
         public string containerField
         {
@@ -4279,12 +4290,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Normal : X3DNormalNode
     {
 
@@ -4297,7 +4308,7 @@ namespace X3D
             this._containerField = "normal";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string vector
         {
             get
@@ -4310,7 +4321,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("normal")]
         public string containerField
         {
@@ -4325,12 +4336,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class NurbsTextureCoordinate : X3DNode
     {
 
@@ -4361,7 +4372,7 @@ namespace X3D
             this._containerField = "texCoord";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string controlPoint
         {
             get
@@ -4374,7 +4385,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string uDimension
         {
@@ -4388,7 +4399,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string vDimension
         {
@@ -4402,7 +4413,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string uKnot
         {
             get
@@ -4415,7 +4426,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string vKnot
         {
             get
@@ -4428,7 +4439,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("3")]
         public string uOrder
         {
@@ -4442,7 +4453,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("3")]
         public string vOrder
         {
@@ -4456,7 +4467,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string weight
         {
             get
@@ -4469,7 +4480,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("texCoord")]
         public string containerField
         {
@@ -4484,12 +4495,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TextureCoordinate : X3DTextureCoordinateNode
     {
 
@@ -4502,7 +4513,7 @@ namespace X3D
             this._containerField = "texCoord";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string point
         {
             get
@@ -4515,7 +4526,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("texCoord")]
         public string containerField
         {
@@ -4530,12 +4541,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TextureCoordinate3D : X3DTextureCoordinateNode
     {
 
@@ -4548,7 +4559,7 @@ namespace X3D
             this._containerField = "texCoord";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string point
         {
             get
@@ -4561,7 +4572,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("texCoord")]
         public string containerField
         {
@@ -4576,12 +4587,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TextureCoordinate4D : X3DTextureCoordinateNode
     {
 
@@ -4594,7 +4605,7 @@ namespace X3D
             this._containerField = "texCoord";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string point
         {
             get
@@ -4607,7 +4618,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("texCoord")]
         public string containerField
         {
@@ -4622,12 +4633,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TextureCoordinateGenerator : X3DTextureCoordinateNode
     {
 
@@ -4643,7 +4654,7 @@ namespace X3D
             this._containerField = "texCoord";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(textureCoordinateGeneratorModeValues.SPHERE)]
         public textureCoordinateGeneratorModeValues mode
         {
@@ -4657,7 +4668,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string parameter
         {
             get
@@ -4670,7 +4681,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("texCoord")]
         public string containerField
         {
@@ -4685,8 +4696,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum textureCoordinateGeneratorModeValues
     {
 
@@ -4703,38 +4714,38 @@ namespace X3D
         CAMERASPACEREFLECTIONVECTOR,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("SPHERE-LOCAL")]
+        [XmlEnumAttribute("SPHERE-LOCAL")]
         SPHERELOCAL,
 
         /// <remarks/>
         COORD,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("COORD-EYE")]
+        [XmlEnumAttribute("COORD-EYE")]
         COORDEYE,
 
         /// <remarks/>
         NOISE,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("NOISE-EYE")]
+        [XmlEnumAttribute("NOISE-EYE")]
         NOISEEYE,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("SPHERE-REFLECT")]
+        [XmlEnumAttribute("SPHERE-REFLECT")]
         SPHEREREFLECT,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("SPHERE-REFLECT-LOCAL")]
+        [XmlEnumAttribute("SPHERE-REFLECT-LOCAL")]
         SPHEREREFLECTLOCAL,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class IndexedLineSet : X3DGeometryNode
     {
 
@@ -4755,12 +4766,12 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Color", typeof(Color))]
-        [System.Xml.Serialization.XmlElementAttribute("ColorRGBA", typeof(ColorRGBA))]
-        [System.Xml.Serialization.XmlElementAttribute("Coordinate", typeof(Coordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
-        [System.Xml.Serialization.XmlElementAttribute("GeoCoordinate", typeof(GeoCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("Color", typeof(Color))]
+        [XmlElementAttribute("ColorRGBA", typeof(ColorRGBA))]
+        [XmlElementAttribute("Coordinate", typeof(Coordinate))]
+        [XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
+        [XmlElementAttribute("GeoCoordinate", typeof(GeoCoordinate))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
         public List<object> Items
         {
             get
@@ -4773,7 +4784,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool colorPerVertex
         {
@@ -4787,7 +4798,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string colorIndex
         {
             get
@@ -4800,7 +4811,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string coordIndex
         {
             get
@@ -4813,7 +4824,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -4828,12 +4839,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class IndexedTriangleFanSet : X3DComposedGeometryNode
     {
 
@@ -4846,7 +4857,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string index
         {
             get
@@ -4859,7 +4870,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -4874,12 +4885,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class IndexedTriangleSet : X3DComposedGeometryNode
     {
 
@@ -4893,7 +4904,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string index
         {
             get
@@ -4907,7 +4918,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -4922,12 +4933,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class IndexedTriangleStripSet : X3DComposedGeometryNode
     {
 
@@ -4940,7 +4951,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string index
         {
             get
@@ -4953,7 +4964,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -4968,12 +4979,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Inline : X3DChildNode
     {
 
@@ -4996,7 +5007,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool load
         {
@@ -5010,7 +5021,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string bboxCenter
         {
@@ -5024,7 +5035,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("-1 -1 -1")]
         public string bboxSize
         {
@@ -5038,7 +5049,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> url
         {
             get
@@ -5051,7 +5062,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -5066,12 +5077,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class IntegerSequencer : X3DSequencerNode
     {
 
@@ -5084,7 +5095,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string keyValue
         {
             get
@@ -5097,7 +5108,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -5112,12 +5123,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class IntegerTrigger : X3DTriggerNode
     {
 
@@ -5131,7 +5142,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("-1")]
         public string integerKey
         {
@@ -5145,7 +5156,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -5160,12 +5171,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class KeySensor : X3DKeyDeviceSensorNode
     {
 
@@ -5176,7 +5187,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -5191,12 +5202,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class LineProperties : X3DAppearanceChildNode
     {
 
@@ -5216,7 +5227,7 @@ namespace X3D
             this._containerField = "lineProperties";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool applied
         {
@@ -5230,7 +5241,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("1")]
         public string linetype
         {
@@ -5244,7 +5255,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float linewidthScaleFactor
         {
@@ -5258,7 +5269,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("lineProperties")]
         public string containerField
         {
@@ -5273,12 +5284,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TextureProperties : X3DNode
     {
 
@@ -5322,7 +5333,7 @@ namespace X3D
             this._containerField = "textureProperties";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float anisotropicDegree
         {
@@ -5336,7 +5347,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0 0")]
         public string borderColor
         {
@@ -5350,7 +5361,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string borderWidth
         {
@@ -5364,7 +5375,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(textureBoundaryModeValues.REPEAT)]
         public textureBoundaryModeValues boundaryModeS
         {
@@ -5378,7 +5389,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(textureBoundaryModeValues.REPEAT)]
         public textureBoundaryModeValues boundaryModeT
         {
@@ -5392,7 +5403,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(textureBoundaryModeValues.REPEAT)]
         public textureBoundaryModeValues boundaryModeR
         {
@@ -5406,7 +5417,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(textureMagnificationModeValues.FASTEST)]
         public textureMagnificationModeValues magnificationFilter
         {
@@ -5420,7 +5431,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(textureMinificationModeValues.FASTEST)]
         public textureMinificationModeValues minificationFilter
         {
@@ -5434,7 +5445,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(textureCompressionModeValues.FASTEST)]
         public textureCompressionModeValues textureCompression
         {
@@ -5448,7 +5459,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float texturePriority
         {
@@ -5462,7 +5473,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool generateMipMaps
         {
@@ -5476,7 +5487,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("textureProperties")]
         public string containerField
         {
@@ -5491,8 +5502,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum textureBoundaryModeValues
     {
 
@@ -5512,8 +5523,8 @@ namespace X3D
         REPEAT,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum textureMagnificationModeValues
     {
 
@@ -5533,8 +5544,8 @@ namespace X3D
         NICEST,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum textureMinificationModeValues
     {
 
@@ -5566,8 +5577,8 @@ namespace X3D
         NICEST,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum textureCompressionModeValues
     {
 
@@ -5590,12 +5601,12 @@ namespace X3D
         NICEST,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class LineSet : X3DGeometryNode
     {
 
@@ -5611,12 +5622,12 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Color", typeof(Color))]
-        [System.Xml.Serialization.XmlElementAttribute("ColorRGBA", typeof(ColorRGBA))]
-        [System.Xml.Serialization.XmlElementAttribute("Coordinate", typeof(Coordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
-        [System.Xml.Serialization.XmlElementAttribute("GeoCoordinate", typeof(GeoCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("Color", typeof(Color))]
+        [XmlElementAttribute("ColorRGBA", typeof(ColorRGBA))]
+        [XmlElementAttribute("Coordinate", typeof(Coordinate))]
+        [XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
+        [XmlElementAttribute("GeoCoordinate", typeof(GeoCoordinate))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
         public List<object> Items
         {
             get
@@ -5629,7 +5640,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string vertexCount
         {
             get
@@ -5642,7 +5653,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -5657,12 +5668,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class LocalFog : X3DChildNode
     {
 
@@ -5685,7 +5696,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool enabled
         {
@@ -5699,7 +5710,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1 1")]
         public string color
         {
@@ -5713,7 +5724,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(fogTypeValues.LINEAR)]
         public fogTypeValues fogType
         {
@@ -5727,7 +5738,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float visibilityRange
         {
@@ -5741,7 +5752,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -5756,12 +5767,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class LOD : X3DGroupingNode
     {
 
@@ -5780,7 +5791,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool forceTransitions
         {
@@ -5794,7 +5805,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string center
         {
@@ -5808,7 +5819,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string range
         {
             get
@@ -5821,7 +5832,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -5836,12 +5847,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Material : X3DMaterialNode
     {
 
@@ -5870,7 +5881,7 @@ namespace X3D
             this._containerField = "material";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.2")]
         public float ambientIntensity
         {
@@ -5884,7 +5895,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0.8 0.8 0.8")]
         public string diffuseColor
         {
@@ -5898,7 +5909,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string emissiveColor
         {
@@ -5912,7 +5923,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.2")]
         public float shininess
         {
@@ -5926,7 +5937,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string specularColor
         {
@@ -5940,7 +5951,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float transparency
         {
@@ -5954,7 +5965,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("material")]
         public string containerField
         {
@@ -5969,20 +5980,20 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DMaterialNode : X3DAppearanceChildNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TwoSidedMaterial : X3DMaterialNode
     {
 
@@ -6032,7 +6043,7 @@ namespace X3D
             this._containerField = "material";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.2")]
         public float ambientIntensity
         {
@@ -6046,7 +6057,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.2")]
         public float backAmbientIntensity
         {
@@ -6060,7 +6071,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0.8 0.8 0.8")]
         public string diffuseColor
         {
@@ -6074,7 +6085,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0.8 0.8 0.8")]
         public string backDiffuseColor
         {
@@ -6088,7 +6099,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string emissiveColor
         {
@@ -6102,7 +6113,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string backEmissiveColor
         {
@@ -6116,7 +6127,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.2")]
         public float shininess
         {
@@ -6130,7 +6141,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.2")]
         public float backShininess
         {
@@ -6144,7 +6155,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string specularColor
         {
@@ -6158,7 +6169,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string backSpecularColor
         {
@@ -6172,7 +6183,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float transparency
         {
@@ -6186,7 +6197,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float backTransparency
         {
@@ -6200,7 +6211,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool separateBackColor
         {
@@ -6214,7 +6225,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("material")]
         public string containerField
         {
@@ -6229,12 +6240,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class MetadataBoolean : X3DMetadataObject
     {
 
@@ -6248,7 +6259,7 @@ namespace X3D
             this._containerField = metadataContainerFieldValues.metadata;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<bool> value
         {
             get
@@ -6261,7 +6272,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(metadataContainerFieldValues.metadata)]
         public metadataContainerFieldValues containerField
         {
@@ -6276,8 +6287,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum metadataContainerFieldValues
     {
 
@@ -6288,8 +6299,8 @@ namespace X3D
         value,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DMetadataObject : X3DNode
@@ -6299,7 +6310,7 @@ namespace X3D
 
         private string _reference;
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string name
         {
             get
@@ -6312,7 +6323,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string reference
         {
             get
@@ -6326,12 +6337,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class MetadataDouble : X3DMetadataObject
     {
 
@@ -6344,7 +6355,7 @@ namespace X3D
             this._containerField = metadataContainerFieldValues.metadata;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string value
         {
             get
@@ -6357,7 +6368,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(metadataContainerFieldValues.metadata)]
         public metadataContainerFieldValues containerField
         {
@@ -6372,12 +6383,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class MetadataFloat : X3DMetadataObject
     {
 
@@ -6390,7 +6401,7 @@ namespace X3D
             this._containerField = metadataContainerFieldValues.metadata;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string value
         {
             get
@@ -6403,7 +6414,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(metadataContainerFieldValues.metadata)]
         public metadataContainerFieldValues containerField
         {
@@ -6418,12 +6429,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class MetadataInteger : X3DMetadataObject
     {
 
@@ -6436,7 +6447,7 @@ namespace X3D
             this._containerField = metadataContainerFieldValues.metadata;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string value
         {
             get
@@ -6449,7 +6460,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(metadataContainerFieldValues.metadata)]
         public metadataContainerFieldValues containerField
         {
@@ -6472,12 +6483,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class MetadataString : X3DMetadataObject
     {
 
@@ -6491,7 +6502,7 @@ namespace X3D
             this._containerField = metadataContainerFieldValues.metadata;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> value
         {
             get
@@ -6504,7 +6515,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(metadataContainerFieldValues.metadata)]
         public metadataContainerFieldValues containerField
         {
@@ -6519,12 +6530,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class MovieTexture : X3DSoundSourceNode
     {
 
@@ -6547,7 +6558,7 @@ namespace X3D
             this._containerField = "texture";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> url
         {
             get
@@ -6560,7 +6571,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool repeatS
         {
@@ -6574,7 +6585,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool repeatT
         {
@@ -6588,7 +6599,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float speed
         {
@@ -6602,7 +6613,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("texture")]
         public string containerField
         {
@@ -6617,12 +6628,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class MultiTexture : X3DTextureNode
     {
 
@@ -6651,10 +6662,10 @@ namespace X3D
             this._containerField = "texture";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ImageTexture", typeof(ImageTexture))]
-        [System.Xml.Serialization.XmlElementAttribute("MovieTexture", typeof(MovieTexture))]
-        [System.Xml.Serialization.XmlElementAttribute("PixelTexture", typeof(PixelTexture))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("ImageTexture", typeof(ImageTexture))]
+        [XmlElementAttribute("MovieTexture", typeof(MovieTexture))]
+        [XmlElementAttribute("PixelTexture", typeof(PixelTexture))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
         public List<object> Items
         {
             get
@@ -6667,7 +6678,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float alpha
         {
@@ -6681,7 +6692,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1 1")]
         public string color
         {
@@ -6695,7 +6706,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> function
         {
             get
@@ -6708,7 +6719,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> mode
         {
             get
@@ -6721,7 +6732,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> source
         {
             get
@@ -6734,7 +6745,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("texture")]
         public string containerField
         {
@@ -6749,12 +6760,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class PixelTexture : X3DTexture2DNode
     {
 
@@ -6768,7 +6779,7 @@ namespace X3D
             this._containerField = "texture";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string image
         {
@@ -6782,7 +6793,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("texture")]
         public string containerField
         {
@@ -6797,12 +6808,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class MultiTextureTransform : X3DTextureTransformNode
     {
 
@@ -6816,8 +6827,8 @@ namespace X3D
             this._containerField = "textureTransform";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureTransform", typeof(TextureTransform))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("TextureTransform", typeof(TextureTransform))]
         public List<object> Items
         {
             get
@@ -6830,7 +6841,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("textureTransform")]
         public string containerField
         {
@@ -6845,12 +6856,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TextureTransform : X3DTextureTransformNode
     {
 
@@ -6873,7 +6884,7 @@ namespace X3D
             this._containerField = "textureTransform";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0")]
         public string center
         {
@@ -6887,7 +6898,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float rotation
         {
@@ -6901,7 +6912,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1")]
         public string scale
         {
@@ -6915,7 +6926,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0")]
         public string translation
         {
@@ -6929,7 +6940,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("textureTransform")]
         public string containerField
         {
@@ -6944,20 +6955,20 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DTextureTransformNode : X3DAppearanceChildNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class NavigationInfo : X3DBindableNode
     {
 
@@ -6990,7 +7001,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0.25 1.6 0.75")]
         public string avatarSize
         {
@@ -7004,7 +7015,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool headlight
         {
@@ -7018,7 +7029,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float speed
         {
@@ -7032,7 +7043,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string type
         {
             get
@@ -7045,7 +7056,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> transitionType
         {
             get
@@ -7058,7 +7069,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(1D)]
         public double transitionTime
         {
@@ -7072,7 +7083,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float visibilityLimit
         {
@@ -7086,7 +7097,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -7101,12 +7112,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class NormalInterpolator : X3DInterpolatorNode
     {
 
@@ -7119,7 +7130,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string keyValue
         {
             get
@@ -7132,7 +7143,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -7147,12 +7158,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class OrientationInterpolator : X3DInterpolatorNode
     {
 
@@ -7165,7 +7176,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string keyValue
         {
             get
@@ -7178,7 +7189,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -7193,12 +7204,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class PlaneSensor : X3DDragSensorNode
     {
 
@@ -7221,7 +7232,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0 0")]
         public string axisRotation
         {
@@ -7235,7 +7246,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("-1 -1")]
         public string maxPosition
         {
@@ -7249,7 +7260,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0")]
         public string minPosition
         {
@@ -7263,7 +7274,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string offset
         {
@@ -7277,7 +7288,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -7292,12 +7303,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class PointLight : X3DLightNode
     {
 
@@ -7320,7 +7331,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 0 0")]
         public string attenuation
         {
@@ -7334,7 +7345,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string location
         {
@@ -7348,7 +7359,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "100")]
         public float radius
         {
@@ -7362,7 +7373,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool global
         {
@@ -7376,7 +7387,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -7391,12 +7402,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class PointSet : X3DGeometryNode
     {
 
@@ -7410,12 +7421,12 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Color", typeof(Color))]
-        [System.Xml.Serialization.XmlElementAttribute("ColorRGBA", typeof(ColorRGBA))]
-        [System.Xml.Serialization.XmlElementAttribute("Coordinate", typeof(Coordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
-        [System.Xml.Serialization.XmlElementAttribute("GeoCoordinate", typeof(GeoCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("Color", typeof(Color))]
+        [XmlElementAttribute("ColorRGBA", typeof(ColorRGBA))]
+        [XmlElementAttribute("Coordinate", typeof(Coordinate))]
+        [XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
+        [XmlElementAttribute("GeoCoordinate", typeof(GeoCoordinate))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
         public List<object> Items
         {
             get
@@ -7428,7 +7439,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -7443,12 +7454,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Polyline2D : X3DGeometryNode
     {
 
@@ -7461,7 +7472,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string lineSegments
         {
             get
@@ -7474,7 +7485,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -7489,12 +7500,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Polypoint2D : X3DGeometryNode
     {
 
@@ -7507,7 +7518,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string point
         {
             get
@@ -7520,7 +7531,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -7535,12 +7546,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class PositionInterpolator : X3DInterpolatorNode
     {
 
@@ -7553,7 +7564,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string keyValue
         {
             get
@@ -7566,7 +7577,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -7581,12 +7592,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class PositionInterpolator2D : X3DInterpolatorNode
     {
 
@@ -7599,7 +7610,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string keyValue
         {
             get
@@ -7612,7 +7623,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -7627,12 +7638,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ProximitySensor : X3DEnvironmentalSensorNode
     {
 
@@ -7646,7 +7657,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string center
         {
@@ -7660,7 +7671,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -7675,12 +7686,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Rectangle2D : X3DGeometryNode
     {
 
@@ -7697,7 +7708,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("2 2")]
         public string size
         {
@@ -7711,7 +7722,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool solid
         {
@@ -7725,7 +7736,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -7740,12 +7751,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ScalarInterpolator : X3DInterpolatorNode
     {
 
@@ -7758,7 +7769,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string keyValue
         {
             get
@@ -7771,7 +7782,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -7786,12 +7797,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class EaseInEaseOut : X3DChildNode
     {
 
@@ -7806,7 +7817,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string easeInEaseOut
         {
             get
@@ -7819,7 +7830,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string key
         {
             get
@@ -7832,7 +7843,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -7847,12 +7858,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class SplinePositionInterpolator : X3DInterpolatorNode
     {
 
@@ -7873,7 +7884,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool closed
         {
@@ -7887,7 +7898,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string keyValue
         {
             get
@@ -7900,7 +7911,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string keyVelocity
         {
             get
@@ -7913,7 +7924,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool normalizeVelocity
         {
@@ -7927,7 +7938,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -7942,12 +7953,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class SplinePositionInterpolator2D : X3DInterpolatorNode
     {
 
@@ -7968,7 +7979,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool closed
         {
@@ -7982,7 +7993,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string keyValue
         {
             get
@@ -7995,7 +8006,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string keyVelocity
         {
             get
@@ -8008,7 +8019,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool normalizeVelocity
         {
@@ -8022,7 +8033,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -8037,12 +8048,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class SplineScalarInterpolator : X3DInterpolatorNode
     {
 
@@ -8063,7 +8074,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool closed
         {
@@ -8077,7 +8088,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string keyValue
         {
             get
@@ -8090,7 +8101,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string keyVelocity
         {
             get
@@ -8103,7 +8114,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool normalizeVelocity
         {
@@ -8117,7 +8128,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -8132,12 +8143,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class SquadOrientationInterpolator : X3DInterpolatorNode
     {
 
@@ -8153,7 +8164,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string keyValue
         {
             get
@@ -8166,7 +8177,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool normalizeVelocity
         {
@@ -8180,7 +8191,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -8195,18 +8206,18 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Shape : X3DShapeNode
     {
 
         private string _containerField = "children";
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -8221,12 +8232,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Sound : X3DSoundNode
     {
 
@@ -8266,9 +8277,9 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("AudioClip", typeof(AudioClip))]
-        [System.Xml.Serialization.XmlElementAttribute("MovieTexture", typeof(MovieTexture))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("AudioClip", typeof(AudioClip))]
+        [XmlElementAttribute("MovieTexture", typeof(MovieTexture))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
         public object Item
         {
             get
@@ -8281,7 +8292,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1")]
         public string direction
         {
@@ -8295,7 +8306,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float intensity
         {
@@ -8309,7 +8320,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string location
         {
@@ -8323,7 +8334,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "10")]
         public float maxBack
         {
@@ -8337,7 +8348,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "10")]
         public float maxFront
         {
@@ -8351,7 +8362,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float minBack
         {
@@ -8365,7 +8376,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float minFront
         {
@@ -8379,7 +8390,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float priority
         {
@@ -8393,7 +8404,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool spatialize
         {
@@ -8407,7 +8418,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -8422,20 +8433,20 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DSoundNode : X3DChildNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Sphere : X3DGeometryNode
     {
 
@@ -8452,7 +8463,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float radius
         {
@@ -8466,7 +8477,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool solid
         {
@@ -8480,7 +8491,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -8495,12 +8506,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class SphereSensor : X3DDragSensorNode
     {
 
@@ -8514,7 +8525,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0 0")]
         public string offset
         {
@@ -8528,7 +8539,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -8543,12 +8554,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class SpotLight : X3DLightNode
     {
 
@@ -8580,7 +8591,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 0 0")]
         public string attenuation
         {
@@ -8594,7 +8605,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.7854")]
         public float beamWidth
         {
@@ -8608,7 +8619,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1.570796")]
         public float cutOffAngle
         {
@@ -8622,7 +8633,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 -1")]
         public string direction
         {
@@ -8636,7 +8647,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string location
         {
@@ -8650,7 +8661,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "100")]
         public float radius
         {
@@ -8664,7 +8675,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool global
         {
@@ -8678,7 +8689,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -8693,12 +8704,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class StringSensor : X3DKeyDeviceSensorNode
     {
 
@@ -8712,7 +8723,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool deletionAllowed
         {
@@ -8726,7 +8737,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -8741,12 +8752,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Switch : X3DGroupingNode
     {
 
@@ -8760,7 +8771,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("-1")]
         public string whichChoice
         {
@@ -8774,7 +8785,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -8789,12 +8800,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Text : X3DGeometryNode
     {
 
@@ -8866,7 +8877,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string @string
         {
             get
@@ -8881,7 +8892,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string length
         {
             get
@@ -8894,7 +8905,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float maxExtent
         {
@@ -8908,7 +8919,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool solid
         {
@@ -8922,7 +8933,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -8938,12 +8949,12 @@ namespace X3D
 
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ScreenFontStyle : X3DFontStyleNode
     {
 
@@ -8982,7 +8993,7 @@ namespace X3D
             this._containerField = "fontStyle";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> family
         {
             get
@@ -8995,7 +9006,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool horizontal
         {
@@ -9009,7 +9020,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> justify
         {
             get
@@ -9022,7 +9033,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string language
         {
             get
@@ -9035,7 +9046,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool leftToRight
         {
@@ -9049,7 +9060,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "12")]
         public float pointSize
         {
@@ -9063,7 +9074,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float spacing
         {
@@ -9077,7 +9088,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(fontStyleValues.PLAIN)]
         public fontStyleValues style
         {
@@ -9091,7 +9102,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool topToBottom
         {
@@ -9105,7 +9116,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("fontStyle")]
         public string containerField
         {
@@ -9120,12 +9131,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TextureBackground : X3DBackgroundNode
     {
 
@@ -9139,11 +9150,11 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ImageTexture", typeof(ImageTexture))]
-        [System.Xml.Serialization.XmlElementAttribute("MovieTexture", typeof(MovieTexture))]
-        [System.Xml.Serialization.XmlElementAttribute("MultiTexture", typeof(MultiTexture))]
-        [System.Xml.Serialization.XmlElementAttribute("PixelTexture", typeof(PixelTexture))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("ImageTexture", typeof(ImageTexture))]
+        [XmlElementAttribute("MovieTexture", typeof(MovieTexture))]
+        [XmlElementAttribute("MultiTexture", typeof(MultiTexture))]
+        [XmlElementAttribute("PixelTexture", typeof(PixelTexture))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
         public List<object> Items
         {
             get
@@ -9156,7 +9167,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -9171,12 +9182,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TimeSensor : X3DTimeDependentNode
     {
 
@@ -9193,7 +9204,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(1D)]
         public double cycleInterval
         {
@@ -9207,7 +9218,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool enabled
         {
@@ -9221,7 +9232,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -9236,12 +9247,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TimeTrigger : X3DTriggerNode
     {
 
@@ -9252,7 +9263,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -9267,12 +9278,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TouchSensor : X3DTouchSensorNode
     {
 
@@ -9283,7 +9294,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -9298,12 +9309,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Transform : X3DGroupingNode
     {
 
@@ -9388,7 +9399,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string center
         {
@@ -9402,7 +9413,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string rotation
         {
@@ -9417,7 +9428,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1 1")]
         public string scale
         {
@@ -9432,7 +9443,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string scaleOrientation
         {
@@ -9447,7 +9458,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string translation
         {
@@ -9462,7 +9473,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -9477,12 +9488,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TriangleFanSet : X3DComposedGeometryNode
     {
 
@@ -9495,7 +9506,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string fanCount
         {
             get
@@ -9508,7 +9519,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -9523,12 +9534,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TriangleSet : X3DComposedGeometryNode
     {
 
@@ -9539,7 +9550,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -9554,12 +9565,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TriangleSet2D : X3DGeometryNode
     {
 
@@ -9575,7 +9586,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string vertices
         {
             get
@@ -9588,7 +9599,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool solid
         {
@@ -9602,7 +9613,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -9617,12 +9628,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TriangleStripSet : X3DComposedGeometryNode
     {
 
@@ -9635,7 +9646,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string stripCount
         {
             get
@@ -9648,7 +9659,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -9663,12 +9674,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Viewpoint : X3DViewpointNode
     {
 
@@ -9693,7 +9704,7 @@ namespace X3D
         [XmlIgnore]
         public Vector3 CenterOfRotation;
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string centerOfRotation
         {
@@ -9708,7 +9719,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.7854")]
         public float fieldOfView
         {
@@ -9725,7 +9736,7 @@ namespace X3D
         [XmlIgnore]
         public Vector3 Position;
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 10")]
         public string position
         {
@@ -9740,7 +9751,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -9755,12 +9766,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class VisibilitySensor : X3DEnvironmentalSensorNode
     {
 
@@ -9774,7 +9785,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string center
         {
@@ -9788,7 +9799,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -9803,12 +9814,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class WorldInfo : X3DInfoNode
     {
 
@@ -9824,7 +9835,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> info
         {
             get
@@ -9837,7 +9848,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string title
         {
             get
@@ -9850,7 +9861,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -9865,8 +9876,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DInfoNode : X3DChildNode
@@ -9880,7 +9891,7 @@ namespace X3D
 
         private string _level;
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public componentNames name
         {
             get
@@ -9893,7 +9904,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         public string level
         {
             get
@@ -9907,8 +9918,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum componentNames
     {
 
@@ -9949,7 +9960,7 @@ namespace X3D
         Grouping,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("H-Anim")]
+        [XmlEnumAttribute("H-Anim")]
         HAnim,
 
         /// <remarks/>
@@ -10024,18 +10035,18 @@ namespace X3D
 
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Script : X3DScriptNode
     {
         private string _url = string.Empty;
         private string _source;
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string url
         {
             get
@@ -10048,7 +10059,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string src
         {
             get
@@ -10074,12 +10085,12 @@ namespace X3D
 
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class unit : SceneGraphStructureStatement
     {
 
@@ -10089,7 +10100,7 @@ namespace X3D
 
         private double _conversionFactor;
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public unitCategories category
         {
             get
@@ -10102,7 +10113,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         public string name
         {
             get
@@ -10115,7 +10126,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public double conversionFactor
         {
             get
@@ -10129,8 +10140,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum unitCategories
     {
 
@@ -10147,12 +10158,12 @@ namespace X3D
         mass,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class EXPORT : SceneGraphNode, SceneGraphStructureStatement
     {
 
@@ -10160,7 +10171,7 @@ namespace X3D
 
         private string _as;
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "IDREF")]
+        [XmlAttributeAttribute(DataType = "IDREF")]
         public string localDEF
         {
             get
@@ -10173,7 +10184,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         public string AS
         {
             get
@@ -10187,12 +10198,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class IMPORT : SceneGraphNode, SceneGraphStructureStatement
     {
 
@@ -10202,7 +10213,7 @@ namespace X3D
 
         private string _as;
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "IDREF")]
+        [XmlAttributeAttribute(DataType = "IDREF")]
         public string inlineDEF
         {
             get
@@ -10215,7 +10226,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         public string importedDEF
         {
             get
@@ -10228,7 +10239,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "ID")]
+        [XmlAttributeAttribute(DataType = "ID")]
         public string AS
         {
             get
@@ -10242,12 +10253,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class IS : SceneGraphStructureStatement
     {
 
@@ -10258,7 +10269,7 @@ namespace X3D
             this._items = new List<connect>();
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("connect")]
+        [XmlElementAttribute("connect")]
         public List<connect> Items
         {
             get
@@ -10272,12 +10283,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class connect : SceneGraphStructureStatement
     {
 
@@ -10285,7 +10296,7 @@ namespace X3D
 
         private string _protoField;
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         public string nodeField
         {
             get
@@ -10298,7 +10309,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         public string protoField
         {
             get
@@ -10314,19 +10325,19 @@ namespace X3D
 
     public partial class field : SceneGraphNode, SceneGraphStructureStatement
     {
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("")]
         public string name { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("")]
         public string type { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("")]
         public string value { get; set; }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("")]
         public string accessType { get; set; }
     }
@@ -10337,12 +10348,12 @@ namespace X3D
 
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class head : SceneGraphNode, SceneGraphStructureStatement
     {
 
@@ -10359,7 +10370,7 @@ namespace X3D
             this._component = new List<component>();
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("component")]
+        [XmlElementAttribute("component")]
         public List<component> component
         {
             get
@@ -10372,7 +10383,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("unit")]
+        [XmlElementAttribute("unit")]
         public List<unit> unit
         {
             get
@@ -10385,7 +10396,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("meta")]
+        [XmlElementAttribute("meta")]
         public List<meta> meta
         {
             get
@@ -10399,12 +10410,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class meta : SceneGraphNode, SceneGraphStructureStatement
     {
 
@@ -10420,7 +10431,7 @@ namespace X3D
 
         private string _scheme;
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string name
         {
             get
@@ -10433,7 +10444,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string content
         {
             get
@@ -10446,7 +10457,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public metaDirectionValues dir
         {
             get
@@ -10459,7 +10470,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute("http-equiv")]
+        [XmlAttributeAttribute("http-equiv")]
         public string httpequiv
         {
             get
@@ -10472,7 +10483,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string lang
         {
             get
@@ -10485,7 +10496,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string scheme
         {
             get
@@ -10499,8 +10510,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum metaDirectionValues
     {
 
@@ -10511,12 +10522,12 @@ namespace X3D
         ltr,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ExternProtoDeclare : SceneGraphStructureStatement
     {
 
@@ -10536,7 +10547,7 @@ namespace X3D
             this._field = new List<field>();
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("field")]
+        [XmlElementAttribute("field")]
         public List<field> field
         {
             get
@@ -10549,7 +10560,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         public string name
         {
             get
@@ -10562,7 +10573,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> url
         {
             get
@@ -10575,7 +10586,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string appinfo
         {
             get
@@ -10588,7 +10599,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string documentation
         {
             get
@@ -10602,12 +10613,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ProtoInterface : SceneGraphStructureStatement
     {
 
@@ -10618,7 +10629,7 @@ namespace X3D
             this._field = new List<field>();
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("field")]
+        [XmlElementAttribute("field")]
         public List<field> field
         {
             get
@@ -10640,12 +10651,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ROUTE : SceneGraphNode, SceneGraphStructureStatement
     {
 
@@ -10657,7 +10668,7 @@ namespace X3D
 
         private string _toField;
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "IDREF")]
+        [XmlAttributeAttribute(DataType = "IDREF")]
         public string fromNode
         {
             get
@@ -10670,7 +10681,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         public string fromField
         {
             get
@@ -10683,7 +10694,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "IDREF")]
+        [XmlAttributeAttribute(DataType = "IDREF")]
         public string toNode
         {
             get
@@ -10696,7 +10707,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         public string toField
         {
             get
@@ -10710,9 +10721,9 @@ namespace X3D
         }
     }
 
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [SerializableAttribute()]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class X3D : SceneGraphNode, SceneGraphStructureStatement
     {
 
@@ -10750,7 +10761,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string version
         {
             get
@@ -10778,7 +10789,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public profileNames profile
         {
             get
@@ -10797,12 +10808,12 @@ namespace X3D
 
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class DISEntityManager : X3DChildNode
     {
 
@@ -10828,8 +10839,8 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("DISEntityTypeMapping", typeof(DISEntityTypeMapping))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("DISEntityTypeMapping", typeof(DISEntityTypeMapping))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
         public List<object> Items
         {
             get
@@ -10842,7 +10853,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("localhost")]
         public string address
         {
@@ -10856,7 +10867,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string applicationID
         {
@@ -10870,7 +10881,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string port
         {
@@ -10884,7 +10895,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string siteID
         {
@@ -10898,7 +10909,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -10913,12 +10924,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class DISEntityTypeMapping : X3DInfoNode
     {
 
@@ -10953,7 +10964,7 @@ namespace X3D
             this._containerField = "mapping";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> url
         {
             get
@@ -10966,7 +10977,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string category
         {
@@ -10980,7 +10991,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string country
         {
@@ -10994,7 +11005,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string domain
         {
@@ -11008,7 +11019,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string extra
         {
@@ -11022,7 +11033,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string kind
         {
@@ -11036,7 +11047,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string specific
         {
@@ -11050,7 +11061,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string subcategory
         {
@@ -11064,7 +11075,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("mapping")]
         public string containerField
         {
@@ -11079,12 +11090,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class EspduTransform : X3DGroupingNode
     {
 
@@ -11264,7 +11275,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool enabled
         {
@@ -11278,7 +11289,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string marking
         {
             get
@@ -11291,7 +11302,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string siteID
         {
@@ -11305,7 +11316,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string applicationID
         {
@@ -11319,7 +11330,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string entityID
         {
@@ -11333,7 +11344,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string forceID
         {
@@ -11347,7 +11358,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string entityKind
         {
@@ -11361,7 +11372,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string entityDomain
         {
@@ -11375,7 +11386,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string entityCountry
         {
@@ -11389,7 +11400,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string entityCategory
         {
@@ -11403,7 +11414,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string entitySubcategory
         {
@@ -11417,7 +11428,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string entitySpecific
         {
@@ -11431,7 +11442,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string entityExtra
         {
@@ -11445,7 +11456,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(0.1D)]
         public double readInterval
         {
@@ -11459,7 +11470,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(1D)]
         public double writeInterval
         {
@@ -11473,7 +11484,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(networkModeValues.standAlone)]
         public networkModeValues networkMode
         {
@@ -11487,7 +11498,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string translation
         {
@@ -11501,7 +11512,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string rotation
         {
@@ -11515,7 +11526,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1 1")]
         public string scale
         {
@@ -11529,7 +11540,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string scaleOrientation
         {
@@ -11543,7 +11554,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string center
         {
@@ -11557,7 +11568,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("localhost")]
         public string address
         {
@@ -11571,7 +11582,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string port
         {
@@ -11585,7 +11596,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string multicastRelayHost
         {
             get
@@ -11598,7 +11609,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string multicastRelayPort
         {
@@ -11612,7 +11623,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool rtpHeaderExpected
         {
@@ -11626,7 +11637,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string deadReckoning
         {
@@ -11640,7 +11651,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string linearVelocity
         {
@@ -11654,7 +11665,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string linearAcceleration
         {
@@ -11668,7 +11679,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool fired1
         {
@@ -11682,7 +11693,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool fired2
         {
@@ -11696,7 +11707,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string collisionType
         {
@@ -11710,7 +11721,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string detonationLocation
         {
@@ -11724,7 +11735,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string detonationRelativeLocation
         {
@@ -11738,7 +11749,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string detonationResult
         {
@@ -11752,7 +11763,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string eventApplicationID
         {
@@ -11766,7 +11777,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string eventEntityID
         {
@@ -11780,7 +11791,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string eventNumber
         {
@@ -11794,7 +11805,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string eventSiteID
         {
@@ -11808,7 +11819,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string munitionStartPoint
         {
@@ -11822,7 +11833,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string munitionEndPoint
         {
@@ -11836,7 +11847,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string munitionSiteID
         {
@@ -11850,7 +11861,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string munitionApplicationID
         {
@@ -11864,7 +11875,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string munitionEntityID
         {
@@ -11878,7 +11889,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string fireMissionIndex
         {
@@ -11892,7 +11903,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string warhead
         {
@@ -11906,7 +11917,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string fuse
         {
@@ -11920,7 +11931,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string munitionQuantity
         {
@@ -11934,7 +11945,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string firingRate
         {
@@ -11948,7 +11959,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float firingRange
         {
@@ -11962,7 +11973,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string articulationParameterCount
         {
@@ -11976,7 +11987,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string articulationParameterDesignatorArray
         {
             get
@@ -11989,7 +12000,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string articulationParameterChangeIndicatorArray
         {
             get
@@ -12002,7 +12013,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string articulationParameterIdPartAttachedToArray
         {
             get
@@ -12015,7 +12026,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string articulationParameterTypeArray
         {
             get
@@ -12028,7 +12039,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string articulationParameterArray
         {
             get
@@ -12041,7 +12052,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> geoSystem
         {
             get
@@ -12054,7 +12065,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string geoCoords
         {
@@ -12068,7 +12079,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -12083,8 +12094,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum networkModeValues
     {
 
@@ -12098,12 +12109,12 @@ namespace X3D
         networkWriter,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ReceiverPdu : X3DNetworkSensorNode
     {
 
@@ -12184,7 +12195,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string bboxCenter
         {
@@ -12198,7 +12209,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("-1 -1 -1")]
         public string bboxSize
         {
@@ -12212,7 +12223,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("1")]
         public string whichGeometry
         {
@@ -12226,7 +12237,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(0.1D)]
         public double readInterval
         {
@@ -12240,7 +12251,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(1D)]
         public double writeInterval
         {
@@ -12254,7 +12265,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(networkModeValues.standAlone)]
         public networkModeValues networkMode
         {
@@ -12268,7 +12279,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string siteID
         {
@@ -12282,7 +12293,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string applicationID
         {
@@ -12296,7 +12307,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string entityID
         {
@@ -12310,7 +12321,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("localhost")]
         public string address
         {
@@ -12324,7 +12335,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string port
         {
@@ -12338,7 +12349,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string multicastRelayHost
         {
             get
@@ -12351,7 +12362,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string multicastRelayPort
         {
@@ -12365,7 +12376,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool rtpHeaderExpected
         {
@@ -12379,7 +12390,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string radioID
         {
@@ -12393,7 +12404,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float receivedPower
         {
@@ -12407,7 +12418,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string receiverState
         {
@@ -12421,7 +12432,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string transmitterSiteID
         {
@@ -12435,7 +12446,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string transmitterApplicationID
         {
@@ -12449,7 +12460,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string transmitterEntityID
         {
@@ -12463,7 +12474,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string transmitterRadioID
         {
@@ -12477,7 +12488,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> geoSystem
         {
             get
@@ -12490,7 +12501,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string geoCoords
         {
@@ -12504,7 +12515,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -12519,12 +12530,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class SignalPdu : X3DNetworkSensorNode
     {
 
@@ -12604,7 +12615,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string bboxCenter
         {
@@ -12618,7 +12629,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("-1 -1 -1")]
         public string bboxSize
         {
@@ -12632,7 +12643,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("1")]
         public string whichGeometry
         {
@@ -12646,7 +12657,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(0.1D)]
         public double readInterval
         {
@@ -12660,7 +12671,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(1D)]
         public double writeInterval
         {
@@ -12674,7 +12685,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(networkModeValues.standAlone)]
         public networkModeValues networkMode
         {
@@ -12688,7 +12699,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string siteID
         {
@@ -12702,7 +12713,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string applicationID
         {
@@ -12716,7 +12727,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string entityID
         {
@@ -12730,7 +12741,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("localhost")]
         public string address
         {
@@ -12744,7 +12755,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string port
         {
@@ -12758,7 +12769,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string multicastRelayHost
         {
             get
@@ -12771,7 +12782,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string multicastRelayPort
         {
@@ -12785,7 +12796,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool rtpHeaderExpected
         {
@@ -12799,7 +12810,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string radioID
         {
@@ -12813,7 +12824,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string encodingScheme
         {
@@ -12827,7 +12838,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string tdlType
         {
@@ -12841,7 +12852,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string sampleRate
         {
@@ -12855,7 +12866,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string samples
         {
@@ -12869,7 +12880,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string dataLength
         {
@@ -12883,7 +12894,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string data
         {
             get
@@ -12896,7 +12907,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> geoSystem
         {
             get
@@ -12909,7 +12920,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string geoCoords
         {
@@ -12923,7 +12934,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -12938,12 +12949,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TransmitterPdu : X3DNetworkSensorNode
     {
 
@@ -13072,7 +13083,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string bboxCenter
         {
@@ -13086,7 +13097,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("-1 -1 -1")]
         public string bboxSize
         {
@@ -13100,7 +13111,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("1")]
         public string whichGeometry
         {
@@ -13114,7 +13125,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(0.1D)]
         public double readInterval
         {
@@ -13128,7 +13139,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(1D)]
         public double writeInterval
         {
@@ -13142,7 +13153,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(networkModeValues.standAlone)]
         public networkModeValues networkMode
         {
@@ -13156,7 +13167,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string siteID
         {
@@ -13170,7 +13181,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string applicationID
         {
@@ -13184,7 +13195,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string entityID
         {
@@ -13198,7 +13209,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("localhost")]
         public string address
         {
@@ -13212,7 +13223,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string port
         {
@@ -13226,7 +13237,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string multicastRelayHost
         {
             get
@@ -13239,7 +13250,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string multicastRelayPort
         {
@@ -13253,7 +13264,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool rtpHeaderExpected
         {
@@ -13267,7 +13278,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string radioID
         {
@@ -13281,7 +13292,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string antennaLocation
         {
@@ -13295,7 +13306,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string antennaPatternLength
         {
@@ -13309,7 +13320,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string antennaPatternType
         {
@@ -13323,7 +13334,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string cryptoKeyID
         {
@@ -13337,7 +13348,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string cryptoSystem
         {
@@ -13351,7 +13362,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string frequency
         {
@@ -13365,7 +13376,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string inputSource
         {
@@ -13379,7 +13390,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string lengthOfModulationParameters
         {
@@ -13393,7 +13404,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string modulationTypeDetail
         {
@@ -13407,7 +13418,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string modulationTypeMajor
         {
@@ -13421,7 +13432,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string modulationTypeSpreadSpectrum
         {
@@ -13435,7 +13446,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string modulationTypeSystem
         {
@@ -13449,7 +13460,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float power
         {
@@ -13463,7 +13474,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string radioEntityTypeCategory
         {
@@ -13477,7 +13488,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string radioEntityTypeCountry
         {
@@ -13491,7 +13502,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string radioEntityTypeDomain
         {
@@ -13505,7 +13516,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string radioEntityTypeKind
         {
@@ -13519,7 +13530,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string radioEntityTypeNomenclature
         {
@@ -13533,7 +13544,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string radioEntityTypeNomenclatureVersion
         {
@@ -13547,7 +13558,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string relativeAntennaLocation
         {
@@ -13561,7 +13572,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float transmitFrequencyBandwidth
         {
@@ -13575,7 +13586,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string transmitState
         {
@@ -13589,7 +13600,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> geoSystem
         {
             get
@@ -13602,7 +13613,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string geoCoords
         {
@@ -13616,7 +13627,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -13631,12 +13642,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class GeoElevationGrid : X3DGeometryNode
     {
 
@@ -13691,15 +13702,15 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Color", typeof(Color))]
-        [System.Xml.Serialization.XmlElementAttribute("ColorRGBA", typeof(ColorRGBA))]
-        [System.Xml.Serialization.XmlElementAttribute("FogCoordinate", typeof(FogCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("GeoOrigin", typeof(GeoOrigin))]
-        [System.Xml.Serialization.XmlElementAttribute("MultiTextureCoordinate", typeof(MultiTextureCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("Normal", typeof(Normal))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureCoordinate", typeof(TextureCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureCoordinateGenerator", typeof(TextureCoordinateGenerator))]
+        [XmlElementAttribute("Color", typeof(Color))]
+        [XmlElementAttribute("ColorRGBA", typeof(ColorRGBA))]
+        [XmlElementAttribute("FogCoordinate", typeof(FogCoordinate))]
+        [XmlElementAttribute("GeoOrigin", typeof(GeoOrigin))]
+        [XmlElementAttribute("MultiTextureCoordinate", typeof(MultiTextureCoordinate))]
+        [XmlElementAttribute("Normal", typeof(Normal))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("TextureCoordinate", typeof(TextureCoordinate))]
+        [XmlElementAttribute("TextureCoordinateGenerator", typeof(TextureCoordinateGenerator))]
         public List<object> Items
         {
             get
@@ -13712,7 +13723,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> geoSystem
         {
             get
@@ -13725,7 +13736,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string geoGridOrigin
         {
@@ -13739,7 +13750,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0 0")]
         public string height
         {
@@ -13753,7 +13764,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool ccw
         {
@@ -13767,7 +13778,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool colorPerVertex
         {
@@ -13781,7 +13792,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float creaseAngle
         {
@@ -13795,7 +13806,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool normalPerVertex
         {
@@ -13809,7 +13820,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool solid
         {
@@ -13823,7 +13834,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("2")]
         public string xDimension
         {
@@ -13837,7 +13848,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(1D)]
         public double xSpacing
         {
@@ -13851,7 +13862,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float yScale
         {
@@ -13865,7 +13876,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("2")]
         public string zDimension
         {
@@ -13879,7 +13890,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(1D)]
         public double zSpacing
         {
@@ -13893,7 +13904,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -13908,12 +13919,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class GeoLocation : X3DGroupingNode
     {
 
@@ -13932,7 +13943,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> geoSystem
         {
             get
@@ -13945,7 +13956,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string geoCoords
         {
@@ -13959,7 +13970,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -13982,12 +13993,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class GeoMetadata : X3DInfoNode
     {
 
@@ -14007,17 +14018,17 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("GeoCoordinate", typeof(GeoCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("GeoElevationGrid", typeof(GeoElevationGrid))]
-        [System.Xml.Serialization.XmlElementAttribute("GeoLOD", typeof(GeoLOD))]
-        [System.Xml.Serialization.XmlElementAttribute("GeoLocation", typeof(GeoLocation))]
-        [System.Xml.Serialization.XmlElementAttribute("GeoOrigin", typeof(GeoOrigin))]
-        [System.Xml.Serialization.XmlElementAttribute("GeoPositionInterpolator", typeof(GeoPositionInterpolator))]
-        [System.Xml.Serialization.XmlElementAttribute("GeoProximitySensor", typeof(GeoProximitySensor))]
-        [System.Xml.Serialization.XmlElementAttribute("GeoTouchSensor", typeof(GeoTouchSensor))]
-        [System.Xml.Serialization.XmlElementAttribute("GeoTransform", typeof(GeoTransform))]
-        [System.Xml.Serialization.XmlElementAttribute("GeoViewpoint", typeof(GeoViewpoint))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("GeoCoordinate", typeof(GeoCoordinate))]
+        [XmlElementAttribute("GeoElevationGrid", typeof(GeoElevationGrid))]
+        [XmlElementAttribute("GeoLOD", typeof(GeoLOD))]
+        [XmlElementAttribute("GeoLocation", typeof(GeoLocation))]
+        [XmlElementAttribute("GeoOrigin", typeof(GeoOrigin))]
+        [XmlElementAttribute("GeoPositionInterpolator", typeof(GeoPositionInterpolator))]
+        [XmlElementAttribute("GeoProximitySensor", typeof(GeoProximitySensor))]
+        [XmlElementAttribute("GeoTouchSensor", typeof(GeoTouchSensor))]
+        [XmlElementAttribute("GeoTransform", typeof(GeoTransform))]
+        [XmlElementAttribute("GeoViewpoint", typeof(GeoViewpoint))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
         public List<object> Items
         {
             get
@@ -14030,7 +14041,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> url
         {
             get
@@ -14043,7 +14054,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> summary
         {
             get
@@ -14056,7 +14067,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -14071,12 +14082,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class GeoPositionInterpolator : X3DInterpolatorNode
     {
 
@@ -14109,7 +14120,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> geoSystem
         {
             get
@@ -14122,7 +14133,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string keyValue
         {
             get
@@ -14135,7 +14146,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -14150,12 +14161,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class GeoProximitySensor : X3DEnvironmentalSensorNode
     {
 
@@ -14192,7 +14203,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string center
         {
@@ -14206,7 +14217,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string geoCenter
         {
@@ -14220,7 +14231,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> geoSystem
         {
             get
@@ -14233,7 +14244,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -14248,12 +14259,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class GeoTouchSensor : X3DTouchSensorNode
     {
 
@@ -14284,7 +14295,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> geoSystem
         {
             get
@@ -14297,7 +14308,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -14312,12 +14323,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class GeoTransform : X3DGroupingNode
     {
 
@@ -14348,7 +14359,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string geoCenter
         {
@@ -14362,7 +14373,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> geoSystem
         {
             get
@@ -14375,7 +14386,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string rotation
         {
@@ -14389,7 +14400,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1 1")]
         public string scale
         {
@@ -14403,7 +14414,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string scaleOrientation
         {
@@ -14417,7 +14428,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string translation
         {
@@ -14431,7 +14442,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -14446,12 +14457,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class GeoViewpoint : X3DViewpointNode
     {
 
@@ -14494,7 +14505,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string centerOfRotation
         {
@@ -14508,7 +14519,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> geoSystem
         {
             get
@@ -14521,7 +14532,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.7854")]
         public float fieldOfView
         {
@@ -14535,7 +14546,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 100000")]
         public string position
         {
@@ -14549,7 +14560,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float speedFactor
         {
@@ -14563,7 +14574,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -14578,12 +14589,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class HAnimDisplacer : X3DGeometricPropertyNode
     {
 
@@ -14603,7 +14614,7 @@ namespace X3D
             this._containerField = "displacers";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public featurePointNames name
         {
             get
@@ -14616,7 +14627,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string coordIndex
         {
             get
@@ -14629,7 +14640,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string displacements
         {
             get
@@ -14642,7 +14653,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float weight
         {
@@ -14656,7 +14667,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("displacers")]
         public string containerField
         {
@@ -14671,8 +14682,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum featurePointNames
     {
 
@@ -14713,11 +14724,11 @@ namespace X3D
         l_clavicale,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("r_thelion/bustpoint")]
+        [XmlEnumAttribute("r_thelion/bustpoint")]
         r_thelionbustpoint,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("l_thelion/bustpoint")]
+        [XmlEnumAttribute("l_thelion/bustpoint")]
         l_thelionbustpoint,
 
         /// <remarks/>
@@ -14772,7 +14783,7 @@ namespace X3D
         r_radial_styloid,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("r_axilla_post.")]
+        [XmlEnumAttribute("r_axilla_post.")]
         r_axilla_post,
 
         /// <remarks/>
@@ -14809,7 +14820,7 @@ namespace X3D
         l_radial_styloid,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("l_axilla_post.")]
+        [XmlEnumAttribute("l_axilla_post.")]
         l_axilla_post,
 
         /// <remarks/>
@@ -14861,7 +14872,7 @@ namespace X3D
         r_metatarsal_pha1,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("r_calcaneous_post.")]
+        [XmlEnumAttribute("r_calcaneous_post.")]
         r_calcaneous_post,
 
         /// <remarks/>
@@ -14892,7 +14903,7 @@ namespace X3D
         l_metatarsal_pha1,
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("l_calcaneous_post.")]
+        [XmlEnumAttribute("l_calcaneous_post.")]
         l_calcaneous_post,
 
         /// <remarks/>
@@ -14911,12 +14922,12 @@ namespace X3D
         navel,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class HAnimJoint : X3DChildNode
     {
 
@@ -14967,9 +14978,9 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("HAnimDisplacer", typeof(HAnimDisplacer))]
-        [System.Xml.Serialization.XmlElementAttribute("HAnimJoint", typeof(HAnimJoint))]
-        [System.Xml.Serialization.XmlElementAttribute("HAnimSegment", typeof(HAnimSegment))]
+        [XmlElementAttribute("HAnimDisplacer", typeof(HAnimDisplacer))]
+        [XmlElementAttribute("HAnimJoint", typeof(HAnimJoint))]
+        [XmlElementAttribute("HAnimSegment", typeof(HAnimSegment))]
         public List<X3DNode> Items
         {
             get
@@ -14982,7 +14993,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public jointNames name
         {
             get
@@ -14995,7 +15006,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string center
         {
@@ -15009,7 +15020,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string rotation
         {
@@ -15023,7 +15034,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1 1")]
         public string scale
         {
@@ -15037,7 +15048,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string scaleOrientation
         {
@@ -15051,7 +15062,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string translation
         {
@@ -15065,7 +15076,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string skinCoordIndex
         {
             get
@@ -15078,7 +15089,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string skinCoordWeight
         {
             get
@@ -15091,7 +15102,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string llimit
         {
             get
@@ -15104,7 +15115,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string ulimit
         {
             get
@@ -15117,7 +15128,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string limitOrientation
         {
@@ -15131,7 +15142,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string stiffness
         {
@@ -15145,7 +15156,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string bboxCenter
         {
@@ -15159,7 +15170,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("-1 -1 -1")]
         public string bboxSize
         {
@@ -15173,7 +15184,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -15188,12 +15199,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class HAnimSegment : X3DGroupingNode
     {
 
@@ -15218,7 +15229,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("HAnimDisplacer")]
+        [XmlElementAttribute("HAnimDisplacer")]
         public List<HAnimDisplacer> HAnimDisplacer
         {
             get
@@ -15231,7 +15242,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public segmentNames name
         {
             get
@@ -15244,7 +15255,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float mass
         {
@@ -15258,7 +15269,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string centerOfMass
         {
@@ -15272,7 +15283,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0 0 0 0 0 0 0")]
         public string momentsOfInertia
         {
@@ -15286,7 +15297,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -15301,8 +15312,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum segmentNames
     {
 
@@ -15589,8 +15600,8 @@ namespace X3D
         r_pinky_distal,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum jointNames
     {
 
@@ -15877,12 +15888,12 @@ namespace X3D
         r_pinky3,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class HAnimSite : X3DGroupingNode
     {
 
@@ -15910,7 +15921,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         public string name
         {
             get
@@ -15923,7 +15934,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string center
         {
@@ -15937,7 +15948,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string rotation
         {
@@ -15951,7 +15962,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1 1")]
         public string scale
         {
@@ -15965,7 +15976,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string scaleOrientation
         {
@@ -15979,7 +15990,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string translation
         {
@@ -15993,7 +16004,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -16008,12 +16019,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Contour2D : X3DNode
     {
 
@@ -16027,9 +16038,9 @@ namespace X3D
             this._containerField = "trimmingContour";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ContourPolyline2D", typeof(ContourPolyline2D))]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsCurve2D", typeof(NurbsCurve2D))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("ContourPolyline2D", typeof(ContourPolyline2D))]
+        [XmlElementAttribute("NurbsCurve2D", typeof(NurbsCurve2D))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
         public List<object> Items
         {
             get
@@ -16042,7 +16053,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("trimmingContour")]
         public string containerField
         {
@@ -16057,12 +16068,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ContourPolyline2D : X3DNurbsControlCurveNode
     {
 
@@ -16073,7 +16084,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -16088,8 +16099,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DNurbsControlCurveNode : X3DNode
@@ -16097,7 +16108,7 @@ namespace X3D
 
         private string _controlPoint;
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string controlPoint
         {
             get
@@ -16111,12 +16122,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class NurbsCurve2D : X3DNurbsControlCurveNode
     {
 
@@ -16140,7 +16151,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool closed
         {
@@ -16154,7 +16165,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string knot
         {
             get
@@ -16167,7 +16178,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("3")]
         public string order
         {
@@ -16181,7 +16192,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string tessellation
         {
@@ -16195,7 +16206,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string weight
         {
             get
@@ -16208,7 +16219,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -16223,12 +16234,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class NurbsCurve : X3DParametricGeometryNode
     {
 
@@ -16254,9 +16265,9 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Coordinate", typeof(Coordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("Coordinate", typeof(Coordinate))]
+        [XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
         public object Item
         {
             get
@@ -16269,7 +16280,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool closed
         {
@@ -16283,7 +16294,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string knot
         {
             get
@@ -16296,7 +16307,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("3")]
         public string order
         {
@@ -16310,7 +16321,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string tessellation
         {
@@ -16324,7 +16335,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string weight
         {
             get
@@ -16337,7 +16348,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -16352,17 +16363,17 @@ namespace X3D
         }
     }
 
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DNurbsSurfaceGeometryNode))]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [XmlIncludeAttribute(typeof(X3DNurbsSurfaceGeometryNode))]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DParametricGeometryNode : X3DGeometryNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DNurbsSurfaceGeometryNode : X3DParametricGeometryNode
@@ -16405,7 +16416,7 @@ namespace X3D
             this._solid = true;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool uClosed
         {
@@ -16419,7 +16430,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool vClosed
         {
@@ -16433,7 +16444,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string uDimension
         {
@@ -16447,7 +16458,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string vDimension
         {
@@ -16461,7 +16472,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string uKnot
         {
             get
@@ -16474,7 +16485,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string vKnot
         {
             get
@@ -16487,7 +16498,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("3")]
         public string uOrder
         {
@@ -16501,7 +16512,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("3")]
         public string vOrder
         {
@@ -16515,7 +16526,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string uTessellation
         {
@@ -16529,7 +16540,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string vTessellation
         {
@@ -16543,7 +16554,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string weight
         {
             get
@@ -16556,7 +16567,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool solid
         {
@@ -16571,12 +16582,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class NurbsOrientationInterpolator : X3DChildNode
     {
 
@@ -16596,9 +16607,9 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Coordinate", typeof(Coordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("Coordinate", typeof(Coordinate))]
+        [XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
         public object Item
         {
             get
@@ -16611,7 +16622,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string knot
         {
             get
@@ -16624,7 +16635,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("3")]
         public string order
         {
@@ -16638,7 +16649,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string weight
         {
             get
@@ -16651,7 +16662,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -16666,12 +16677,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class NurbsPatchSurface : X3DNurbsSurfaceGeometryNode
     {
 
@@ -16685,12 +16696,12 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Coordinate", typeof(Coordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsTextureCoordinate", typeof(NurbsTextureCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureCoordinate", typeof(TextureCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureCoordinateGenerator", typeof(TextureCoordinateGenerator))]
+        [XmlElementAttribute("Coordinate", typeof(Coordinate))]
+        [XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
+        [XmlElementAttribute("NurbsTextureCoordinate", typeof(NurbsTextureCoordinate))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("TextureCoordinate", typeof(TextureCoordinate))]
+        [XmlElementAttribute("TextureCoordinateGenerator", typeof(TextureCoordinateGenerator))]
         public List<object> Items
         {
             get
@@ -16703,7 +16714,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -16718,12 +16729,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class NurbsPositionInterpolator : X3DChildNode
     {
 
@@ -16743,9 +16754,9 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Coordinate", typeof(Coordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("Coordinate", typeof(Coordinate))]
+        [XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
         public object Item
         {
             get
@@ -16758,7 +16769,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string knot
         {
             get
@@ -16771,7 +16782,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("3")]
         public string order
         {
@@ -16785,7 +16796,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string weight
         {
             get
@@ -16798,7 +16809,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -16813,12 +16824,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class NurbsSet : X3DChildNode
     {
 
@@ -16853,7 +16864,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("NurbsPatchSurface")]
+        [XmlElementAttribute("NurbsPatchSurface")]
         public List<NurbsPatchSurface> NurbsPatchSurface
         {
             get
@@ -16866,7 +16877,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("NurbsSweptSurface")]
+        [XmlElementAttribute("NurbsSweptSurface")]
         public List<NurbsSweptSurface> NurbsSweptSurface
         {
             get
@@ -16879,7 +16890,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("NurbsSwungSurface")]
+        [XmlElementAttribute("NurbsSwungSurface")]
         public List<NurbsSwungSurface> NurbsSwungSurface
         {
             get
@@ -16892,7 +16903,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("NurbsTrimmedSurface")]
+        [XmlElementAttribute("NurbsTrimmedSurface")]
         public List<NurbsTrimmedSurface> NurbsTrimmedSurface
         {
             get
@@ -16905,7 +16916,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance")]
+        [XmlElementAttribute("ProtoInstance")]
         public List<ProtoInstance> ProtoInstance
         {
             get
@@ -16918,7 +16929,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float tessellationScale
         {
@@ -16932,7 +16943,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string bboxCenter
         {
@@ -16946,7 +16957,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("-1 -1 -1")]
         public string bboxSize
         {
@@ -16960,7 +16971,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -16975,12 +16986,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class NurbsSweptSurface : X3DParametricGeometryNode
     {
 
@@ -17000,10 +17011,10 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ContourPolyline2D", typeof(ContourPolyline2D))]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsCurve", typeof(NurbsCurve))]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsCurve2D", typeof(NurbsCurve2D))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("ContourPolyline2D", typeof(ContourPolyline2D))]
+        [XmlElementAttribute("NurbsCurve", typeof(NurbsCurve))]
+        [XmlElementAttribute("NurbsCurve2D", typeof(NurbsCurve2D))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
         public List<object> Items
         {
             get
@@ -17016,7 +17027,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool ccw
         {
@@ -17030,7 +17041,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool solid
         {
@@ -17044,7 +17055,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -17059,12 +17070,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class NurbsSwungSurface : X3DParametricGeometryNode
     {
 
@@ -17084,9 +17095,9 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ContourPolyline2D", typeof(ContourPolyline2D))]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsCurve2D", typeof(NurbsCurve2D))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("ContourPolyline2D", typeof(ContourPolyline2D))]
+        [XmlElementAttribute("NurbsCurve2D", typeof(NurbsCurve2D))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
         public List<object> Items
         {
             get
@@ -17099,7 +17110,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool ccw
         {
@@ -17113,7 +17124,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool solid
         {
@@ -17127,7 +17138,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -17142,12 +17153,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class NurbsTrimmedSurface : X3DNurbsSurfaceGeometryNode
     {
 
@@ -17161,13 +17172,13 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Contour2D", typeof(Contour2D))]
-        [System.Xml.Serialization.XmlElementAttribute("Coordinate", typeof(Coordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsTextureCoordinate", typeof(NurbsTextureCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureCoordinate", typeof(TextureCoordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureCoordinateGenerator", typeof(TextureCoordinateGenerator))]
+        [XmlElementAttribute("Contour2D", typeof(Contour2D))]
+        [XmlElementAttribute("Coordinate", typeof(Coordinate))]
+        [XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
+        [XmlElementAttribute("NurbsTextureCoordinate", typeof(NurbsTextureCoordinate))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("TextureCoordinate", typeof(TextureCoordinate))]
+        [XmlElementAttribute("TextureCoordinateGenerator", typeof(TextureCoordinateGenerator))]
         public List<object> Items
         {
             get
@@ -17180,7 +17191,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -17195,12 +17206,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class NurbsSurfaceInterpolator : X3DChildNode
     {
 
@@ -17231,9 +17242,9 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Coordinate", typeof(Coordinate))]
-        [System.Xml.Serialization.XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("Coordinate", typeof(Coordinate))]
+        [XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
         public object Item
         {
             get
@@ -17246,7 +17257,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string uDimension
         {
@@ -17260,7 +17271,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("0")]
         public string vDimension
         {
@@ -17274,7 +17285,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string uKnot
         {
             get
@@ -17287,7 +17298,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string vKnot
         {
             get
@@ -17300,7 +17311,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("3")]
         public string uOrder
         {
@@ -17314,7 +17325,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("3")]
         public string vOrder
         {
@@ -17328,7 +17339,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string weight
         {
             get
@@ -17341,7 +17352,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -17356,12 +17367,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class CADAssembly : X3DGroupingNode
     {
 
@@ -17374,7 +17385,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string name
         {
             get
@@ -17387,7 +17398,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -17402,12 +17413,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class CADFace : X3DProductStructureChildNode
     {
 
@@ -17426,10 +17437,10 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("LOD", typeof(LOD))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
-        [System.Xml.Serialization.XmlElementAttribute("Shape", typeof(Shape))]
-        [System.Xml.Serialization.XmlElementAttribute("Transform", typeof(Transform))]
+        [XmlElementAttribute("LOD", typeof(LOD))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("Shape", typeof(Shape))]
+        [XmlElementAttribute("Transform", typeof(Transform))]
         public object Item
         {
             get
@@ -17442,7 +17453,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string bboxCenter
         {
@@ -17456,7 +17467,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("-1 -1 -1")]
         public string bboxSize
         {
@@ -17470,7 +17481,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -17485,8 +17496,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DProductStructureChildNode : X3DChildNode
@@ -17494,7 +17505,7 @@ namespace X3D
 
         private string _name;
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string name
         {
             get
@@ -17508,12 +17519,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class CADLayer : X3DGroupingNode
     {
 
@@ -17529,7 +17540,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string name
         {
             get
@@ -17542,7 +17553,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<bool> visible
         {
             get
@@ -17555,7 +17566,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -17570,12 +17581,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class CADPart : X3DProductStructureChildNode
     {
 
@@ -17610,8 +17621,8 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("CADFace", typeof(CADFace))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("CADFace", typeof(CADFace))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
         public List<object> Items
         {
             get
@@ -17624,7 +17635,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string center
         {
@@ -17638,7 +17649,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string rotation
         {
@@ -17652,7 +17663,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1 1")]
         public string scale
         {
@@ -17666,7 +17677,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string scaleOrientation
         {
@@ -17680,7 +17691,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string translation
         {
@@ -17694,7 +17705,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string bboxCenter
         {
@@ -17708,7 +17719,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("-1 -1 -1")]
         public string bboxSize
         {
@@ -17722,7 +17733,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -17737,12 +17748,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class IndexedQuadSet : X3DComposedGeometryNode
     {
 
@@ -17755,7 +17766,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string index
         {
             get
@@ -17768,7 +17779,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -17783,12 +17794,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class QuadSet : X3DComposedGeometryNode
     {
 
@@ -17799,7 +17810,7 @@ namespace X3D
             this._containerField = "geometry";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("geometry")]
         public string containerField
         {
@@ -17814,12 +17825,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class PackagedShader : X3DShaderNode
     {
 
@@ -17833,7 +17844,7 @@ namespace X3D
             this._containerField = "shaders";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> url
         {
             get
@@ -17846,7 +17857,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("shaders")]
         public string containerField
         {
@@ -17861,8 +17872,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DShaderNode : X3DAppearanceChildNode
@@ -17870,7 +17881,7 @@ namespace X3D
         // SFString []        language   ""   ["Cg"|"GLSL"|"HLSL"|...]
         private string _language;
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string language
         {
             get
@@ -17906,7 +17917,7 @@ namespace X3D
         private bool _isSelected;
         private List<field> _fields = new List<field>();
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public bool activate
         {
             get
@@ -17919,7 +17930,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public bool isValid
         {
             get
@@ -17932,7 +17943,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public bool isSelected
         {
             get
@@ -17945,7 +17956,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ShaderPart")]
+        [XmlElementAttribute("ShaderPart")]
         public List<ShaderPart> parts
         {
             get
@@ -17958,7 +17969,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("shaders")]
         public string containerField
         {
@@ -17972,7 +17983,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("field")]
+        [XmlElementAttribute("field")]
         public List<field> fields
         {
             get
@@ -17999,7 +18010,7 @@ namespace X3D
             this._containerField = "shaders";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ShaderProgram")]
+        [XmlElementAttribute("ShaderProgram")]
         public List<ShaderProgram> ShaderProgram
         {
             get
@@ -18012,7 +18023,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("shaders")]
         public string containerField
         {
@@ -18043,7 +18054,7 @@ namespace X3D
             this._containerField = "programs";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> url
         {
             get
@@ -18056,7 +18067,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(shaderPartTypeValues.VERTEX)]
         public shaderPartTypeValues type
         {
@@ -18070,7 +18081,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("programs")]
         public string containerField
         {
@@ -18085,8 +18096,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     public enum shaderPartTypeValues
     {
         VERTEX,
@@ -18105,12 +18116,12 @@ namespace X3D
 
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ShaderPart : X3DNodeMixedContent
     {
 
@@ -18134,7 +18145,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string url
         {
             get
@@ -18154,7 +18165,7 @@ namespace X3D
             set { _source = value; }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(shaderPartTypeValues.VERTEX)]
         public shaderPartTypeValues type
         {
@@ -18168,7 +18179,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("parts")]
         public string containerField
         {
@@ -18183,12 +18194,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ComposedCubeMapTexture : X3DEnvironmentTextureNode
     {
 
@@ -18202,10 +18213,10 @@ namespace X3D
             this._containerField = "texture";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ImageTexture", typeof(ImageTexture))]
-        [System.Xml.Serialization.XmlElementAttribute("MovieTexture", typeof(MovieTexture))]
-        [System.Xml.Serialization.XmlElementAttribute("PixelTexture", typeof(PixelTexture))]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("ImageTexture", typeof(ImageTexture))]
+        [XmlElementAttribute("MovieTexture", typeof(MovieTexture))]
+        [XmlElementAttribute("PixelTexture", typeof(PixelTexture))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
         public List<object> Items
         {
             get
@@ -18218,7 +18229,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("texture")]
         public string containerField
         {
@@ -18233,20 +18244,20 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DEnvironmentTextureNode : X3DTextureNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class GeneratedCubeMapTexture : X3DEnvironmentTextureNode
     {
 
@@ -18265,8 +18276,8 @@ namespace X3D
             this._containerField = "texture";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureProperties", typeof(TextureProperties))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("TextureProperties", typeof(TextureProperties))]
         public object Item
         {
             get
@@ -18279,7 +18290,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(GeneratedCubeMapTextureUpdate.NONE)]
         public GeneratedCubeMapTextureUpdate update
         {
@@ -18293,7 +18304,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("128")]
         public string size
         {
@@ -18307,7 +18318,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("texture")]
         public string containerField
         {
@@ -18322,9 +18333,9 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
+    [XmlTypeAttribute(AnonymousType = true)]
     public enum GeneratedCubeMapTextureUpdate
     {
 
@@ -18338,12 +18349,12 @@ namespace X3D
         ALWAYS,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ImageCubeMapTexture : X3DEnvironmentTextureNode
     {
 
@@ -18359,8 +18370,8 @@ namespace X3D
             this._containerField = "texture";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
-        [System.Xml.Serialization.XmlElementAttribute("TextureProperties", typeof(TextureProperties))]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
+        [XmlElementAttribute("TextureProperties", typeof(TextureProperties))]
         public object Item
         {
             get
@@ -18373,7 +18384,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> url
         {
             get
@@ -18386,7 +18397,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("texture")]
         public string containerField
         {
@@ -18401,12 +18412,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ComposedTexture3D : X3DTexture3DNode
     {
 
@@ -18429,7 +18440,7 @@ namespace X3D
             this._containerField = "texture";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ImageTexture")]
+        [XmlElementAttribute("ImageTexture")]
         public List<ImageTexture> ImageTexture
         {
             get
@@ -18442,7 +18453,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("PixelTexture")]
+        [XmlElementAttribute("PixelTexture")]
         public List<PixelTexture> PixelTexture
         {
             get
@@ -18455,7 +18466,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("MovieTexture")]
+        [XmlElementAttribute("MovieTexture")]
         public List<MovieTexture> MovieTexture
         {
             get
@@ -18468,7 +18479,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance")]
+        [XmlElementAttribute("ProtoInstance")]
         public List<ProtoInstance> ProtoInstance
         {
             get
@@ -18481,7 +18492,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("texture")]
         public string containerField
         {
@@ -18496,8 +18507,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DTexture3DNode : X3DTextureNode
@@ -18518,8 +18529,8 @@ namespace X3D
             this._repeatR = false;
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("TextureProperties", typeof(TextureProperties), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("TextureProperties", typeof(TextureProperties), Order = 0)]
         public object Item
         {
             get
@@ -18532,7 +18543,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool repeatS
         {
@@ -18546,7 +18557,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool repeatT
         {
@@ -18560,7 +18571,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool repeatR
         {
@@ -18575,12 +18586,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ImageTexture3D : X3DTexture3DNode
     {
 
@@ -18594,7 +18605,7 @@ namespace X3D
             this._containerField = "texture";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> url
         {
             get
@@ -18607,7 +18618,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("texture")]
         public string containerField
         {
@@ -18622,12 +18633,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class PixelTexture3D : X3DTexture3DNode
     {
 
@@ -18641,7 +18652,7 @@ namespace X3D
             this._containerField = "texture";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0 0")]
         public string image
         {
@@ -18655,7 +18666,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("texture")]
         public string containerField
         {
@@ -18670,12 +18681,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TextureTransformMatrix3D : X3DTextureTransformNode
     {
 
@@ -18689,7 +18700,7 @@ namespace X3D
             this._containerField = "textureTransform";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1")]
         public string matrix
         {
@@ -18703,7 +18714,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("textureTransform")]
         public string containerField
         {
@@ -18718,12 +18729,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TextureTransform3D : X3DTextureTransformNode
     {
 
@@ -18746,7 +18757,7 @@ namespace X3D
             this._containerField = "textureTransform";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string center
         {
@@ -18760,7 +18771,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string rotation
         {
@@ -18774,7 +18785,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1 1")]
         public string scale
         {
@@ -18788,7 +18799,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string translation
         {
@@ -18802,7 +18813,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("textureTransform")]
         public string containerField
         {
@@ -18817,12 +18828,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class OrthoViewpoint : X3DViewpointNode
     {
 
@@ -18842,7 +18853,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string centerOfRotation
         {
@@ -18856,7 +18867,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("-1 -1 1 1")]
         public string fieldOfView
         {
@@ -18870,7 +18881,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 10")]
         public string position
         {
@@ -18884,7 +18895,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -18899,12 +18910,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ViewpointGroup : X3DChildNode
     {
 
@@ -18932,11 +18943,11 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("GeoViewpoint", typeof(GeoViewpoint), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("OrthoViewpoint", typeof(OrthoViewpoint), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Viewpoint", typeof(Viewpoint), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ViewpointGroup", typeof(ViewpointGroup), Order = 0)]
+        [XmlElementAttribute("GeoViewpoint", typeof(GeoViewpoint), Order = 0)]
+        [XmlElementAttribute("OrthoViewpoint", typeof(OrthoViewpoint), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("Viewpoint", typeof(Viewpoint), Order = 0)]
+        [XmlElementAttribute("ViewpointGroup", typeof(ViewpointGroup), Order = 0)]
         public List<object> Items
         {
             get
@@ -18949,7 +18960,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string center
         {
@@ -18963,7 +18974,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string description
         {
             get
@@ -18976,7 +18987,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool displayed
         {
@@ -18990,7 +19001,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool retainUserOffsets
         {
@@ -19004,7 +19015,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string size
         {
@@ -19018,7 +19029,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -19033,12 +19044,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Viewport : X3DViewportNode
     {
 
@@ -19052,7 +19063,7 @@ namespace X3D
             this._containerField = "viewport";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0 1")]
         public string clipBoundary
         {
@@ -19066,7 +19077,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("viewport")]
         public string containerField
         {
@@ -19081,20 +19092,20 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class X3DViewportNode : X3DGroupingNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Layout : X3DLayoutNode
     {
 
@@ -19131,7 +19142,7 @@ namespace X3D
             this._containerField = "layout";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> align
         {
             get
@@ -19144,7 +19155,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0")]
         public string offset
         {
@@ -19158,7 +19169,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> offsetUnits
         {
             get
@@ -19171,7 +19182,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> scaleMode
         {
             get
@@ -19184,7 +19195,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1")]
         public string size
         {
@@ -19198,7 +19209,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> sizeUnits
         {
             get
@@ -19211,7 +19222,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("layout")]
         public string containerField
         {
@@ -19226,16 +19237,16 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DLayoutNode : X3DChildNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DLayerNode : X3DNode
@@ -19251,12 +19262,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ScreenGroup : X3DGroupingNode
     {
 
@@ -19267,7 +19278,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -19282,12 +19293,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class BallJoint : X3DRigidJointNode
     {
 
@@ -19301,7 +19312,7 @@ namespace X3D
             this._containerField = "joints";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string anchorPoint
         {
@@ -19315,7 +19326,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("joints")]
         public string containerField
         {
@@ -19330,8 +19341,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DRigidJointNode : X3DNode
@@ -19348,8 +19359,8 @@ namespace X3D
             this._forceOutput.Add("\"NONE\"");
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("RigidBody", typeof(RigidBody), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("RigidBody", typeof(RigidBody), Order = 0)]
         public List<object> Items
         {
             get
@@ -19362,7 +19373,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> forceOutput
         {
             get
@@ -19376,12 +19387,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class RigidBody : X3DNode
     {
 
@@ -19456,12 +19467,12 @@ namespace X3D
             this._containerField = RigidBodyContainerField.bodies;
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Box", typeof(Box), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("CollidableOffset", typeof(CollidableOffset), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("CollidableShape", typeof(CollidableShape), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Cone", typeof(Cone), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Sphere", typeof(Sphere), Order = 0)]
+        [XmlElementAttribute("Box", typeof(Box), Order = 0)]
+        [XmlElementAttribute("CollidableOffset", typeof(CollidableOffset), Order = 0)]
+        [XmlElementAttribute("CollidableShape", typeof(CollidableShape), Order = 0)]
+        [XmlElementAttribute("Cone", typeof(Cone), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("Sphere", typeof(Sphere), Order = 0)]
         public List<object> Items
         {
             get
@@ -19474,7 +19485,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.001")]
         public float angularDampingFactor
         {
@@ -19488,7 +19499,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string angularVelocity
         {
@@ -19502,7 +19513,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool autoDamp
         {
@@ -19516,7 +19527,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool autoDisable
         {
@@ -19530,7 +19541,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string centerOfMass
         {
@@ -19544,7 +19555,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float disableAngularSpeed
         {
@@ -19558,7 +19569,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float disableLinearSpeed
         {
@@ -19572,7 +19583,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(0D)]
         public double disableTime
         {
@@ -19586,7 +19597,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool enabled
         {
@@ -19600,7 +19611,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0")]
         public string finiteRotationAxis
         {
@@ -19614,7 +19625,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool @fixed
         {
@@ -19628,7 +19639,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string forces
         {
             get
@@ -19641,7 +19652,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 0 0 0 1 0 0 0 1")]
         public string inertia
         {
@@ -19655,7 +19666,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.001")]
         public float linearDampingFactor
         {
@@ -19669,7 +19680,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string linearVelocity
         {
@@ -19683,7 +19694,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float mass
         {
@@ -19697,7 +19708,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string position
         {
@@ -19711,7 +19722,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string orientation
         {
@@ -19725,7 +19736,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string torques
         {
             get
@@ -19738,7 +19749,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool useFiniteRotation
         {
@@ -19752,7 +19763,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool useGlobalGravity
         {
@@ -19766,7 +19777,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(RigidBodyContainerField.bodies)]
         public RigidBodyContainerField containerField
         {
@@ -19781,12 +19792,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class CollidableOffset : X3DNBodyCollidableNode
     {
 
@@ -19799,9 +19810,9 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("CollidableOffset", typeof(CollidableOffset), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("CollidableShape", typeof(CollidableShape), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("CollidableOffset", typeof(CollidableOffset), Order = 0)]
+        [XmlElementAttribute("CollidableShape", typeof(CollidableShape), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
         public object Item
         {
             get
@@ -19814,7 +19825,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -19829,12 +19840,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class CollidableShape : X3DNBodyCollidableNode
     {
 
@@ -19847,8 +19858,8 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Shape", typeof(Shape), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("Shape", typeof(Shape), Order = 0)]
         public object Item
         {
             get
@@ -19861,7 +19872,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -19876,8 +19887,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DNBodyCollidableNode : X3DChildNode
@@ -19902,7 +19913,7 @@ namespace X3D
             this._translation = "0 0 0";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string bboxCenter
         {
@@ -19916,7 +19927,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("-1 -1 -1")]
         public string bboxSize
         {
@@ -19930,7 +19941,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool enabled
         {
@@ -19944,7 +19955,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string rotation
         {
@@ -19958,7 +19969,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string translation
         {
@@ -19973,9 +19984,9 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
+    [XmlTypeAttribute(AnonymousType = true)]
     public enum RigidBodyContainerField
     {
 
@@ -19989,12 +20000,12 @@ namespace X3D
         bodies,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class CollisionCollection : X3DNode
     {
 
@@ -20036,10 +20047,10 @@ namespace X3D
             this._containerField = "collider";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("CollidableOffset", typeof(CollidableOffset), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("CollidableShape", typeof(CollidableShape), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("CollisionSpace", typeof(CollisionSpace), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("CollidableOffset", typeof(CollidableOffset), Order = 0)]
+        [XmlElementAttribute("CollidableShape", typeof(CollidableShape), Order = 0)]
+        [XmlElementAttribute("CollisionSpace", typeof(CollisionSpace), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
         public List<object> Items
         {
             get
@@ -20052,7 +20063,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> appliedParameters
         {
             get
@@ -20065,7 +20076,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float bounce
         {
@@ -20079,7 +20090,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool enabled
         {
@@ -20093,7 +20104,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0")]
         public string frictionCoefficients
         {
@@ -20107,7 +20118,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.1")]
         public float minBounceSpeed
         {
@@ -20121,7 +20132,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0")]
         public string slipFactors
         {
@@ -20135,7 +20146,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.0001")]
         public float softnessConstantForceMix
         {
@@ -20149,7 +20160,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.8")]
         public float softnessErrorCorrection
         {
@@ -20163,7 +20174,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0")]
         public string surfaceSpeed
         {
@@ -20177,7 +20188,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("collider")]
         public string containerField
         {
@@ -20192,12 +20203,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class CollisionSpace : X3DNBodyCollisionSpaceNode
     {
 
@@ -20214,10 +20225,10 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("CollidableOffset", typeof(CollidableOffset), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("CollidableShape", typeof(CollidableShape), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("CollisionSpace", typeof(CollisionSpace), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("CollidableOffset", typeof(CollidableOffset), Order = 0)]
+        [XmlElementAttribute("CollidableShape", typeof(CollidableShape), Order = 0)]
+        [XmlElementAttribute("CollisionSpace", typeof(CollisionSpace), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
         public List<object> Items
         {
             get
@@ -20230,7 +20241,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool useGeometry
         {
@@ -20244,7 +20255,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -20259,8 +20270,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DNBodyCollisionSpaceNode : X3DNode
@@ -20279,7 +20290,7 @@ namespace X3D
             this._enabled = true;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string bboxCenter
         {
@@ -20293,7 +20304,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("-1 -1 -1")]
         public string bboxSize
         {
@@ -20307,7 +20318,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool enabled
         {
@@ -20322,12 +20333,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class CollisionSensor : X3DSensorNode
     {
 
@@ -20340,8 +20351,8 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("CollisionCollection", typeof(CollisionCollection), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("CollisionCollection", typeof(CollisionCollection), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
         public object Item
         {
             get
@@ -20354,7 +20365,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -20369,12 +20380,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class Contact : X3DNode
     {
 
@@ -20431,7 +20442,7 @@ namespace X3D
             this._containerField = "contacts";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
+        [XmlElementAttribute(Order = 0)]
         public RigidBody RigidBody
         {
             get
@@ -20444,7 +20455,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("RigidBody", Order = 1)]
+        [XmlElementAttribute("RigidBody", Order = 1)]
         public RigidBody RigidBody1
         {
             get
@@ -20457,9 +20468,9 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("CollidableOffset", typeof(CollidableOffset), Order = 2)]
-        [System.Xml.Serialization.XmlElementAttribute("CollidableShape", typeof(CollidableShape), Order = 2)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 2)]
+        [XmlElementAttribute("CollidableOffset", typeof(CollidableOffset), Order = 2)]
+        [XmlElementAttribute("CollidableShape", typeof(CollidableShape), Order = 2)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 2)]
         public List<object> Items
         {
             get
@@ -20472,7 +20483,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> appliedParameters
         {
             get
@@ -20485,7 +20496,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float bounce
         {
@@ -20499,7 +20510,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0")]
         public string contactNormal
         {
@@ -20513,7 +20524,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float depth
         {
@@ -20527,7 +20538,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0")]
         public string frictionCoefficients
         {
@@ -20541,7 +20552,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0")]
         public string frictionDirection
         {
@@ -20555,7 +20566,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float minBounceSpeed
         {
@@ -20569,7 +20580,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string position
         {
@@ -20583,7 +20594,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0")]
         public string slipCoefficients
         {
@@ -20597,7 +20608,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.0001")]
         public float softnessConstantForceMix
         {
@@ -20611,7 +20622,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.8")]
         public float softnessErrorCorrection
         {
@@ -20625,7 +20636,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0")]
         public string surfaceSpeed
         {
@@ -20639,7 +20650,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("contacts")]
         public string containerField
         {
@@ -20654,12 +20665,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class DoubleAxisHingeJoint : X3DRigidJointNode
     {
 
@@ -20712,7 +20723,7 @@ namespace X3D
             this._containerField = "joints";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string anchorPoint
         {
@@ -20726,7 +20737,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string axis1
         {
@@ -20740,7 +20751,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string axis2
         {
@@ -20754,7 +20765,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float desiredAngularVelocity1
         {
@@ -20768,7 +20779,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float desiredAngularVelocity2
         {
@@ -20782,7 +20793,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "3.141593")]
         public float maxAngle1
         {
@@ -20796,7 +20807,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float maxTorque1
         {
@@ -20810,7 +20821,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float maxTorque2
         {
@@ -20824,7 +20835,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "-3.141593")]
         public float minAngle1
         {
@@ -20838,7 +20849,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float stop1Bounce
         {
@@ -20852,7 +20863,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.001")]
         public float stop1ConstantForceMix
         {
@@ -20866,7 +20877,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.8")]
         public float stop1ErrorCorrection
         {
@@ -20880,7 +20891,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.8")]
         public float suspensionErrorCorrection
         {
@@ -20894,7 +20905,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float suspensionForce
         {
@@ -20908,7 +20919,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("joints")]
         public string containerField
         {
@@ -20923,12 +20934,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class MotorJoint : X3DRigidJointNode
     {
 
@@ -20990,7 +21001,7 @@ namespace X3D
             this._containerField = "joints";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool autoCalc
         {
@@ -21004,7 +21015,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float axis1Angle
         {
@@ -21018,7 +21029,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float axis1Torque
         {
@@ -21032,7 +21043,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float axis2Angle
         {
@@ -21046,7 +21057,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float axis2Torque
         {
@@ -21060,7 +21071,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float axis3Angle
         {
@@ -21074,7 +21085,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float axis3Torque
         {
@@ -21088,7 +21099,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("1")]
         public string enabledAxes
         {
@@ -21102,7 +21113,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string motor1Axis
         {
@@ -21116,7 +21127,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string motor2Axis
         {
@@ -21130,7 +21141,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string motor3Axis
         {
@@ -21144,7 +21155,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float stop1Bounce
         {
@@ -21158,7 +21169,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.8")]
         public float stop1ErrorCorrection
         {
@@ -21172,7 +21183,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float stop2Bounce
         {
@@ -21186,7 +21197,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.8")]
         public float stop2ErrorCorrection
         {
@@ -21200,7 +21211,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float stop3Bounce
         {
@@ -21214,7 +21225,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.8")]
         public float stop3ErrorCorrection
         {
@@ -21228,7 +21239,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("joints")]
         public string containerField
         {
@@ -21243,12 +21254,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class RigidBodyCollection : X3DChildNode
     {
 
@@ -21298,15 +21309,15 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("BallJoint", typeof(BallJoint), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("CollisionCollection", typeof(CollisionCollection), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("DoubleAxisHingeJoint", typeof(DoubleAxisHingeJoint), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("MotorJoint", typeof(MotorJoint), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("RigidBody", typeof(RigidBody), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("SingleAxisHingeJoint", typeof(SingleAxisHingeJoint), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("SliderJoint", typeof(SliderJoint), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("UniversalJoint", typeof(UniversalJoint), Order = 0)]
+        [XmlElementAttribute("BallJoint", typeof(BallJoint), Order = 0)]
+        [XmlElementAttribute("CollisionCollection", typeof(CollisionCollection), Order = 0)]
+        [XmlElementAttribute("DoubleAxisHingeJoint", typeof(DoubleAxisHingeJoint), Order = 0)]
+        [XmlElementAttribute("MotorJoint", typeof(MotorJoint), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("RigidBody", typeof(RigidBody), Order = 0)]
+        [XmlElementAttribute("SingleAxisHingeJoint", typeof(SingleAxisHingeJoint), Order = 0)]
+        [XmlElementAttribute("SliderJoint", typeof(SliderJoint), Order = 0)]
+        [XmlElementAttribute("UniversalJoint", typeof(UniversalJoint), Order = 0)]
         public List<object> Items
         {
             get
@@ -21319,7 +21330,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool autoDisable
         {
@@ -21333,7 +21344,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.0001")]
         public float constantForceMix
         {
@@ -21347,7 +21358,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float contactSurfaceThickness
         {
@@ -21361,7 +21372,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float disableAngularSpeed
         {
@@ -21375,7 +21386,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float disableLinearSpeed
         {
@@ -21389,7 +21400,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(0D)]
         public double disableTime
         {
@@ -21403,7 +21414,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool enabled
         {
@@ -21417,7 +21428,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.8")]
         public float errorCorrection
         {
@@ -21431,7 +21442,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 -9.8 0")]
         public string gravity
         {
@@ -21445,7 +21456,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("10")]
         public string iterations
         {
@@ -21459,7 +21470,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "-1")]
         public float maxCorrectionSpeed
         {
@@ -21473,7 +21484,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool preferAccuracy
         {
@@ -21487,7 +21498,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -21502,12 +21513,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class SingleAxisHingeJoint : X3DRigidJointNode
     {
 
@@ -21536,7 +21547,7 @@ namespace X3D
             this._containerField = "joints";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string anchorPoint
         {
@@ -21550,7 +21561,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string axis
         {
@@ -21564,7 +21575,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "3.141593")]
         public float maxAngle
         {
@@ -21578,7 +21589,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "-3.141593")]
         public float minAngle
         {
@@ -21592,7 +21603,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float stopBounce
         {
@@ -21606,7 +21617,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.8")]
         public float stopErrorCorrection
         {
@@ -21620,7 +21631,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("joints")]
         public string containerField
         {
@@ -21635,12 +21646,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class SliderJoint : X3DRigidJointNode
     {
 
@@ -21669,7 +21680,7 @@ namespace X3D
             this._containerField = "joints";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0")]
         public string axis
         {
@@ -21683,7 +21694,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float maxSeparation
         {
@@ -21697,7 +21708,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float minSeparation
         {
@@ -21711,7 +21722,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float sliderForce
         {
@@ -21725,7 +21736,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float stopBounce
         {
@@ -21739,7 +21750,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float stopErrorCorrection
         {
@@ -21753,7 +21764,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("joints")]
         public string containerField
         {
@@ -21768,12 +21779,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class UniversalJoint : X3DRigidJointNode
     {
 
@@ -21805,7 +21816,7 @@ namespace X3D
             this._containerField = "joints";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string anchorPoint
         {
@@ -21819,7 +21830,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string axis1
         {
@@ -21833,7 +21844,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string axis2
         {
@@ -21847,7 +21858,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float stop1Bounce
         {
@@ -21861,7 +21872,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.8")]
         public float stop1ErrorCorrection
         {
@@ -21875,7 +21886,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float stop2Bounce
         {
@@ -21889,7 +21900,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.8")]
         public float stop2ErrorCorrection
         {
@@ -21903,7 +21914,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("joints")]
         public string containerField
         {
@@ -21933,8 +21944,8 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("IndexedLineSet", typeof(IndexedLineSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("LineSet", typeof(LineSet), Order = 0)]
+        [XmlElementAttribute("IndexedLineSet", typeof(IndexedLineSet), Order = 0)]
+        [XmlElementAttribute("LineSet", typeof(LineSet), Order = 0)]
         public X3DGeometryNode Item
         {
             get
@@ -21947,32 +21958,32 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Anchor", typeof(Anchor), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Billboard", typeof(Billboard), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("CADAssembly", typeof(CADAssembly), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("CADLayer", typeof(CADLayer), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("CADPart", typeof(CADPart), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Collision", typeof(Collision), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("EspduTransform", typeof(EspduTransform), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("GeoLOD", typeof(GeoLOD), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("GeoLocation", typeof(GeoLocation), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("GeoTransform", typeof(GeoTransform), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Group", typeof(Group), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("HAnimJoint", typeof(HAnimJoint), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Inline", typeof(Inline), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("LOD", typeof(LOD), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("LayoutGroup", typeof(LayoutGroup), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsSet", typeof(NurbsSet), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("ReceiverPdu", typeof(ReceiverPdu), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("ScreenGroup", typeof(ScreenGroup), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Shape", typeof(Shape), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("SignalPdu", typeof(SignalPdu), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("StaticGroup", typeof(StaticGroup), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Switch", typeof(Switch), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Transform", typeof(Transform), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("TransmitterPdu", typeof(TransmitterPdu), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Viewport", typeof(Viewport), Order = 1)]
+        [XmlElementAttribute("Anchor", typeof(Anchor), Order = 1)]
+        [XmlElementAttribute("Billboard", typeof(Billboard), Order = 1)]
+        [XmlElementAttribute("CADAssembly", typeof(CADAssembly), Order = 1)]
+        [XmlElementAttribute("CADLayer", typeof(CADLayer), Order = 1)]
+        [XmlElementAttribute("CADPart", typeof(CADPart), Order = 1)]
+        [XmlElementAttribute("Collision", typeof(Collision), Order = 1)]
+        [XmlElementAttribute("EspduTransform", typeof(EspduTransform), Order = 1)]
+        [XmlElementAttribute("GeoLOD", typeof(GeoLOD), Order = 1)]
+        [XmlElementAttribute("GeoLocation", typeof(GeoLocation), Order = 1)]
+        [XmlElementAttribute("GeoTransform", typeof(GeoTransform), Order = 1)]
+        [XmlElementAttribute("Group", typeof(Group), Order = 1)]
+        [XmlElementAttribute("HAnimJoint", typeof(HAnimJoint), Order = 1)]
+        [XmlElementAttribute("Inline", typeof(Inline), Order = 1)]
+        [XmlElementAttribute("LOD", typeof(LOD), Order = 1)]
+        [XmlElementAttribute("LayoutGroup", typeof(LayoutGroup), Order = 1)]
+        [XmlElementAttribute("NurbsSet", typeof(NurbsSet), Order = 1)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 1)]
+        [XmlElementAttribute("ReceiverPdu", typeof(ReceiverPdu), Order = 1)]
+        [XmlElementAttribute("ScreenGroup", typeof(ScreenGroup), Order = 1)]
+        [XmlElementAttribute("Shape", typeof(Shape), Order = 1)]
+        [XmlElementAttribute("SignalPdu", typeof(SignalPdu), Order = 1)]
+        [XmlElementAttribute("StaticGroup", typeof(StaticGroup), Order = 1)]
+        [XmlElementAttribute("Switch", typeof(Switch), Order = 1)]
+        [XmlElementAttribute("Transform", typeof(Transform), Order = 1)]
+        [XmlElementAttribute("TransmitterPdu", typeof(TransmitterPdu), Order = 1)]
+        [XmlElementAttribute("Viewport", typeof(Viewport), Order = 1)]
         public List<object> Items
         {
             get
@@ -21985,7 +21996,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -22000,11 +22011,11 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [XmlTypeAttribute(AnonymousType = true)]
     public partial class Anchor : X3DGroupingNode
     {
 
@@ -22023,7 +22034,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string description
         {
             get
@@ -22036,7 +22047,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> parameter
         {
             get
@@ -22049,7 +22060,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> url
         {
             get
@@ -22062,7 +22073,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -22085,12 +22096,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class PickableGroup : X3DGroupingNode
     {
 
@@ -22123,7 +22134,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("NurbsPatchSurface", Order = 0)]
+        [XmlElementAttribute("NurbsPatchSurface", Order = 0)]
         public List<NurbsPatchSurface> NurbsPatchSurface
         {
             get
@@ -22136,7 +22147,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("NurbsSweptSurface", Order = 1)]
+        [XmlElementAttribute("NurbsSweptSurface", Order = 1)]
         public List<NurbsSweptSurface> NurbsSweptSurface
         {
             get
@@ -22149,7 +22160,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("NurbsSwungSurface", Order = 2)]
+        [XmlElementAttribute("NurbsSwungSurface", Order = 2)]
         public List<NurbsSwungSurface> NurbsSwungSurface
         {
             get
@@ -22162,7 +22173,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("NurbsTrimmedSurface", Order = 3)]
+        [XmlElementAttribute("NurbsTrimmedSurface", Order = 3)]
         public List<NurbsTrimmedSurface> NurbsTrimmedSurface
         {
             get
@@ -22175,7 +22186,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", Order = 4)]
+        [XmlElementAttribute("ProtoInstance", Order = 4)]
         public List<ProtoInstance> ProtoInstance
         {
             get
@@ -22188,7 +22199,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public List<string> objectType
         {
             get
@@ -22201,7 +22212,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool pickable
         {
@@ -22215,7 +22226,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -22246,7 +22257,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("PointSet", Order = 0)]
+        [XmlElementAttribute("PointSet", Order = 0)]
         public PointSet Item
         {
             get
@@ -22259,32 +22270,32 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Anchor", typeof(Anchor), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Billboard", typeof(Billboard), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("CADAssembly", typeof(CADAssembly), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("CADLayer", typeof(CADLayer), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("CADPart", typeof(CADPart), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Collision", typeof(Collision), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("EspduTransform", typeof(EspduTransform), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("GeoLOD", typeof(GeoLOD), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("GeoLocation", typeof(GeoLocation), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("GeoTransform", typeof(GeoTransform), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Group", typeof(Group), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("HAnimJoint", typeof(HAnimJoint), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Inline", typeof(Inline), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("LOD", typeof(LOD), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("LayoutGroup", typeof(LayoutGroup), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsSet", typeof(NurbsSet), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("ReceiverPdu", typeof(ReceiverPdu), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("ScreenGroup", typeof(ScreenGroup), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Shape", typeof(Shape), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("SignalPdu", typeof(SignalPdu), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("StaticGroup", typeof(StaticGroup), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Switch", typeof(Switch), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Transform", typeof(Transform), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("TransmitterPdu", typeof(TransmitterPdu), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Viewport", typeof(Viewport), Order = 1)]
+        [XmlElementAttribute("Anchor", typeof(Anchor), Order = 1)]
+        [XmlElementAttribute("Billboard", typeof(Billboard), Order = 1)]
+        [XmlElementAttribute("CADAssembly", typeof(CADAssembly), Order = 1)]
+        [XmlElementAttribute("CADLayer", typeof(CADLayer), Order = 1)]
+        [XmlElementAttribute("CADPart", typeof(CADPart), Order = 1)]
+        [XmlElementAttribute("Collision", typeof(Collision), Order = 1)]
+        [XmlElementAttribute("EspduTransform", typeof(EspduTransform), Order = 1)]
+        [XmlElementAttribute("GeoLOD", typeof(GeoLOD), Order = 1)]
+        [XmlElementAttribute("GeoLocation", typeof(GeoLocation), Order = 1)]
+        [XmlElementAttribute("GeoTransform", typeof(GeoTransform), Order = 1)]
+        [XmlElementAttribute("Group", typeof(Group), Order = 1)]
+        [XmlElementAttribute("HAnimJoint", typeof(HAnimJoint), Order = 1)]
+        [XmlElementAttribute("Inline", typeof(Inline), Order = 1)]
+        [XmlElementAttribute("LOD", typeof(LOD), Order = 1)]
+        [XmlElementAttribute("LayoutGroup", typeof(LayoutGroup), Order = 1)]
+        [XmlElementAttribute("NurbsSet", typeof(NurbsSet), Order = 1)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 1)]
+        [XmlElementAttribute("ReceiverPdu", typeof(ReceiverPdu), Order = 1)]
+        [XmlElementAttribute("ScreenGroup", typeof(ScreenGroup), Order = 1)]
+        [XmlElementAttribute("Shape", typeof(Shape), Order = 1)]
+        [XmlElementAttribute("SignalPdu", typeof(SignalPdu), Order = 1)]
+        [XmlElementAttribute("StaticGroup", typeof(StaticGroup), Order = 1)]
+        [XmlElementAttribute("Switch", typeof(Switch), Order = 1)]
+        [XmlElementAttribute("Transform", typeof(Transform), Order = 1)]
+        [XmlElementAttribute("TransmitterPdu", typeof(TransmitterPdu), Order = 1)]
+        [XmlElementAttribute("Viewport", typeof(Viewport), Order = 1)]
         public List<object> Items
         {
             get
@@ -22297,7 +22308,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -22320,12 +22331,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class PrimitivePickSensor : X3DPickSensorNode
     {
 
@@ -22341,10 +22352,10 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Box", typeof(Box), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Cone", typeof(Cone), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Cylinder", typeof(Cylinder), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Sphere", typeof(Sphere), Order = 0)]
+        [XmlElementAttribute("Box", typeof(Box), Order = 0)]
+        [XmlElementAttribute("Cone", typeof(Cone), Order = 0)]
+        [XmlElementAttribute("Cylinder", typeof(Cylinder), Order = 0)]
+        [XmlElementAttribute("Sphere", typeof(Sphere), Order = 0)]
         public X3DGeometryNode Item
         {
             get
@@ -22357,32 +22368,32 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Anchor", typeof(Anchor), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Billboard", typeof(Billboard), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("CADAssembly", typeof(CADAssembly), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("CADLayer", typeof(CADLayer), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("CADPart", typeof(CADPart), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Collision", typeof(Collision), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("EspduTransform", typeof(EspduTransform), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("GeoLOD", typeof(GeoLOD), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("GeoLocation", typeof(GeoLocation), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("GeoTransform", typeof(GeoTransform), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Group", typeof(Group), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("HAnimJoint", typeof(HAnimJoint), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Inline", typeof(Inline), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("LOD", typeof(LOD), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("LayoutGroup", typeof(LayoutGroup), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsSet", typeof(NurbsSet), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("ReceiverPdu", typeof(ReceiverPdu), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("ScreenGroup", typeof(ScreenGroup), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Shape", typeof(Shape), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("SignalPdu", typeof(SignalPdu), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("StaticGroup", typeof(StaticGroup), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Switch", typeof(Switch), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Transform", typeof(Transform), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("TransmitterPdu", typeof(TransmitterPdu), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Viewport", typeof(Viewport), Order = 1)]
+        [XmlElementAttribute("Anchor", typeof(Anchor), Order = 1)]
+        [XmlElementAttribute("Billboard", typeof(Billboard), Order = 1)]
+        [XmlElementAttribute("CADAssembly", typeof(CADAssembly), Order = 1)]
+        [XmlElementAttribute("CADLayer", typeof(CADLayer), Order = 1)]
+        [XmlElementAttribute("CADPart", typeof(CADPart), Order = 1)]
+        [XmlElementAttribute("Collision", typeof(Collision), Order = 1)]
+        [XmlElementAttribute("EspduTransform", typeof(EspduTransform), Order = 1)]
+        [XmlElementAttribute("GeoLOD", typeof(GeoLOD), Order = 1)]
+        [XmlElementAttribute("GeoLocation", typeof(GeoLocation), Order = 1)]
+        [XmlElementAttribute("GeoTransform", typeof(GeoTransform), Order = 1)]
+        [XmlElementAttribute("Group", typeof(Group), Order = 1)]
+        [XmlElementAttribute("HAnimJoint", typeof(HAnimJoint), Order = 1)]
+        [XmlElementAttribute("Inline", typeof(Inline), Order = 1)]
+        [XmlElementAttribute("LOD", typeof(LOD), Order = 1)]
+        [XmlElementAttribute("LayoutGroup", typeof(LayoutGroup), Order = 1)]
+        [XmlElementAttribute("NurbsSet", typeof(NurbsSet), Order = 1)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 1)]
+        [XmlElementAttribute("ReceiverPdu", typeof(ReceiverPdu), Order = 1)]
+        [XmlElementAttribute("ScreenGroup", typeof(ScreenGroup), Order = 1)]
+        [XmlElementAttribute("Shape", typeof(Shape), Order = 1)]
+        [XmlElementAttribute("SignalPdu", typeof(SignalPdu), Order = 1)]
+        [XmlElementAttribute("StaticGroup", typeof(StaticGroup), Order = 1)]
+        [XmlElementAttribute("Switch", typeof(Switch), Order = 1)]
+        [XmlElementAttribute("Transform", typeof(Transform), Order = 1)]
+        [XmlElementAttribute("TransmitterPdu", typeof(TransmitterPdu), Order = 1)]
+        [XmlElementAttribute("Viewport", typeof(Viewport), Order = 1)]
         public List<object> Items
         {
             get
@@ -22395,7 +22406,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -22410,12 +22421,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class VolumePickSensor : X3DPickSensorNode
     {
 
@@ -22431,39 +22442,39 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Arc2D", typeof(Arc2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ArcClose2D", typeof(ArcClose2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Box", typeof(Box), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Circle2D", typeof(Circle2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Cone", typeof(Cone), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Cylinder", typeof(Cylinder), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Disk2D", typeof(Disk2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ElevationGrid", typeof(ElevationGrid), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Extrusion", typeof(Extrusion), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("GeoElevationGrid", typeof(GeoElevationGrid), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedFaceSet", typeof(IndexedFaceSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedLineSet", typeof(IndexedLineSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedQuadSet", typeof(IndexedQuadSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedTriangleFanSet", typeof(IndexedTriangleFanSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedTriangleSet", typeof(IndexedTriangleSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedTriangleStripSet", typeof(IndexedTriangleStripSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("LineSet", typeof(LineSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsCurve", typeof(NurbsCurve), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsPatchSurface", typeof(NurbsPatchSurface), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsSweptSurface", typeof(NurbsSweptSurface), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsSwungSurface", typeof(NurbsSwungSurface), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsTrimmedSurface", typeof(NurbsTrimmedSurface), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("PointSet", typeof(PointSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Polyline2D", typeof(Polyline2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Polypoint2D", typeof(Polypoint2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("QuadSet", typeof(QuadSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Rectangle2D", typeof(Rectangle2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Sphere", typeof(Sphere), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Text", typeof(Text), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("TriangleFanSet", typeof(TriangleFanSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("TriangleSet", typeof(TriangleSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("TriangleSet2D", typeof(TriangleSet2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("TriangleStripSet", typeof(TriangleStripSet), Order = 0)]
+        [XmlElementAttribute("Arc2D", typeof(Arc2D), Order = 0)]
+        [XmlElementAttribute("ArcClose2D", typeof(ArcClose2D), Order = 0)]
+        [XmlElementAttribute("Box", typeof(Box), Order = 0)]
+        [XmlElementAttribute("Circle2D", typeof(Circle2D), Order = 0)]
+        [XmlElementAttribute("Cone", typeof(Cone), Order = 0)]
+        [XmlElementAttribute("Cylinder", typeof(Cylinder), Order = 0)]
+        [XmlElementAttribute("Disk2D", typeof(Disk2D), Order = 0)]
+        [XmlElementAttribute("ElevationGrid", typeof(ElevationGrid), Order = 0)]
+        [XmlElementAttribute("Extrusion", typeof(Extrusion), Order = 0)]
+        [XmlElementAttribute("GeoElevationGrid", typeof(GeoElevationGrid), Order = 0)]
+        [XmlElementAttribute("IndexedFaceSet", typeof(IndexedFaceSet), Order = 0)]
+        [XmlElementAttribute("IndexedLineSet", typeof(IndexedLineSet), Order = 0)]
+        [XmlElementAttribute("IndexedQuadSet", typeof(IndexedQuadSet), Order = 0)]
+        [XmlElementAttribute("IndexedTriangleFanSet", typeof(IndexedTriangleFanSet), Order = 0)]
+        [XmlElementAttribute("IndexedTriangleSet", typeof(IndexedTriangleSet), Order = 0)]
+        [XmlElementAttribute("IndexedTriangleStripSet", typeof(IndexedTriangleStripSet), Order = 0)]
+        [XmlElementAttribute("LineSet", typeof(LineSet), Order = 0)]
+        [XmlElementAttribute("NurbsCurve", typeof(NurbsCurve), Order = 0)]
+        [XmlElementAttribute("NurbsPatchSurface", typeof(NurbsPatchSurface), Order = 0)]
+        [XmlElementAttribute("NurbsSweptSurface", typeof(NurbsSweptSurface), Order = 0)]
+        [XmlElementAttribute("NurbsSwungSurface", typeof(NurbsSwungSurface), Order = 0)]
+        [XmlElementAttribute("NurbsTrimmedSurface", typeof(NurbsTrimmedSurface), Order = 0)]
+        [XmlElementAttribute("PointSet", typeof(PointSet), Order = 0)]
+        [XmlElementAttribute("Polyline2D", typeof(Polyline2D), Order = 0)]
+        [XmlElementAttribute("Polypoint2D", typeof(Polypoint2D), Order = 0)]
+        [XmlElementAttribute("QuadSet", typeof(QuadSet), Order = 0)]
+        [XmlElementAttribute("Rectangle2D", typeof(Rectangle2D), Order = 0)]
+        [XmlElementAttribute("Sphere", typeof(Sphere), Order = 0)]
+        [XmlElementAttribute("Text", typeof(Text), Order = 0)]
+        [XmlElementAttribute("TriangleFanSet", typeof(TriangleFanSet), Order = 0)]
+        [XmlElementAttribute("TriangleSet", typeof(TriangleSet), Order = 0)]
+        [XmlElementAttribute("TriangleSet2D", typeof(TriangleSet2D), Order = 0)]
+        [XmlElementAttribute("TriangleStripSet", typeof(TriangleStripSet), Order = 0)]
         public X3DGeometryNode Item
         {
             get
@@ -22476,32 +22487,32 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Anchor", typeof(Anchor), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Billboard", typeof(Billboard), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("CADAssembly", typeof(CADAssembly), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("CADLayer", typeof(CADLayer), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("CADPart", typeof(CADPart), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Collision", typeof(Collision), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("EspduTransform", typeof(EspduTransform), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("GeoLOD", typeof(GeoLOD), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("GeoLocation", typeof(GeoLocation), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("GeoTransform", typeof(GeoTransform), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Group", typeof(Group), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("HAnimJoint", typeof(HAnimJoint), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Inline", typeof(Inline), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("LOD", typeof(LOD), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("LayoutGroup", typeof(LayoutGroup), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsSet", typeof(NurbsSet), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("ReceiverPdu", typeof(ReceiverPdu), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("ScreenGroup", typeof(ScreenGroup), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Shape", typeof(Shape), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("SignalPdu", typeof(SignalPdu), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("StaticGroup", typeof(StaticGroup), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Switch", typeof(Switch), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Transform", typeof(Transform), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("TransmitterPdu", typeof(TransmitterPdu), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("Viewport", typeof(Viewport), Order = 1)]
+        [XmlElementAttribute("Anchor", typeof(Anchor), Order = 1)]
+        [XmlElementAttribute("Billboard", typeof(Billboard), Order = 1)]
+        [XmlElementAttribute("CADAssembly", typeof(CADAssembly), Order = 1)]
+        [XmlElementAttribute("CADLayer", typeof(CADLayer), Order = 1)]
+        [XmlElementAttribute("CADPart", typeof(CADPart), Order = 1)]
+        [XmlElementAttribute("Collision", typeof(Collision), Order = 1)]
+        [XmlElementAttribute("EspduTransform", typeof(EspduTransform), Order = 1)]
+        [XmlElementAttribute("GeoLOD", typeof(GeoLOD), Order = 1)]
+        [XmlElementAttribute("GeoLocation", typeof(GeoLocation), Order = 1)]
+        [XmlElementAttribute("GeoTransform", typeof(GeoTransform), Order = 1)]
+        [XmlElementAttribute("Group", typeof(Group), Order = 1)]
+        [XmlElementAttribute("HAnimJoint", typeof(HAnimJoint), Order = 1)]
+        [XmlElementAttribute("Inline", typeof(Inline), Order = 1)]
+        [XmlElementAttribute("LOD", typeof(LOD), Order = 1)]
+        [XmlElementAttribute("LayoutGroup", typeof(LayoutGroup), Order = 1)]
+        [XmlElementAttribute("NurbsSet", typeof(NurbsSet), Order = 1)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 1)]
+        [XmlElementAttribute("ReceiverPdu", typeof(ReceiverPdu), Order = 1)]
+        [XmlElementAttribute("ScreenGroup", typeof(ScreenGroup), Order = 1)]
+        [XmlElementAttribute("Shape", typeof(Shape), Order = 1)]
+        [XmlElementAttribute("SignalPdu", typeof(SignalPdu), Order = 1)]
+        [XmlElementAttribute("StaticGroup", typeof(StaticGroup), Order = 1)]
+        [XmlElementAttribute("Switch", typeof(Switch), Order = 1)]
+        [XmlElementAttribute("Transform", typeof(Transform), Order = 1)]
+        [XmlElementAttribute("TransmitterPdu", typeof(TransmitterPdu), Order = 1)]
+        [XmlElementAttribute("Viewport", typeof(Viewport), Order = 1)]
         public List<object> Items
         {
             get
@@ -22514,7 +22525,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -22529,12 +22540,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ColorDamper : X3DDamperNode
     {
 
@@ -22551,7 +22562,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0.8 0.8 0.8")]
         public string initialDestination
         {
@@ -22565,7 +22576,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0.8 0.8 0.8")]
         public string initialValue
         {
@@ -22579,7 +22590,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -22594,8 +22605,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DDamperNode : X3DFollowerNode
@@ -22614,7 +22625,7 @@ namespace X3D
             this._order = "3";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(0.3D)]
         public double tau
         {
@@ -22628,7 +22639,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "-1")]
         public float tolerance
         {
@@ -22642,7 +22653,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("3")]
         public string order
         {
@@ -22657,18 +22668,18 @@ namespace X3D
         }
     }
 
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DDamperNode))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DChaserNode))]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [XmlIncludeAttribute(typeof(X3DDamperNode))]
+    [XmlIncludeAttribute(typeof(X3DChaserNode))]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DFollowerNode : X3DChildNode
     {
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DChaserNode : X3DFollowerNode
@@ -22681,7 +22692,7 @@ namespace X3D
             this._duration = 1D;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(1D)]
         public double duration
         {
@@ -22696,12 +22707,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class CoordinateDamper : X3DDamperNode
     {
 
@@ -22718,7 +22729,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string initialDestination
         {
@@ -22732,7 +22743,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string initialValue
         {
@@ -22746,7 +22757,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -22761,12 +22772,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class OrientationDamper : X3DDamperNode
     {
 
@@ -22783,7 +22794,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0 0")]
         public string initialDestination
         {
@@ -22797,7 +22808,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0 0")]
         public string initialValue
         {
@@ -22811,7 +22822,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -22826,12 +22837,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class PositionDamper : X3DDamperNode
     {
 
@@ -22848,7 +22859,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string initialDestination
         {
@@ -22862,7 +22873,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string initialValue
         {
@@ -22876,7 +22887,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -22891,12 +22902,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class PositionDamper2D : X3DDamperNode
     {
 
@@ -22913,7 +22924,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0")]
         public string initialDestination
         {
@@ -22927,7 +22938,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0")]
         public string initialValue
         {
@@ -22941,7 +22952,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -22956,12 +22967,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ScalarDamper : X3DDamperNode
     {
 
@@ -22978,7 +22989,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float initialDestination
         {
@@ -22992,7 +23003,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float initialValue
         {
@@ -23006,7 +23017,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -23021,12 +23032,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TexCoordDamper2D : X3DDamperNode
     {
 
@@ -23041,7 +23052,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string initialDestination
         {
             get
@@ -23054,7 +23065,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string initialValue
         {
             get
@@ -23067,7 +23078,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -23082,12 +23093,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ColorChaser : X3DChaserNode
     {
 
@@ -23104,7 +23115,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0.8 0.8 0.8")]
         public string initialDestination
         {
@@ -23118,7 +23129,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0.8 0.8 0.8")]
         public string initialValue
         {
@@ -23132,7 +23143,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -23147,12 +23158,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class CoordinateChaser : X3DChaserNode
     {
 
@@ -23169,7 +23180,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string initialDestination
         {
@@ -23183,7 +23194,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string initialValue
         {
@@ -23197,7 +23208,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -23212,12 +23223,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class OrientationChaser : X3DChaserNode
     {
 
@@ -23234,7 +23245,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0 0")]
         public string initialDestination
         {
@@ -23248,7 +23259,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0 0")]
         public string initialValue
         {
@@ -23262,7 +23273,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -23277,12 +23288,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class PositionChaser : X3DChaserNode
     {
 
@@ -23299,7 +23310,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string initialDestination
         {
@@ -23313,7 +23324,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string initialValue
         {
@@ -23327,7 +23338,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -23342,12 +23353,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class PositionChaser2D : X3DChaserNode
     {
 
@@ -23364,7 +23375,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0")]
         public string initialDestination
         {
@@ -23378,7 +23389,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0")]
         public string initialValue
         {
@@ -23392,7 +23403,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -23407,12 +23418,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ScalarChaser : X3DChaserNode
     {
 
@@ -23429,7 +23440,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float initialDestination
         {
@@ -23443,7 +23454,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float initialValue
         {
@@ -23457,7 +23468,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -23472,12 +23483,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class TexCoordChaser2D : X3DChaserNode
     {
 
@@ -23492,7 +23503,7 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string initialDestination
         {
             get
@@ -23505,7 +23516,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string initialValue
         {
             get
@@ -23518,7 +23529,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -23533,12 +23544,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class BoundedPhysicsModel : X3DParticlePhysicsModelNode
     {
 
@@ -23551,40 +23562,40 @@ namespace X3D
             this._containerField = "physics";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Arc2D", typeof(Arc2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ArcClose2D", typeof(ArcClose2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Box", typeof(Box), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Circle2D", typeof(Circle2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Cone", typeof(Cone), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Cylinder", typeof(Cylinder), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Disk2D", typeof(Disk2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ElevationGrid", typeof(ElevationGrid), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Extrusion", typeof(Extrusion), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("GeoElevationGrid", typeof(GeoElevationGrid), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedFaceSet", typeof(IndexedFaceSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedLineSet", typeof(IndexedLineSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedQuadSet", typeof(IndexedQuadSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedTriangleFanSet", typeof(IndexedTriangleFanSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedTriangleSet", typeof(IndexedTriangleSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedTriangleStripSet", typeof(IndexedTriangleStripSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("LineSet", typeof(LineSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsCurve", typeof(NurbsCurve), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsPatchSurface", typeof(NurbsPatchSurface), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsSweptSurface", typeof(NurbsSweptSurface), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsSwungSurface", typeof(NurbsSwungSurface), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsTrimmedSurface", typeof(NurbsTrimmedSurface), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("PointSet", typeof(PointSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Polyline2D", typeof(Polyline2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Polypoint2D", typeof(Polypoint2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("QuadSet", typeof(QuadSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Rectangle2D", typeof(Rectangle2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Sphere", typeof(Sphere), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Text", typeof(Text), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("TriangleFanSet", typeof(TriangleFanSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("TriangleSet", typeof(TriangleSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("TriangleSet2D", typeof(TriangleSet2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("TriangleStripSet", typeof(TriangleStripSet), Order = 0)]
+        [XmlElementAttribute("Arc2D", typeof(Arc2D), Order = 0)]
+        [XmlElementAttribute("ArcClose2D", typeof(ArcClose2D), Order = 0)]
+        [XmlElementAttribute("Box", typeof(Box), Order = 0)]
+        [XmlElementAttribute("Circle2D", typeof(Circle2D), Order = 0)]
+        [XmlElementAttribute("Cone", typeof(Cone), Order = 0)]
+        [XmlElementAttribute("Cylinder", typeof(Cylinder), Order = 0)]
+        [XmlElementAttribute("Disk2D", typeof(Disk2D), Order = 0)]
+        [XmlElementAttribute("ElevationGrid", typeof(ElevationGrid), Order = 0)]
+        [XmlElementAttribute("Extrusion", typeof(Extrusion), Order = 0)]
+        [XmlElementAttribute("GeoElevationGrid", typeof(GeoElevationGrid), Order = 0)]
+        [XmlElementAttribute("IndexedFaceSet", typeof(IndexedFaceSet), Order = 0)]
+        [XmlElementAttribute("IndexedLineSet", typeof(IndexedLineSet), Order = 0)]
+        [XmlElementAttribute("IndexedQuadSet", typeof(IndexedQuadSet), Order = 0)]
+        [XmlElementAttribute("IndexedTriangleFanSet", typeof(IndexedTriangleFanSet), Order = 0)]
+        [XmlElementAttribute("IndexedTriangleSet", typeof(IndexedTriangleSet), Order = 0)]
+        [XmlElementAttribute("IndexedTriangleStripSet", typeof(IndexedTriangleStripSet), Order = 0)]
+        [XmlElementAttribute("LineSet", typeof(LineSet), Order = 0)]
+        [XmlElementAttribute("NurbsCurve", typeof(NurbsCurve), Order = 0)]
+        [XmlElementAttribute("NurbsPatchSurface", typeof(NurbsPatchSurface), Order = 0)]
+        [XmlElementAttribute("NurbsSweptSurface", typeof(NurbsSweptSurface), Order = 0)]
+        [XmlElementAttribute("NurbsSwungSurface", typeof(NurbsSwungSurface), Order = 0)]
+        [XmlElementAttribute("NurbsTrimmedSurface", typeof(NurbsTrimmedSurface), Order = 0)]
+        [XmlElementAttribute("PointSet", typeof(PointSet), Order = 0)]
+        [XmlElementAttribute("Polyline2D", typeof(Polyline2D), Order = 0)]
+        [XmlElementAttribute("Polypoint2D", typeof(Polypoint2D), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("QuadSet", typeof(QuadSet), Order = 0)]
+        [XmlElementAttribute("Rectangle2D", typeof(Rectangle2D), Order = 0)]
+        [XmlElementAttribute("Sphere", typeof(Sphere), Order = 0)]
+        [XmlElementAttribute("Text", typeof(Text), Order = 0)]
+        [XmlElementAttribute("TriangleFanSet", typeof(TriangleFanSet), Order = 0)]
+        [XmlElementAttribute("TriangleSet", typeof(TriangleSet), Order = 0)]
+        [XmlElementAttribute("TriangleSet2D", typeof(TriangleSet2D), Order = 0)]
+        [XmlElementAttribute("TriangleStripSet", typeof(TriangleStripSet), Order = 0)]
         public object Item
         {
             get
@@ -23597,7 +23608,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("physics")]
         public string containerField
         {
@@ -23612,8 +23623,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DParticlePhysicsModelNode : X3DNode
@@ -23626,7 +23637,7 @@ namespace X3D
             this._enabled = true;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool enabled
         {
@@ -23641,12 +23652,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ForcePhysicsModel : X3DParticlePhysicsModelNode
     {
 
@@ -23660,7 +23671,7 @@ namespace X3D
             this._containerField = "physics";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 -9.8 0")]
         public string force
         {
@@ -23674,7 +23685,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("physics")]
         public string containerField
         {
@@ -23689,12 +23700,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class WindPhysicsModel : X3DParticlePhysicsModelNode
     {
 
@@ -23717,7 +23728,7 @@ namespace X3D
             this._containerField = "physics";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 0 0")]
         public string direction
         {
@@ -23731,7 +23742,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.1")]
         public float gustiness
         {
@@ -23745,7 +23756,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.1")]
         public float speed
         {
@@ -23759,7 +23770,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float turbulence
         {
@@ -23773,7 +23784,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("physics")]
         public string containerField
         {
@@ -23788,12 +23799,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ConeEmitter : X3DParticleEmitterNode
     {
 
@@ -23813,7 +23824,7 @@ namespace X3D
             this._containerField = "emitter";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.7854")]
         public float angle
         {
@@ -23827,7 +23838,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0")]
         public string direction
         {
@@ -23841,7 +23852,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string position
         {
@@ -23855,7 +23866,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("emitter")]
         public string containerField
         {
@@ -23870,8 +23881,8 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DParticleEmitterNode : X3DNode
@@ -23893,7 +23904,7 @@ namespace X3D
             this._surfaceArea = ((float)(0F));
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float speed
         {
@@ -23907,7 +23918,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.25")]
         public float variation
         {
@@ -23921,7 +23932,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float mass
         {
@@ -23935,7 +23946,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float surfaceArea
         {
@@ -23950,12 +23961,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ExplosionEmitter : X3DParticleEmitterNode
     {
 
@@ -23969,7 +23980,7 @@ namespace X3D
             this._containerField = "emitter";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string position
         {
@@ -23983,7 +23994,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("emitter")]
         public string containerField
         {
@@ -23998,12 +24009,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class PointEmitter : X3DParticleEmitterNode
     {
 
@@ -24020,7 +24031,7 @@ namespace X3D
             this._containerField = "emitter";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0")]
         public string direction
         {
@@ -24034,7 +24045,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
         public string position
         {
@@ -24048,7 +24059,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("emitter")]
         public string containerField
         {
@@ -24063,12 +24074,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class PolylineEmitter : X3DParticleEmitterNode
     {
 
@@ -24087,9 +24098,9 @@ namespace X3D
             this._containerField = "emitter";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Coordinate", typeof(Coordinate), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("Coordinate", typeof(Coordinate), Order = 0)]
+        [XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
         public object Item
         {
             get
@@ -24102,7 +24113,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("-1")]
         public string coordIndex
         {
@@ -24116,7 +24127,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0")]
         public string direction
         {
@@ -24130,7 +24141,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("emitter")]
         public string containerField
         {
@@ -24145,12 +24156,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class SurfaceEmitter : X3DParticleEmitterNode
     {
 
@@ -24166,40 +24177,40 @@ namespace X3D
             this._containerField = "emitter";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Arc2D", typeof(Arc2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ArcClose2D", typeof(ArcClose2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Box", typeof(Box), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Circle2D", typeof(Circle2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Cone", typeof(Cone), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Cylinder", typeof(Cylinder), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Disk2D", typeof(Disk2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ElevationGrid", typeof(ElevationGrid), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Extrusion", typeof(Extrusion), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("GeoElevationGrid", typeof(GeoElevationGrid), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedFaceSet", typeof(IndexedFaceSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedLineSet", typeof(IndexedLineSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedQuadSet", typeof(IndexedQuadSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedTriangleFanSet", typeof(IndexedTriangleFanSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedTriangleSet", typeof(IndexedTriangleSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("IndexedTriangleStripSet", typeof(IndexedTriangleStripSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("LineSet", typeof(LineSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsCurve", typeof(NurbsCurve), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsPatchSurface", typeof(NurbsPatchSurface), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsSweptSurface", typeof(NurbsSweptSurface), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsSwungSurface", typeof(NurbsSwungSurface), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("NurbsTrimmedSurface", typeof(NurbsTrimmedSurface), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("PointSet", typeof(PointSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Polyline2D", typeof(Polyline2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Polypoint2D", typeof(Polypoint2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("QuadSet", typeof(QuadSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Rectangle2D", typeof(Rectangle2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Sphere", typeof(Sphere), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Text", typeof(Text), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("TriangleFanSet", typeof(TriangleFanSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("TriangleSet", typeof(TriangleSet), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("TriangleSet2D", typeof(TriangleSet2D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("TriangleStripSet", typeof(TriangleStripSet), Order = 0)]
+        [XmlElementAttribute("Arc2D", typeof(Arc2D), Order = 0)]
+        [XmlElementAttribute("ArcClose2D", typeof(ArcClose2D), Order = 0)]
+        [XmlElementAttribute("Box", typeof(Box), Order = 0)]
+        [XmlElementAttribute("Circle2D", typeof(Circle2D), Order = 0)]
+        [XmlElementAttribute("Cone", typeof(Cone), Order = 0)]
+        [XmlElementAttribute("Cylinder", typeof(Cylinder), Order = 0)]
+        [XmlElementAttribute("Disk2D", typeof(Disk2D), Order = 0)]
+        [XmlElementAttribute("ElevationGrid", typeof(ElevationGrid), Order = 0)]
+        [XmlElementAttribute("Extrusion", typeof(Extrusion), Order = 0)]
+        [XmlElementAttribute("GeoElevationGrid", typeof(GeoElevationGrid), Order = 0)]
+        [XmlElementAttribute("IndexedFaceSet", typeof(IndexedFaceSet), Order = 0)]
+        [XmlElementAttribute("IndexedLineSet", typeof(IndexedLineSet), Order = 0)]
+        [XmlElementAttribute("IndexedQuadSet", typeof(IndexedQuadSet), Order = 0)]
+        [XmlElementAttribute("IndexedTriangleFanSet", typeof(IndexedTriangleFanSet), Order = 0)]
+        [XmlElementAttribute("IndexedTriangleSet", typeof(IndexedTriangleSet), Order = 0)]
+        [XmlElementAttribute("IndexedTriangleStripSet", typeof(IndexedTriangleStripSet), Order = 0)]
+        [XmlElementAttribute("LineSet", typeof(LineSet), Order = 0)]
+        [XmlElementAttribute("NurbsCurve", typeof(NurbsCurve), Order = 0)]
+        [XmlElementAttribute("NurbsPatchSurface", typeof(NurbsPatchSurface), Order = 0)]
+        [XmlElementAttribute("NurbsSweptSurface", typeof(NurbsSweptSurface), Order = 0)]
+        [XmlElementAttribute("NurbsSwungSurface", typeof(NurbsSwungSurface), Order = 0)]
+        [XmlElementAttribute("NurbsTrimmedSurface", typeof(NurbsTrimmedSurface), Order = 0)]
+        [XmlElementAttribute("PointSet", typeof(PointSet), Order = 0)]
+        [XmlElementAttribute("Polyline2D", typeof(Polyline2D), Order = 0)]
+        [XmlElementAttribute("Polypoint2D", typeof(Polypoint2D), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("QuadSet", typeof(QuadSet), Order = 0)]
+        [XmlElementAttribute("Rectangle2D", typeof(Rectangle2D), Order = 0)]
+        [XmlElementAttribute("Sphere", typeof(Sphere), Order = 0)]
+        [XmlElementAttribute("Text", typeof(Text), Order = 0)]
+        [XmlElementAttribute("TriangleFanSet", typeof(TriangleFanSet), Order = 0)]
+        [XmlElementAttribute("TriangleSet", typeof(TriangleSet), Order = 0)]
+        [XmlElementAttribute("TriangleSet2D", typeof(TriangleSet2D), Order = 0)]
+        [XmlElementAttribute("TriangleStripSet", typeof(TriangleStripSet), Order = 0)]
         public object Item
         {
             get
@@ -24212,7 +24223,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("-1")]
         public string coordIndex
         {
@@ -24226,7 +24237,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("emitter")]
         public string containerField
         {
@@ -24241,12 +24252,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class VolumeEmitter : X3DParticleEmitterNode
     {
 
@@ -24268,9 +24279,9 @@ namespace X3D
             this._containerField = "emitter";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Coordinate", typeof(Coordinate), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("Coordinate", typeof(Coordinate), Order = 0)]
+        [XmlElementAttribute("CoordinateDouble", typeof(CoordinateDouble), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
         public object Item
         {
             get
@@ -24283,7 +24294,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("-1")]
         public string coordIndex
         {
@@ -24297,7 +24308,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 1 0")]
         public string direction
         {
@@ -24311,7 +24322,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool @internal
         {
@@ -24325,7 +24336,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("emitter")]
         public string containerField
         {
@@ -24340,12 +24351,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ParticleSystem : X3DShapeNode
     {
 
@@ -24400,8 +24411,8 @@ namespace X3D
             this._containerField = "children";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("Color", typeof(Color), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ColorRGBA", typeof(ColorRGBA), Order = 0)]
+        [XmlElementAttribute("Color", typeof(Color), Order = 0)]
+        [XmlElementAttribute("ColorRGBA", typeof(ColorRGBA), Order = 0)]
         public X3DColorNode Item
         {
             get
@@ -24414,12 +24425,12 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ConeEmitter", typeof(ConeEmitter), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("ExplosionEmitter", typeof(ExplosionEmitter), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("PointEmitter", typeof(PointEmitter), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("PolylineEmitter", typeof(PolylineEmitter), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("SurfaceEmitter", typeof(SurfaceEmitter), Order = 1)]
-        [System.Xml.Serialization.XmlElementAttribute("VolumeEmitter", typeof(VolumeEmitter), Order = 1)]
+        [XmlElementAttribute("ConeEmitter", typeof(ConeEmitter), Order = 1)]
+        [XmlElementAttribute("ExplosionEmitter", typeof(ExplosionEmitter), Order = 1)]
+        [XmlElementAttribute("PointEmitter", typeof(PointEmitter), Order = 1)]
+        [XmlElementAttribute("PolylineEmitter", typeof(PolylineEmitter), Order = 1)]
+        [XmlElementAttribute("SurfaceEmitter", typeof(SurfaceEmitter), Order = 1)]
+        [XmlElementAttribute("VolumeEmitter", typeof(VolumeEmitter), Order = 1)]
         public X3DParticleEmitterNode Item1
         {
             get
@@ -24432,7 +24443,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("BoundedPhysicsModel", Order = 2)]
+        [XmlElementAttribute("BoundedPhysicsModel", Order = 2)]
         public List<BoundedPhysicsModel> BoundedPhysicsModel
         {
             get
@@ -24445,7 +24456,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ForcePhysicsModel", Order = 3)]
+        [XmlElementAttribute("ForcePhysicsModel", Order = 3)]
         public List<ForcePhysicsModel> ForcePhysicsModel
         {
             get
@@ -24458,7 +24469,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("WindPhysicsModel", Order = 4)]
+        [XmlElementAttribute("WindPhysicsModel", Order = 4)]
         public List<WindPhysicsModel> WindPhysicsModel
         {
             get
@@ -24471,7 +24482,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", Order = 5)]
+        [XmlElementAttribute("ProtoInstance", Order = 5)]
         public List<ProtoInstance> ProtoInstance
         {
             get
@@ -24484,7 +24495,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlElementAttribute(Order = 6)]
+        [XmlElementAttribute(Order = 6)]
         public TextureCoordinate TextureCoordinate
         {
             get
@@ -24497,7 +24508,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool createParticles
         {
@@ -24511,7 +24522,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool enabled
         {
@@ -24525,7 +24536,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.25")]
         public float lifetimeVariation
         {
@@ -24539,7 +24550,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("200")]
         public string maxParticles
         {
@@ -24553,7 +24564,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "5")]
         public float particleLifetime
         {
@@ -24567,7 +24578,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0.02 0.02")]
         public string particleSize
         {
@@ -24581,7 +24592,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string colorKey
         {
             get
@@ -24594,7 +24605,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("QUAD")]
         public string geometryType
         {
@@ -24608,7 +24619,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         public string texCoordKey
         {
             get
@@ -24621,7 +24632,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
         public string containerField
         {
@@ -24636,12 +24647,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class BoundaryEnhancementVolumeStyle : X3DComposableVolumeRenderStyleNode
     {
 
@@ -24661,7 +24672,7 @@ namespace X3D
             this._containerField = "renderStyle";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.9")]
         public float boundaryOpacity
         {
@@ -24675,7 +24686,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "2")]
         public float opacityFactor
         {
@@ -24689,7 +24700,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.2")]
         public float retainedOpacity
         {
@@ -24703,7 +24714,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("renderStyle")]
         public string containerField
         {
@@ -24718,17 +24729,17 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DComposableVolumeRenderStyleNode : X3DVolumeRenderStyleNode
     {
     }
 
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(X3DComposableVolumeRenderStyleNode))]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [XmlIncludeAttribute(typeof(X3DComposableVolumeRenderStyleNode))]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public abstract partial class X3DVolumeRenderStyleNode : X3DNode
@@ -24741,7 +24752,7 @@ namespace X3D
             this._enabled = true;
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool enabled
         {
@@ -24756,12 +24767,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class CartoonVolumeStyle : X3DComposableVolumeRenderStyleNode
     {
 
@@ -24783,10 +24794,10 @@ namespace X3D
             this._containerField = "renderStyle";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ImageTexture3D", typeof(ImageTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("PixelTexture3D", typeof(PixelTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
+        [XmlElementAttribute("ImageTexture3D", typeof(ImageTexture3D), Order = 0)]
+        [XmlElementAttribute("PixelTexture3D", typeof(PixelTexture3D), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
         public object Item
         {
             get
@@ -24799,7 +24810,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("4")]
         public string colorSteps
         {
@@ -24813,7 +24824,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1 1 1")]
         public string orthogonalColor
         {
@@ -24827,7 +24838,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0 1")]
         public string parallelColor
         {
@@ -24841,7 +24852,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("renderStyle")]
         public string containerField
         {
@@ -24864,12 +24875,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class EdgeEnhancementVolumeStyle : X3DComposableVolumeRenderStyleNode
     {
 
@@ -24888,10 +24899,10 @@ namespace X3D
             this._containerField = "renderStyle";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ImageTexture3D", typeof(ImageTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("PixelTexture3D", typeof(PixelTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
+        [XmlElementAttribute("ImageTexture3D", typeof(ImageTexture3D), Order = 0)]
+        [XmlElementAttribute("PixelTexture3D", typeof(PixelTexture3D), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
         public object Item
         {
             get
@@ -24904,7 +24915,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0 1")]
         public string edgeColor
         {
@@ -24918,7 +24929,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.4")]
         public float gradientThreshold
         {
@@ -24932,7 +24943,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("renderStyle")]
         public string containerField
         {
@@ -24947,12 +24958,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class OpacityMapVolumeStyle : X3DComposableVolumeRenderStyleNode
     {
 
@@ -24965,14 +24976,14 @@ namespace X3D
             this._containerField = "renderStyle";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ImageTexture", typeof(ImageTexture), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ImageTexture3D", typeof(ImageTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("MovieTexture", typeof(MovieTexture), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("MultiTexture", typeof(MultiTexture), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("PixelTexture", typeof(PixelTexture), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("PixelTexture3D", typeof(PixelTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
+        [XmlElementAttribute("ImageTexture", typeof(ImageTexture), Order = 0)]
+        [XmlElementAttribute("ImageTexture3D", typeof(ImageTexture3D), Order = 0)]
+        [XmlElementAttribute("MovieTexture", typeof(MovieTexture), Order = 0)]
+        [XmlElementAttribute("MultiTexture", typeof(MultiTexture), Order = 0)]
+        [XmlElementAttribute("PixelTexture", typeof(PixelTexture), Order = 0)]
+        [XmlElementAttribute("PixelTexture3D", typeof(PixelTexture3D), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
         public object Item
         {
             get
@@ -24985,7 +24996,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("renderStyle")]
         public string containerField
         {
@@ -25000,12 +25011,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ProjectionVolumeStyle : X3DVolumeRenderStyleNode
     {
 
@@ -25022,7 +25033,7 @@ namespace X3D
             this._containerField = "renderStyle";
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float intensityThreshold
         {
@@ -25036,7 +25047,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(ProjectionVolumeStyleType.MAX)]
         public ProjectionVolumeStyleType type
         {
@@ -25050,7 +25061,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("renderStyle")]
         public string containerField
         {
@@ -25065,9 +25076,9 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
+    [XmlTypeAttribute(AnonymousType = true)]
     public enum ProjectionVolumeStyleType
     {
 
@@ -25081,12 +25092,12 @@ namespace X3D
         AVERAGE,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ShadedVolumeStyle : X3DComposableVolumeRenderStyleNode
     {
 
@@ -25109,11 +25120,11 @@ namespace X3D
             this._containerField = "renderStyle";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ImageTexture3D", typeof(ImageTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("Material", typeof(Material), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("PixelTexture3D", typeof(PixelTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
+        [XmlElementAttribute("ImageTexture3D", typeof(ImageTexture3D), Order = 0)]
+        [XmlElementAttribute("Material", typeof(Material), Order = 0)]
+        [XmlElementAttribute("PixelTexture3D", typeof(PixelTexture3D), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
         public List<object> Items
         {
             get
@@ -25126,7 +25137,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool lighting
         {
@@ -25140,7 +25151,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool shadows
         {
@@ -25154,7 +25165,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(ShadedVolumeStylePhaseFunction.HenyeyGreenstein)]
         public ShadedVolumeStylePhaseFunction phaseFunction
         {
@@ -25168,7 +25179,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("renderStyle")]
         public string containerField
         {
@@ -25183,26 +25194,26 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
+    [XmlTypeAttribute(AnonymousType = true)]
     public enum ShadedVolumeStylePhaseFunction
     {
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("Henyey-Greenstein")]
+        [XmlEnumAttribute("Henyey-Greenstein")]
         HenyeyGreenstein,
 
         /// <remarks/>
         NONE,
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class SilhouetteEnhancementVolumeStyle : X3DComposableVolumeRenderStyleNode
     {
 
@@ -25224,10 +25235,10 @@ namespace X3D
             this._containerField = "renderStyle";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ImageTexture3D", typeof(ImageTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("PixelTexture3D", typeof(PixelTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
+        [XmlElementAttribute("ImageTexture3D", typeof(ImageTexture3D), Order = 0)]
+        [XmlElementAttribute("PixelTexture3D", typeof(PixelTexture3D), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
         public object Item
         {
             get
@@ -25240,7 +25251,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
         public float silhouetteBoundaryOpacity
         {
@@ -25254,7 +25265,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
         public float silhouetteRetainedOpacity
         {
@@ -25268,7 +25279,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0.5")]
         public float silhouetteSharpness
         {
@@ -25282,7 +25293,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("renderStyle")]
         public string containerField
         {
@@ -25297,12 +25308,12 @@ namespace X3D
         }
     }
 
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
-    [System.SerializableAttribute()]
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class ToneMappedVolumeStyle : X3DComposableVolumeRenderStyleNode
     {
 
@@ -25321,10 +25332,10 @@ namespace X3D
             this._containerField = "renderStyle";
         }
 
-        [System.Xml.Serialization.XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ImageTexture3D", typeof(ImageTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("PixelTexture3D", typeof(PixelTexture3D), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
+        [XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
+        [XmlElementAttribute("ImageTexture3D", typeof(ImageTexture3D), Order = 0)]
+        [XmlElementAttribute("PixelTexture3D", typeof(PixelTexture3D), Order = 0)]
+        [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
         public object Item
         {
             get
@@ -25337,7 +25348,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 1 0")]
         public string coolColor
         {
@@ -25351,7 +25362,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("1 1 0 0")]
         public string warmColor
         {
@@ -25365,7 +25376,7 @@ namespace X3D
             }
         }
 
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("renderStyle")]
         public string containerField
         {

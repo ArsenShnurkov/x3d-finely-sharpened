@@ -2,10 +2,11 @@
 <!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN" "http://www.web3d.org/specifications/x3d-3.3.dtd">
 <X3D profile='Interchange' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
   <head>
-    <meta content='Icosahedron-tessellate.x3d' name='title'/>
-    <meta content='Icosahedron shape composed using IndexedTriangleSet or IndexedFaceSet node with tesselation shader for X3D spec consideration' name='description'/>
+    <meta content='keyboard-bindings.x3d' name='title'/>
+    <meta content='Keyboard event bindings in X3D Scripting' name='description'/>
     <meta content='Gerallt Franke' name='creator'/>
     <meta content='18 June 2016' name='created'/>
+	<meta content='23 July 2016' name='modified'/>
     <meta content='Recommended browser for viewing is x3d-finely-sharpened' name='X3DBrowser'/>
     <meta content='GPLv3' name='License'/>
 	
@@ -46,7 +47,11 @@
 	<Script>
 	<![CDATA[
 
-		// This script is executed every frame
+
+		function onRenderFrame(e) 
+		{
+			// This script is executed every frame
+		}
 		
 	]]>
 	</Script>

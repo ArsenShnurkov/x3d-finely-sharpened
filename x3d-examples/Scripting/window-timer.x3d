@@ -2,10 +2,9 @@
 <!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
 <X3D profile='Immersive' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
 	<head>
-		<meta content='ColorSwitcher.x3d' name='title'/>
-		<meta content='Gerallt Franke' name='translator'/>
-		<meta content='21 July 2016' name='modified'/>
-		<meta content='Translated from: http://doc.x3dom.org/tutorials/animationInteraction/switch/example.html' name='translated-from'/>
+		<meta content='window-timer.x3d' name='title'/>
+		<meta content='Gerallt Franke' name='creator'/>
+		<meta content='23 July 2016' name='modified'/>
 		
 		<Script>
 			<![CDATA[
@@ -24,6 +23,10 @@
 					}
 				},2000);
 				
+				
+				// All scripts within head, or not under header are compiled and executed once
+				// The onRenderFrame() function definition is executed multiple times - every frame
+				
 			]]>
 		</Script>
 	</head>
@@ -31,7 +34,12 @@
 
 		<Script>
 		<![CDATA[
-			// This script is executed every frame
+		
+			function onRenderFrame(e) 
+			{
+				// This script is executed every frame
+			}
+			
 		]]>
 		</Script>
 	</Scene>

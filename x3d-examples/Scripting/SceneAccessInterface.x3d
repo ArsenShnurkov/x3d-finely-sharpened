@@ -5,7 +5,7 @@
 	<head>
 		<meta content='SceneAccessInterface.x3d' name='title'/>
 		<meta content='Gerallt Franke' name='creator'/>
-		<meta content='22 July 2016' name='modified'/>
+		<meta content='23 July 2016' name='modified'/>
 		
 		<Script>
 			<![CDATA[
@@ -28,7 +28,8 @@
 				
 				showBrowserInfo();
 				
-				// This header script is executed once before Scene scripts
+				// All scripts within head, or not under header are compiled and executed once
+				// The onRenderFrame() function definition is executed multiple times - every frame
 			]]>
 		</Script>
 	</head>
@@ -38,8 +39,11 @@
 		<Script>
 		<![CDATA[
 
-			// This script is executed every frame
-			
+			function onRenderFrame(e) 
+			{
+				// This script is executed every frame
+			}
+		
 		]]>
 		</Script>
 	</Scene>

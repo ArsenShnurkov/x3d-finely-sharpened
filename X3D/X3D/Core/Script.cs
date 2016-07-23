@@ -16,7 +16,8 @@ namespace X3D
         public static bool ScriptingEnabled = false;
 
         private head parentHead = null;
-        private bool executeOnce = false;
+        private bool isHeadScript = false;
+        private bool compiled = false;
         private bool executed = false;
         private int headScriptIndex = -1;
         private int numHeadScripts = 0;
@@ -30,11 +31,11 @@ namespace X3D
             base.Load();
 
             parentHead = GetParent<head>();
-            executeOnce = parentHead != null;
+            isHeadScript = parentHead != null;
 
             numHeadScripts = parentHead == null ? 0 : parentHead.Children.Count(n => n.GetType() == typeof(Script));
 
-            if (executeOnce && !executed)
+            if (isHeadScript && !compiled)
                 headScriptIndex++;
 
             if (!string.IsNullOrEmpty(url))
@@ -64,11 +65,9 @@ namespace X3D
                 
                 // COMPILE
 
-                if (engine != null && executeOnce && !executed)
+                if (engine != null && !compiled)
                 {
                     engine.CompileAndExecute(this.ScriptSource);
-
-                    executed = true;
 
                     if (headScriptIndex == 0)
                     {
@@ -98,7 +97,7 @@ namespace X3D
                                 keyCode = Consts.ScanCodeToKeyCodeMap[charCode];
 
                                 // Send both scan code an javascript keyCode
-                                ScriptingEngine.CurrentContext.OnKeyDown(keyCode, charCode);
+                                engine.OnKeyDown(keyCode, charCode);
                             }
                             else
                             {
@@ -112,6 +111,8 @@ namespace X3D
 
                         documentEventsBound = true;
                     }
+
+                    compiled = true;
                 }
             }
         }
@@ -120,7 +121,7 @@ namespace X3D
         {
             base.Render(rc);
 
-            if (!executeOnce && !string.IsNullOrEmpty(this.ScriptSource))
+            if (compiled && !string.IsNullOrEmpty(this.ScriptSource))
             {
                 var engine = ScriptingEngine.CurrentContext;
 
@@ -130,7 +131,9 @@ namespace X3D
                 {
                     engine.UpdateKeyboardState(rc.Keyboard);
 
-                    engine.Execute(this.ScriptSource);
+                    //engine.Execute(this.ScriptSource); // not efficient, see OnRenderFrame
+
+                    engine.OnRenderFrame(rc);
                 }
 
                 executed = true;

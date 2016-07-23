@@ -2,18 +2,21 @@
 <!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN" "http://www.web3d.org/specifications/x3d-3.3.dtd">
 <X3D profile='Interactive' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
   <head>
-    <meta content='Icosahedron-tessellate.x3d' name='title'/>
-    <meta content='Icosahedron shape composed using IndexedTriangleSet or IndexedFaceSet node with tesselation shader for X3D spec consideration' name='description'/>
+    <meta content='Icosahedron-tessellate-with-keyboard-script-bindings.x3d' name='title'/>
+    <meta content='Icosahedron shape composed using IndexedTriangleSet or IndexedFaceSet node with tesselation shader and parameter adjustment for X3D spec consideration' name='description'/>
     <meta content='Gerallt Franke' name='creator'/>
     <meta content='18 June 2016' name='created'/>
+	<meta content='23 July 2016' name='modified'/>
     <meta content='Recommended browser for viewing is x3d-finely-sharpened' name='X3DBrowser'/>
     <meta content='GPLv3' name='License'/>
 	
 	<Script>
 	<![CDATA[
 
-		// This header script is executed once
+		// All scripts within head, or not under header are compiled and executed once
+		// The onRenderFrame() function definition is executed multiple times - every frame
 		
+		var frameId = 0;
 		var tessLevelInner = 3;
 		var tessLevelOuter = 2; 
 		
@@ -54,8 +57,6 @@
 	<Script>
 	<![CDATA[
 
-		// This script is executed every frame
-
 		function update(){
 			console.log('~~~ Tessellation Settings ~~~');
 			console.log('Inner: ' + tessLevelInner);
@@ -66,25 +67,33 @@
 			shaderTess01.setFieldValue('TessLevelOuter', tessLevelOuter);
 		}
 		
-		if(Keyboard[Key.Left]) // efficient Keyboard map to manage key state
+		
+		function onRenderFrame(e) // This script is executed every frame
 		{
-			tessLevelInner = tessLevelInner > 1 ? tessLevelInner - 1 : 1;
-			update();
-		}
-		if(Keyboard[Key.Right])
-		{
-			tessLevelInner++;
-			update();
-		}
-		if(Keyboard[Key.Up])
-		{
-			tessLevelOuter++;
-			update();
-		}
-		if(Keyboard[Key.Down])
-		{
-			tessLevelOuter = tessLevelOuter > 1 ? tessLevelOuter - 1 : 1;
-			update();
+			if(Keyboard[Key.Left]) // efficient Keyboard map to manage key state
+			{
+				tessLevelInner = tessLevelInner > 1 ? tessLevelInner - 1 : 1;
+				update();
+			}
+			if(Keyboard[Key.Right])
+			{
+				tessLevelInner++;
+				update();
+			}
+			if(Keyboard[Key.Up])
+			{
+				tessLevelOuter++;
+				update();
+			}
+			if(Keyboard[Key.Down])
+			{
+				tessLevelOuter = tessLevelOuter > 1 ? tessLevelOuter - 1 : 1;
+				update();
+			}
+		
+		
+			console.log('frame ' + frameId + ' time ' + e.time);
+			frameId++;
 		}
 
 	]]>

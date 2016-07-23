@@ -4,7 +4,7 @@
 	<head>
 		<meta content='ColorSwitcher.x3d' name='title'/>
 		<meta content='Gerallt Franke' name='translator'/>
-		<meta content='21 July 2016' name='modified'/>
+		<meta content='23 July 2016' name='modified'/>
 		<meta content='Translated from: http://doc.x3dom.org/tutorials/animationInteraction/switch/example.html' name='translated-from'/>
 		
 		<Script>
@@ -87,8 +87,14 @@
 		
 		<Script>
 		<![CDATA[
-			// changeVisibleNode(0);
-			//incrementChoice();
+
+			function onRenderFrame(e) 
+			{
+				// This script is executed every frame
+				
+				// changeVisibleNode(0);
+				//incrementChoice();
+			}
 		]]>
 		</Script>
 	</Scene>
