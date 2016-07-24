@@ -387,7 +387,8 @@ namespace X3D.Parser
                 return coords.ToArray();
             }
 
-            Regex regMFInt32 = new Regex("[+-]?\\d+\\.\\d?[^,]+");
+            Regex regMFInt32 = new Regex(value.Contains(',') ? "\\S+\\S?\\s+\\S+\\S?" : "\\S+\\S?\\s+\\S+\\S?\\s+");
+            //Regex regMFInt32 = new Regex("[+-]?\\d+\\.\\d?[^,]+");
             var mc = regMFInt32.Matches(value);
 
             foreach (Match m in mc)
