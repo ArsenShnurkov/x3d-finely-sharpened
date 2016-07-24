@@ -13,6 +13,8 @@ namespace X3D
         internal string __id;
         internal int _id = -1;
 
+        #region Public Fields
+
         [XmlAttributeAttribute()]
         public string id
         {
@@ -26,17 +28,39 @@ namespace X3D
             }
         }
 
+        [XmlIgnore]
+        public bool debug = true;
+
+        [XmlIgnore]
         public bool PassthroughAllowed = true;
 
+        [XmlIgnore]
         public SceneGraphNode Parent = null;
+
+        [XmlIgnore]
         public List<SceneGraphNode> Parents = new List<SceneGraphNode>();
+
+        [XmlIgnore]
         public List<SceneGraphNode> Children = new List<SceneGraphNode>();
+
+        [XmlIgnore]
         public List<SceneGraphNode> Siblings = new List<SceneGraphNode>();
-        
+
+        [XmlIgnore]
         public bool IsLeaf;
+
+        [XmlIgnore]
         public bool HasRendered = false;
 
+        [XmlIgnore]
+        public bool? isValid;
+
+        [XmlIgnore]
         public int Depth { get; set; }
+
+        #endregion
+
+        #region Public Virtuals
 
         public virtual void Load() { }
 
@@ -47,6 +71,142 @@ namespace X3D
         public virtual void PreRender() { }
         public virtual void Render(RenderingContext rc) { }
         public virtual void PostRender(RenderingContext rc) { }
+
+        #endregion
+
+        #region Dynamic Validation
+
+        /// <summary>
+        /// Validate relationships in scene at runtime and make adjustments instantly as necessary.
+        /// 
+        /// </summary>
+        /// <returns>
+        /// True, if the types of children of the current node are allowable under this type of SceneGraphNode
+        /// Otherwise false, if there were any children found that arent valid relationships.
+        /// </returns>
+        public bool Validate()
+        {
+            bool passed = true;
+            bool warned = false;
+            List<SceneGraphNode> invalid;
+            string msg = string.Empty;
+            this.isValid = null;
+
+            //TODO: validate relationships in scene at runtime and make adjustments instantly as necessary
+
+            if (typeof(X3DProgrammableShaderObject).IsInstanceOfType(this))
+            {
+                // Only allowed to have ShaderPart, and field children
+
+                if (!this.Children.Any(n => (typeof(field).IsInstanceOfType(n))))
+                {
+                    warned = true;
+
+                    if (debug) Console.WriteLine("[Warning] PackagedShader doesnt contain any field children");
+                }
+
+                if (typeof(ComposedShader).IsInstanceOfType(this))
+                {
+                    
+                    invalid = this.Children.Where(n => !((typeof(ShaderPart).IsInstanceOfType(n) || typeof(field).IsInstanceOfType(n)))).ToList();
+
+                    processInvalidNodes(invalid, this.ToString(), out passed);
+
+                    if (!this.Children.Any(n => (typeof(ShaderPart).IsInstanceOfType(n))))
+                    {
+                        passed = false;
+
+                        if (debug) Console.WriteLine("ComposedShader must contain ShaderPart children");
+                    }
+                }
+                else if (typeof(PackagedShader).IsInstanceOfType(this))
+                {
+
+
+
+                }
+                else if (typeof(ShaderProgram).IsInstanceOfType(this))
+                {
+
+                }
+            }
+            else if (typeof(X3DAppearanceNode).IsInstanceOfType(this))
+            {
+                invalid = this.Children.Where(n => !typeof(X3DAppearanceChildNode).IsInstanceOfType(n) ).ToList();
+
+                processInvalidNodes(invalid, this.ToString(), out passed);
+            }
+
+            this.isValid = passed;
+
+            return passed;
+        }
+
+        private void processInvalidNodes(List<SceneGraphNode> invalid, string parentName, out bool passed)
+        {
+            string msg;
+
+            passed = true;
+
+            if (invalid.Any())
+            {
+                passed = false;
+
+                msg = getNodeNames(invalid);
+
+                if (debug) Console.WriteLine("{0} should not contain children of type [{1}]", parentName, msg);
+
+                pruneBadRelationships(invalid);
+            }
+        }
+
+        /// <summary>
+        /// Removes nodes classed as invalid from the Scene Graph
+        /// </summary>
+        private void pruneBadRelationships(List<SceneGraphNode> invalidNodes)
+        {
+            for(int i=0; i < invalidNodes.Count(); i++)
+            {
+                SceneGraphNode invalidNode = invalidNodes[i];
+
+                //if(invalidNode.isValid.HasValue && invalidNode.isValid.Value == false)
+                {
+                    this.Children.Remove(invalidNode);
+                }
+            }
+
+            if (debug) Console.WriteLine("pruned bad relationships");
+        }
+
+        /// <summary>
+        /// Removes a node from the Scene Graph that is classed as invalid 
+        /// </summary>
+        private void pruneBadRelationship(SceneGraphNode invalidNode)
+        {
+            //if (invalidNode.isValid.HasValue && invalidNode.isValid.Value == false)
+            {
+                this.Children.Remove(invalidNode);
+            }
+
+            if (debug) Console.WriteLine("pruned bad relationship");
+        }
+
+        /// <returns>
+        /// List of node names in the set of input nodes
+        /// </returns>
+        private string getNodeNames(IEnumerable<SceneGraphNode> nodes)
+        {
+            string msg = string.Empty;
+            foreach (SceneGraphNode n in nodes)
+            {
+                msg += n.ToString() + " ";
+            }
+            msg = msg.TrimEnd().Replace(" ", ", ");
+
+            return msg;
+        }
+
+        #endregion
 
         #region Node Search Methods
 
