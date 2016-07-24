@@ -11,6 +11,20 @@ public class MatrixExtensions
         return new MatrixExtensions(mat4);
     }
 
+    public static Matrix4 CreateTranslationMatrix(Vector3 right, Vector3 up, Vector3 backward, Vector3 translation)
+    {
+        Matrix4 m;
+
+        m = new Matrix4(
+            right.X, right.Y, right.Z, 0f,
+            up.X, up.Y, up.Z, 0f,
+            backward.X, backward.Y, backward.Z, 0f,
+            translation.X, translation.Y, translation.Z, 0f
+        );
+
+        return m;
+    }
+
     //   public static Matrix4 LookAt(Vector3 eye, Vector3 center, Vector3 up) 
     //{
     //	Matrix4 @default = Matrix4.Zero;

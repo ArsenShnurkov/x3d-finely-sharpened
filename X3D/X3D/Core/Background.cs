@@ -200,6 +200,8 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
             //GL.Disable(EnableCap.DepthTest);
 
+            //TODO: in shader perform a Slerp https://en.wikipedia.org/wiki/Slerp
+
             if (generateSkyAndGround)
             {
                 rc.PushMatricies();

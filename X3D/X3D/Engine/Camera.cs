@@ -51,6 +51,7 @@ namespace X3D.Engine
         public Vector3 DollyDirection = Vector3.UnitZ;
         public Vector3 Scale = Vector3.One;
 
+        public float camera_roll = 0.0f;
         public float camera_yaw = 0.0f;
 		public float camera_pitch = 0.0f;
 		public float max_pitch = 5.0f;
@@ -275,10 +276,17 @@ namespace X3D.Engine
                //* MathHelpers.CreateRotation(ref q2)
                 ;
 
-			PrevPosition = Position;
+
+            //Vector3 left = Up.Cross(Forward);
+            //Matrix = MatrixExtensions.CreateTranslationMatrix(Right, Up, left, PlayerPosition);
+
+            PrevPosition = Position;
 		}
 
-        Quaternion _yaw = Quaternion.Identity;
+        //Quaternion _yaw = Quaternion.Identity;
+        
+
+
 
         public void ApplyRotation()
 		{
@@ -286,9 +294,10 @@ namespace X3D.Engine
 
             Vector3 direction = (Look - Position);
             direction.Normalize();
-			//MakeOrthogonal();
 
-			//Vector3 pitch_axis = Vector3.Cross(direction, Up);
+            //MakeOrthogonal();
+
+            Vector3 pitch_axis = Vector3.Cross(direction, Up);
             //Vector3 roll_axis = Right + Up;
             //Vector3 roll_axis = Forward + Up;
 
@@ -302,12 +311,12 @@ namespace X3D.Engine
 
 
 
-            //pitch = Quaternion.FromAxisAngle(pitch_axis, camera_pitch  ); // radians
-            //yaw = Quaternion.FromAxisAngle(Up, camera_yaw); // PiOver180
+            pitch = Quaternion.FromAxisAngle(pitch_axis, camera_pitch  ); // radians
+            yaw = Quaternion.FromAxisAngle(Up, camera_yaw); // PiOver180
             //roll = Quaternion.FromAxisAngle(roll_axis, camera_pitch); // roll_angle
 
-            //Orientation = yaw * pitch; /* * roll // */
-            //Orientation = yaw * pitch;
+            //Orientation = pitch * yaw; /* * roll // */
+            Orientation = pitch * yaw;
 
             //Orientation = pitch  /* roll */ ;
             //Orientation = yaw;
@@ -316,20 +325,77 @@ namespace X3D.Engine
 
             //Orientation *= pitch;
 
-            Orientation = QuaternionExtensions.QuaternionFromEulerAnglesRad(camera_yaw, camera_pitch, 0f );
+
+
+            //Orientation = QuaternionExtensions.QuaternionFromEulerAnglesRad(camera_yaw, camera_pitch, 0f );
+
+
+
+
+
+            //Vector3 Amount = new Vector3(camera_pitch, camera_yaw, 0f);
+
+            //// create orientation vectors
+            //Vector3 up = Vector3.UnitY;
+            //Quaternion anotherRotation = Quaternion.Identity;
+
+            //Vector3 lookat = QuaternionExtensions.Rotate(anotherRotation, Vector3.UnitZ); //Vector3 lookat = quatRotate(anotherRotation, Vector3.UnitZ);
+            //Vector3 forward = new Vector3(lookat.X, 0, lookat.Z).Normalized();
+            //Vector3 left = up.Cross(forward);
+
+            //// rotate camera with quaternions created from axis and angle
+            //Orientation = (new Quaternion(up, Amount.Y)) * Orientation;
+            //Orientation = (new Quaternion(left, Amount.X)) * Orientation;
+            //Orientation = (new Quaternion(forward, Amount.Z)) * Orientation;
+
+            //Orientation = eulerToQuat(0f, camera_pitch, camera_yaw);
+
+            //Orientation.Normalize();
+            
+
+
+
+
+
+            // Update Direction
+            //this.Direction = QuaternionExtensions.Rotate(Orientation, Vector3.UnitZ);
+            
 
             Orientation.Normalize();
 
-            // Update Direction
-            this.Direction = QuaternionExtensions.Rotate(Orientation, Vector3.UnitX);
+            //anotherRotation = Orientation;
         }
 
-		//Matrix4 lookAt(Vector3 eye, Vector3 center, Vector3 up) 
-		//{
-		//	return MatrixExtensions.LookAt(eye,center,up, this.Matrix);
-		//}
+        public static Quaternion eulerToQuat(float roll, float pitch, float yaw)
+        {
+            float cr, cp, cy, sr, sp, sy, cpcy, spsy;
+            // calculate trig identities
+            cr = (float)Math.Cos(roll / 2);
+            cp = (float)Math.Cos(pitch / 2);
+            cy = (float)Math.Cos(yaw / 2);
+            sr = (float)Math.Sin(roll / 2);
+            sp = (float)Math.Sin(pitch / 2);
+            sy = (float)Math.Sin(yaw / 2);
+            cpcy = cp * cy;
+            spsy = sp * sy;
 
-		public void invert()
+            Quaternion quat = new Quaternion();
+
+            quat.W = cr * cpcy + sr * spsy;
+            quat.X = sr * cpcy - cr * spsy;
+            quat.Y = cr * sp * cy + sr * cp * sy;
+            quat.Z = cr * cp * sy - sr * sp * cy;
+
+            return quat;
+        }
+
+
+        //Matrix4 lookAt(Vector3 eye, Vector3 center, Vector3 up) 
+        //{
+        //	return MatrixExtensions.LookAt(eye,center,up, this.Matrix);
+        //}
+
+        public void invert()
 		{
 			invNeg();
 		}
@@ -524,6 +590,10 @@ namespace X3D.Engine
 
             camera_pitch += degrees;
 
+            //degrees = MathHelpers.ClampCircular(degrees, 0.0f, MathHelpers.PI2);
+
+            //camera_pitch = degrees;
+
             Pitch(degrees);
 		}
 
@@ -560,9 +630,21 @@ namespace X3D.Engine
 
             camera_yaw += degrees ;
 
+            //degrees = MathHelpers.ClampCircular(degrees, 0.0f, MathHelpers.PI2);
+
+            //camera_yaw = degrees;
+
+            
+
             Yaw(degrees);
 
 		}
+
+        public void ApplyRoll(float degrees)
+        {
+            camera_roll = degrees;
+            Roll(degrees);
+        }
 
 		public void Reset()
 		{

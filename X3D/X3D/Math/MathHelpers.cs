@@ -52,7 +52,7 @@ namespace X3D
            return result;
         }
 
-    public static float Clamp(float value, float min, float max)
+        public static float Clamp(float value, float min, float max)
         {
             return value > max ? max : (value < min ? min : value);
         }
