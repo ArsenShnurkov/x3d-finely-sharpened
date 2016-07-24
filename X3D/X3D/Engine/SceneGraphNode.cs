@@ -92,10 +92,15 @@ namespace X3D
 
         #region Public Virtuals
 
+        /// <summary>
+        /// Node deserilized callback
+        /// </summary>
+        public virtual void Init() { }
+
         public virtual void Load() { }
 
         public virtual void PostDeserialization() { Load(); }
-        public virtual void PostDescendantDeserialization() { }
+        public virtual void PostDescendantDeserialization() { Init(); }
 
         public virtual void PreRenderOnce(RenderingContext rc) { }
         public virtual void PreRender() { }
@@ -111,9 +116,15 @@ namespace X3D
         /// </summary>
         internal void CopyToShadowDom()
         {
+            //TODO: Note when XML Writer is used later we need to write from SwitchChildren instead of Children
+
             if (this.Children != null && this.Children.Count > 0)
             {
-                this.Shadow = this.Children;
+                SceneGraphNode[] tmp = new SceneGraphNode[this.Children.Count];
+
+                this.Children.CopyTo(tmp);
+
+                this.Shadow = tmp.ToList();
 
                 this.Children.Clear();
             }
