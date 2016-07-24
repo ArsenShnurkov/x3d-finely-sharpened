@@ -5,49 +5,59 @@
 	<head>
 		<Script>
 			<![CDATA[
-				var current_choice = 0;
-				var maxChoice = 4;
+				var choice = 0;
+				var maxChoice = 5;
 				var interval;
 				
 				
 				function incrementChoice()
 				{
-					console.log('incrementChoice');
 					var switcher = document.getElementById("switcher");
-
-					console.log('about to set choice');
 					
-					switcher.setAttribute("whichChoice", current_choice);
+					switcher.setAttribute("whichChoice", choice);
 					
 					console.log("Switch node choice set to: " + switcher.getAttribute("whichChoice"));
 					
-					if(current_choice +1 < maxChoice){
-						current_choice += 1;
-					}
-					else{
-						current_choice = 0;
-						
-					}
-					
-					
+					choice = (choice+1) % maxChoice;
 				}
 				
-				interval = window.setInterval(function()
-				{
-					console.log('incrementing choice');
-					incrementChoice();
+				//interval = window.setInterval(function()
+				//{
+					//console.log('incrementing choice');
+					//incrementChoice();
 					
-				},3000);
+				//},3000);
+				
+				document.onkeydown = checkKey;
+
+				function checkKey(e) {
+					var event = window.event ? window.event : e;
+					console.log(event.keyCode);
+					
+					if (event.keyCode == '78') // 'n'
+					{
+						incrementChoice();
+						
+						console.log('right');
+					}
+				}
 				
 			]]>
 		</Script>
 	</head>
 	<Scene DEF='scene'>
-		<Viewpoint position='0 5 100' fieldOfView="2.0944" />
+		<Viewpoint position='0 5 100' fieldOfView="1.5" />
 		<NavigationInfo type="WALK" />
 		
 		<Switch id="switcher" whichChoice="0">
-			<Background backUrl='"texture\generic\BK.png"' 
+			<Background backUrl='"skies\sunset_back.jpg"' 
+				bottomUrl='"skies\sunset_bottom.jpg"' 
+				frontUrl='"skies\sunset_front.jpg"' 
+				leftUrl='"skies\sunset_left.jpg"' 
+				rightUrl='"skies\sunset_right.jpg"' 
+				topUrl='"skies\sunset_top.jpg"' /> 
+		
+ 			<Background backUrl='"texture\generic\BK.png"' 
 				bottomUrl='"texture\generic\DN.png"' 
 				frontUrl='"texture\generic\FR.png"' 
 				leftUrl='"texture\generic\LF.png"' 
@@ -59,22 +69,16 @@
 				frontUrl='"skies\sky_lake_front.jpg"' 
 				leftUrl='"skies\sky_lake_left.jpg"' 
 				rightUrl='"skies\sky_lake_right.jpg"' 
-				topUrl='"skies\sky_lake_top.jpg"' />
+				topUrl='"skies\sky_lake_top.jpg"' /> 
 
 				
-			<!-- <Background backUrl='"skies\sky_red_back.bmp"' 
-				bottomUrl='"skies\sky_red_bottom.png"' 
+			<Background backUrl='"skies\sky_red_back.jpg"' 
+				bottomUrl='"skies\sky_red_bottom.jpg"' 
 				frontUrl='"skies\sky_red_front.jpg"' 
-				leftUrl='"skies\sky_red_left.png"' 
-				rightUrl='"skies\sky_red_right.png"' 
-				topUrl='"skies\sky_red_top.png"' /> -->
-				
-			<Background backUrl='"skies\sunset_back.png"' 
-				bottomUrl='"skies\sunset_bottom.png"' 
-				frontUrl='"skies\sunset_front.png"' 
-				leftUrl='"skies\sunset_left.png"' 
-				rightUrl='"skies\sunset_right.png"' 
-				topUrl='"skies\sunset_top.png"' />
+				leftUrl='"skies\sky_red_left.jpg"' 
+				rightUrl='"skies\sky_red_right.jpg"' 
+				topUrl='"skies\sky_red_top.jpg"' />
+
 				
 		</Switch>
 		<Script>
@@ -84,7 +88,14 @@
 			function onRenderFrame(e) 
 			{
 				// This script is executed every frame
+				
+				if(Keyboard[Key.H])
+				{
+					//incrementChoice();
+				}
 			}
+			
+
 			
 		]]>
 		</Script>

@@ -22,7 +22,7 @@ namespace X3D
         private int headScriptIndex = -1;
         private int numHeadScripts = 0;
 
-        private bool documentEventsBound = false;
+        private static bool documentEventsBound = false;
 
         #region Rendering Methods
 
@@ -103,6 +103,7 @@ namespace X3D
                             {
                                 Console.WriteLine("*** key {0} not bound *** ", charCode);
                             }
+
                             
                         };
 

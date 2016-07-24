@@ -54,6 +54,13 @@ namespace X3D
             for (int i = 0; i < 6; i++)
             {
                 loadCubeMapSide(tex_cube, TextureTarget.TextureCubeMapPositiveX + i, textureUrls[i]);
+/* 
+GL_TEXTURE_CUBE_MAP_POSITIVE_X	Right
+GL_TEXTURE_CUBE_MAP_NEGATIVE_X	Left
+GL_TEXTURE_CUBE_MAP_POSITIVE_Y	Top
+GL_TEXTURE_CUBE_MAP_NEGATIVE_Y	Bottom
+GL_TEXTURE_CUBE_MAP_POSITIVE_Z	Back
+GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             }
 
             GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, (int)TextureMinFilter.Linear);
@@ -77,7 +84,18 @@ namespace X3D
             win.Rectangle imgRect;
             IntPtr pTexImage;
 
-            if (ImageTexture.GetTextureImageFromMFString(url, out image, out width, out height))
+            bool? rotCW = null;
+
+            if(side_target == TextureTarget.TextureCubeMapPositiveY) // Top
+            {
+                rotCW = false; // CCW
+            }
+            else if (side_target == TextureTarget.TextureCubeMapNegativeY) // Bottom
+            {
+                rotCW = true; // CW
+            }
+
+            if (ImageTexture.GetTextureImageFromMFString(url, out image, out width, out height, false, rotCW))
             {
                 imgRect = new win.Rectangle(0, 0, width, height);
                 pixelData = image.LockBits(imgRect, win.Imaging.ImageLockMode.ReadOnly,
@@ -178,7 +196,7 @@ namespace X3D
 
             bool texture2d;
             var size = new Vector3(1, 1, 1);
-            var scale = new Vector3(1, 1, 1);
+            var scale = new Vector3(2, 2, 2);
 
             //GL.Disable(EnableCap.DepthTest);
 

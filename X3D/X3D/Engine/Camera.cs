@@ -229,7 +229,9 @@ namespace X3D.Engine
             // Apply Orientation
             Quaternion q = Orientation; //.Inverted();
             
-             worldView *= MathHelpers.CreateRotation(ref q);
+             worldView *= MathHelpers.CreateRotation(ref q)
+                //* MathHelpers.CreateRotation(ref _yaw)
+                ;
 
             return worldView;
         } 
@@ -262,44 +264,65 @@ namespace X3D.Engine
                 outm = Matrix4.LookAt(PlayerPosition, Look, Up);
             }
 
-            Quaternion q = Orientation.Inverted();
+            //Quaternion q = Orientation.Inverted();
+            //Quaternion q2 = _yaw.Inverted();
 
-            Matrix = outm * MathHelpers.CreateRotation(ref q);
+            Quaternion q = Orientation;
+
+            Matrix = outm 
+                * MathHelpers.CreateRotation(ref q)
+               // * MathHelpers.CreateRotation(ref q)
+               //* MathHelpers.CreateRotation(ref q2)
+                ;
 
 			PrevPosition = Position;
 		}
 
-		public void ApplyRotation()
+        Quaternion _yaw = Quaternion.Identity;
+
+        public void ApplyRotation()
 		{
+
+
             Vector3 direction = (Look - Position);
             direction.Normalize();
 			//MakeOrthogonal();
 
-			Vector3 pitch_axis = Vector3.Cross(direction, Up);
-            Vector3 roll_axis = Right + Up;
+			//Vector3 pitch_axis = Vector3.Cross(direction, Up);
+            //Vector3 roll_axis = Right + Up;
+            //Vector3 roll_axis = Forward + Up;
 
             //pitch_axis = roll_axis;
 
 
 
-            pitch = Quaternion.FromAxisAngle(pitch_axis, camera_pitch  ); // radians
-			yaw = Quaternion.FromAxisAngle(Up, camera_yaw); // PiOver180
-            //roll = Quaternion.FromAxisAngle(roll_axis, roll_angle);
+            //_yaw = Quaternion.FromAxisAngle(Up, camera_yaw);
+            //_yaw.Normalize();
 
-            Orientation = yaw * pitch  /* roll */
-                ;
+
+
+
+            //pitch = Quaternion.FromAxisAngle(pitch_axis, camera_pitch  ); // radians
+            //yaw = Quaternion.FromAxisAngle(Up, camera_yaw); // PiOver180
+            //roll = Quaternion.FromAxisAngle(roll_axis, camera_pitch); // roll_angle
+
+            //Orientation = yaw * pitch; /* * roll // */
+            //Orientation = yaw * pitch;
+
             //Orientation = pitch  /* roll */ ;
             //Orientation = yaw;
 
-            
-            Orientation *= pitch;
+            //Orientation = pitch;
+
+            //Orientation *= pitch;
+
+            Orientation = QuaternionExtensions.QuaternionFromEulerAnglesRad(camera_yaw, camera_pitch, 0f );
 
             Orientation.Normalize();
 
             // Update Direction
-
-			//this.Direction = QuaternionExtensions.Rotate(Orientation, Vector3.UnitX);
-		}
+            this.Direction = QuaternionExtensions.Rotate(Orientation, Vector3.UnitX);
+        }
 
 		//Matrix4 lookAt(Vector3 eye, Vector3 center, Vector3 up) 
 		//{
@@ -500,6 +523,8 @@ namespace X3D.Engine
             //}
 
             camera_pitch += degrees;
+
+            Pitch(degrees);
 		}
 
 		public void ApplyYaw(float degrees) 
@@ -534,7 +559,8 @@ namespace X3D.Engine
             //}
 
             camera_yaw += degrees ;
-				//* PiOver180
+
+            Yaw(degrees);
 
 		}
 

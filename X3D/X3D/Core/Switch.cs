@@ -25,6 +25,8 @@ namespace X3D
 
         public override void SwitchNode(int choice)
         {
+            if (!(choice >= 0 && choice < Shadow.Count)) return;
+
             if (debug && Shadow != null && Shadow.Count > 0)
             {
                 if (choice >= 0 && choice < Shadow.Count)
