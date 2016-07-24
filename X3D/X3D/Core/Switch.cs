@@ -13,8 +13,11 @@ namespace X3D
 
         public Switch()
         {
-            // The switch will take care of its own rendering
-            //this.PassthroughAllowed = false;
+            // Could implement switch by disabling passthrough, 
+            // however switch would have to ensure its child is completely rendered. 
+            // Better to keep rendering logic within the renderer.
+
+            //this.PassthroughAllowed = false; 
             this.debug = true;
         }
 
@@ -58,22 +61,6 @@ namespace X3D
         public override void Render(RenderingContext rc)
         {
             base.Render(rc);
-
-            /* Because passthrough is not allowed, this shape must make sure one of its children are rendered */
-            //if (this.Shadow != null && Shadow.Count > 0)
-            //{
-
-            //    if (_whichChoice >= 0 && _whichChoice < this.Shadow.Count)
-            //    {
-            //        SceneGraphNode n; // the node that is now visible to the engine
-
-            //        n = this.Shadow[WhichChoice];
-
-
-            //        if(PassthroughAllowed == false)
-            //            n.Render(rc);
-            //    }
-            //}
         }
 
         #endregion

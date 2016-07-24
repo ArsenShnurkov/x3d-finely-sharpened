@@ -70,7 +70,7 @@
 				<Shape>
 					<Appearance>
 						<Material diffuseColor='1 0 0'></Material>
-						<ImageTexture  url='"spectrum.jpg"'/>
+						<ImageTexture  url='"spectrum-first.jpg"'/>
 					</Appearance>
 					<Sphere></Sphere>
 				</Shape>
