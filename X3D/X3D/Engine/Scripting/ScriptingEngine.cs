@@ -164,6 +164,8 @@ namespace X3D.Engine
 
         internal void OnKeyDown(int keyCode, int charCode)
         {
+            if (v8.IsDisposed) return;
+
             using (Handle functHandle = v8.Execute("document.onkeydown", SOURCE_NAME, false))
             {
                 if (functHandle.ValueType != JSValueType.CompilerError && functHandle.IsFunction)
@@ -193,6 +195,8 @@ namespace X3D.Engine
 
         internal void ExecuteGlobalScriptFunction(string name)
         {
+            if (v8.IsDisposed) return;
+
             using (Handle functHandle = v8.Execute(name, SOURCE_NAME, false))
             {
                 if (functHandle.ValueType != JSValueType.CompilerError && functHandle.IsFunction)
@@ -204,6 +208,8 @@ namespace X3D.Engine
 
         internal void OnRenderFrame(RenderingContext rc)
         {
+            if (v8.IsDisposed) return;
+
             using (Handle functHandle = v8.Execute("onRenderFrame", SOURCE_NAME, false))
             {
                 if (functHandle.ValueType != JSValueType.CompilerError && functHandle.IsFunction)
