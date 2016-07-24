@@ -71,7 +71,7 @@ Use Visual Studio 2015 for development and compilation.
 Task list
 ```
 
-COMPLETED: URL/URI/filesys/data:text/plain assett & resource fetching (partial URN support)
+COMPLETED: URL/URI/filesys/CDATA/data:text/plain assett & resource fetching (partial URN support)
 PARTLY: Viewpoint and ViewpointGroup implementation and decent-scalable Camera model
 PARTLY: Background, MultiTexturing, CubeMapping, ..
 MOSTLY: Scripting using JavaScript (JIT compiled using the V8 Engine)
