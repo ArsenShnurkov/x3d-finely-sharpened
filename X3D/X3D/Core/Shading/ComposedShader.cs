@@ -14,6 +14,9 @@ namespace X3D
     public partial class ComposedShader
     {
         [XmlIgnore]
+        public bool HasErrors = false;
+
+        [XmlIgnore]
         public int ShaderHandle;
 
         [XmlIgnore]
@@ -59,12 +62,16 @@ namespace X3D
         }
         public ComposedShader Use()
         {
-            GL.UseProgram(this.ShaderHandle);
+            if(!HasErrors) GL.UseProgram(this.ShaderHandle);
             return this;
         }
 
         #region Field Setter Helpers
 
+        /// <summary>
+        /// Updates the field with a new value just in the SceneGraph.
+        /// (Changes in the field are picked up by a currrently running X3DProgrammableShaderObject)
+        /// </summary>
         public void setFieldValue(string name, object value)
         {
             field field = (field)this.Children
@@ -103,6 +110,8 @@ namespace X3D
 
         internal void SetFieldValueSTR(string name, string value, string x3dType)
         {
+            if (HasErrors) return;
+
             object v;
             Type type;
 
@@ -126,6 +135,8 @@ namespace X3D
 
         internal void SetFieldValue(string name, int value)
         {
+            if (HasErrors) return;  
+            
             GL.Uniform1(GL.GetUniformLocation(this.ShaderHandle, name), value);
 
             //UpdateField(name, X3DTypeConverters.ToString(value));
@@ -133,6 +144,8 @@ namespace X3D
 
         internal void SetFieldValue(string name, float value)
         {
+            if (HasErrors) return;
+
             var loc = GL.GetUniformLocation(this.ShaderHandle, name);
             GL.Uniform1(loc, value);
 
@@ -141,6 +154,8 @@ namespace X3D
 
         internal void SetFieldValue(string name, Vector3 value)
         {
+            if (HasErrors) return;
+
             GL.Uniform3(GL.GetUniformLocation(this.ShaderHandle, name), ref value);
 
             //UpdateField(name, X3DTypeConverters.ToString(value));
@@ -148,6 +163,8 @@ namespace X3D
 
         internal void SetFieldValue(string name, Vector4 value)
         {
+            if (HasErrors) return;
+
             GL.Uniform4(GL.GetUniformLocation(this.ShaderHandle, name), ref value);
 
             //UpdateField(name, X3DTypeConverters.ToString(value));
@@ -155,6 +172,8 @@ namespace X3D
 
         internal void SetFieldValue(string name, ref Matrix3 value)
         {
+            if (HasErrors) return;
+
             GL.UniformMatrix3(GL.GetUniformLocation(this.ShaderHandle, name), false, ref value);
 
             //TODO: convert matrix back to string and update field
@@ -163,6 +182,8 @@ namespace X3D
 
         internal void SetFieldValue(string name, ref Matrix4 value)
         {
+            if (HasErrors) return;
+
             GL.UniformMatrix4(GL.GetUniformLocation(this.ShaderHandle, name), false, ref value);
 
             //TODO: convert matrix back to string and update field
@@ -204,18 +225,26 @@ namespace X3D
                 GL.LinkProgram(this.ShaderHandle);
                 string err = GL.GetProgramInfoLog(this.ShaderHandle).Trim();
 
-                if(!string.IsNullOrEmpty(err))
+                if (!string.IsNullOrEmpty(err))
+                {
                     Console.WriteLine(err);
-                
 
+                    if (err.ToLower().Contains("error"))
+                    {
+                        this.HasErrors = true;
+                    }
+                }
+                    
+  
                 if (GL.GetError() != ErrorCode.NoError)
                 {
-                    throw new Exception("Error Linking ComposedShader Shader Program");
+                    this.HasErrors = true;
+                    //throw new Exception("Error Linking ComposedShader Shader Program");
                 }
                 else
                 {
                     this.Linked = true;
-
+                    
                     Console.WriteLine("ComposedShader [linked]"); //TODO: check for more link errors
                 }
             }
