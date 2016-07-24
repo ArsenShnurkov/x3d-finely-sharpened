@@ -65,7 +65,7 @@ namespace X3D
             shader.Use();
 
             RefreshDefaultUniforms();
-            RefreshMaterialUniforms();
+            //RefreshMaterialUniforms();
             if (shader.IsTessellator)
             {
                 RefreshTessUniforms();
@@ -92,22 +92,21 @@ namespace X3D
 
         public void RefreshTessUniforms()
         {
+            if (CurrentShader.HasErrors) return;
+
             Uniforms.Modelview = GL.GetUniformLocation(CurrentShader.ShaderHandle, "modelview");
             Uniforms.Projection = GL.GetUniformLocation(CurrentShader.ShaderHandle, "projection");
             Uniforms.NormalMatrix = GL.GetUniformLocation(CurrentShader.ShaderHandle, "normalmatrix");
             Uniforms.LightPosition = GL.GetUniformLocation(CurrentShader.ShaderHandle, "LightPosition");
             Uniforms.AmbientMaterial = GL.GetUniformLocation(CurrentShader.ShaderHandle, "AmbientMaterial");
             Uniforms.DiffuseMaterial = GL.GetUniformLocation(CurrentShader.ShaderHandle, "DiffuseMaterial");
-            Uniforms.TessLevelInner = GL.GetUniformLocation(CurrentShader.ShaderHandle, "TessLevelInner");
-            Uniforms.TessLevelOuter = GL.GetUniformLocation(CurrentShader.ShaderHandle, "TessLevelOuter");
+            //Uniforms.TessLevelInner = GL.GetUniformLocation(CurrentShader.ShaderHandle, "TessLevelInner");
+            //Uniforms.TessLevelOuter = GL.GetUniformLocation(CurrentShader.ShaderHandle, "TessLevelOuter");
         }
 
         public void RefreshDefaultUniforms()
         {
-            uniformModelview = GL.GetUniformLocation(CurrentShader.ShaderHandle, "modelview");
-            uniformProjection = GL.GetUniformLocation(CurrentShader.ShaderHandle, "projection");
-            uniformCameraScale = GL.GetUniformLocation(CurrentShader.ShaderHandle, "camscale");
-            uniformX3DScale = GL.GetUniformLocation(CurrentShader.ShaderHandle, "X3DScale");
+            if (CurrentShader.HasErrors) return;
 
             uniforms.a_position = GL.GetAttribLocation(CurrentShader.ShaderHandle, "position");
             uniforms.a_normal = GL.GetAttribLocation(CurrentShader.ShaderHandle, "normal");
@@ -118,15 +117,17 @@ namespace X3D
             uniforms.sampler = GL.GetUniformLocation(CurrentShader.ShaderHandle, "_MainTex");
         }
 
-        public void RefreshMaterialUniforms()
-        {
-            Materials.ambientIntensity = GL.GetUniformLocation(CurrentShader.ShaderHandle, "ambientIntensity");
-            Materials.diffuseColor = GL.GetUniformLocation(CurrentShader.ShaderHandle, "diffuseColor");
-            Materials.emissiveColor = GL.GetUniformLocation(CurrentShader.ShaderHandle, "emissiveColor");
-            Materials.shininess = GL.GetUniformLocation(CurrentShader.ShaderHandle, "shininess");
-            Materials.specularColor = GL.GetUniformLocation(CurrentShader.ShaderHandle, "specularColor");
-            Materials.transparency = GL.GetUniformLocation(CurrentShader.ShaderHandle, "transparency");
-        }
+        //public void RefreshMaterialUniforms()
+        //{
+        //    if (CurrentShader.HasErrors) return;
+        //
+        //    Materials.ambientIntensity = GL.GetUniformLocation(CurrentShader.ShaderHandle, "ambientIntensity");
+        //    Materials.diffuseColor = GL.GetUniformLocation(CurrentShader.ShaderHandle, "diffuseColor");
+        //    Materials.emissiveColor = GL.GetUniformLocation(CurrentShader.ShaderHandle, "emissiveColor");
+        //    Materials.shininess = GL.GetUniformLocation(CurrentShader.ShaderHandle, "shininess");
+        //    Materials.specularColor = GL.GetUniformLocation(CurrentShader.ShaderHandle, "specularColor");
+        //    Materials.transparency = GL.GetUniformLocation(CurrentShader.ShaderHandle, "transparency");
+        //}
 
         public void SetSampler(int sampler)
         {
@@ -144,7 +145,7 @@ namespace X3D
             IncludeComposedShader(@default);
 
             RefreshDefaultUniforms();
-            RefreshMaterialUniforms();
+            //RefreshMaterialUniforms();
         }
 
         public override void PreRender()
@@ -171,7 +172,7 @@ namespace X3D
                 this.CurrentShader.Use();
 
                 RefreshDefaultUniforms();
-                RefreshMaterialUniforms();
+                //RefreshMaterialUniforms();
 
                 if (this.CurrentShader.IsTessellator)
                     RefreshTessUniforms();
