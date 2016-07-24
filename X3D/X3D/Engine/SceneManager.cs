@@ -630,7 +630,7 @@ namespace X3D.Engine
                 xtr.WhitespaceHandling = WhitespaceHandling.All; // preserve line endings in attribute values
                                                                  //xtr.Normalization = false; // another way to preserve line endings in attribute values
                                                                  // however turning off normalization makes processing much slower
-                xml = XDocument.Load(xtr, LoadOptions.PreserveWhitespace);
+                xml = XDocument.Load(xtr, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
             }
 
             //xml = XDocument.Load(xml_stream, LoadOptions.PreserveWhitespace);
@@ -658,7 +658,7 @@ namespace X3D.Engine
                 xtr.WhitespaceHandling = WhitespaceHandling.All; // preserve line endings in attribute values
                                                                  //xtr.Normalization = false; // another way to preserve line endings in attribute values
                                                                  // however turning off normalization makes processing much slower
-                xml = XDocument.Load(xtr, LoadOptions.PreserveWhitespace);
+                xml = XDocument.Load(xtr, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
             }
 
             //xml = XDocument.Load(xml_string,LoadOptions.PreserveWhitespace);
