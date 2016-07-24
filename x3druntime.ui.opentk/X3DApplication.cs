@@ -158,7 +158,7 @@ namespace x3druntime.ui.opentk
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("OpenGL Version " + t[0] + "." + t[1]);
 
-            ShowSupportMatrix();
+            //ShowSupportMatrix();
 
 #if GAME_INIT_MODE && FULLSCREEN
             window.WindowState=WindowState.Minimized;
