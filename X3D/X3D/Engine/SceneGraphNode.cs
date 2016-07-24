@@ -53,6 +53,12 @@ namespace X3D
         [XmlIgnore]
         public List<SceneGraphNode> Children = new List<SceneGraphNode>();
 
+        /// <summary>
+        /// The children that arent currently visible in the scene
+        /// </summary>
+        [XmlIgnore]
+        public List<SceneGraphNode> Shadow = new List<SceneGraphNode>();
+
         [XmlIgnore]
         public List<SceneGraphNode> Siblings = new List<SceneGraphNode>();
 
@@ -95,6 +101,23 @@ namespace X3D
         public virtual void PreRender() { }
         public virtual void Render(RenderingContext rc) { }
         public virtual void PostRender(RenderingContext rc) { }
+
+        #endregion
+
+        #region Internal Methods
+
+        /// <summary>
+        /// Used to control the visibility listing of nodes in the graph.
+        /// </summary>
+        internal void CopyToShadowDom()
+        {
+            if (this.Children != null && this.Children.Count > 0)
+            {
+                this.Shadow = this.Children;
+
+                this.Children.Clear();
+            }
+        }
 
         #endregion
 
