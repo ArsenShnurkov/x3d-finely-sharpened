@@ -21,6 +21,12 @@ namespace X3D
 
         #region Public Fields
 
+        /// <summary>
+        /// The line number and column number the element was parsed from in the XML document.
+        /// </summary>
+        [XmlIgnore]
+        public Vector2 XMLDocumentLocation = new Vector2(-1, -1);
+
         [XmlAttributeAttribute()]
         public string id
         {
@@ -66,6 +72,20 @@ namespace X3D
 
         #endregion
 
+        #region Public Methods
+
+        public string ErrorStringWithLineNumbers()
+        {
+            if (XMLDocumentLocation == null)
+            {
+                return this.ToString();
+            }
+
+            return string.Format("line ({2},{1})", this.ToString(), XMLDocumentLocation.X, XMLDocumentLocation.Y);
+        }
+
+        #endregion
+
         #region Public Virtuals
 
         public virtual void Load() { }
@@ -93,23 +113,24 @@ namespace X3D
         public bool Validate()
         {
             bool passed = true;
-            bool warned = false;
-            
+            bool warned0 = false;
+            bool warned1 = false;
+
             this.isValid = null;
 
             // X3D VALIDATION
 
             // Test Appearance Component
-            appearanceValidationConstraints(out passed, out warned);
+            appearanceValidationConstraints(out passed, out warned0);
 
             // Test Shader Component
-            shaderValidationConstraints(out passed, out warned);
+            shaderValidationConstraints(out passed, out warned1);
 
             //TODO: test other X3D node relationships
 
             this.isValid = passed;
 
-            this.alreadyWarned = warned;
+            this.alreadyWarned = warned0 || warned1;
 
             return passed;
         }
@@ -117,6 +138,8 @@ namespace X3D
         #region X3D Component Constraints
 
         // TODO: come up with a better way to define constraints between nodes, and act on them
+
+        //TODO: Validate more X3D components
 
         private void appearanceValidationConstraints(out bool passed, out bool warned)
         {
@@ -131,7 +154,9 @@ namespace X3D
                 {
                     warned = true;
 
-                    if (!alreadyWarned && debug) Console.WriteLine("[Warning] {0} doesnt contain any X3DAppearanceChildNode children", this.ToString());
+                    if (!alreadyWarned && debug) Console.Write("[Warning] {0} doesnt contain any X3DAppearanceChildNode children ", this.ToString());
+
+                    if (!alreadyWarned && debug) Console.WriteLine(ErrorStringWithLineNumbers());
                 }
 
                 invalid = this.Children.Where(n => !typeof(X3DAppearanceChildNode).IsInstanceOfType(n)).ToList();
@@ -166,11 +191,50 @@ namespace X3D
 
                     processInvalidNodes(invalid, this.ToString(), out passed);
 
-                    if (!this.Children.Any(n => (typeof(ShaderPart).IsInstanceOfType(n))))
+                    var shaderParts = this.Children.Where(n => (typeof(ShaderPart).IsInstanceOfType(n))).Select(part => (ShaderPart)part).ToList();
+
+                    if (!shaderParts.Any())
                     {
                         passed = false;
 
                         if (debug) Console.WriteLine("ComposedShader must contain ShaderPart children");
+
+                        pruneBadRelationship(this, referToParent: true);
+                    }
+                    else
+                    {
+                        for(int i=0; i< shaderParts.Count(); i++)
+                        {
+                            var part = shaderParts[i];
+
+                            // TODO: are URLs actually valid?
+
+                            if (part.Children.Any())
+                            {
+                                passed = false;
+
+                                if (debug) Console.WriteLine("ShaderPart must not have any children defined other than a CDATA text node");
+
+                                pruneBadRelationship(part);
+                            }
+
+                            if (string.IsNullOrEmpty(part.url) && string.IsNullOrEmpty(part.ShaderSource.Trim()))
+                            {
+                                passed = false;
+
+                                if (debug) Console.WriteLine("ShaderPart must have a url attribute or CDATA section defined");
+
+                                pruneBadRelationship(part);
+                            }
+                            else if (!string.IsNullOrEmpty(part.ShaderSource) && string.IsNullOrEmpty(part.ShaderSource.Trim()))
+                            {
+                                passed = false;
+
+                                if (debug) Console.WriteLine("ShaderPart must have a CDATA section properly defined");
+
+                                pruneBadRelationship(part);
+                            }
+                        }
                     }
                 }
                 else if (typeof(PackagedShader).IsInstanceOfType(this))
@@ -244,20 +308,31 @@ namespace X3D
                 }
             }
 
-            if (debug) Console.WriteLine("pruned bad relationships");
+            if (debug) Console.Write("pruned bad relationships ");
+            if (debug) Console.WriteLine(ErrorStringWithLineNumbers());
         }
 
         /// <summary>
         /// Removes a node from the Scene Graph that is classed as invalid 
         /// </summary>
-        private void pruneBadRelationship(SceneGraphNode invalidNode)
+        private void pruneBadRelationship(SceneGraphNode invalidNode, bool referToParent = false)
         {
             //if (invalidNode.isValid.HasValue && invalidNode.isValid.Value == false)
             {
-                this.Children.Remove(invalidNode);
+                if (referToParent)
+                {
+                    if(this.Parent != null) this.Parent.Children.Remove(invalidNode);
+                }
+                else
+                {
+                    this.Children.Remove(invalidNode);
+                }
+
+                
             }
 
-            if (debug) Console.WriteLine("pruned bad relationship");
+            if (debug) Console.Write("pruned bad relationship ");
+            if (debug) Console.WriteLine(ErrorStringWithLineNumbers());
         }
 
         /// <returns>
