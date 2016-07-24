@@ -224,8 +224,8 @@ namespace X3D
                         }
                         else
                         {
-                            GL.Uniform1(parentShape.Uniforms.TessLevelInner, parentShape.TessLevelInner);
-                            GL.Uniform1(parentShape.Uniforms.TessLevelOuter, parentShape.TessLevelOuter);
+                            //GL.Uniform1(parentShape.Uniforms.TessLevelInner, parentShape.TessLevelInner);
+                            //GL.Uniform1(parentShape.Uniforms.TessLevelOuter, parentShape.TessLevelOuter);
                         }
 
 
