@@ -91,6 +91,8 @@ namespace X3D.Parser
             stm = new MemoryStream(UTF8Encoding.UTF8.GetBytes(xml));
             xr = XmlReader.Create((Stream)stm, xs);
 
+
+
             return (SceneGraphNode)ser.Deserialize(xr);
         }
 
