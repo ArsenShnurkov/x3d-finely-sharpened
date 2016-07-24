@@ -8754,6 +8754,22 @@ namespace X3D
 
     public class X3DSwitchNode : X3DGroupingNode
     {
+        protected int _whichChoice = -1;
+
+        public int WhichChoice
+        {
+            get
+            {
+                return this._whichChoice;
+            }
+            set
+            {
+                this._whichChoice = value;
+
+                this.SwitchNode(_whichChoice);
+            }
+        }
+
         public virtual void SwitchNode(int choice) { }
     }
 
@@ -8766,23 +8782,20 @@ namespace X3D
     public partial class Switch : X3DSwitchNode
     {
         internal bool debug = false;
-        private int _whichChoice = -1;
         private string _containerField = "children";
         
 
         [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute(-1)]
-        public int whichChoice
+        public string whichChoice
         {
             get
             {
-                return this._whichChoice;
+                return this._whichChoice.ToString();
             }
             set
             {
-                this._whichChoice = value;
-
-                this.SwitchNode(value);
+                this.WhichChoice = int.Parse(value);
             }
         }
 
