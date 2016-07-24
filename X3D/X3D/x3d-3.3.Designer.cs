@@ -8761,15 +8761,9 @@ namespace X3D
     public partial class Switch : X3DGroupingNode
     {
 
-        private string _whichChoice;
+        private string _whichChoice = "-1";
+        private string _containerField = "children";
 
-        private string _containerField;
-
-        public Switch()
-        {
-            this._whichChoice = "-1";
-            this._containerField = "children";
-        }
 
         [XmlAttributeAttribute(DataType = "integer")]
         [System.ComponentModel.DefaultValueAttribute("-1")]
