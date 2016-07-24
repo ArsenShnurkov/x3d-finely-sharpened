@@ -10352,7 +10352,7 @@ namespace X3D
         public string value { get; set; }
 
         [XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute("")]
+        [System.ComponentModel.DefaultValueAttribute("inputOutput")]
         public string accessType { get; set; }
     }
 

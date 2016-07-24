@@ -150,7 +150,7 @@ namespace x3druntime.ui.opentk
             {
                 uint WM_GETTEXT = 0x000D;
                 int len = GetTextBoxTextLength(hTextBox);
-                if (len <= 0) return null;  // no text
+                if (len <= 0) return string.Empty;  // no text
                 StringBuilder sb = new StringBuilder(len + 1);
                 SendMessage3(hTextBox, WM_GETTEXT, len + 1, sb);
                 return sb.ToString();

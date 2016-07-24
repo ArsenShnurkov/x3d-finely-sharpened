@@ -9,6 +9,11 @@ namespace X3D
     {
         private ComposedShader parentShader;
 
+        public field()
+        {
+            this.accessType = "inputOutput";
+        }
+
         public override void Load()
         {
             base.Load();

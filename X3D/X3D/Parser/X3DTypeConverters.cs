@@ -43,10 +43,31 @@ namespace X3D.Parser
             {
                 Console.WriteLine("X3D type '{0}' not implemented", x3dType);
             }
+            else if (type == typeof(string))
+            {
+                if(x3dType == "SFInt32")
+                {
+                    return int.Parse(value);
+                }
+                else if (x3dType == "SFFloat")
+                {
+                    return float.Parse(value);
+                }
+                else if (x3dType == "SFVec2f")
+                {
+                    return X3DTypeConverters.SFVec2f(value);
+                }
+                else if (x3dType == "SFVec3f")
+                {
+                    return X3DTypeConverters.SFVec3f(value);
+                }
+            }
             else
             {
                 Console.WriteLine("X3D type '{0}' not implemented",x3dType);
             }
+
+
             return null;
         }
 
@@ -310,6 +331,24 @@ namespace X3D.Parser
             float[] values = value.Split(' ').Select(s => float.Parse(s)).ToArray();
             return new Vector3(values[0], values[1], values[2]);
         }
+        public static Vector2 SFVec2f(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return Vector2.Zero;
+            }
+
+            //Regex regMFInt32 = new Regex("[+-]?\\d+\\.\\d+");
+            //MatchCollection mc = regMFInt32.Matches(value);
+
+            //return new Vector3(float.Parse(mc[0].Value), 
+            //                   float.Parse(mc[1].Value), 
+            //                   float.Parse(mc[2].Value));
+            float[] f = Floats(value);
+
+            return new Vector2(f[0], f[1]);
+        }
+
         public static Vector3 SFVec3f(string value)
         {
             if (string.IsNullOrEmpty(value))

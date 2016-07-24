@@ -104,7 +104,7 @@ namespace X3D.Engine
                 {
                     v8.Execute(handle, false);
 
-                    handle.Dispose();
+                    //handle.Dispose();
                 }
             }
         }
