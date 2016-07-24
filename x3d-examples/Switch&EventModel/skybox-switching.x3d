@@ -3,6 +3,13 @@
 
 <X3D profile='Interactive' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
 	<head>
+	    <meta content='skybox-switching.x3d' name='title'/>
+		<meta content='Skybox background node switching in X3D Scripting' name='description'/>
+		<meta content='Gerallt Franke' name='creator'/>
+		<meta content='24 July 2016' name='created'/>
+		<meta content='24 July 2016' name='modified'/>
+		<meta content='Recommended browser for viewing is x3d-finely-sharpened' name='X3DBrowser'/>
+		<meta content='GPLv3' name='License'/>
 		<Script>
 			<![CDATA[
 				var choice = 0;
@@ -50,6 +57,14 @@
 		<NavigationInfo type="WALK" />
 		
 		<Switch id="switcher" whichChoice="0">
+		
+			<Background backUrl='"skies\sky_lake_back.jpg"' 
+				bottomUrl='"skies\sky_lake_bottom.jpg"' 
+				frontUrl='"skies\sky_lake_front.jpg"' 
+				leftUrl='"skies\sky_lake_left.jpg"' 
+				rightUrl='"skies\sky_lake_right.jpg"' 
+				topUrl='"skies\sky_lake_top.jpg"' /> 
+		
 			<Background backUrl='"skies\sunset_back.jpg"' 
 				bottomUrl='"skies\sunset_bottom.jpg"' 
 				frontUrl='"skies\sunset_front.jpg"' 
@@ -63,14 +78,6 @@
 				leftUrl='"texture\generic\LF.png"' 
 				rightUrl='"texture\generic\RT.png"' 
 				topUrl='"texture\generic\UP.png"' />
-				
-			<Background backUrl='"skies\sky_lake_back.jpg"' 
-				bottomUrl='"skies\sky_lake_bottom.jpg"' 
-				frontUrl='"skies\sky_lake_front.jpg"' 
-				leftUrl='"skies\sky_lake_left.jpg"' 
-				rightUrl='"skies\sky_lake_right.jpg"' 
-				topUrl='"skies\sky_lake_top.jpg"' /> 
-
 				
 			<Background backUrl='"skies\sky_red_back.jpg"' 
 				bottomUrl='"skies\sky_red_bottom.jpg"' 
