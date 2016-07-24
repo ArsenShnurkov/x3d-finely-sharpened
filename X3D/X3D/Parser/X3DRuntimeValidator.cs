@@ -64,7 +64,7 @@ namespace X3D.Parser
                 {
                     warned = true;
 
-                    if (!parent.alreadyWarned && debug) Console.Write("[Warning] {0} doesnt contain any X3DAppearanceChildNode children ", this.ToString());
+                    if (!parent.alreadyWarned && debug) Console.Write("[Warning] {0} doesnt contain any X3DAppearanceChildNode children ", parent.ToString());
 
                     if (!parent.alreadyWarned && debug) Console.WriteLine(parent.ErrorStringWithLineNumbers());
                 }
@@ -231,18 +231,18 @@ namespace X3D.Parser
             {
                 if (referToParent)
                 {
-                    if (parent.Parent != null) parent.Parent.Children.Remove(invalidNode);
+                    if (invalidNode.Parent != null) invalidNode.Parent.Children.Remove(invalidNode);
                 }
                 else
                 {
-                    parent.Children.Remove(invalidNode);
+                    invalidNode.Children.Remove(invalidNode);
                 }
 
 
             }
 
             if (debug) Console.Write("pruned bad relationship ");
-            if (debug) Console.WriteLine(parent.ErrorStringWithLineNumbers());
+            if (debug) Console.WriteLine(invalidNode.ErrorStringWithLineNumbers());
         }
 
         /// <returns>
