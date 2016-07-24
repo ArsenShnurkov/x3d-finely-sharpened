@@ -13,6 +13,12 @@ namespace X3D
         internal string __id;
         internal int _id = -1;
 
+        #region Private Fields
+
+        private bool alreadyWarned = false;
+
+        #endregion
+
         #region Public Fields
 
         [XmlAttributeAttribute()]
@@ -88,11 +94,29 @@ namespace X3D
         {
             bool passed = true;
             bool warned = false;
-            List<SceneGraphNode> invalid;
-            string msg = string.Empty;
+            
             this.isValid = null;
 
-            //TODO: validate relationships in scene at runtime and make adjustments instantly as necessary
+            // X3D VALIDATION
+
+            // Test Shader Component
+            shaderValidationConstraints(out passed, out warned);
+
+            //TODO: test other X3D node relationships
+
+            this.isValid = passed;
+
+            this.alreadyWarned = warned;
+
+            return passed;
+        }
+
+        private void shaderValidationConstraints(out bool passed, out bool warned)
+        {
+            List<SceneGraphNode> invalid;
+
+            passed = true;
+            warned = false;
 
             if (typeof(X3DProgrammableShaderObject).IsInstanceOfType(this))
             {
@@ -102,12 +126,12 @@ namespace X3D
                 {
                     warned = true;
 
-                    if (debug) Console.WriteLine("[Warning] PackagedShader doesnt contain any field children");
+                    if (!alreadyWarned && debug) Console.WriteLine("[Warning] {0} doesnt contain any field children", this.ToString());
                 }
 
                 if (typeof(ComposedShader).IsInstanceOfType(this))
                 {
-                    
+
                     invalid = this.Children.Where(n => !((typeof(ShaderPart).IsInstanceOfType(n) || typeof(field).IsInstanceOfType(n)))).ToList();
 
                     processInvalidNodes(invalid, this.ToString(), out passed);
@@ -121,28 +145,51 @@ namespace X3D
                 }
                 else if (typeof(PackagedShader).IsInstanceOfType(this))
                 {
+                    invalid = this.Children;
 
-
-
+                    processInvalidNodes(invalid, this.ToString(), out passed, noChildrenAllowed: true);
                 }
                 else if (typeof(ShaderProgram).IsInstanceOfType(this))
                 {
+                    invalid = this.Children;
 
+                    processInvalidNodes(invalid, this.ToString(), out passed, noChildrenAllowed: true);
                 }
             }
-            else if (typeof(X3DAppearanceNode).IsInstanceOfType(this))
+            else if (typeof(ShaderPart).IsInstanceOfType(this))
             {
-                invalid = this.Children.Where(n => !typeof(X3DAppearanceChildNode).IsInstanceOfType(n) ).ToList();
+                invalid = this.Children;
+
+                processInvalidNodes(invalid, this.ToString(), out passed, noChildrenAllowed: true);
+            }
+            else if (typeof(ProgramShader).IsInstanceOfType(this))
+            {
+                invalid = this.Children.Where(n => !typeof(ShaderProgram).IsInstanceOfType(n)).ToList();
+
 
                 processInvalidNodes(invalid, this.ToString(), out passed);
             }
+            else if (typeof(X3DAppearanceNode).IsInstanceOfType(this))
+            {
+                if (!this.Children.Any(n => (typeof(X3DAppearanceChildNode).IsInstanceOfType(n))))
+                {
+                    warned = true;
 
-            this.isValid = passed;
+                    if (!alreadyWarned && debug) Console.WriteLine("[Warning] {0} doesnt contain any X3DAppearanceChildNode children", this.ToString());
+                }
 
-            return passed;
+                invalid = this.Children.Where(n => !typeof(X3DAppearanceChildNode).IsInstanceOfType(n)).ToList();
+
+                processInvalidNodes(invalid, this.ToString(), out passed);
+            }
         }
 
-        private void processInvalidNodes(List<SceneGraphNode> invalid, string parentName, out bool passed)
+        /// <summary>
+        /// Process any invalid nodes found, pruning out each from the Scene Graph as each is discovered.
+        /// This transformation applies to immediate children only.
+        /// A new validation state to the node is determined after the processing.
+        /// </summary>
+        private void processInvalidNodes(List<SceneGraphNode> invalid, string parentName, out bool passed, bool noChildrenAllowed = false)
         {
             string msg;
 
@@ -154,8 +201,11 @@ namespace X3D
 
                 msg = getNodeNames(invalid);
 
+                if (noChildrenAllowed && debug) Console.WriteLine("{0} should not contain any children", parentName);
                 if (debug) Console.WriteLine("{0} should not contain children of type [{1}]", parentName, msg);
-
+                
+                // Maybe it would be better to re-insert nodes in places where they are allowed instead of pruning them?
+                //TODO: define node insertion rules
                 pruneBadRelationships(invalid);
             }
         }
