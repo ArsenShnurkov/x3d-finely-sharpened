@@ -99,6 +99,9 @@ namespace X3D
 
             // X3D VALIDATION
 
+            // Test Appearance Component
+            appearanceValidationConstraints(out passed, out warned);
+
             // Test Shader Component
             shaderValidationConstraints(out passed, out warned);
 
@@ -110,6 +113,33 @@ namespace X3D
 
             return passed;
         }
+
+        #region X3D Component Constraints
+
+        // TODO: come up with a better way to define constraints between nodes, and act on them
+
+        private void appearanceValidationConstraints(out bool passed, out bool warned)
+        {
+            List<SceneGraphNode> invalid;
+
+            passed = true;
+            warned = false;
+
+            if (typeof(X3DAppearanceNode).IsInstanceOfType(this))
+            {
+                if (!this.Children.Any(n => (typeof(X3DAppearanceChildNode).IsInstanceOfType(n))))
+                {
+                    warned = true;
+
+                    if (!alreadyWarned && debug) Console.WriteLine("[Warning] {0} doesnt contain any X3DAppearanceChildNode children", this.ToString());
+                }
+
+                invalid = this.Children.Where(n => !typeof(X3DAppearanceChildNode).IsInstanceOfType(n)).ToList();
+
+                processInvalidNodes(invalid, this.ToString(), out passed);
+            }
+        }
+
 
         private void shaderValidationConstraints(out bool passed, out bool warned)
         {
@@ -169,20 +199,9 @@ namespace X3D
 
                 processInvalidNodes(invalid, this.ToString(), out passed);
             }
-            else if (typeof(X3DAppearanceNode).IsInstanceOfType(this))
-            {
-                if (!this.Children.Any(n => (typeof(X3DAppearanceChildNode).IsInstanceOfType(n))))
-                {
-                    warned = true;
-
-                    if (!alreadyWarned && debug) Console.WriteLine("[Warning] {0} doesnt contain any X3DAppearanceChildNode children", this.ToString());
-                }
-
-                invalid = this.Children.Where(n => !typeof(X3DAppearanceChildNode).IsInstanceOfType(n)).ToList();
-
-                processInvalidNodes(invalid, this.ToString(), out passed);
-            }
         }
+        
+        #endregion
 
         /// <summary>
         /// Process any invalid nodes found, pruning out each from the Scene Graph as each is discovered.
