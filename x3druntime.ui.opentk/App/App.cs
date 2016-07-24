@@ -146,12 +146,19 @@ namespace x3druntime.ui.opentk
 
         private static string GetTextBoxText(IntPtr hTextBox)
         {
-            uint WM_GETTEXT = 0x000D;
-            int len = GetTextBoxTextLength(hTextBox);
-            if (len <= 0) return null;  // no text
-            StringBuilder sb = new StringBuilder(len + 1);
-            SendMessage3(hTextBox, WM_GETTEXT, len + 1, sb);
-            return sb.ToString();
+            try
+            {
+                uint WM_GETTEXT = 0x000D;
+                int len = GetTextBoxTextLength(hTextBox);
+                if (len <= 0) return null;  // no text
+                StringBuilder sb = new StringBuilder(len + 1);
+                SendMessage3(hTextBox, WM_GETTEXT, len + 1, sb);
+                return sb.ToString();
+            }
+            catch (Exception ex)
+            {
+                return string.Empty;
+            }
         }
 
         private static void EventCallback(IntPtr hWinEventHook, int iEvent, IntPtr hWnd, int idObject, int idChild, 
