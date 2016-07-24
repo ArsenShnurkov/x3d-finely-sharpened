@@ -128,7 +128,10 @@ namespace X3D.Engine
             Console.WriteLine("".PadLeft(node.Depth,'\t')+"<"+node.GetNodeName()+">");
 #endif
 #endif
-
+            if (!node.Validate())
+            {
+                Console.WriteLine("X3D Validation [failed]");
+            }
 
             if (!node.HasRendered)
             {
