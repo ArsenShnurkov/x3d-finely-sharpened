@@ -32,7 +32,6 @@
 				<field accessType='inputOnly' name='TessLevelInner' type='SFFloat' value="3"/>
 				<field accessType='inputOnly' name='TessLevelOuter' type='SFFloat' value="2" />
 				
-				
 				<ShaderPart type='VERTEX' url='data:text/plain
 #version 420 core 
 layout(location = 0) in vec3 position;
