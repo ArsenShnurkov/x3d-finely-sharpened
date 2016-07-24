@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile='Immersive' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
+	<head>
+		<meta content='ColorSwitcher.x3d' name='title'/>
+		<meta content='Gerallt Franke' name='translator'/>
+		<meta content='23 July 2016' name='modified'/>
+		<meta content='Translated from: http://doc.x3dom.org/tutorials/animationInteraction/switch/example.html' name='translated-from'/>
+		
+		<Script>
+			<![CDATA[
+				var times = 0;
+				var current_choice = 0;
+				var maxChoice = 2;
+				var interval;
+				
+				/**
+				 * Change the selected object of the swichting node
+				 * 
+				 * @param choiceId number: New node id to set (starting from 0, or -1 to hide all of them)
+				 */
+				function changeVisibleNode(choiceId)
+				{
+					var dirLight = document.getElementById("switcher");
+
+					dirLight.setAttribute("whichChoice", choiceId);
+					
+					//if(choiceId == -1)
+					//	document.getElementById("visNode").innerHTML = "No node visible!";
+					//else
+					//	document.getElementById("visNode").innerHTML = "Showing node # "+choiceId;
+				}
+				
+				function incrementChoice()
+				{
+					var dirLight = document.getElementById("switcher");
+
+					dirLight.setAttribute("whichChoice", current_choice);
+					
+					console.log("Switch node choice set to: " + dirLight.getAttribute("whichChoice"));
+					
+					if(current_choice +1 == maxChoice){
+						current_choice = 0;
+					}
+					else{
+						current_choice += 1;
+					}
+					
+					
+				}
+				
+				interval = window.setInterval(function(){
+					//console.log('switch every 2 secs');
+					times++;
+					
+					incrementChoice();
+					
+					//if(times == 4){
+						//clearInterval(interval);
+						//console.log('stopped timer');
+					//}
+				},2000);
+				
+			]]>
+		</Script>
+	</head>
+    <Scene>
+		<Viewpoint description='Sphere View' position='0 0 -3.4'/>
+	    <Switch id="switcher" whichChoice="0">
+				<Shape>
+					<Appearance>
+						<Material diffuseColor='1 0 0'></Material>
+						<ImageTexture  url='"spectrum.jpg"'/>
+					</Appearance>
+					<Sphere></Sphere>
+				</Shape>
+	        
+				<Shape>
+					<Appearance>
+						<Material diffuseColor='0 0 1'></Material>
+						<ImageTexture  url='"spectrum-alt.jpg"'/>
+					</Appearance>
+					<Sphere></Sphere>
+				</Shape>
+		</Switch>
+		
+		<Script>
+		<![CDATA[
+
+			function onRenderFrame(e) 
+			{
+				// This script is executed every frame
+				
+				// changeVisibleNode(0);
+				//incrementChoice();
+			}
+		]]>
+		</Script>
+	</Scene>
+</X3D>
