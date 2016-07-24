@@ -5,6 +5,10 @@ using System.Text;
 
 namespace X3D.Parser
 {
+    /// <summary>
+    /// Intended to be used as a method to validate the relationships of X3D scene graph nodes 
+    /// as they are rendered or inserted into the scene graph.
+    /// </summary>
     public class X3DRuntimeValidator
     {
         public static bool debug = true;
