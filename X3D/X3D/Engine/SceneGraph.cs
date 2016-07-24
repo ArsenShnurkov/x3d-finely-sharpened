@@ -6,6 +6,7 @@ using System.Xml.XPath;
 using System.Xml.Linq;
 using X3D.Core;
 using X3D.Parser;
+using System.Xml;
 
 namespace X3D.Engine
 {
@@ -91,6 +92,11 @@ namespace X3D.Engine
                 
                 if (child != null)
                 {
+                    IXmlLineInfo lineInfo;
+                    lineInfo = (IXmlLineInfo)nav;
+                    
+                    child.XMLDocumentLocation = new OpenTK.Vector2(lineInfo.LinePosition, lineInfo.LineNumber);
+
 #if DEBUG_SCENE_GRAPH
                     Console.ForegroundColor=ConsoleColor.White;
                     Console.WriteLine("".PadLeft(current_depth,'»')+nav.Name+" "+child.DEF+" "+current_depth.ToString()+"/"+node_id.ToString());
