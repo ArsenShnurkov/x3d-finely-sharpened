@@ -109,9 +109,9 @@ namespace x3druntime.ui.opentk
                     Vector3 direction = Vector3.Zero;
 
                     if (Math.Abs(dx) > Math.Abs(dy))
-                        direction.X = (dx > 0) ? 0.01f : -0.01f;
+                        direction.X = (dx > 0) ? 0.06f : -0.06f;
                     else
-                        direction.Y = (dy > 0) ? 0.01f : -0.01f;
+                        direction.Y = (dy > 0) ? 0.06f : -0.06f;
 
 
 

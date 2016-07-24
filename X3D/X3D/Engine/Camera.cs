@@ -230,9 +230,7 @@ namespace X3D.Engine
             // Apply Orientation
             Quaternion q = Orientation; //.Inverted();
             
-             worldView *= MathHelpers.CreateRotation(ref q)
-                //* MathHelpers.CreateRotation(ref _yaw)
-                ;
+            worldView *= MathHelpers.CreateRotation(ref q);
 
             return worldView;
         } 
@@ -256,7 +254,8 @@ namespace X3D.Engine
 
             if(NavigationInfo.NavigationType == NavigationType.Examine)
             {
-                outm = Matrix4.LookAt(Position, Position + DollyDirection, Up); // Test code put in quickly just for Mouse Navigation merged here
+                outm = Matrix4.LookAt(Position, Position + DollyDirection, Up); 
+                // Test code put in quickly just for Mouse Navigation merged here
             }
             else if(NavigationInfo.NavigationType == NavigationType.Walk || NavigationInfo.NavigationType == NavigationType.Fly)
             {
@@ -265,16 +264,9 @@ namespace X3D.Engine
                 outm = Matrix4.LookAt(PlayerPosition, Look, Up);
             }
 
-            //Quaternion q = Orientation.Inverted();
-            //Quaternion q2 = _yaw.Inverted();
-
             Quaternion q = Orientation;
 
-            Matrix = outm 
-                * MathHelpers.CreateRotation(ref q)
-               // * MathHelpers.CreateRotation(ref q)
-               //* MathHelpers.CreateRotation(ref q2)
-                ;
+            Matrix = outm * MathHelpers.CreateRotation(ref q);
 
 
             //Vector3 left = Up.Cross(Forward);
@@ -282,10 +274,6 @@ namespace X3D.Engine
 
             PrevPosition = Position;
 		}
-
-        //Quaternion _yaw = Quaternion.Identity;
-        
-
 
 
         public void ApplyRotation()
@@ -297,17 +285,11 @@ namespace X3D.Engine
 
             //MakeOrthogonal();
 
-            Vector3 pitch_axis = Vector3.Cross(direction, Up);
+            Vector3 pitch_axis = -1 * Vector3.Cross(direction, Up);
             //Vector3 roll_axis = Right + Up;
             //Vector3 roll_axis = Forward + Up;
 
             //pitch_axis = roll_axis;
-
-
-
-            //_yaw = Quaternion.FromAxisAngle(Up, camera_yaw);
-            //_yaw.Normalize();
-
 
 
 
@@ -317,14 +299,6 @@ namespace X3D.Engine
 
             //Orientation = pitch * yaw; /* * roll // */
             Orientation = pitch * yaw;
-
-            //Orientation = pitch  /* roll */ ;
-            //Orientation = yaw;
-
-            //Orientation = pitch;
-
-            //Orientation *= pitch;
-
 
 
             //Orientation = QuaternionExtensions.QuaternionFromEulerAnglesRad(camera_yaw, camera_pitch, 0f );
@@ -362,31 +336,6 @@ namespace X3D.Engine
             
 
             Orientation.Normalize();
-
-            //anotherRotation = Orientation;
-        }
-
-        public static Quaternion eulerToQuat(float roll, float pitch, float yaw)
-        {
-            float cr, cp, cy, sr, sp, sy, cpcy, spsy;
-            // calculate trig identities
-            cr = (float)Math.Cos(roll / 2);
-            cp = (float)Math.Cos(pitch / 2);
-            cy = (float)Math.Cos(yaw / 2);
-            sr = (float)Math.Sin(roll / 2);
-            sp = (float)Math.Sin(pitch / 2);
-            sy = (float)Math.Sin(yaw / 2);
-            cpcy = cp * cy;
-            spsy = sp * sy;
-
-            Quaternion quat = new Quaternion();
-
-            quat.W = cr * cpcy + sr * spsy;
-            quat.X = sr * cpcy - cr * spsy;
-            quat.Y = cr * sp * cy + sr * cp * sy;
-            quat.Z = cr * cp * sy - sr * sp * cy;
-
-            return quat;
         }
 
 
@@ -462,12 +411,12 @@ namespace X3D.Engine
 			Right.Normalize();
 		}
 
-		public void Yaw(float angle)
+		public void Yaw(float radians)
 		{
             //angle = MathHelpers.ClampCircular(angle, 0f, MathHelpers.PI2);
 
             // Up
-            Matrix4 m = Matrix4.CreateFromAxisAngle(Up, angle);
+            Matrix4 m = Matrix4.CreateFromAxisAngle(Up, radians);
 
 			// Transform vector by matrix, project result back into w = 1.0f
 			Right = MatrixExtensions.Transform(m,Right); // TransformVectorCoord
@@ -475,22 +424,22 @@ namespace X3D.Engine
 		}
 
         //private float pitchAngle = 0f, yawAngle = 0f;
-		public void Pitch(float angle)
+		public void Pitch(float radians)
 		{
             //angle = MathHelpers.ClampCircular(angle, 0f, MathHelpers.PI2);
 
             // Right
-            Matrix4 m = Matrix4.CreateFromAxisAngle(Right, angle);
+            Matrix4 m = Matrix4.CreateFromAxisAngle(Right, radians);
 
 			// Transform vector by matrix, project result back into w = 1.0f
 			Right = MatrixExtensions.Transform(m, Up); // TransformVectorCoord
 			Up = MatrixExtensions.Transform(m, Look);
 		}
 
-		public void Roll(float angle)
+		public void Roll(float radians)
 		{
             // Look, Right and Up
-            Matrix4 m = Matrix4.CreateFromAxisAngle(Look, angle);
+            Matrix4 m = Matrix4.CreateFromAxisAngle(Look, radians);
 
 			// Transform vector by matrix, project result back into w = 1.0f
 			Right = MatrixExtensions.Transform(m, Right); // TransformVectorCoord
@@ -565,7 +514,7 @@ namespace X3D.Engine
 			//playerMover.move(direction, frameTime);
 		}
 
-		public void ApplyPitch(float degrees) 
+		public void ApplyPitch(float radians) 
 		{
             //Check bounds with the max pitch rate so that we aren't moving too fast
             //if (degrees < -max_pitch)
@@ -588,16 +537,16 @@ namespace X3D.Engine
             //    camera_pitch += MathHelpers.PI2;
             //}
 
-            camera_pitch += degrees;
+            camera_pitch += radians;
 
             //degrees = MathHelpers.ClampCircular(degrees, 0.0f, MathHelpers.PI2);
 
             //camera_pitch = degrees;
 
-            Pitch(degrees);
+            Pitch(radians);
 		}
 
-		public void ApplyYaw(float degrees) 
+		public void ApplyYaw(float radians) 
 		{
             //Check bounds with the max heading rate so that we aren't moving too fast
             //if (degrees < -max_yaw)
@@ -628,7 +577,7 @@ namespace X3D.Engine
             //    camera_yaw += 360.0f;
             //}
 
-            camera_yaw += degrees ;
+            camera_yaw += radians;
 
             //degrees = MathHelpers.ClampCircular(degrees, 0.0f, MathHelpers.PI2);
 
@@ -636,7 +585,7 @@ namespace X3D.Engine
 
             
 
-            Yaw(degrees);
+            Yaw(radians);
 
 		}
 

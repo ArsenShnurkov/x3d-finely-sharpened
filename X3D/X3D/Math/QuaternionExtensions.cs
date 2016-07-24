@@ -33,6 +33,29 @@ public static class QuaternionExtensions
 		return v;
 	}
 
+    public static Quaternion EulerToQuat(float roll, float pitch, float yaw)
+    {
+        float cr, cp, cy, sr, sp, sy, cpcy, spsy;
+        // calculate trig identities
+        cr = (float)Math.Cos(roll / 2);
+        cp = (float)Math.Cos(pitch / 2);
+        cy = (float)Math.Cos(yaw / 2);
+        sr = (float)Math.Sin(roll / 2);
+        sp = (float)Math.Sin(pitch / 2);
+        sy = (float)Math.Sin(yaw / 2);
+        cpcy = cp * cy;
+        spsy = sp * sy;
+
+        Quaternion quat = new Quaternion();
+
+        quat.W = cr * cpcy + sr * spsy;
+        quat.X = sr * cpcy - cr * spsy;
+        quat.Y = cr * sp * cy + sr * cp * sy;
+        quat.Z = cr * cp * sy - sr * sp * cy;
+
+        return quat;
+    }
+
     //public static Quaternion angle2quat(float yaw, float pitch, float roll)
     //{
     //    Quaternion q = new Quaternion();
