@@ -16,6 +16,9 @@ This engine has had a massive overhaul, now we support shader and script program
 
 
 
+![alt text](screenshots/screenshot-env1.png "Example Scene demonstrating switching of sky backgrounds through Switch node and scripting")
+
+
 Example 1 - test of tessellated Icosahedron IndexedTriangleSet textured geometry
 Written in pure X3D using GLSL shader scripts, as well as ECMAScript for user interactivity.
 ![alt text](screenshots/screenshot1.png "X3D Runtime Viewer Example 1")
