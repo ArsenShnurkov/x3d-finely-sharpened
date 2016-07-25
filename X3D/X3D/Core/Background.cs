@@ -219,7 +219,7 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 Matrix4 mat4;
 
 #if APPLY_BACKDROP
-                mat4 = rc.cam.GetWorldOrientation();
+                mat4 = rc.cam.ViewMatrix;
                 _shapeOuter.CurrentShader.SetFieldValue("modelview", ref mat4);
 #endif
                 _shapeOuter.CurrentShader.SetFieldValue("scale", scaleSky);
