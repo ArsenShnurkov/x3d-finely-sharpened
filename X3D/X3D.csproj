@@ -102,7 +102,6 @@
     <Compile Include="X3D\Engine\Scripting\BrowserFunction.cs" />
     <Compile Include="X3D\Engine\Scripting\ScriptingEngine.cs" />
     <Compile Include="X3D\Engine\Scripting\WindowFunction.cs" />
-    <Compile Include="X3D\Engine\SimpleCamera.cs" />
     <Compile Include="X3D\Core\Shading\ComposedShader.cs" />
     <Compile Include="X3D\Core\Cone.cs" />
     <Compile Include="X3D\Core\Cylinder.cs" />
