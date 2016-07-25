@@ -13,11 +13,13 @@ namespace X3D
         {
             base.Render(rc);
 
+            rc.PushMatricies();
+
             rc.Translate(this.Translation);
             rc.Scale(this.Scale, this.ScaleOrientation);
             rc.Rotate(this.Rotation);
 
-            rc.PushMatricies();
+            
         }
 
         public override void PostRender(RenderingContext rc)

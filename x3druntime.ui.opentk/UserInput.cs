@@ -263,6 +263,17 @@ namespace x3druntime.ui.opentk
                     rotated = true;
                 }
 
+                if (Keyboard[Key.Number0])
+                {
+                    ActiveCamera.ApplyRoll(-0.1f);
+                    rotated = true;
+                }
+                if (Keyboard[Key.Number9])
+                {
+                    ActiveCamera.ApplyRoll(0.1f);
+                    rotated = true;
+                }
+
                 #endregion
             }
 

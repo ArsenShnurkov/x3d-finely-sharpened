@@ -112,17 +112,17 @@ namespace x3druntime.ui.opentk
                     Vector3 direction = Vector3.Zero;
 
                     if (Math.Abs(dx) > Math.Abs(dy))
-                        direction.X = (dx > 0) ? 0.06f : -0.06f;
+                        direction.X = (dx > 0) ? 0.1f : -0.1f;
                     else
-                        direction.Y = (dy > 0) ? 0.06f : -0.06f;
+                        direction.Y = (dy > 0) ? 0.1f : -0.1f;
 
 
 
                     float xAngle = (direction.X);
                     float yAngle = (direction.Y);
 
-                    //float xAngle = dx * 0.0001f;
-                    //float yAngle = dy * 0.0001f;
+                    //xAngle = dx * 0.001f;
+                    //yAngle = dy * 0.001f;
 
                     //xAngle = MathHelpers.ClampCircular(xAngle, 0.0f, MathHelpers.TwoPi);
                     //yAngle = MathHelpers.ClampCircular(yAngle, 0.0f, MathHelpers.TwoPi);
@@ -251,8 +251,11 @@ namespace x3druntime.ui.opentk
                 RenderingContext rc = new RenderingContext();
                 rc.View = View.CreateViewFromWindow(this.window);
                 rc.Time = e.Time;
-                rc.matricies.modelview = ActiveCamera.Matrix;
+                rc.matricies.worldview = ActiveCamera.ViewMatrix;
                 rc.matricies.projection = ActiveCamera.Projection;
+                
+                rc.matricies.modelview = Matrix4.Identity;
+                rc.matricies.orientation = Quaternion.Identity;
                 rc.cam = ActiveCamera;
                 rc.Keyboard = this.Keyboard;
 

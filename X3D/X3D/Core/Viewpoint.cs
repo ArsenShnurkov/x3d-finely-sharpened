@@ -47,8 +47,8 @@ namespace X3D
             }
             else
             {
-                rc.Translate(viewpoint.Position);
-                rc.Rotate(viewpoint.Orientation, viewpoint.CenterOfRotation);
+                rc.TranslateWorldview(viewpoint.Position);
+                rc.RotateWorldview(viewpoint.Orientation, viewpoint.CenterOfRotation);
             }
 
 

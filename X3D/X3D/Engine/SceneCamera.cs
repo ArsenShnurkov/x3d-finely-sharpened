@@ -36,7 +36,8 @@ namespace X3D.Engine
 		public Vector3 Position, Origin, PrevPosition;
 		public Vector3 Rotation, OriginRotation;
 		public Quaternion Orientation, PrevOrientation;
-		public Matrix4 Matrix;
+		public Matrix4 ViewMatrix;
+        public Matrix4 ViewMatrixNoRot;
         public Matrix4 Projection;
 
         public Quaternion orientation_quat;
@@ -68,7 +69,7 @@ namespace X3D.Engine
             velocity = Vector3.Zero;
             onGround = false;
 
-            Matrix = Matrix4.Identity;
+            ViewMatrix = Matrix4.Identity;
             Orientation = Quaternion.Identity;
             
             Rotation = Vector3.Zero;
@@ -86,14 +87,12 @@ namespace X3D.Engine
             
             Right = Vector3.UnitX;
 
-            //Forward = Vector3.UnitY; /*
-            Forward = Vector3.UnitZ; // */
+            Forward = Vector3.UnitZ;
 
             Direction = Forward;
 
             //Mouse Navigation parameters
-            //Up = Vector3.UnitZ; /*
-            Up = Vector3.UnitY;  // */
+            Up = Vector3.UnitY;
 
             //Position = Origin = movement = new Vector3(0, 0, -2); /*
             Position = Origin = movement = Vector3.Zero; // Q3 // */
@@ -233,7 +232,23 @@ namespace X3D.Engine
             worldView *= MathHelpers.CreateRotation(ref q);
 
             return worldView;
-        } 
+        }
+
+        public Matrix4 GetModelTranslation()
+        {
+            Matrix4 modelView;
+            Vector3 playerPosition;
+
+            playerPosition = new Vector3(Position.X + NavigationInfo.AvatarSize.X,
+                Position.Y + NavigationInfo.AvatarSize.Y,
+                Position.Z + this.playerHeight + NavigationInfo.AvatarSize.Z
+            );
+
+            Look = playerPosition + (Direction) * 1.0f;
+            modelView = Matrix4.LookAt(playerPosition, Look, Up);
+
+            return modelView;
+        }
 
         /// <summary>
         /// Applies transformations using camera configuration and camera vectors and assigns a new View Matrix.
@@ -261,13 +276,17 @@ namespace X3D.Engine
             {
                 Look = PlayerPosition + (Direction) * 1.0f;
 
+                //Look = QuaternionExtensions.Rotate(Orientation, Direction);
+
                 outm = Matrix4.LookAt(PlayerPosition, Look, Up);
             }
 
             Quaternion q = Orientation;
 
-            Matrix = outm * MathHelpers.CreateRotation(ref q);
-
+            //ViewMatrix = MathHelpers.CreateRotation(ref q) * outm; // orientation applies in local space
+            ViewMatrix = outm * MathHelpers.CreateRotation(ref q); // orientation applies in world space
+            ViewMatrixNoRot = outm; // always stick in front of current player (dont move with world)  
+            //ViewMatrix = outm;
 
             //Vector3 left = Up.Cross(Forward);
             //Matrix = MatrixExtensions.CreateTranslationMatrix(Right, Up, left, PlayerPosition);
@@ -279,13 +298,13 @@ namespace X3D.Engine
         public void ApplyRotation()
 		{
 
-
             Vector3 direction = (Look - Position);
             direction.Normalize();
 
             //MakeOrthogonal();
 
-            Vector3 pitch_axis = -1 * Vector3.Cross(direction, Up);
+
+            //Vector3 pitch_axis = -1 * Vector3.Cross(direction, Up);
             //Vector3 roll_axis = Right + Up;
             //Vector3 roll_axis = Forward + Up;
 
@@ -293,12 +312,12 @@ namespace X3D.Engine
 
 
 
-            pitch = Quaternion.FromAxisAngle(pitch_axis, camera_pitch  ); // radians
-            yaw = Quaternion.FromAxisAngle(Up, camera_yaw); // PiOver180
+            //pitch = Quaternion.FromAxisAngle(pitch_axis, camera_pitch  ); // radians
+            //yaw = Quaternion.FromAxisAngle(Up, camera_yaw); // PiOver180
             //roll = Quaternion.FromAxisAngle(roll_axis, camera_pitch); // roll_angle
 
-            //Orientation = pitch * yaw; /* * roll // */
-            Orientation = pitch * yaw;
+            //Orientation = pitch * roll * yaw ;
+            //Orientation = pitch * yaw;
 
 
             //Orientation = QuaternionExtensions.QuaternionFromEulerAnglesRad(camera_yaw, camera_pitch, 0f );
@@ -322,10 +341,10 @@ namespace X3D.Engine
             //Orientation = (new Quaternion(left, Amount.X)) * Orientation;
             //Orientation = (new Quaternion(forward, Amount.Z)) * Orientation;
 
-            //Orientation = eulerToQuat(0f, camera_pitch, camera_yaw);
+            Orientation = QuaternionExtensions.EulerToQuat(-camera_pitch, -camera_yaw, 0f);
 
             //Orientation.Normalize();
-            
+
 
 
 
@@ -333,7 +352,15 @@ namespace X3D.Engine
 
             // Update Direction
             //this.Direction = QuaternionExtensions.Rotate(Orientation, Vector3.UnitZ);
-            
+
+
+            //Look = QuaternionExtensions.Rotate(Orientation, Vector3.UnitZ);
+            //Vector3 forward = new Vector3(lookat.X, 0, lookat.Z).Normalized();
+            //Vector3 up = Vector3.UnitY;
+            //Vector3 left = up.Cross(forward);
+
+            //this.Direction = lookat;
+
 
             Orientation.Normalize();
         }
@@ -460,14 +487,25 @@ namespace X3D.Engine
 
 		public void Strafe(float magnitude)
 		{
-			Vector3 Right = Vector3.UnitX;
-			Position += Right * magnitude;
-		}
+            Vector3 lookat = QuaternionExtensions.Rotate(Orientation, Vector3.UnitZ);
+            Vector3 forward = new Vector3(lookat.X, 0, lookat.Z).Normalized();
+            Vector3 up = Vector3.UnitY;
+            Vector3 left = up.Cross(forward);
 
-		public void Fly(float units)
+            Position += left * magnitude;
+
+
+            //Vector3 Right = Vector3.UnitX;
+            //Position += Right * magnitude;
+        }
+
+        public void Fly(float units)
 		{
-			Position += Up * units;
-		}
+            Vector3 up = Vector3.UnitY;
+            Position += up * units;
+
+            //Position += Up * units;
+        }
 
         #region Mouse Navigation
 
@@ -591,10 +629,10 @@ namespace X3D.Engine
 
 		}
 
-        public void ApplyRoll(float degrees)
+        public void ApplyRoll(float radians)
         {
-            camera_roll = degrees;
-            Roll(degrees);
+            camera_roll += radians;
+            Roll(radians);
         }
 
 		public void Reset()

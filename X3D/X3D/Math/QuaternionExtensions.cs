@@ -53,6 +53,10 @@ public static class QuaternionExtensions
         quat.Y = cr * sp * cy + sr * cp * sy;
         quat.Z = cr * cp * sy - sr * sp * cy;
 
+        quat.Normalize();
+        quat.Conjugate();
+        quat.Normalize();
+
         return quat;
     }
 

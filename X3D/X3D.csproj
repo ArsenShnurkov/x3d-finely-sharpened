@@ -130,6 +130,7 @@
     <Compile Include="X3D\Math\QuaternionExtensions.cs" />
     <Compile Include="X3D\Math\VectorExtensions.cs" />
     <Compile Include="X3D\Parser\X3DRuntimeValidator.cs" />
+    <Compile Include="X3D\Parser\X3DSceneGraphXMLSerializer.cs" />
     <Compile Include="X3D\Parser\X3DTypeConverters.cs" />
     <Compile Include="X3D\Math\MathHelpers.cs" />
     <Compile Include="X3D\Math\Matricies.cs" />

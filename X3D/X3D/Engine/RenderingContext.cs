@@ -27,6 +27,17 @@ namespace X3D
 
         #region Public Methods
 
+        public void TranslateWorldview(Vector3 translation)
+        {
+            matricies.worldview  *= Matrix4.CreateTranslation(translation);
+            //matricies.modelview *= Matrix4.CreateTranslation(translation);
+        }
+
+        public void RotateWorldview(Vector4 rotation, Vector3 centerOfRotation)
+        {
+
+        }
+
         public void Translate(Vector3 translation)
         {
             matricies.modelview *= Matrix4.CreateTranslation(translation);
