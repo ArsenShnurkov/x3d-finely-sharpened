@@ -11,7 +11,7 @@ namespace X3D
     public class RenderingContext
     {
         public Matricies matricies = new Matricies();
-        public TestCamera cam;
+        public SceneCamera cam;
         public double Time;
 
         /// <summary>

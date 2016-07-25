@@ -95,7 +95,7 @@
     <Compile Include="X3D\Core\Text.cs" />
     <Compile Include="X3D\Core\TextureBackground.cs" />
     <Compile Include="X3D\Core\ViewpointGroup.cs" />
-    <Compile Include="X3D\Engine\Camera.cs" />
+    <Compile Include="X3D\Engine\SceneCamera.cs" />
     <Compile Include="X3D\Engine\Consts.cs" />
     <Compile Include="X3D\Engine\Crosshair.cs" />
     <Compile Include="X3D\Engine\SceneEntity.cs" />

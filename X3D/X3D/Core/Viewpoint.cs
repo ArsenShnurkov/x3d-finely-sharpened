@@ -54,7 +54,7 @@ namespace X3D
 
         }
 
-        public static void Initilize(TestCamera activeCamera, View viewport)
+        public static void Initilize(SceneCamera activeCamera, View viewport)
         {
             // Set up the Viewport and projection matrix
             if(InitialViewpoint == null)

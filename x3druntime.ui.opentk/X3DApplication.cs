@@ -37,7 +37,7 @@ namespace x3druntime.ui.opentk
         public string BaseMIME { get; set; }
 
         private static SceneManager scene;
-        private TestCamera ActiveCamera; //private Camera ActiveCamera;
+        private SceneCamera ActiveCamera; //private Camera ActiveCamera;
         private bool ispanning, iszooming;
         private float mouseScale = 0.01f;
         private bool mouseDragging = false;
@@ -59,7 +59,7 @@ namespace x3druntime.ui.opentk
 
 
             //ActiveCamera = new Camera(this.window.Width, this.window.Height);
-            ActiveCamera = new TestCamera(this.window.Width, this.window.Height);
+            ActiveCamera = new SceneCamera(this.window.Width, this.window.Height);
 
             this.Mouse.WheelChanged += Mouse_WheelChanged;
             this.window.MouseLeave += Window_MouseLeave;
