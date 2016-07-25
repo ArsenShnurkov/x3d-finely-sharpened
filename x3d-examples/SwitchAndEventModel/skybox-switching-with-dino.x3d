@@ -13,7 +13,7 @@
 		<Script>
 			<![CDATA[
 				var choice = 0;
-				var maxChoice = 7;
+				var maxChoice = 8;
 				var interval;
 				
 				
@@ -59,6 +59,13 @@
 		
 		
  		<Switch id="switcher" whichChoice="0">
+		
+			<Background backUrl='"mp_midnight\midnight-silence_bk.png"' 
+				bottomUrl='"mp_midnight\midnight-silence_dn.png"' 
+				frontUrl='"mp_midnight\midnight-silence_ft.png"' 
+				leftUrl='"mp_midnight\midnight-silence_lf.png"' 
+				rightUrl='"mp_midnight\midnight-silence_rt.png"' 
+				topUrl='"mp_midnight\midnight-silence_up.png"' />
 		
 			<Background backUrl='"sb_strato\stratosphere_bk.png"' 
 				bottomUrl='"sb_strato\stratosphere_dn.png"' 
