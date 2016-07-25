@@ -129,7 +129,8 @@ namespace X3D
 
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, handles);
-            Buffering.ApplyBufferPointers(parentShape.uniforms);
+            Buffering.ApplyBufferPointers(parentShape.CurrentShader);
+            //Buffering.ApplyBufferPointers(parentShape.uniforms);
             GL.DrawArrays(PrimitiveType.TriangleFan, 0, verts);
             
 

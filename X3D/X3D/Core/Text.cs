@@ -213,7 +213,8 @@ namespace X3D
                     //parentShape.SetSampler(0);
                     GL.BindTexture(TextureTarget.Texture2D, stringTexture.Value.Index);
                     GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-                    Buffering.ApplyBufferPointers(parentShape.uniforms);
+                    Buffering.ApplyBufferPointers(parentShape.CurrentShader);
+                    //Buffering.ApplyBufferPointers(parentShape.uniforms);
                     GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies);
 
 

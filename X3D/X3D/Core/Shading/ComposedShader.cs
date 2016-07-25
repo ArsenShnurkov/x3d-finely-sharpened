@@ -8,11 +8,22 @@ using X3D.Core;
 using X3D.Core;
 using OpenTK;
 using X3D.Parser;
+using X3D.Core.Shading.DefaultUniforms;
 
 namespace X3D
 {
+    public enum VertexAttribType
+    {
+        Position,
+        Normal,
+        TextureCoord,
+        Color
+    }
+
     public partial class ComposedShader
     {
+        private ShaderUniformsPNCT uniforms = new ShaderUniformsPNCT();
+
         [XmlIgnore]
         public bool HasErrors = false;
 
@@ -65,6 +76,64 @@ namespace X3D
             if(!HasErrors) GL.UseProgram(this.ShaderHandle);
             return this;
         }
+
+        public void Unbind()
+        {
+            if (!HasErrors) GL.UseProgram(0);
+        }
+
+        public void SetSampler(int sampler)
+        {
+            GL.Uniform1(uniforms.sampler, sampler);
+        }
+
+        #region Buffer Data Pointer Helpers
+
+        public void SetPointer(string name, VertexAttribType type)
+        {
+            //int uniformLoc = GL.GetUniformLocation(ShaderHandle, name); // can only get pointer right after Linking
+            switch (type)
+            {
+                case VertexAttribType.Position:
+                    if(uniforms.a_position != -1)
+                    {
+                        GL.EnableVertexAttribArray(uniforms.a_position);
+                        GL.VertexAttribPointer(uniforms.a_position, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)0);
+                    }
+                    break;
+                case VertexAttribType.TextureCoord:
+                    if (uniforms.a_texcoord != -1)
+                    {
+                        GL.EnableVertexAttribArray(uniforms.a_texcoord);
+                        GL.VertexAttribPointer(uniforms.a_texcoord, 2, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes + Vector4.SizeInBytes));
+                    }
+                    break;
+                case VertexAttribType.Normal:
+                    if (uniforms.a_normal != -1)
+                    {
+                        GL.EnableVertexAttribArray(uniforms.a_normal);
+                        GL.VertexAttribPointer(uniforms.a_normal, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes));
+                    }
+                    break;
+                case VertexAttribType.Color:
+                    if (uniforms.a_color != -1)
+                    {
+                        GL.EnableVertexAttribArray(uniforms.a_color);
+                        GL.VertexAttribPointer(uniforms.a_color, 4, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes));
+                    }
+                    break;
+            }
+        }
+
+        public void BindDefaultPointers()
+        {
+            uniforms.a_position = GL.GetAttribLocation(ShaderHandle, "position");
+            uniforms.a_normal = GL.GetAttribLocation(ShaderHandle, "normal");
+            uniforms.a_color = GL.GetAttribLocation(ShaderHandle, "color");
+            uniforms.a_texcoord = GL.GetAttribLocation(ShaderHandle, "texcoord");
+        }
+
+        #endregion
 
         #region Field Setter Helpers
 
@@ -246,6 +315,10 @@ namespace X3D
                     this.Linked = true;
                     
                     Console.WriteLine("ComposedShader [linked]"); //TODO: check for more link errors
+
+                    GL.UseProgram(ShaderHandle);
+                    BindDefaultPointers();
+                    GL.UseProgram(0);
                 }
             }
             else

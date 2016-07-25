@@ -16,6 +16,7 @@ using X3D.Engine;
 using OpenTK.Input;
 using X3D;
 using System.Reflection;
+using System.Drawing;
 
 /* Need OpenTK.Compatibility.dll for GLu */
 
@@ -42,6 +43,8 @@ namespace x3druntime.ui.opentk
         private bool mouseDragging = false;
         private bool? lockMouseCursor = null;
         private float dx = 0, dy = 0;
+        private Crosshair _crosshair;
+        private bool showCrosshair = true;
 
         /// <param name="window">
         /// A window or display which is used to render the X3D application
@@ -167,7 +170,6 @@ namespace x3druntime.ui.opentk
 
             // INITILISE SCENE
 
-            
 
             GL.Disable(EnableCap.Normalize);
             // shade model upgraded from fixed function to shader side
@@ -196,6 +198,15 @@ namespace x3druntime.ui.opentk
                 scene = SceneManager.fromURL(url, mime_type);
 
                 Viewpoint.Initilize(ActiveCamera, view);
+
+                if (showCrosshair)
+                {
+                    //Set crosshair
+                    _crosshair = new Crosshair();
+                    _crosshair.Load();
+                }
+                
+
             }
             else
             {
@@ -247,8 +258,18 @@ namespace x3druntime.ui.opentk
 
                 // Apply the current Viewpoint
                 Viewpoint.Apply(rc, Viewpoint.CurrentViewpoint);
-                
+
+
+
                 Renderer.Draw(scene.SceneGraph, rc);
+
+                if (showCrosshair)
+                {
+                    rc.PushMatricies();
+                    this._crosshair.Render(rc);
+                    rc.PopMatricies();
+                }
+                
             }
             else
             {

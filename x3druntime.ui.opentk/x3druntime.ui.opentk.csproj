@@ -161,7 +161,10 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\crosshair.png" />
+    <Content Include="Resources\ErrorTexture.png" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="Resources\fullscreen.png" />
   </ItemGroup>

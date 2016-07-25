@@ -9,11 +9,29 @@ using X3D;
 using System.Collections.Generic;
 using System.Linq;
 using X3D.Engine;
+using System.Runtime.InteropServices;
 
 namespace x3druntime.ui.opentk
 {
     public partial class X3DApplication
     {
+        [DllImport("user32.dll")]
+        private static extern int ShowCursor(bool bShow);
+        private static bool systemCursorVisible = true;
+
+        public void ToggleCursor()
+        {
+            if (systemCursorVisible)
+            {
+                ShowCursor(false);
+            }
+            else
+            {
+                ShowCursor(true);
+            }
+            systemCursorVisible = !systemCursorVisible;
+        }
+
 
         public void ShowSupportMatrix()
         {

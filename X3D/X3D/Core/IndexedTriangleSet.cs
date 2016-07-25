@@ -173,7 +173,8 @@ namespace X3D
 
                                 GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
                                 GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-                                Buffering.ApplyBufferPointers(shape.uniforms);
+                                Buffering.ApplyBufferPointers(shape.CurrentShader);
+                                //Buffering.ApplyBufferPointers(shape.uniforms);
                                 GL.DrawArrays(PrimitiveType.Patches, 0, verticies_num);
                             }
 
@@ -191,7 +192,8 @@ namespace X3D
                                 shape.CurrentShader.SetFieldValue("scale", scale);
 
                                 GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-                                Buffering.ApplyBufferPointers(shape.uniforms);
+                                Buffering.ApplyBufferPointers(shape.CurrentShader);
+                                //Buffering.ApplyBufferPointers(shape.uniforms);
                                 GL.DrawArrays(PrimitiveType.Triangles, 0, verticies_num);
                             }
 

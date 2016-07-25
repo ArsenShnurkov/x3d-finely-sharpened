@@ -453,7 +453,9 @@ namespace X3D.Engine
 
 		public void Walk(float magnitude)
 		{
-			Position += Look * magnitude;
+            Vector3 lookat = QuaternionExtensions.Rotate(Orientation, Vector3.UnitZ);
+
+            Position += lookat * magnitude;
 		}
 
 		public void Strafe(float magnitude)

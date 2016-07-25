@@ -73,6 +73,10 @@ namespace x3druntime.ui.opentk
                     {
                         window.WindowState = WindowState.Normal;
                     }
+
+                    lockMouseCursor = !lockMouseCursor;
+                    ToggleCursor();
+
                     break;
 
                 case Key.V:
@@ -171,11 +175,11 @@ namespace x3druntime.ui.opentk
             {
                 if (Keyboard[Key.T])
                 {
-                    ActiveCamera.Fly(0.1f);
+                    ActiveCamera.Fly(playerDirectionMagnitude);
                 }
                 if (Keyboard[Key.G])
                 {
-                    ActiveCamera.Fly(-0.1f);
+                    ActiveCamera.Fly(-playerDirectionMagnitude);
                 }
 
                 if (Keyboard[Key.W])

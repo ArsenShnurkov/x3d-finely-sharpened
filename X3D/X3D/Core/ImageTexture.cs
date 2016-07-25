@@ -24,7 +24,22 @@ namespace X3D
     {
         #region Public Static Methods
 
-        public static ImageTexture CreateTextureFromImage(Bitmap image, Rectangle boundingbox)
+        public static ImageTexture CreateTextureFromImage(Bitmap image, RectangleF boundingbox, bool adjustSize = false)
+        {
+            Rectangle bounds = new Rectangle()
+            {
+                X = (int)boundingbox.X,
+                Y = (int)boundingbox.Y,
+                Height = (int)boundingbox.Height,
+                Width = (int)boundingbox.Width,
+                Size = boundingbox.Size.ToSize(),
+                Location = new Point((int)boundingbox.Location.X, (int)boundingbox.Location.Y)
+            };
+            
+            return CreateTextureFromImage(image, bounds, adjustSize);
+        }
+
+        public static ImageTexture CreateTextureFromImage(Bitmap image, Rectangle boundingbox, bool adjustSize = false)
         {
             ImageTexture texture = new ImageTexture();
 
@@ -32,7 +47,56 @@ namespace X3D
             texture.Width = boundingbox.Width;
             texture.Height = boundingbox.Height;
 
-            //texture.Index = GL.GenTexture();
+
+            if (adjustSize)
+            {
+                /*	Get the maximum texture size supported by OpenGL: */
+                int[] textureMaxSize = new int[] { 0 };
+                GL.GetInteger(GetPName.MaxTextureSize, textureMaxSize);
+                //gl.GetInteger(OpenGL.GL_MAX_TEXTURE_SIZE,textureMaxSize);
+
+                /*	Find the target width and height sizes, which is just the highest
+                 *	posible power of two that'll fit into the image. */
+                int glTexWidth = textureMaxSize[0];
+                int glTexHeight = textureMaxSize[0];
+                for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+                {
+                    if (image.Width < size)
+                    {
+                        glTexWidth = size / 2;
+                        break;
+                    }
+                    if (image.Width == size)
+                        glTexWidth = size;
+
+                }
+
+                for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+                {
+                    if (image.Height < size)
+                    {
+                        glTexHeight = size / 2;
+                        break;
+                    }
+                    if (image.Height == size)
+                        glTexHeight = size;
+                }
+
+                if (image.Width != glTexWidth || image.Height != glTexHeight)
+                {
+                    /* Scale the image according to OpenGL requirements */
+                    Image newImage = image.GetThumbnailImage(glTexWidth, glTexHeight, null, IntPtr.Zero);
+
+                    image.Dispose();
+                    image = (Bitmap)newImage;
+
+                    boundingbox.Width = glTexWidth;
+                    boundingbox.Height = glTexHeight;
+                }
+            }
+
+
+            texture.Index = GL.GenTexture();
             //GL.BindTexture(TextureTarget.Texture2D, texture.Index);
             //GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)All.Linear);
             //GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)All.Linear);
@@ -46,10 +110,10 @@ namespace X3D
             texture.image = image;
 
             // Upload done later by system automatically
-            //texture.LoadTexture();
+            texture.LoadTexture();
 
             // Append to system texture assets
-            texture._textureID = SceneManager.CreateTexture(texture);
+            //texture._textureID = SceneManager.CreateTexture(texture);
 
             return texture;
         }
@@ -89,6 +153,12 @@ namespace X3D
 
             foreach (string url in urls)
             {
+                if (Path.GetExtension(url).Contains("tga"))
+                {
+                    Console.WriteLine("ImageTexture of type '{1}' can not be loaded using C# Bitmap. {0} \nError assett type not supported yet. Consider converting to jpg or png formats to continue",url, Path.GetExtension(url));
+                    continue;
+                }
+
                 if (SceneManager.FetchSingle(url, out resource))
                 {
                     if (resource is Stream)
@@ -222,12 +292,13 @@ namespace X3D
             if (!string.IsNullOrEmpty(url) && _textureID == -1)
             {
 
-                this._textureID = SceneManager.CreateTexture(this);
+                //this._textureID = SceneManager.CreateTexture(this);
+                this.Index = GL.GenTexture();
 
                 if (GetTextureImageFromMFString(url) == true)
                 {
                     // Upload done later by system automatically
-                    //this.LoadTexture();
+                    this.LoadTexture();
                 }
             }
         }

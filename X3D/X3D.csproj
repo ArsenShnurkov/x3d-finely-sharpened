@@ -88,6 +88,7 @@
     <Compile Include="X3D\Core\Background.cs" />
     <Compile Include="X3D\Core\Box.cs" />
     <Compile Include="X3D\Core\NavigationInfo.cs" />
+    <Compile Include="X3D\Core\Shading\BuiltIn\CrosshairShader.cs" />
     <Compile Include="X3D\Core\Shading\BuiltIn\ColorDiscardShader.cs" />
     <Compile Include="X3D\Core\Shading\BuiltIn\CubeMapBackgroundShader.cs" />
     <Compile Include="X3D\Core\Switch.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="X3D\Core\ViewpointGroup.cs" />
     <Compile Include="X3D\Engine\Camera.cs" />
     <Compile Include="X3D\Engine\Consts.cs" />
+    <Compile Include="X3D\Engine\Crosshair.cs" />
     <Compile Include="X3D\Engine\SceneEntity.cs" />
     <Compile Include="X3D\Engine\Scripting\BrowserFunction.cs" />
     <Compile Include="X3D\Engine\Scripting\ScriptingEngine.cs" />
@@ -169,11 +171,14 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\crosshair.png" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -191,7 +196,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_IncrementBeforeBuild="True" BuildVersion_UseGlobalSettings="False" BuildVersion_AssemblyInfoFilename="" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_AssemblyInfoFilename="" BuildVersion_UseGlobalSettings="False" BuildVersion_IncrementBeforeBuild="True" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -46,7 +46,8 @@ namespace X3D
         {
             GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
-            Buffering.ApplyBufferPointers(parentShape.uniforms);
+            Buffering.ApplyBufferPointers(parentShape.CurrentShader);
+            //Buffering.ApplyBufferPointers(parentShape.uniforms);
             GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
         }
 

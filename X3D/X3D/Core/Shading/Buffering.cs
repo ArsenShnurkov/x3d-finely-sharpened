@@ -24,8 +24,22 @@ namespace X3D.Core.Shading
     public class Buffering
     {
         /// <summary>
+        /// Precondition: Apply Buffer Pointers right before GL.DrawArrays or GL.DrawElements, 
+        /// requires default pointers to be bound in the shader after linking.
+        /// </summary>
+        public static void ApplyBufferPointers(ComposedShader shader)
+        {
+            // Set pointers to shader vertex attributes 
+            shader.SetPointer("position", VertexAttribType.Position); // vertex position
+            shader.SetPointer("normal", VertexAttribType.Normal); // vertex normal
+            shader.SetPointer("color", VertexAttribType.Color); // vertex color
+            shader.SetPointer("texcoord", VertexAttribType.TextureCoord); // vertex texCoordinate
+        }
+
+        /// <summary>d
         /// Precondition: Apply Buffer Pointers right before GL.DrawArrays or GL.DrawElements
         /// </summary>
+        [ObsoleteAttribute("use ApplyBufferPointers(ComposedShader) instead")]
         public static void ApplyBufferPointers(ShaderUniformsPNCT uniforms)
         {
             if (uniforms.a_position != -1)

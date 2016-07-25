@@ -231,7 +231,8 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 GL.DepthMask(false);
 #endif
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved_outer);
-                Buffering.ApplyBufferPointers(_shapeOuter.uniforms);
+                Buffering.ApplyBufferPointers(_shapeOuter.CurrentShader);
+                //Buffering.ApplyBufferPointers(_shapeOuter.uniforms);
                 GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticiesOuter);
 
 #if APPLY_BACKDROP
@@ -259,7 +260,8 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 GL.DepthMask(false);
 #endif
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved_inner);
-                Buffering.ApplyBufferPointers(_shapeInner.uniforms);
+                Buffering.ApplyBufferPointers(_shapeInner.CurrentShader);
+                //Buffering.ApplyBufferPointers(_shapeInner.uniforms);
                 GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticiesInner);
 
 #if APPLY_BACKDROP
@@ -302,7 +304,8 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.TextureCubeMap, tex_cube);
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved_cube);
-                Buffering.ApplyBufferPointers(_shapeInnerCube.uniforms);
+                Buffering.ApplyBufferPointers(_shapeInnerCube.CurrentShader);
+                //Buffering.ApplyBufferPointers(_shapeInnerCube.uniforms);
                 GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticiesCube);
 
 #if APPLY_BACKDROP

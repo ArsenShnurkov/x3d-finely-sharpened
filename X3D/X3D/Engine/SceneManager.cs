@@ -732,16 +732,16 @@ namespace X3D.Engine
             Renderer.Scene(scene, rc);
         }
 
-        public static int CreateTexture(ImageTexture indexableTexture)
-        {
-            int i;
+        //public static int CreateTexture(ImageTexture indexableTexture)
+        //{
+        //    int i;
 
-            i = _texturesToBuffer.Count;
+        //    i = _texturesToBuffer.Count;
             
-            _texturesToBuffer.Enqueue(indexableTexture);
+        //    _texturesToBuffer.Enqueue(indexableTexture);
 
-            return i;
-        }
+        //    return i;
+        //}
 
         #endregion
     }

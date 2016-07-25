@@ -44,7 +44,7 @@ namespace X3D.Engine
 
             if (X3D.RuntimePresentationEnabled)
             {
-                BufferSystemTextures();
+                //BufferSystemTextures();
 
                 draw_scenegraph_dfs_iterative(sg.GetRoot(), rc);
             }
@@ -186,28 +186,28 @@ namespace X3D.Engine
 
         protected static void BufferSystemTextures()
         {
-            if (SceneManager._texturesToBuffer.Count > 0)
-            {
-                int i = 0;
-                ImageTexture t;
-                SceneManager._texturesBuffered = new int[SceneManager._texturesToBuffer.Count];
+            //if (SceneManager._texturesToBuffer.Count > 0)
+            //{
+            //    int i = 0;
+            //    ImageTexture t;
+            //    SceneManager._texturesBuffered = new int[SceneManager._texturesToBuffer.Count];
 
-                GL.GenTextures(SceneManager._texturesToBuffer.Count, SceneManager._texturesBuffered);
+            //    GL.GenTextures(SceneManager._texturesToBuffer.Count, SceneManager._texturesBuffered);
 
-                while(SceneManager._texturesToBuffer.Count > 0)
-                {
-                    t = SceneManager._texturesToBuffer.Dequeue();
+            //    while(SceneManager._texturesToBuffer.Count > 0)
+            //    {
+            //        t = SceneManager._texturesToBuffer.Dequeue();
 
-                    t.Index = SceneManager._texturesBuffered[i];
+            //        t.Index = SceneManager._texturesBuffered[i];
 
-                    if (t.IsLoaded == false)
-                        t.LoadTexture();
+            //        if (t.IsLoaded == false)
+            //            t.LoadTexture();
 
-                    i++;
-                }
+            //        i++;
+            //    }
 
-                Console.WriteLine("Allocated {0} system textures", i);
-            }
+            //    Console.WriteLine("Allocated {0} system textures", i);
+            //}
         }
 
         #endregion

@@ -108,10 +108,11 @@ namespace X3D
         {
             if (CurrentShader.HasErrors) return;
 
-            uniforms.a_position = GL.GetAttribLocation(CurrentShader.ShaderHandle, "position");
-            uniforms.a_normal = GL.GetAttribLocation(CurrentShader.ShaderHandle, "normal");
-            uniforms.a_color = GL.GetAttribLocation(CurrentShader.ShaderHandle, "color");
-            uniforms.a_texcoord = GL.GetAttribLocation(CurrentShader.ShaderHandle, "texcoord");
+            //uniforms.a_position = GL.GetAttribLocation(CurrentShader.ShaderHandle, "position");
+            //uniforms.a_normal = GL.GetAttribLocation(CurrentShader.ShaderHandle, "normal");
+            //uniforms.a_color = GL.GetAttribLocation(CurrentShader.ShaderHandle, "color");
+            //uniforms.a_texcoord = GL.GetAttribLocation(CurrentShader.ShaderHandle, "texcoord");
+
             uniforms.a_coloringEnabled = GL.GetUniformLocation(CurrentShader.ShaderHandle, "coloringEnabled");
             uniforms.a_texturingEnabled = GL.GetUniformLocation(CurrentShader.ShaderHandle, "texturingEnabled");
             uniforms.sampler = GL.GetUniformLocation(CurrentShader.ShaderHandle, "_MainTex");
@@ -129,10 +130,10 @@ namespace X3D
         //    Materials.transparency = GL.GetUniformLocation(CurrentShader.ShaderHandle, "transparency");
         //}
 
-        public void SetSampler(int sampler)
-        {
-            GL.Uniform1(uniforms.sampler, sampler);
-        }
+        //public void SetSampler(int sampler)
+        //{
+        //    GL.Uniform1(uniforms.sampler, sampler);
+        //}
 
         public override void Load()
         {

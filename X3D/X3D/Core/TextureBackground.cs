@@ -241,7 +241,8 @@ namespace X3D
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.TextureCubeMap, tex_cube);
             GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
-            Buffering.ApplyBufferPointers(_shape.uniforms);
+            Buffering.ApplyBufferPointers(_shape.CurrentShader);
+            //Buffering.ApplyBufferPointers(_shape.uniforms);
             GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
 #if APPLY_BACKDROP
             GL.DepthMask(true);
