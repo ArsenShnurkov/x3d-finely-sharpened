@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 using X3D.Parser;
+using System.Xml.Schema;
 
 namespace X3D
 {
@@ -332,5 +334,4 @@ namespace X3D
 
         #endregion
     }
-
 }
