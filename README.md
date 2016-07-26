@@ -77,6 +77,7 @@ Task list
 ```
 
 COMPLETED: URL/URI/filesys/CDATA/data:text/plain assett & resource fetching (partial URN support)
+COMPLETED: X3D XML Scene Export (b3ec3a7)
 MOSTLY: Viewpoint and ViewpointGroup implementation and decent-scalable Camera model. (Support for Fly, and Examine)
 PARTLY: Background, MultiTexturing, CubeMapping, ..
 PARTLY: X3D Validation and invalid node pruning (Applied on the fly in the Runtime)
