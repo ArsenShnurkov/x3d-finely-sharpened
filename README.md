@@ -1,5 +1,6 @@
-# x3d-finely-sharpened (alpha)
+# x3d-finely-sharpened
 X3D browser/engine written in C#
+Featuring the latest bleeding edge developmental work on the X3D C# language binding. 
 
 
 Intro
