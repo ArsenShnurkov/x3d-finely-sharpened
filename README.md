@@ -1,4 +1,4 @@
-# x3d-finely-sharpened
+# x3d-finely-sharpened (alpha)
 X3D browser/engine written in C#
 
 
