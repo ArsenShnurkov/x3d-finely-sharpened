@@ -14,7 +14,7 @@ With software like Blender as well as libraries like OpenTK, X3D as a markup for
 A copy of the OpenTK library ships along as the engine uses it at the moment as a point of reference to OpenGL. Currently we're a bit low on documentation but I have included a few X3D examples pulled from random sources on the www.
 ```
 
-This engine has had a massive overhaul, now we support shader and script programming - we are working on implementing both the Interchange and Interactive profiles... Some important components such as the Route Graph are absent, right now there are a small number of issues on the backlog currently being investigated so stay tuned!
+This engine has had a massive overhaul, now we support shader and script programming - we are working on implementing both the Interchange and Interactive profiles... Some important components such as the Route Graph and Prototyping are absent, right now there are a small number of issues on the backlog currently being investigated so stay tuned!
 
 
 
