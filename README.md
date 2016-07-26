@@ -75,7 +75,7 @@ Task list
 ```
 
 COMPLETED: URL/URI/filesys/CDATA/data:text/plain assett & resource fetching (partial URN support)
-PARTLY: Viewpoint and ViewpointGroup implementation and decent-scalable Camera model
+MOSTLY: Viewpoint and ViewpointGroup implementation and decent-scalable Camera model. (Support for Fly, and Examine)
 PARTLY: Background, MultiTexturing, CubeMapping, ..
 PARTLY: X3D Validation and invalid node pruning (Applied on the fly in the Runtime)
 MOSTLY: Scripting using JavaScript (JIT compiled using the V8 Engine)
