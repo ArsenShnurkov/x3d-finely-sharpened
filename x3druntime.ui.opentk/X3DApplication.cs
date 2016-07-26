@@ -45,6 +45,7 @@ namespace x3druntime.ui.opentk
         private float dx = 0, dy = 0;
         private Crosshair _crosshair;
         private bool showCrosshair = true;
+        private bool fastFlySpeed = false;
 
         /// <param name="window">
         /// A window or display which is used to render the X3D application

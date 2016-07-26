@@ -23,7 +23,7 @@ namespace X3D.Engine
         private ImageTexture _crosshair;
 
         private Vector3 size = new Vector3(0.11f, 0.13f, 0.12f);
-        private Vector3 scale = new Vector3(1, 1, 1);
+        private Vector3 scale = new Vector3(0.8f, 0.8f, 0.8f);
 
         public Crosshair()
         {

@@ -38,11 +38,13 @@ namespace X3D
         [XmlIgnore]
         public TessShaderUniforms Uniforms = new TessShaderUniforms();
 
-        private int uniformCameraScale, uniformX3DScale;
-
-
+        [XmlIgnore]
         public float TessLevelInner = 137; // 3
+
+        [XmlIgnore]
         public float TessLevelOuter = 115; // 2
+
+        [XmlIgnore]
         public Matrix3 NormalMatrix = Matrix3.Identity;
 
         [XmlIgnore]
@@ -178,48 +180,31 @@ namespace X3D
                 if (this.CurrentShader.IsTessellator)
                     RefreshTessUniforms();
 
-                /* 
-glm::mat4 View = glm::lookAt(
-    glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
-    glm::vec3(0,0,0), // and looks at the origin
-    glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-    );
-  
-// Model matrix : an identity matrix (model will be at the origin)
-glm::mat4 Model = glm::mat4(1.0f);
-// Our ModelViewProjection : multiplication of our 3 matrices
-glm::mat4 mvp = Projection * View * Model; // Remember, matrix multiplication is the other way around
-                 */
 
                 Matrix4 view = Matrix4.LookAt(new Vector3(4, 3, 3),  // Camera is at (4,3,3), in World Space
                     new Vector3(0, 0, 0),  // and looks at the origin
                     new Vector3(0, 1, 0) // Head is up (set to 0,-1,0 to look upside-down)
                 );
 
-                Matrix4 model = rc.matricies.modelview;
-                //Matrix4 MVP = rc.matricies.projection * view * model; // this is the model-view-projection matrix
+                Matrix4 model = rc.matricies.modelview; // applied transformation hierarchy
+
                 Matrix4 transl = Matrix4.CreateTranslation(0, 0, 3);
 
                 Matrix4 cameraTransl = Matrix4.CreateTranslation(rc.cam.Position);
 
-                //model = Matrix4.Identity;
-
                 Quaternion q = rc.cam.Orientation;
-                //q.Conjugate();
 
                 Matrix4 cameraRot;
 
-                cameraRot = Matrix4.CreateFromQuaternion(q);
-                // cameraRot = MathHelpers.CreateRotation(ref q);
-
-                Matrix4 CMR = (cameraTransl * model) * cameraRot //* transl 
-                                                                 //* view   
-                                                                 //model
-
-                    ; // this is the camera-model-camrotate matrix
+                cameraRot = Matrix4.CreateFromQuaternion(q); // cameraRot = MathHelpers.CreateRotation(ref q);
 
 
-                CurrentShader.SetFieldValue("modelview", ref CMR); //GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);
+                Matrix4 MVP =  (model * cameraTransl) * cameraRot // position and orient the Shape relative to the world and camera
+
+                    ; // this is the MVP matrix
+
+
+                CurrentShader.SetFieldValue("modelview", ref MVP); //GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);
                 CurrentShader.SetFieldValue("projection", ref rc.matricies.projection);
                 CurrentShader.SetFieldValue("camscale", rc.cam.Scale.X); //GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
                 CurrentShader.SetFieldValue("X3DScale", rc.matricies.Scale); //GL.Uniform3(uniformX3DScale, rc.matricies.Scale);

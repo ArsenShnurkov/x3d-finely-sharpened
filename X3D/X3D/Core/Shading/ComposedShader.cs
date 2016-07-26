@@ -316,9 +316,17 @@ namespace X3D
                     
                     Console.WriteLine("ComposedShader [linked]"); //TODO: check for more link errors
 
-                    GL.UseProgram(ShaderHandle);
-                    BindDefaultPointers();
-                    GL.UseProgram(0);
+                    try
+                    {
+                        GL.UseProgram(ShaderHandle);
+                        BindDefaultPointers();
+                        GL.UseProgram(0);
+                    }
+                    catch 
+                    {
+
+                    }
+
                 }
             }
             else

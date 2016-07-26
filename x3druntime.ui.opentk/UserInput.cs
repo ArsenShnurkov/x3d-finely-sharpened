@@ -15,6 +15,8 @@ namespace x3druntime.ui.opentk
     public partial class X3DApplication
     {
 
+
+
         private void Keyboard_KeyUp(object sender, OpenTK.Input.KeyboardKeyEventArgs e)
         {
             switch (e.Key)
@@ -85,7 +87,7 @@ namespace x3druntime.ui.opentk
                     foreach (Viewpoint v in Viewpoint.ViewpointList) { text += "[" + v.description + "] "; }
 
                     // Integrate this into HUD
-                    System.Windows.Forms.MessageBox.Show(text.TrimEnd());
+                    System.Windows.Forms.MessageBox.Show("Viewpoints: " + text.TrimEnd());
                     break;
 
                 #region Viewpoint Key Bindings
@@ -133,8 +135,6 @@ namespace x3druntime.ui.opentk
                     Viewpoint.CurrentIndex = Viewpoint.ViewpointList.Count - 1;
                     Viewpoint.CurrentViewpoint = Viewpoint.FinalViewpoint;
                     break;
-
-
                     #endregion
             }
         }
@@ -143,6 +143,9 @@ namespace x3druntime.ui.opentk
         {
             Vector3 direction = Vector3.Zero;
             bool rotated = false;
+
+            fastFlySpeed = Keyboard[Key.ShiftLeft];
+            movementSpeed = fastFlySpeed ? 4.0f : 1.0f; 
 
             if (Keyboard[Key.Escape] || Keyboard[Key.Q])
             {
@@ -175,32 +178,32 @@ namespace x3druntime.ui.opentk
             {
                 if (Keyboard[Key.T])
                 {
-                    ActiveCamera.Fly(playerDirectionMagnitude);
+                    ActiveCamera.Fly(playerDirectionMagnitude * movementSpeed);
                 }
                 if (Keyboard[Key.G])
                 {
-                    ActiveCamera.Fly(-playerDirectionMagnitude);
+                    ActiveCamera.Fly(-playerDirectionMagnitude * movementSpeed);
                 }
 
                 if (Keyboard[Key.W])
                 {
-                    ActiveCamera.Walk(playerDirectionMagnitude);
+                    ActiveCamera.Walk(playerDirectionMagnitude * movementSpeed);
                     //direction += ActiveCamera.Direction * playerDirectionMagnitude;
                 }
                 if (Keyboard[Key.S])
                 {
-                    ActiveCamera.Walk(-playerDirectionMagnitude);
+                    ActiveCamera.Walk(-playerDirectionMagnitude * movementSpeed);
                     //direction -= ActiveCamera.Direction * playerDirectionMagnitude;
                 }
                 if (Keyboard[Key.A])
                 {
-                    ActiveCamera.Strafe(playerDirectionMagnitude);
+                    ActiveCamera.Strafe(playerDirectionMagnitude * movementSpeed);
                     //ActiveCamera.Right = ActiveCamera.Up.Cross(ActiveCamera.Direction);
                     //direction += ActiveCamera.Right * playerDirectionMagnitude;
                 }
                 if (Keyboard[Key.D])
                 {
-                    ActiveCamera.Strafe(-playerDirectionMagnitude);
+                    ActiveCamera.Strafe(-playerDirectionMagnitude * movementSpeed);
                     //ActiveCamera.Right = ActiveCamera.Up.Cross(ActiveCamera.Direction);
                     //direction -= ActiveCamera.Right * playerDirectionMagnitude;
                 }
@@ -211,7 +214,7 @@ namespace x3druntime.ui.opentk
                 {
                     //ActiveCamera.Horizon();
                     //ActiveCamera.Yaw(-10.0f * 0.007f);
-                    ActiveCamera.ApplyYaw(-0.1f);
+                    ActiveCamera.ApplyYaw(-playerDirectionMagnitude * movementSpeed);
                     //ActiveCamera.ApplyRotation();
 
                     //this.heading += 1.0f;
@@ -223,7 +226,7 @@ namespace x3druntime.ui.opentk
                 {
                     //ActiveCamera.Horizon();
                     //ActiveCamera.Yaw(10.0f * 0.007f);
-                    ActiveCamera.ApplyYaw(0.1f);
+                    ActiveCamera.ApplyYaw(playerDirectionMagnitude * movementSpeed);
                     //ActiveCamera.ApplyRotation();
                     //this.heading -= 1.0f;
                     //this.yrot = this.heading;
@@ -233,7 +236,7 @@ namespace x3druntime.ui.opentk
                 if (Keyboard[Key.Up])
                 {
                     //ActiveCamera.Pitch(10.0f * 0.007f);
-                    ActiveCamera.ApplyPitch(-0.1f);
+                    ActiveCamera.ApplyPitch(-playerDirectionMagnitude * movementSpeed);
                     //ActiveCamera.ApplyRotation();
 
                     //this.xpos += (float)Math.Sin(this.heading * Math.PI / 180.0) * 0.05f;
@@ -249,7 +252,7 @@ namespace x3druntime.ui.opentk
                 if (Keyboard[Key.Down])
                 {
                     //ActiveCamera.Pitch(-10.0f * 0.007f);
-                    ActiveCamera.ApplyPitch(0.1f);
+                    ActiveCamera.ApplyPitch(playerDirectionMagnitude * movementSpeed);
                     //ActiveCamera.ApplyRotation();
 
                     //this.xpos -= (float)Math.Sin(this.heading * Math.PI / 180.0) * 0.05f;

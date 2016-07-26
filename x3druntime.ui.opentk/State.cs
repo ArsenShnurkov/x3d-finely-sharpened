@@ -9,6 +9,7 @@ namespace x3druntime.ui.opentk
     {
 
         public static float playerDirectionMagnitude = 0.1f;
+        public static float movementSpeed = 1.0f;
 
         bool rotate_enable = true;
         bool fx_enable = true;

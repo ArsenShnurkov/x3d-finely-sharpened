@@ -76,28 +76,28 @@ namespace X3D
                 {
                     v = new Vertex()
                     {
-                        Position = new Vector3(0f, 0f + newLinePositionY, z),
+                        Position = new Vector3(0f, 0f + newLinePositionY, z) * 0.5f,
                         TexCoord = new Vector2(0f, 1f)
                     };
                     geometry.Add(v);
 
                     v = new Vertex()
                     {
-                        Position = new Vector3(1.0f, 0f + newLinePositionY, z),
+                        Position = new Vector3(1.0f, 0f + newLinePositionY, z) * 0.5f,
                         TexCoord = new Vector2(1f, 1f)
                     };
                     geometry.Add(v);
 
                     v = new Vertex()
                     {
-                        Position = new Vector3(1.0f, h + newLinePositionY, z),
+                        Position = new Vector3(1.0f, h + newLinePositionY, z) * 0.5f,
                         TexCoord = new Vector2(1f, 0f)
                     };
                     geometry.Add(v);
 
                     v = new Vertex()
                     {
-                        Position = new Vector3(0f, h + newLinePositionY, z),
+                        Position = new Vector3(0f, h + newLinePositionY, z) * 0.5f,
                         TexCoord = new Vector2(0f, 0f)
                     };
                     geometry.Add(v);
@@ -214,7 +214,6 @@ namespace X3D
                     GL.BindTexture(TextureTarget.Texture2D, stringTexture.Value.Index);
                     GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
                     Buffering.ApplyBufferPointers(parentShape.CurrentShader);
-                    //Buffering.ApplyBufferPointers(parentShape.uniforms);
                     GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies);
 
 

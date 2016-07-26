@@ -304,17 +304,23 @@ namespace X3D.Engine
             //MakeOrthogonal();
 
 
+            Vector3 lookat = QuaternionExtensions.Rotate(Orientation, Vector3.UnitZ);
+            Vector3 forward = new Vector3(lookat.X, 0, lookat.Z).Normalized();
+            Vector3 up = Vector3.UnitY;
+            Vector3 left = up.Cross(forward);
+
+
             //Vector3 pitch_axis = -1 * Vector3.Cross(direction, Up);
-            //Vector3 roll_axis = Right + Up;
+            Vector3 roll_axis = forward + Up;
             //Vector3 roll_axis = Forward + Up;
 
             //pitch_axis = roll_axis;
 
 
 
-            //pitch = Quaternion.FromAxisAngle(pitch_axis, camera_pitch  ); // radians
-            //yaw = Quaternion.FromAxisAngle(Up, camera_yaw); // PiOver180
-            //roll = Quaternion.FromAxisAngle(roll_axis, camera_pitch); // roll_angle
+            //pitch = Quaternion.FromAxisAngle(pitch_axis, camera_pitch  );
+            //yaw = Quaternion.FromAxisAngle(Up, camera_yaw);
+            roll = Quaternion.FromAxisAngle(roll_axis, -camera_roll);
 
             //Orientation = pitch * roll * yaw ;
             //Orientation = pitch * yaw;
@@ -341,7 +347,13 @@ namespace X3D.Engine
             //Orientation = (new Quaternion(left, Amount.X)) * Orientation;
             //Orientation = (new Quaternion(forward, Amount.Z)) * Orientation;
 
-            Orientation = QuaternionExtensions.EulerToQuat(-camera_pitch, -camera_yaw, 0f);
+            Orientation = QuaternionExtensions.EulerToQuat(-camera_pitch, -camera_yaw, 0);
+
+            //roll = QuaternionExtensions.EulerToQuat(0, 0, -camera_roll);
+            roll.Conjugate();
+            roll.Normalize();
+
+            Orientation *= roll;
 
             //Orientation.Normalize();
 
@@ -438,7 +450,9 @@ namespace X3D.Engine
 			Right.Normalize();
 		}
 
-		public void Yaw(float radians)
+        #region Flying Naviagion
+
+        public void Yaw(float radians)
 		{
             //angle = MathHelpers.ClampCircular(angle, 0f, MathHelpers.PI2);
 
@@ -478,7 +492,7 @@ namespace X3D.Engine
 
 		}
 
-		public void Walk(float magnitude)
+        public void Walk(float magnitude)
 		{
             Vector3 lookat = QuaternionExtensions.Rotate(Orientation, Vector3.UnitZ);
 
@@ -493,19 +507,98 @@ namespace X3D.Engine
             Vector3 left = up.Cross(forward);
 
             Position += left * magnitude;
-
-
-            //Vector3 Right = Vector3.UnitX;
-            //Position += Right * magnitude;
         }
 
         public void Fly(float units)
 		{
             Vector3 up = Vector3.UnitY;
-            Position += up * units;
 
-            //Position += Up * units;
+            Position += up * units;
         }
+
+        public void ApplyPitch(float radians)
+        {
+            //Check bounds with the max pitch rate so that we aren't moving too fast
+            //if (degrees < -max_pitch)
+            //{
+            //    degrees = -max_pitch;
+            //}
+            //else if (degrees > max_pitch)
+            //{
+            //    degrees = max_pitch;
+            //}
+            //camera_pitch += degrees;
+
+            ////Check bounds for the camera pitch
+            //if (camera_pitch > MathHelpers.PI2)
+            //{
+            //    camera_pitch -= MathHelpers.PI2;
+            //}
+            //else if (camera_pitch < -MathHelpers.PI2)
+            //{
+            //    camera_pitch += MathHelpers.PI2;
+            //}
+
+            camera_pitch += radians;
+
+            //degrees = MathHelpers.ClampCircular(degrees, 0.0f, MathHelpers.PI2);
+
+            //camera_pitch = degrees;
+
+            Pitch(radians);
+        }
+
+        public void ApplyYaw(float radians)
+        {
+            //Check bounds with the max heading rate so that we aren't moving too fast
+            //if (degrees < -max_yaw)
+            //{
+            //    degrees = -max_yaw;
+            //}
+            //else if (degrees > max_yaw)
+            //{
+            //    degrees = max_yaw;
+            //}
+            ////This controls how the heading is changed if the camera is pointed straight up or down
+            ////The heading delta direction changes
+            //if (camera_pitch > 90 && camera_pitch < 270 || (camera_pitch < -90 && camera_pitch > -270))
+            //{
+            //    camera_yaw -= degrees;
+            //}
+            //else
+            //{
+            //    camera_yaw += degrees;
+            //}
+            ////Check bounds for the camera heading
+            //if (camera_yaw > 360.0f)
+            //{
+            //    camera_yaw -= 360.0f;
+            //}
+            //else if (camera_yaw < -360.0f)
+            //{
+            //    camera_yaw += 360.0f;
+            //}
+
+            camera_yaw += radians;
+
+            //degrees = MathHelpers.ClampCircular(degrees, 0.0f, MathHelpers.PI2);
+
+            //camera_yaw = degrees;
+
+
+
+            Yaw(radians);
+
+        }
+
+        public void ApplyRoll(float radians)
+        {
+            camera_roll += radians;
+
+            Roll(radians);
+        }
+
+        #endregion
 
         #region Mouse Navigation
 
@@ -554,94 +647,17 @@ namespace X3D.Engine
 			//playerMover.move(direction, frameTime);
 		}
 
-		public void ApplyPitch(float radians) 
-		{
-            //Check bounds with the max pitch rate so that we aren't moving too fast
-            //if (degrees < -max_pitch)
-            //{
-            //    degrees = -max_pitch;
-            //}
-            //else if (degrees > max_pitch)
-            //{
-            //    degrees = max_pitch;
-            //}
-            //camera_pitch += degrees;
-
-            ////Check bounds for the camera pitch
-            //if (camera_pitch > MathHelpers.PI2)
-            //{
-            //    camera_pitch -= MathHelpers.PI2;
-            //}
-            //else if (camera_pitch < -MathHelpers.PI2)
-            //{
-            //    camera_pitch += MathHelpers.PI2;
-            //}
-
-            camera_pitch += radians;
-
-            //degrees = MathHelpers.ClampCircular(degrees, 0.0f, MathHelpers.PI2);
-
-            //camera_pitch = degrees;
-
-            Pitch(radians);
-		}
-
-		public void ApplyYaw(float radians) 
-		{
-            //Check bounds with the max heading rate so that we aren't moving too fast
-            //if (degrees < -max_yaw)
-            //{
-            //    degrees = -max_yaw;
-            //}
-            //else if (degrees > max_yaw)
-            //{
-            //    degrees = max_yaw;
-            //}
-            ////This controls how the heading is changed if the camera is pointed straight up or down
-            ////The heading delta direction changes
-            //if (camera_pitch > 90 && camera_pitch < 270 || (camera_pitch < -90 && camera_pitch > -270))
-            //{
-            //    camera_yaw -= degrees;
-            //}
-            //else
-            //{
-            //    camera_yaw += degrees;
-            //}
-            ////Check bounds for the camera heading
-            //if (camera_yaw > 360.0f)
-            //{
-            //    camera_yaw -= 360.0f;
-            //}
-            //else if (camera_yaw < -360.0f)
-            //{
-            //    camera_yaw += 360.0f;
-            //}
-
-            camera_yaw += radians;
-
-            //degrees = MathHelpers.ClampCircular(degrees, 0.0f, MathHelpers.PI2);
-
-            //camera_yaw = degrees;
-
-            
-
-            Yaw(radians);
-
-		}
-
-        public void ApplyRoll(float radians)
-        {
-            camera_roll += radians;
-            Roll(radians);
-        }
-
 		public void Reset()
 		{
 			// Could be used for respawning
 			Position = Origin;
 			Rotation = OriginRotation;
 			Orientation = Quaternion.Identity;
-			//xAngle = 0.0;
+            //xAngle = 0.0;
+
+            camera_pitch = 0;
+            camera_roll = 0;
+            camera_yaw = 0;
 		}
 
 		public void setOrigin(Vector3 origin, Vector3 rotation)
