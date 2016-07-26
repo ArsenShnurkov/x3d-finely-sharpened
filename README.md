@@ -1,6 +1,8 @@
 # x3d-finely-sharpened
 X3D browser/engine written in C#
 
+Featuring the latest bleeding edge developmental work on the X3D C# language binding. 
+
 
 Intro
 ```
@@ -12,8 +14,11 @@ With software like Blender as well as libraries like OpenTK, X3D as a markup for
 A copy of the OpenTK library ships along as the engine uses it at the moment as a point of reference to OpenGL. Currently we're a bit low on documentation but I have included a few X3D examples pulled from random sources on the www.
 ```
 
-This engine has had a massive overhaul, now we support shader and script programming - because of this IMAO we nearly have implemented both the Interchange and Interactive profiles... Event routing and a bunch of fixing is still in the works though so stay tuned!
+This engine has had a massive overhaul, now we support shader and script programming - we are working on implementing both the Interchange and Interactive profiles... Some important components such as the Route Graph and Prototyping are absent, right now there are a small number of issues on the backlog currently being investigated so stay tuned!
 
+
+
+![alt text](screenshots/screenshot-env1.png "Example Scene demonstrating switching of sky backgrounds through Switch node and scripting")
 
 
 Example 1 - test of tessellated Icosahedron IndexedTriangleSet textured geometry
@@ -72,7 +77,8 @@ Task list
 ```
 
 COMPLETED: URL/URI/filesys/CDATA/data:text/plain assett & resource fetching (partial URN support)
-PARTLY: Viewpoint and ViewpointGroup implementation and decent-scalable Camera model
+COMPLETED: X3D XML Scene Export (b3ec3a7)
+MOSTLY: Viewpoint and ViewpointGroup implementation and decent-scalable Camera model. (Support for Fly, and Examine)
 PARTLY: Background, MultiTexturing, CubeMapping, ..
 PARTLY: X3D Validation and invalid node pruning (Applied on the fly in the Runtime)
 MOSTLY: Scripting using JavaScript (JIT compiled using the V8 Engine)
