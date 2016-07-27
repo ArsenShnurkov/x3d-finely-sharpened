@@ -29,6 +29,8 @@ namespace X3D
 
         public void TranslateWorldview(Vector3 translation)
         {
+
+
             matricies.worldview  *= Matrix4.CreateTranslation(translation);
             //matricies.modelview *= Matrix4.CreateTranslation(translation);
         }
@@ -60,7 +62,9 @@ namespace X3D
 
         public void Scale(Vector3 scale, Vector4 scaleOrientation)
         {
-            matricies.Scale = Vector3.Multiply(matricies.Scale, scale);
+            matricies.modelview *= Matrix4.CreateScale(scale);
+
+            //matricies.Scale = Vector3.Multiply(matricies.Scale, scale);
         }
 
         public void PushMatricies()
