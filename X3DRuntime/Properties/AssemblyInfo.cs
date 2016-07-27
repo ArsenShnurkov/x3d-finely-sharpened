@@ -5,13 +5,13 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("x3druntime.ui.opentk")]
+[assembly: AssemblyTitle("X3DRuntime")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("x3druntime.ui.opentk")]
+[assembly: AssemblyCompany("x3d-finely-sharpened")]
+[assembly: AssemblyProduct("x3d-finely-sharpened")]
 [assembly: AssemblyCopyright("Copyright © Gerallt G. Franke  2013 - 2016")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("x3d-finely-sharpened")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
