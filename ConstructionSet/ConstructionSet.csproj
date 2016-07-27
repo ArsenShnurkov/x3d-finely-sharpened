@@ -66,7 +66,7 @@
     <None Include="Shaders\PerlinNoiseVertexShader.shader" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\x3druntime.ui.opentk\X3DRuntime.csproj">
+    <ProjectReference Include="..\X3DRuntime\X3DRuntime.csproj">
       <Project>{c0aa1245-092c-480d-9963-7b03dda63794}</Project>
       <Name>X3DRuntime</Name>
     </ProjectReference>

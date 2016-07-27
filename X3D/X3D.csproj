@@ -53,10 +53,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\OpenTK\OpenTK.dll</HintPath>
     </Reference>
-    <Reference Include="OpenTK.Compatibility, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\OpenTK\OpenTK.Compatibility.dll</HintPath>
-    </Reference>
     <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\OpenTK\OpenTK.GLControl.dll</HintPath>
@@ -126,7 +122,6 @@
     <Compile Include="X3D\Engine\Scripting\X3DConsole.cs" />
     <Compile Include="X3D\Core\Extrusion.cs" />
     <Compile Include="X3D\Math\BoundingBox.cs" />
-    <Compile Include="X3D\Math\MatrixCollection.cs" />
     <Compile Include="X3D\Math\MatrixExtensions.cs" />
     <Compile Include="X3D\Math\QuaternionExtensions.cs" />
     <Compile Include="X3D\Math\VectorExtensions.cs" />
@@ -197,7 +192,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_AssemblyInfoFilename="" BuildVersion_UseGlobalSettings="False" BuildVersion_IncrementBeforeBuild="True" />
+      <UserProperties BuildVersion_IncrementBeforeBuild="True" BuildVersion_UseGlobalSettings="False" BuildVersion_AssemblyInfoFilename="" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
