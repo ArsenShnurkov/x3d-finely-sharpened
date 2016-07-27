@@ -317,6 +317,20 @@ namespace X3D
 
         #region Public Methods
 
+        public Vector3 GetRGB(int x, int y)
+        {
+            Vector3 c = Vector3.Zero;
+
+            System.Drawing.Color col = image.GetPixel(x, y);
+
+            c.X = col.R;
+            c.Y = col.G;
+            c.Z = col.B;
+
+
+            return c;
+        }
+
         public void LoadTexture()
         {
 
