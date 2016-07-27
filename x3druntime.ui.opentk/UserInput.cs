@@ -145,7 +145,7 @@ namespace x3druntime.ui.opentk
             bool rotated = false;
 
             fastFlySpeed = Keyboard[Key.ShiftLeft];
-            movementSpeed = fastFlySpeed ? 4.0f : 1.0f; 
+            movementSpeed = fastFlySpeed ? 10.0f : 1.0f; 
 
             if (Keyboard[Key.Escape] || Keyboard[Key.Q])
             {
