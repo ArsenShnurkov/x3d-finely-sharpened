@@ -195,9 +195,12 @@ namespace X3D
                 List<Transform> transformationHierarchy = this.AscendantByType<Transform>().Select(t => (Transform)t).ToList();
                 Matrix4 modelview = Matrix4.Identity * rc.matricies.worldview;
 
+                // using Def_Use/Figure02.1Hut.x3d Cone and Cylinder 
+                Vector3 x3dScale = new Vector3(0.08f, 0.08f, 0.08f); // scaling down to conform with X3D standard (note this was done manually and might need tweaking)
+
                 foreach (Transform transform in transformationHierarchy)
                 {
-                    modelview *= Matrix4.CreateTranslation(transform.Translation);
+                    modelview *= Matrix4.CreateTranslation(transform.Translation * x3dScale);
 
                 }
                 model = modelview;
