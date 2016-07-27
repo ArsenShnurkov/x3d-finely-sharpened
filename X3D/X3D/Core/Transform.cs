@@ -15,9 +15,11 @@ namespace X3D
 
             rc.PushMatricies();
 
-            rc.Translate(this.Translation);
-            rc.Scale(this.Scale, this.ScaleOrientation);
-            rc.Rotate(this.Rotation);
+            // following code below doesnt work because of depth first traversal
+
+            //rc.Translate(this.Translation);
+            //rc.Scale(this.Scale, this.ScaleOrientation);
+            //rc.Rotate(this.Rotation);
 
             
         }
