@@ -1,3 +1,4 @@
+![alt text](x3d-examples/x3d-logo.png "X3D") 
 # x3d-finely-sharpened
 X3D browser/engine written in C#
 
