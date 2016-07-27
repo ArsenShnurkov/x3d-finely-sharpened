@@ -394,7 +394,16 @@ namespace X3D.Parser
             {
                 return new float[] { };
             }
-            Regex regMFInt32 = new Regex("([+-]?[0-9]+[.]?[0-9]?)+"); // [+-]?\\d+\\.\\d+
+
+            // 20160728 have to take into account the exponent that is also allowable for really large or really tiny floating point numbers
+            // i.e. Some datasets can have floating point values specified like: -2.0440411E-16
+
+            // this was the old regex  ([+-]?[0-9]+[.]?[0-9]?)+
+            // (kept for reference) 
+
+            // ([-+]?[0-9]+[.]?[0-9]?[eE]?[-+]?[0-9]?)+
+
+            Regex regMFInt32 = new Regex("([-+]?[0-9]+[.]?[0-9]?[eE]?[-+]?[0-9]?)+"); // [+-]?\\d+\\.\\d+
             MatchCollection mc = regMFInt32.Matches(value);
             List<float> floats = new List<float>();
 
