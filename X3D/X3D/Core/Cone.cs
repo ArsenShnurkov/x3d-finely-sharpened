@@ -34,25 +34,17 @@ namespace X3D
 
             parentShape = GetParent<Shape>();
 
-            if (this.bottom)
-            {
-                // Cone with bottom face
-
-                ifs1.PreRenderOnce(rc);
-            }
-            else
-            {
-                // Cone without bottom face
-
-                ifs2.PreRenderOnce(rc);
-            }
-
+            ifs1.PreRenderOnce(rc); // Cone with bottom face
+            ifs2.PreRenderOnce(rc); // Cone without bottom face
         }
 
         public override unsafe void Render(RenderingContext rc)
         {
             base.Render(rc);
 
+            rc.PushMatricies();
+
+            rc.matricies.Scale = new Vector3(2 * bottomRadius, 1f * height, 2 * bottomRadius);  // Too easy, almost feel like im cheating here.
 
             if (this.bottom)
             {
@@ -67,6 +59,7 @@ namespace X3D
                 ifs2.Render(rc);
             }
 
+            rc.PopMatricies();
         }
 
         #endregion
