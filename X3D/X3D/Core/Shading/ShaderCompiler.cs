@@ -175,5 +175,47 @@ namespace X3D.Core
 
             return shaderProgramHandle;
         }
+
+        public static int ApplyComputeShader(string computeShaderSource)
+        {
+            int shaderProgramHandle = GL.CreateProgram();
+
+            int shaderHandle = GL.CreateShader(ShaderType.ComputeShader);
+
+            GL.ShaderSource(shaderHandle, computeShaderSource);
+
+            GL.CompileShader(shaderHandle);
+
+            int rvalue;
+            GL.GetShader(shaderHandle, ShaderParameter.CompileStatus, out rvalue);
+
+            if (rvalue != 1)
+            {
+                Console.WriteLine("Error in compiling the compute shader\n");
+
+                string err = GL.GetShaderInfoLog(shaderHandle).Trim();
+
+                Console.WriteLine("Compiler error:\n{0}", err);
+
+                return -1;
+            }
+
+            GL.AttachShader(shaderProgramHandle, shaderHandle);
+            GL.LinkProgram(shaderProgramHandle);
+            GL.GetProgram(shaderProgramHandle, GetProgramParameterName.LinkStatus, out rvalue);
+
+            if (rvalue != 1)
+            {
+                Console.WriteLine("Error in linking compute shader program");
+
+                string err = GL.GetProgramInfoLog(shaderProgramHandle).Trim();
+
+                Console.WriteLine("Linker error:\n{0}", err);
+
+                return -1;
+            }
+
+            return shaderProgramHandle;
+        }
     }
 }
