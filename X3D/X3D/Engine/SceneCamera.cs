@@ -320,7 +320,7 @@ namespace X3D.Engine
 
             //pitch = Quaternion.FromAxisAngle(pitch_axis, camera_pitch  );
             //yaw = Quaternion.FromAxisAngle(Up, camera_yaw);
-            roll = Quaternion.FromAxisAngle(roll_axis, -camera_roll);
+            //roll = Quaternion.FromAxisAngle(roll_axis, -camera_roll);
 
             //Orientation = pitch * roll * yaw ;
             //Orientation = pitch * yaw;
@@ -350,10 +350,10 @@ namespace X3D.Engine
             Orientation = QuaternionExtensions.EulerToQuat(-camera_pitch, -camera_yaw, 0);
 
             //roll = QuaternionExtensions.EulerToQuat(0, 0, -camera_roll);
-            roll.Conjugate();
-            roll.Normalize();
+            //roll.Conjugate();
+            //roll.Normalize();
 
-            Orientation *= roll;
+            //Orientation *= roll;
 
             //Orientation.Normalize();
 
