@@ -14,6 +14,7 @@ namespace X3D
 {
     public partial class IndexedFaceSet
     {
+        internal Normal normal;
         internal Coordinate coordinate;
         private TextureCoordinate texCoordinate;
         internal int[] _indices;

@@ -144,8 +144,10 @@ namespace x3druntime.ui.opentk
             Vector3 direction = Vector3.Zero;
             bool rotated = false;
 
+            slowFlySpeed = Keyboard[Key.AltLeft];
             fastFlySpeed = Keyboard[Key.ShiftLeft];
-            movementSpeed = fastFlySpeed ? 10.0f : 1.0f; 
+            movementSpeed = fastFlySpeed ? 10.0f : 1.0f;
+            movementSpeed = slowFlySpeed ? 0.01f : movementSpeed;
 
             if (Keyboard[Key.Escape] || Keyboard[Key.Q])
             {
