@@ -206,8 +206,6 @@ namespace x3druntime.ui.opentk
                     _crosshair = new Crosshair();
                     _crosshair.Load();
                 }
-                
-
             }
             else
             {
@@ -252,7 +250,7 @@ namespace x3druntime.ui.opentk
                 RenderingContext rc = new RenderingContext();
                 rc.View = View.CreateViewFromWindow(this.window);
                 rc.Time = e.Time;
-                rc.matricies.worldview = ActiveCamera.ViewMatrix;
+                rc.matricies.worldview = Matrix4.Identity;
                 rc.matricies.projection = ActiveCamera.Projection;
                 
                 rc.matricies.modelview = Matrix4.Identity;
@@ -273,7 +271,6 @@ namespace x3druntime.ui.opentk
                     this._crosshair.Render(rc);
                     rc.PopMatricies();
                 }
-                
             }
             else
             {
