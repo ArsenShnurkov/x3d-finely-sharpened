@@ -37,8 +37,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\OpenTK\OpenTK.dll</HintPath>
     </Reference>
+    <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\OpenTK\OpenTK.GLControl.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,13 +53,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ElevationBuilder.cs" />
+    <Compile Include="PerlinNoise.cs" />
+    <Compile Include="Shaders\PerlinNoiseShader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="BuilderApplication.cs" />
+    <Compile Include="Shaders\ShaderHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Shaders\PerlinNoiseFragmentShader.shader" />
+    <None Include="Shaders\PerlinNoiseVertexShader.shader" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\x3druntime.ui.opentk\X3DRuntime.csproj">
+      <Project>{C0AA1245-092C-480D-9963-7B03DDA63794}</Project>
+      <Name>X3DRuntime</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\X3D\X3D.csproj">
       <Project>{0742e4e9-d1ba-41f1-b161-33cd3a3d4d33}</Project>
       <Name>X3D</Name>
