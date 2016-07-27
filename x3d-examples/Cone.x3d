@@ -27,7 +27,7 @@
 			<Material diffuseColor="0.1 0.1 0.9" specularColor="1.0 1.0 1.0" />
 			<ImageTexture  url='"spectrum-alt.jpg"'/>
 		   </Appearance>
-		  <Cone bottom='false' bottomRadius='1' height='1' side='true' solid="true"/>
+		  <Cone bottom='false' bottomRadius='6' height='5' side='true' solid="true"/>
 		  <Appearance>
 			<Material/>
 		  </Appearance>
