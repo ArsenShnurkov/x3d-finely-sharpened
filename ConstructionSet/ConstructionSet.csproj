@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>X3D</RootNamespace>
-    <AssemblyName>ElevationBuilder</AssemblyName>
+    <AssemblyName>ConstructionSet</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -35,11 +35,11 @@
   <ItemGroup>
     <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\OpenTK\OpenTK.dll</HintPath>
+      <HintPath>..\OpenTK\OpenTK.dll</HintPath>
     </Reference>
     <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\OpenTK\OpenTK.GLControl.dll</HintPath>
+      <HintPath>..\OpenTK\OpenTK.GLControl.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -66,11 +66,11 @@
     <None Include="Shaders\PerlinNoiseVertexShader.shader" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\x3druntime.ui.opentk\X3DRuntime.csproj">
-      <Project>{C0AA1245-092C-480D-9963-7B03DDA63794}</Project>
+    <ProjectReference Include="..\x3druntime.ui.opentk\X3DRuntime.csproj">
+      <Project>{c0aa1245-092c-480d-9963-7b03dda63794}</Project>
       <Name>X3DRuntime</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\X3D\X3D.csproj">
+    <ProjectReference Include="..\X3D\X3D.csproj">
       <Project>{0742e4e9-d1ba-41f1-b161-33cd3a3d4d33}</Project>
       <Name>X3D</Name>
     </ProjectReference>
