@@ -159,11 +159,15 @@ namespace X3D
 
             shaders = this.DecendantsByType(typeof(X3DShaderNode)).Select(n => (X3DShaderNode)n).ToList();
             hasShaders = shaders.Any();
+
+            
         }
 
         public override void Render(RenderingContext rc)
         {
             base.Render(rc);
+
+            rc.PushMatricies();
 
             NormalMatrix = new Matrix3(rc.matricies.modelview); // NormalMatrix = M4GetUpper3x3(ModelviewMatrix);
 
@@ -186,9 +190,17 @@ namespace X3D
                     new Vector3(0, 1, 0) // Head is up (set to 0,-1,0 to look upside-down)
                 );
 
-                Matrix4 model = rc.matricies.modelview; // applied transformation hierarchy
+                Matrix4 model; // applied transformation hierarchy
 
-                Matrix4 transl = Matrix4.CreateTranslation(0, 0, 3);
+                List<Transform> transformationHierarchy = this.AscendantByType<Transform>().Select(t => (Transform)t).ToList();
+                Matrix4 modelview = Matrix4.Identity * rc.matricies.worldview;
+
+                foreach (Transform transform in transformationHierarchy)
+                {
+                    modelview *= Matrix4.CreateTranslation(transform.Translation);
+
+                }
+                model = modelview;
 
                 Matrix4 cameraTransl = Matrix4.CreateTranslation(rc.cam.Position);
 
@@ -227,6 +239,8 @@ namespace X3D
 
             CurrentShader.Deactivate();
             GL.BindTexture(TextureTarget.Texture2D, 0);
+
+            rc.PopMatricies();
         }
 
         #endregion
