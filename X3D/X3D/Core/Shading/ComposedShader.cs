@@ -177,7 +177,7 @@ namespace X3D
 
         }
 
-        internal void SetFieldValueSTR(string name, string value, string x3dType)
+        public void SetFieldValueSTR(string name, string value, string x3dType)
         {
             if (HasErrors) return;
 
@@ -202,7 +202,7 @@ namespace X3D
             }
         }
 
-        internal void SetFieldValue(string name, int value)
+        public void SetFieldValue(string name, int value)
         {
             if (HasErrors) return;  
             
@@ -211,7 +211,7 @@ namespace X3D
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
 
-        internal void SetFieldValue(string name, float value)
+        public void SetFieldValue(string name, float value)
         {
             if (HasErrors) return;
 
@@ -221,7 +221,7 @@ namespace X3D
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
 
-        internal void SetFieldValue(string name, Vector3 value)
+        public void SetFieldValue(string name, Vector3 value)
         {
             if (HasErrors) return;
 
@@ -230,7 +230,7 @@ namespace X3D
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
 
-        internal void SetFieldValue(string name, Vector4 value)
+        public void SetFieldValue(string name, Vector4 value)
         {
             if (HasErrors) return;
 
@@ -239,7 +239,7 @@ namespace X3D
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
 
-        internal void SetFieldValue(string name, ref Matrix3 value)
+        public void SetFieldValue(string name, ref Matrix3 value)
         {
             if (HasErrors) return;
 
@@ -249,7 +249,7 @@ namespace X3D
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
 
-        internal void SetFieldValue(string name, ref Matrix4 value)
+        public void SetFieldValue(string name, ref Matrix4 value)
         {
             if (HasErrors) return;
 
@@ -259,7 +259,7 @@ namespace X3D
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
 
-        internal void UpdateField(string name, string value)
+        public void UpdateField(string name, string value)
         {
             List<field> fields = this.Children
                 .Where(n => n.GetType() == typeof(field) && n.getAttribute("name").ToString() == name)
