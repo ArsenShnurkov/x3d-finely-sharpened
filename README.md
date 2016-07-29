@@ -126,7 +126,7 @@ Mission statement
 ```
 
 A library implementing the X3D 3.3 specification, frugal by design, with no platform specific boundaries, 
-and an X3D Scene that can be accessed/modified by whatever scripting language is present in the platform.
+for the render of; interactive X3D Scenes, that can be accessed/modified by whichever scripting language is present in the platform.
 ```
 
 Info
