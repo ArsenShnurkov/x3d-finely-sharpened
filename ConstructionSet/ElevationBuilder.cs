@@ -4,36 +4,35 @@ using System.Drawing;
 using X3D.Engine;
 using X3D.Parser;
 
-namespace X3D
+namespace X3D.ConstructionSet
 {
 
-    /// <summary>
-    /// Computes a color given vertex and or (x, z) coordinates of a plane.
-    /// </summary>
-    public delegate Vector3 ElevationColorSequencerDelegate(int face, int vertex, int x, int z);
 
-    /// <summary>
-    /// Computes a height value given (x,z) coordinates of a plane.
-    /// </summary>
-    public delegate float HeightComputationDelegate(int x, int z);
 
-    public class ElevationBuilder
+    public class ElevationBuilder : IElevationBuilder
     {
 
-        public ElevationGrid BuildHeightmapFromPerlin(RenderingContext rc, PerlinNoise perlin, out Bitmap largePerlinImage)
+        public ElevationGrid BuildHeightmapFromGenerator(RenderingContext rc,
+                                                      IHeightMapGenerator generator, 
+                                                      out Bitmap largePerlinImage, 
+                                                      int x, int z, int h, 
+                                                      float sx, 
+                                                      float sz)
         {
             ElevationGrid g;
             Bitmap noiseBitmap;
             Image newImage;
 
-            Console.WriteLine("Rendering perlin noise");
-            noiseBitmap = largePerlinImage = perlin.GetPerlinNoise(rc);
+            Console.WriteLine("Rendering noise texture (in a shader)");
+            noiseBitmap = largePerlinImage = generator.GenerateHeightMap(rc);
 
-            newImage = noiseBitmap.GetThumbnailImage(500, 500, null, IntPtr.Zero); // scale image to make processing easier
+            Console.WriteLine("Processed into GDI Bitmap and cropping down to ({0}, {1}) for performace", x, z);
+            newImage = noiseBitmap.GetThumbnailImage(x, z, null, IntPtr.Zero); // scale image to make processing easier
             //noiseBitmap.Dispose();
             noiseBitmap = (Bitmap)newImage;
 
-            g = BuildHeightmapFromTexture(1, 1, noiseBitmap, 250.0f); // build a rather large height map
+            Console.WriteLine("Going through each depth pixel to generate an ElevationGrid");
+            g = BuildHeightmapFromTexture(sx, sz, noiseBitmap, h); 
 
             return g;
         }
@@ -241,6 +240,16 @@ namespace X3D
             return g;
         }
 
+        public Shape BuildShapeNodeWithScene()
+        {
+            X3D root;
+            Shape shape;
+
+            BuildShapeDom(out root, out shape);
+
+            return shape;
+        }
+
         private void updateProgress(int coordIndex, int numHeights)
         {
 
@@ -248,12 +257,13 @@ namespace X3D
 
             if (percent > 0 && percent % 1.0f == 0)
             {
-                Console.SetCursorPosition(0, 15);
+                //Console.SetCursorPosition(0, 15);
+                
                 Console.Write(" {0}%", percent);
             }
         }
 
-        public void BuildShapeDom(out X3D root, out Shape shape)
+        internal void BuildShapeDom(out X3D root, out Shape shape)
         {
             head head = new head();
             meta meta = new meta();
