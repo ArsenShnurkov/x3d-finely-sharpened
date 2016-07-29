@@ -1,4 +1,6 @@
-﻿using System;
+﻿//BUG: relationships in XML graph output not same as input nodes
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
