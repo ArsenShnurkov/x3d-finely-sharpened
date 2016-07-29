@@ -17,8 +17,7 @@ using OpenTK.Input;
 using X3D;
 using System.Reflection;
 using System.Drawing;
-
-/* Need OpenTK.Compatibility.dll for GLu */
+using X3D.ConstructionSet;
 
 /* Some important things:
  * --
@@ -54,6 +53,10 @@ namespace x3druntime.ui.opentk
         public X3DApplication(INativeWindow window)
         {
             this.window = window;
+
+            // Set up a Construction Set for the current instance
+            SceneManager.ConstructionSet = X3DConsructionSet.GetConstructionSetProvider();
+
 
             //this.window.KeyPress+=new EventHandler<KeyPressEventArgs>(X3DApplication_KeyPress);
             //this.Keyboard.KeyDown+=new EventHandler<OpenTK.Input.KeyboardKeyEventArgs>(Keyboard_KeyDown);
