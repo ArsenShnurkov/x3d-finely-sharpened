@@ -1,6 +1,8 @@
 ﻿using LiquidTechnologies.FastInfoset;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 
@@ -8,29 +10,59 @@ namespace X3D.Parser.X3DB
 {
     // TODO: implement the following X3DB Encoders
     // http://www.web3d.org/documents/specifications/19776-3/V3.3/Part03/tables.html#t-EncodingAlgorithmURI
-    public class DefaultEncoder : FIEncodingAlgorithm
+
+
+    /// <summary>
+    /// This encoder takes an array of float values and encodes them as a quantized form 
+    /// of the single precision floating point numbers defined in IEC 60559.
+    /// </summary>
+    public class QuantizedzlibFloatArrayEncoder : FIEncodingAlgorithm
     {
-        public DefaultEncoder() : base(new Uri("encoder://web3d.org/encoder-not-implemented"))
+        /*
+A custom value is selected for the exponent, 
+mantissa and sign bits typically used to encode floats. 
+The bias of 127 is still used. 
+These values are written to the stream first before the data. 
+The number of exponent bits is encoded using three bits, 
+giving a range of 1-8, zero exponent bits cannot be used. 
+The number of mantissa bits is encoded using five bits. 
+One bit is used for the sign bit. 
+
+When a number uses zero sign bits, it is assumed to be positive. 
+The seven remaining bits are padded with '0000000' (padding) are appended to the bit stream.
+
+The number of float values in the field is appended to the stream using four bytes. 
+The float values themselves are then encoded using the zlib library (see 2.[RFC1950]) 
+and appended to the stream.
+
+This technique is a lossy encoder. 
+ * */
+
+        public QuantizedzlibFloatArrayEncoder() : base(
+            new Uri("encoder://web3d.org/QuantizedzlibFloatArrayEncoder"), 34)
         {
 
         }
 
         public override string Decode(byte[] data)
         {
-            Encoding enc;
+            string result;
 
-            enc = UTF8Encoding.UTF8;
+            using (var stream = new MemoryStream(data, 2, data.Length - 2))
+            using (var inflater = new DeflateStream(stream, CompressionMode.Decompress))
+            using (var streamReader = new StreamReader(inflater))
+            {
 
-            return enc.GetString(data);
+
+                result = streamReader.ReadToEnd();
+            }
+
+            throw new NotImplementedException();
         }
 
         public override byte[] Encode(object data)
         {
-            Encoding enc;
-
-            enc = UTF8Encoding.UTF8;
-
-            return enc.GetBytes(data.ToString());
+            throw new NotImplementedException();
         }
     }
 
@@ -55,24 +87,6 @@ namespace X3D.Parser.X3DB
     public class DeltazlibIntArrayEncoder : FIEncodingAlgorithm
     {
         public DeltazlibIntArrayEncoder() : base(new Uri("encoder://web3d.org/DeltazlibIntArrayEncoder"), 33)
-        {
-
-        }
-
-        public override string Decode(byte[] data)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override byte[] Encode(object data)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class QuantizedzlibFloatArrayEncoder : FIEncodingAlgorithm
-    {
-        public QuantizedzlibFloatArrayEncoder() : base(new Uri("encoder://web3d.org/QuantizedzlibFloatArrayEncoder"), 34)
         {
 
         }
