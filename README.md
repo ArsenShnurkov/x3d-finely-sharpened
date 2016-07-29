@@ -91,7 +91,9 @@ MOSTLY: abstract types defined according to X3D 3.3 spec, see x3d-3.3.Designer.c
 MOSTLY: Viewpoint and ViewpointGroup implementation and decent-scalable Camera model. (Support for Fly, and Examine)
 MOSTLY: Scripting using JavaScript (JIT compiled using the V8 Engine)
 MOSTLY: DEF and USE
-PARTLY: Write support for X3D-B Binary Compression/Decompression, add frontend in ConstructionSet
+PARTLY: Write support for X3D-B Binary Compression/Decompression
+TODO: Implement float[], double[], int[], compressors for X3DB support
+TODO: Write simple UI frontend for import/export X3D-B Binary in ConstructionSet in WPF
 PARTLY: Background, MultiTexturing, CubeMapping, ..
 PARTLY: X3D Validation and invalid node pruning (Applied on the fly in the Runtime)
 TODO: Node Prototyping
