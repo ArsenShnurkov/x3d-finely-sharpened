@@ -1,0 +1,33 @@
+#VRML V2.0 utf8
+  
+Shape{
+	geometry Box{size 10 0.1 0.1}
+}
+Shape{
+	geometry Box{size 0.1 10 0.1}
+}
+
+Shape{
+	geometry Box{size 0.1 0.1 10}
+}
+Transform {
+
+	children 
+		Shape {  appearance Appearance {material Material { }}
+			geometry Extrusion{
+				crossSection [ -1 -1, -1 1, 1 1, 1 -1, -1 -1]
+				orientation [0 0 1 0, 0 0 1 0, 0 0 1 0]
+				scale [1 1, 1 1, 1 1]
+				solid TRUE
+				spine [0 0 -1, 0 0 0, 0 0 1 ]
+				beginCap TRUE
+				endCap TRUE
+				ccw TRUE
+				convex TRUE
+				solid TRUE
+				creaseAngle 0
+			}
+		}
+}
+
+

@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.2//EN" "http://www.web3d.org/specifications/x3d-3.2.dtd">
+<X3D version='3.2' profile='Immersive'  xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.2.xsd'>
+ <head>
+   <meta name='title' content='cylinder-from-wings.x3d'/>
+   <meta name='description' content='*enter description here, short-sentence summaries preferred*'/>
+   <meta name='creator' content='*enter name of original author here*'/>
+   <meta name='translator' content='*if manually translating VRML-to-X3D, enter name of person translating here*'/>
+   <meta name='created' content='*enter date of initial version here*'/>
+   <meta name='translated' content='28 July 2016'/>
+   <meta name='modified'    content='28 July 2016'/>
+   <meta name='version' content='*enter version here*'/>
+   <meta name='reference' content='*enter reference citation or relative/online url here*'/>
+   <meta name='reference' content='*enter additional url/bibliographic reference information here*'/>
+   <meta name='requires' content='*enter reference resource here if required to support function, delivery, or coherence of content*'/>
+   <meta name='rights' content='*enter copyright information here* Example:  Copyright (c) Web3D Consortium Inc. 2006'/>
+   <meta name='drawing' content='*enter drawing filename/url here*'/>
+   <meta name='image' content='*enter image filename/url here*'/>
+   <meta name='MovingImage' content='*enter movie filename/url here*'/>
+   <meta name='photo' content='*enter photo filename/url here*'/>
+   <meta name='subject' content='*enter subject keywords here*'/>
+   <meta name='accessRights' content='*enter permission statements or url here*'/>
+   <meta name='warning' content='*insert any known warnings, bugs or errors here*'/>
+   <meta name='identifier' content='http://*enter online url address for this file here* /D:\projects\X3D\x3d-finely-sharpened\x3d-examples\cylinder-from-wings.x3d'/>
+   <meta name='generator' content='Vrml97ToX3dNist, http://ovrt.nist.gov/v2_x3d.html'/>
+   <meta name='generator' content='X3D-Edit, https://savage.nps.edu/X3D-Edit'/>
+   <meta name='license' content='../../license.html'/>
+ </head>
+ <Scene>
+  <Transform  DEF="Cylinder1" >
+      <Shape >
+          <Appearance >
+              <Material  DEF="default"  ambientIntensity="0.76574385" transparency="0.0" emissiveColor="0.0 0.0 0.0" shininess="0.0" diffuseColor="0.7898538 0.81333333 0.6940445" specularColor="0.0 0.0 0.0"/>
+          </Appearance>
+          <IndexedFaceSet  coordIndex=" 0 1 17 16 -1 0 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 -1 0 16 31 15 -1 1 2 18 17 -1 2 3 19 18 -1 3 4 20 19 -1 4 5 21 20 -1 5 6 22 21 -1 6 7 23 22 -1 7 8 24 23 -1 8 9 25 24 -1 9 10 26 25 -1 10 11 27 26 -1 11 12 28 27 -1 12 13 29 28 -1 13 14 30 29 -1 14 15 31 30 -1 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 -1" 
+		  normalPerVertex="true" 
+		  normalIndex=" 0 1 17 16 -1 0 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 -1 0 16 31 15 -1 1 2 18 17 -1 2 3 19 18 -1 3 4 20 19 -1 4 5 21 20 -1 5 6 22 21 -1 6 7 23 22 -1 7 8 24 23 -1 8 9 25 24 -1 9 10 26 25 -1 10 11 27 26 -1 11 12 28 27 -1 12 13 29 28 -1 13 14 30 29 -1 14 15 31 30 -1 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 -1">
+              <Coordinate  point="1.0 1.0 0.0, 0.9238795 1.0 0.38268343, 0.70710677 1.0 0.70710677, 0.38268343 1.0 0.9238795, 6.123234E-17 1.0 1.0, -0.38268343 1.0 0.9238795, -0.70710677 1.0 0.70710677, -0.9238795 1.0 0.38268343, -1.0 1.0 1.2246469E-16, -0.9238795 1.0 -0.38268343, -0.70710677 1.0 -0.70710677, -0.38268343 1.0 -0.9238795, -1.8369701E-16 1.0 -1.0, 0.38268343 1.0 -0.9238795, 0.70710677 1.0 -0.70710677, 0.9238795 1.0 -0.38268343, 1.0 -1.0 0.0, 0.9238795 -1.0 0.38268343, 0.70710677 -1.0 0.70710677, 0.38268343 -1.0 0.9238795, 6.123234E-17 -1.0 1.0, -0.38268343 -1.0 0.9238795, -0.70710677 -1.0 0.70710677, -0.9238795 -1.0 0.38268343, -1.0 -1.0 1.2246469E-16, -0.9238795 -1.0 -0.38268343, -0.70710677 -1.0 -0.70710677, -0.38268343 -1.0 -0.9238795, -1.8369701E-16 -1.0 -1.0, 0.38268343 -1.0 -0.9238795, 0.70710677 -1.0 -0.70710677, 0.9238795 -1.0 -0.38268343, "/>
+              <Normal  vector="0.89090914 0.45418155 -2.2690927E-16, 0.82309276 0.45418155 0.34093618, 0.6299679 0.45418155 0.6299679, 0.34093618 0.45418155 0.82309276, 0.0 0.45418155 0.89090914, -0.34093618 0.45418155 0.82309276, -0.6299679 0.45418155 0.6299679, -0.82309276 0.45418155 0.34093618, -0.89090914 0.45418155 1.260607E-17, -0.82309276 0.45418155 -0.34093618, -0.6299679 0.45418155 -0.6299679, -0.34093618 0.45418155 -0.82309276, -1.3866677E-16 0.45418155 -0.89090914, 0.34093618 0.45418155 -0.82309276, 0.6299679 0.45418155 -0.6299679, 0.82309276 0.45418155 -0.34093618, 0.89090914 -0.45418155 -1.8909105E-16, 0.82309276 -0.45418155 0.34093618, 0.6299679 -0.45418155 0.6299679, 0.34093618 -0.45418155 0.82309276, 0.0 -0.45418155 0.89090914, -0.34093618 -0.45418155 0.82309276, -0.6299679 -0.45418155 0.6299679, -0.82309276 -0.45418155 0.34093618, -0.89090914 -0.45418155 5.042428E-17, -0.82309276 -0.45418155 -0.34093618, -0.6299679 -0.45418155 -0.6299679, -0.34093618 -0.45418155 -0.82309276, -1.3866677E-16 -0.45418155 -0.89090914, 0.34093618 -0.45418155 -0.82309276, 0.6299679 -0.45418155 -0.6299679, 0.82309276 -0.45418155 -0.34093618, "/>
+          </IndexedFaceSet>
+      </Shape>
+  </Transform>
+  </Scene>
+</X3D>
