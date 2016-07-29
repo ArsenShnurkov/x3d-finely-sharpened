@@ -104,6 +104,7 @@ TODO: Node Prototyping
 PARTLY: grouping
 TODO: event propagation between X3D nodes and their fields, and any shader uniforms
 TODO: networking: inline, import, export, etc
+TODO: Collision on planes and solid geometry 
 PARTLY: scene graph and event graph models
 PARTLY: transformations, and better conformance with standard
 PARTLY: all texturing related nodes esp. TextureProperties, and refactor ImageTexturing
