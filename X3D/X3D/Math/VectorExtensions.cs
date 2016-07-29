@@ -19,8 +19,6 @@ public class VectorExtensions
     public Vector3 Vector3 { get; private set; }
 
 
-
-
     /// <summary>
     /// Caclulate the cross (vector) product of two vectors
     /// </summary>
