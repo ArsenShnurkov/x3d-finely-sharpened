@@ -18,11 +18,31 @@ namespace X3D.Parser.X3DB
     public class X3DBinaryCompression
     {
 
-        private static Uri web3dURN = new Uri("urn:web3d:x3d:fi-vocabulary-3.2");
+        #region Vocabulary Store
 
-        private static FIExternalVocabulary vocab = CreateX3DBVocabulary();
+        private static FIExternalVocabulary vocab33 = CreateX3DBVocabulary(new Uri("urn:web3d:x3d:fi-vocabulary-3.3"));
+        private static FIExternalVocabulary vocab32 = CreateX3DBVocabulary(new Uri("urn:web3d:x3d:fi-vocabulary-3.2"));
+        private static FIExternalVocabulary vocab31 = CreateX3DBVocabulary(new Uri("urn:web3d:x3d:fi-vocabulary-3.1"));
+        private static FIExternalVocabulary vocab30 = CreateX3DBVocabulary(new Uri("urn:web3d:x3d:fi-vocabulary-3.0"));
+
+        private static FIVocabularyManager vocabularyProvider = CreateVocabStore();
+
+        #endregion
 
         #region Public Static Methods
+
+        /// <summary>
+        /// Decompresses an X3DB file direct-to SceneGraph
+        /// </summary>
+        /// <param name="x3db_stream"></param>
+        /// <returns></returns>
+        public static SceneGraph DecompressToSG(Stream x3db_stream)
+        {
+            //TODO: bypass decompression into XDocument, and Xml String, and instead write direct to Scene Graph
+            //TODO: to support this loader optimisation, we need to implement an XMLReader that generates a SceneGraph.
+
+            throw new NotImplementedException("not yet implemented");
+        }
 
         public static SceneManager FromStream(Stream x3db_stream)
         {
@@ -44,13 +64,10 @@ namespace X3D.Parser.X3DB
             XDocument document;
             XmlReader fiReader;
             FIReader fastInfosetReader;
-            FIVocabularyManager vocabularyProvider;
             string xml;
 
             x3db_stream.Position = 0;
 
-            vocabularyProvider = new FIVocabularyManager();
-            vocabularyProvider.AddVocabulary(vocab);
             fastInfosetReader = new FIReader(x3db_stream, vocabularyProvider);
 
             fiReader = XmlReader.Create(fastInfosetReader, null);
@@ -62,6 +79,11 @@ namespace X3D.Parser.X3DB
             return xml;
         }
 
+        /// <summary>
+        /// Compresses XML representation of an X3D Scene into a corresponding X3D Binary Encoded format Fast Info Set.
+        /// </summary>
+        /// <param name="xml_string"></param>
+        /// <returns></returns>
         public static Stream CompressToX3DB(string xml_string)
         {
             XDocument document;
@@ -79,25 +101,45 @@ namespace X3D.Parser.X3DB
                 document = XDocument.Load(xtr, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
             }
 
-            fastInfosetWriter = new FIWriter(x3dbStream, vocab);
+            fastInfosetWriter = new FIWriter(x3dbStream, vocab33);
 
             fiWriter = XmlWriter.Create(fastInfosetWriter);
             document.WriteTo(fiWriter);
             fiWriter.Close();
+
+            x3dbStream.Position = 0;
 
             return x3dbStream;
         }
 
         #endregion
 
+        #region Private Static Methods
+
+        /// <summary>
+        /// Creates a Vocabulary Store using same vocab (X3D Version 3.3) backing all previous versions 3.0 - 3.3.
+        /// </summary>
+        private static FIVocabularyManager CreateVocabStore()
+        {
+            FIVocabularyManager vocabularyProvider;
+
+            vocabularyProvider = new FIVocabularyManager();
+            vocabularyProvider.AddVocabulary(vocab33);
+            vocabularyProvider.AddVocabulary(vocab32);
+            vocabularyProvider.AddVocabulary(vocab31);
+            vocabularyProvider.AddVocabulary(vocab30);
+
+            return vocabularyProvider;
+        }
+
         /// <summary>
         /// http://www.web3d.org/documents/specifications/19776-3/V3.2/Part03/tables.html#Description
         /// http://www.web3d.org/documents/specifications/19776-3/V3.2/Part03/tables.html#t-ElementNameTableInitialValues
         /// http://www.web3d.org/documents/specifications/19776-3/V3.3/Part03/tables.html#t-AttributeNameTableInitialValues
         /// </summary>
-        private static FIExternalVocabulary CreateX3DBVocabulary()
+        private static FIExternalVocabulary CreateX3DBVocabulary(Uri uri)
         {
-            FIExternalVocabulary vocab = new FIExternalVocabulary(web3dURN);
+            FIExternalVocabulary vocab = new FIExternalVocabulary(uri);
 
             // X3D Elements
             vocab.AddElementNameSurrogate("Shape");
@@ -917,5 +959,7 @@ namespace X3D.Parser.X3DB
 
             return vocab;
         }
+
+        #endregion
     }
 }
