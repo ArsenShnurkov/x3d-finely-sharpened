@@ -55,6 +55,14 @@ Example 5 - #3
 ![alt text](screenshots/screenshot7.png "X3D Runtime Viewer Example 5")
 
 
+Example 6 - Minimal X3D Construction Set Implementation, demonstrating simple terrain computation. 
+![alt text](screenshots/ConstructionSet.png "X3D Runtime Viewer Example 6")
+
+
+
+
+
+
 
 Notices
 ```
@@ -79,13 +87,13 @@ Task list
 
 COMPLETED: URL/URI/filesys/CDATA/data:text/plain assett & resource fetching (partial URN support)
 COMPLETED: X3D XML Scene Export (b3ec3a7)
+MOSTLY: abstract types defined according to X3D 3.3 spec, see x3d-3.3.Designer.cs
 MOSTLY: Viewpoint and ViewpointGroup implementation and decent-scalable Camera model. (Support for Fly, and Examine)
+MOSTLY: Scripting using JavaScript (JIT compiled using the V8 Engine)
+MOSTLY: DEF and USE
 PARTLY: Background, MultiTexturing, CubeMapping, ..
 PARTLY: X3D Validation and invalid node pruning (Applied on the fly in the Runtime)
-MOSTLY: Scripting using JavaScript (JIT compiled using the V8 Engine)
 TODO: Node Prototyping
-MOSTLY: abstract types defined according to X3D 3.3 spec, see x3d-3.3.Designer.cs
-PARTLY: DEF and USE
 PARTLY: grouping
 TODO: event propagation between X3D nodes and their fields, and any shader uniforms
 TODO: networking: inline, import, export, etc
