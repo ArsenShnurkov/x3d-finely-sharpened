@@ -143,6 +143,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ConstructionSet\ConstructionSet.csproj">
+      <Project>{d80863f8-38c5-4273-9d0a-ca34ad44fa77}</Project>
+      <Name>ConstructionSet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\X3D\X3D.csproj">
       <Project>{0742E4E9-D1BA-41F1-B161-33CD3A3D4D33}</Project>
       <Name>X3D</Name>
@@ -150,6 +154,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Shaders\BackgroundFragmentShader.shader" />
+    <None Include="Shaders\PerlinNoiseFragmentShader.shader" />
+    <None Include="Shaders\BackgroundVertexShader.shader" />
+    <None Include="Shaders\PerlinNoiseVertexShader.shader" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
