@@ -13,13 +13,14 @@ using X3D.Core.Shading;
 using X3D.Core.Shading.DefaultUniforms;
 using System.Drawing;
 using System.Drawing.Imaging;
+using X3D.Engine;
 
-namespace X3D.Engine
+namespace X3D.ConstructionSet
 {
     /// <summary>
     /// Perlin noise renderer for heightmap generation
     /// </summary>
-    public class PerlinNoise
+    public class PerlinNoise : IPerlinNoiseGenerator
     {
         public float Height { get; set; }
         public Vector3 Position { get; set; }
@@ -44,6 +45,11 @@ namespace X3D.Engine
         }
 
         public Bitmap GetPerlinNoise(RenderingContext rc)
+        {
+            return GenerateHeightMap(rc);
+        }
+
+        public Bitmap GenerateHeightMap(RenderingContext rc)
         {
             GL.BindTexture(TextureTarget.Texture2D, 0);
 
