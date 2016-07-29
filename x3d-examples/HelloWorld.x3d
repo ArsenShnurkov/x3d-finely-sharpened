@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN" "http://www.web3d.org/specifications/x3d-3.3.dtd">
+<X3D profile='Immersive' version='3.3'>
+<head>
+</head>
+<Scene>
+      <WorldInfo title='Hello world!'></WorldInfo>
+      <Group>
+         <Viewpoint DEF='ViewUpClose' fieldOfView='0.7854' position='0 -1 7' description='Hello world!' centerOfRotation='0 -1 0'></Viewpoint>
+         <Transform rotation='0 1 0 3'>
+            <Shape>
+               <Appearance>
+                  <Material DEF='MaterialLightBlue' diffuseColor='.100000001 .5 1'></Material>
+                  <ImageTexture DEF='ImageCloudlessEarth' url='"earth-topo.png","earth-topo.jpg","earth-topo-small.gif","http://www.web3d.org/x3d/content/examples/Basic/earth-topo.png","http://www.web3d.org/x3d/content/examples/Basic/earth-topo.jpg","http://www.web3d.org/x3d/content/examples/Basic/earth-topo-small.gif"'></ImageTexture>
+               </Appearance>
+               <Sphere></Sphere>
+            </Shape>
+         </Transform>
+         <Transform translation='0 -2 0'>
+            <Shape>
+               <Appearance>
+                  <Material USE='MaterialLightBlue'></Material>
+               </Appearance>
+               <Text DEF='TextMessage' string='"Hello","world!"' solid='false'>
+                  <FontStyle justify='"MIDDLE","MIDDLE"'></FontStyle>
+               </Text>
+            </Shape>
+         </Transform>
+      </Group>
+</Scene>
+</X3D>
