@@ -11,8 +11,17 @@ using System.Xml.Schema;
 
 namespace X3D
 {
+    public delegate bool nodeComparePredicateDelegate(SceneGraphNode node);
+
     public abstract partial class SceneGraphNode
     {
+
+        #region Private Fields
+
+        private string _dEF;
+        private string _uSE;
+
+        #endregion
 
         #region Internal Fields
 
@@ -23,6 +32,32 @@ namespace X3D
         #endregion
 
         #region Public Fields
+
+        [XmlAttributeAttribute(DataType = "ID")]
+        public string DEF
+        {
+            get
+            {
+                return this._dEF;
+            }
+            set
+            {
+                this._dEF = value;
+            }
+        }
+
+        [XmlAttributeAttribute(DataType = "IDREF")]
+        public string USE
+        {
+            get
+            {
+                return this._uSE;
+            }
+            set
+            {
+                this._uSE = value;
+            }
+        }
 
         /// <summary>
         /// The line number and column number the element was parsed from in the XML document.
@@ -54,6 +89,40 @@ namespace X3D
 
         [XmlIgnore]
         public List<SceneGraphNode> Children = new List<SceneGraphNode>();
+
+        [XmlIgnore]
+        public List<SceneGraphNode> ChildrenWithAppliedReferences
+        {
+            get
+            {
+                var lst = this.Children;
+
+                List<SceneGraphNode> refs = new List<SceneGraphNode>();
+
+                foreach(SceneGraphNode child in Children)
+                {
+                    if (!string.IsNullOrEmpty(child.USE))
+                    {
+                        var def = child.Siblings.FirstOrDefault(n => !string.IsNullOrEmpty(n.DEF) && n.DEF == child.USE);
+
+                        if(def != null)
+                        {
+                            refs.Add(def);
+                        }
+                        else
+                        {
+                            refs.Add(child);
+                        }
+                    }
+                    else
+                    {
+                        refs.Add(child);
+                    }
+                }
+
+                return refs;
+            }
+        }
 
         /// <summary>
         /// The children that arent currently visible in the scene
@@ -188,6 +257,37 @@ namespace X3D
             return result;
         }
 
+        public SceneGraphNode SearchDFS(nodeComparePredicateDelegate compare)
+        {
+            // Breadth first search for decendant node by type
+            Queue<SceneGraphNode> work_items;
+            SceneGraphNode node;
+            SceneGraphNode result = null;
+
+            work_items = new Queue<SceneGraphNode>();
+            work_items.Enqueue(this);
+
+            do
+            {
+                node = work_items.Dequeue();
+
+                if (compare(node))
+                {
+                    result = node;
+
+                    break;
+                }
+
+                foreach (SceneGraphNode child in node.Children)
+                {
+                    work_items.Enqueue(child);
+                }
+            }
+            while (work_items.Count > 0);
+
+            return result;
+        }
+
         public List<SceneGraphNode> DecendantsByType(Type t)
         {
             // Breadth first search for decendant node by type
@@ -233,6 +333,23 @@ namespace X3D
                 }
 
                 parent = parent.Parent;
+            }
+
+            return lst;
+        }
+
+        public List<SceneGraphNode> Ascendants()
+        {
+            SceneGraphNode ascendant;
+            List<SceneGraphNode> lst = new List<SceneGraphNode>();
+
+            ascendant = this.Parent;
+
+            while (ascendant != null)
+            {
+                lst.Add(ascendant);
+
+                ascendant = ascendant.Parent;
             }
 
             return lst;

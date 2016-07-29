@@ -31,6 +31,12 @@ namespace X3D.Engine
     {
         public SceneGraph SceneGraph;
         public ScriptingEngine ScriptingEngine;
+        public static IConstructionSet ConstructionSet { get; set; }
+
+        public static IConstructionSet GetCurrentConstructionSet()
+        {
+            return ConstructionSet;
+        }
 
         public static string CurrentLocation; // the cd is set upon every X3D scene fetch
 

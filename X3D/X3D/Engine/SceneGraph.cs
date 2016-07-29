@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using X3D.Core;
 using X3D.Parser;
 using System.Xml;
+using System.Linq;
 
 namespace X3D.Engine
 {
@@ -14,11 +15,15 @@ namespace X3D.Engine
     /// http://en.wikipedia.org/wiki/Scene_graph
     /// http://www.drdobbs.com/jvm/understanding-scene-graphs/184405094
     /// http://edutechwiki.unige.ch/en/X3DV#The_scene_graph
+    /// 
+    /// DEF/USE Semantics
+    /// http://www.web3d.org/documents/specifications/19775-1/V3.2/Part01/concepts.html#DEFL_USESemantics
     /// </summary>
     public class SceneGraph
     {
         private SceneGraphNode _root;
         private int __lastid = 0;
+        private Dictionary<string, SceneGraphNode> defUseScope = new Dictionary<string, SceneGraphNode>();
 
         public bool Loaded { get; set; }
 
@@ -32,6 +37,7 @@ namespace X3D.Engine
 
             nav.MoveToRoot();
 
+            // PASS 1
             build_scene_iterativily(nav);
 
             Optimise();
@@ -78,6 +84,7 @@ namespace X3D.Engine
             XPathNavigator startPosition;
             SceneGraphNode parent;
             SceneGraphNode child;
+            SceneGraphNode def;
             int current_depth;
 
             nav.MoveToFirstChild();
@@ -126,6 +133,54 @@ namespace X3D.Engine
 
                     //child.ContinueDeserialization();
                     // ... DEF_use
+
+                    #region DEF/USE 
+
+                    if (!string.IsNullOrEmpty(child.DEF))
+                    {
+                        child.USE = string.Empty;
+
+                        if (defUseScope.ContainsKey(child.DEF))
+                        {
+                            defUseScope[child.DEF] = child; // override existing
+                        }
+                        else
+                        {
+                            defUseScope.Add(child.DEF, child);
+                        }
+                        
+                    }
+                    else if (!string.IsNullOrEmpty(child.USE))
+                    {
+                        child.DEF = string.Empty;
+
+                        var asc = child.Ascendants();
+
+                        if (asc.Any(ascendant => ascendant.DEF == child.USE))
+                        {
+                            Console.WriteLine("Cyclic reference ignored DEF_USE ", child.USE);
+
+                            continue;
+                        }
+
+
+                        // if DEF is not an ancestor (self referential) then there are no cyclic references, so we are good to go.
+                        // insert the DEF node a 2nd time as a child of the USE node parent
+                        // resulting in the DEF node having multiple parents. See DEF/USE semantics.
+
+                        def = _root.SearchDFS((SceneGraphNode n) => n.DEF == child.USE);
+
+                        if (def != null && child.Parent != null)
+                        {
+                            def.Parents.Add(child.Parent);
+
+                            child.Parent.Children.Add(def);
+
+
+                        }
+                    }
+
+                    #endregion
 
                     child.PostDeserialization();
                 }

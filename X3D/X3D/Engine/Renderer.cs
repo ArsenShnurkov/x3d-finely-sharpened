@@ -63,6 +63,7 @@ namespace X3D.Engine
             int num_nodes_visited;
             int num_children_visited;
             SceneGraphNode node;
+            SceneGraphNode defNode;
 
             nodes_visited = new List<int>(); /* It is required to keep track of all the nodes visited for post rendering 
                                                            * (there is no other way (for dfs algorithm) around this) */
@@ -80,7 +81,26 @@ namespace X3D.Engine
                 {
                     nodes_visited.Add(node._id);
 
-                    visit(node,context);
+                    if (!string.IsNullOrEmpty(node.USE))
+                    {
+                        // DEF node should have been linked as a sibling
+
+                        defNode = node.Siblings.FirstOrDefault(n => n.DEF == node.USE);
+                        
+                        if(defNode != null)
+                        {
+                            // Ignore rendering the USE node, maybe copy some of its properties
+
+                            visit(defNode, context);
+                        }
+
+                    }
+                    else
+                    {
+                        visit(node, context);
+                    }
+
+                    
 
                     num_nodes_visited++;
                 }
