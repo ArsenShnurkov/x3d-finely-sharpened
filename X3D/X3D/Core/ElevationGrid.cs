@@ -10,6 +10,8 @@ using OpenTK.Input;
 using X3D.Core.Shading;
 using X3D.Core.Shading.DefaultUniforms;
 using X3D.Parser;
+using X3D.Engine;
+using System.Drawing;
 
 namespace X3D
 {
@@ -24,6 +26,10 @@ namespace X3D
 
         private bool RGBA = false, RGB = false, coloring = false, texturing = false, 
             generateColorMap = false, generateTexCoordMap = false;
+
+        [XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(true)]
+        public bool construct { get; set; }
 
         [XmlIgnore]
         public float[,] HeightMap;
@@ -92,6 +98,43 @@ namespace X3D
             base.PreRenderOnce(rc);
 
             List<Vertex> geometry;
+
+
+            if (construct)
+            {
+                float sx = this.xSpacing;
+                float sz = this.zSpacing;
+
+                IConstructionSet constructionSet;
+                IPerlinNoiseGenerator perlinProvider;
+                Bitmap largePerlinImage;
+
+                constructionSet = SceneManager.GetCurrentConstructionSet();
+                perlinProvider = constructionSet.GetPerlinNoiseProvider();
+
+                ElevationGrid generated = constructionSet.ElevationBuilder.BuildHeightmapFromGenerator(
+                    rc,
+                    perlinProvider,
+                    out largePerlinImage, 40, 40, 20, 20, 20); // build a rather large height map
+
+                largePerlinImage.Dispose();
+
+                Color genColorNode = (Color)generated.Children.FirstOrDefault(n => n.GetType() == typeof(Color));
+                this.RGB = coloring = generateColorMap = true;
+                this.height = generated.height;
+                this.color = X3DTypeConverters.Floats(genColorNode.color);
+                this.colorPerVertex = generated.colorPerVertex;
+                this.normalPerVertex = generated.normalPerVertex;
+                this.Children = generated.Children;
+                this.xSpacing = generated.xSpacing;
+                this.zSpacing = generated.zSpacing;
+                this.xDimension = generated.xDimension;
+                this.zDimension = generated.zDimension;
+            }
+
+
+
+
 
             if (!this._isLoaded)
             {

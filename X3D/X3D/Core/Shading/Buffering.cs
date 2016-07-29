@@ -116,16 +116,19 @@ namespace X3D.Core.Shading
         }
 
         public static int BufferShaderGeometry(Verticies geometry,
-                                               out int vbo_interleaved3, out int NumVerticies)
+                                               out int vbo_interleaved, out int NumVerticies)
         {
-            Vertex[] _interleaved3 = geometry.ToArray();
+            Vertex[] _interleaved = geometry.ToArray();
 
 
             Console.WriteLine("Buffering Verticies..");
 
-            GL.GenBuffers(1, out vbo_interleaved3);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_interleaved3); // InterleavedArrayFormat.T2fC4fN3fV3f
-            GL.BufferData<Vertex>(BufferTarget.ArrayBuffer, (IntPtr)(_interleaved3.Length * Vertex.SizeInBytes), _interleaved3, BufferUsageHint.StaticDraw);
+            vbo_interleaved = GL.GenBuffer();
+            //GL.GenBuffers(1, out vbo_interleaved);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_interleaved); // InterleavedArrayFormat.T2fC4fN3fV3f
+            GL.BufferData<Vertex>(BufferTarget.ArrayBuffer, 
+                (IntPtr)(_interleaved.Length * Vertex.SizeInBytes), 
+                _interleaved, BufferUsageHint.StaticDraw);
 
             Console.WriteLine("[done]");
 
@@ -135,10 +138,234 @@ namespace X3D.Core.Shading
             // [1 1] [1 1 1 1]  [1 1 1]   [1 1 1]
             //     8        24  28    36  40   48
 
-            NumVerticies = _interleaved3.Length;
+            NumVerticies = _interleaved.Length;
 
-            return vbo_interleaved3;
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+
+            return vbo_interleaved;
         }
+
+        public static void Interleave(BoundingBox _bbox,
+    out List<Vertex> verticies3,
+    out List<Vertex> verticies4,
+    int[] _indices, int[] _texIndices,
+    Vector3[] _coords, Vector2[] _texCoords, Vector3[] _normals,
+    int[] _colorIndicies, float[] colors,
+    int? restartIndex = -1, bool genTexCoordPerVertex = true, bool colorPerVertex = true,
+    bool coloring = false, bool texturing = false)
+        {
+            int FACE_RESTART_INDEX = 2;
+
+            // INTERLEAVE FACE SET
+            Console.WriteLine("Interleaving {0} indicies", _indices.Length);
+
+            int faceSetIndex = 0;
+            int faceSetValue, texSetValue = -1, colSetValue = -1;
+            int faceType = 0;
+            List<int> faceset = new List<int>();
+            List<int> texset = new List<int>();
+            List<int> colset = new List<int>();
+            List<Vertex> verticies2 = new List<Vertex>();
+            verticies3 = new List<Vertex>(); // buffer verticies of different face types separatly
+            verticies4 = new List<Vertex>();
+            Vertex v;
+            Vector4 c;
+            float tmp;
+
+            if (restartIndex.HasValue)
+            {
+                // and put verticies of type 4 in another buffer
+                for (int coordIndex = 0; coordIndex < _indices.Length; coordIndex++)
+                {
+                    faceSetValue = _indices[coordIndex];
+
+                    if (_texIndices != null && _texIndices.Length > 0)
+                        texSetValue = _texIndices[coordIndex];
+
+                    if (_texIndices != null && _texIndices.Length > 0)
+                        colSetValue = _texIndices[coordIndex];
+
+                    if (faceSetValue == restartIndex.Value)
+                    {
+                        for (int k = 0; k < faceType; k++)
+                        {
+                            v = Vertex.Zero;
+                            v.Position = _coords[faceset[k]];
+
+                            // Flip Z and Y
+                            //tmp = v.Position.Z;
+                            //v.Position.Z = -v.Position.Y;
+                            //v.Position.Y = tmp;
+
+                            if (texset != null && texset.Count > 0 && _texCoords != null && _texCoords.Length > 0)
+                            {
+                                v.TexCoord = _texCoords[texset[k]];
+                            }
+                            else if (genTexCoordPerVertex && texturing && _bbox != null)
+                            {
+                                //v.TexCoord = MathHelpers.uv(v.Position.x);
+                                v = MathHelpers.uv(_bbox, new Vertex[] { v }, at_origin: false)[0];
+                            }
+
+                            if (coloring)
+                            {
+                                if (colorPerVertex)
+                                {
+
+                                }
+                                else
+                                {
+                                    // color per face
+
+
+                                }
+                            }
+
+                            if (_normals != null && _normals.Length > 0)
+                            {
+                                v.Normal = _normals[faceset[k]];
+                            }
+
+                            switch (faceType)
+                            {
+                                case 3:
+                                    verticies3.Add(v);
+                                    break;
+
+                                case 4:
+                                    verticies4.Add(v);
+                                    break;
+
+                                case 2:
+                                    verticies2.Add(v);
+                                    break;
+                            }
+                        }
+
+                        faceSetIndex++;
+                        faceType = 0;
+                        faceset.Clear();
+                        texset.Clear();
+                    }
+                    else
+                    {
+                        faceType++;
+                        faceset.Add(faceSetValue);
+
+                        if (_texIndices != null && _texIndices.Length > 0)
+                            texset.Add(texSetValue);
+                    }
+                }
+            }
+            else
+            {
+                // NO RESTART INDEX, assume new face is at every 3rd value / i = 2
+
+                if (_indices.Length == 4)
+                {
+                    FACE_RESTART_INDEX = 4; // 0-3 Quad
+                }
+                else if (_indices.Length == 3)
+                {
+                    FACE_RESTART_INDEX = 3; // 0-3 Triangle
+                }
+                else
+                {
+                    FACE_RESTART_INDEX = 3;
+                }
+
+                for (int coordIndex = 0; coordIndex < _indices.Length; coordIndex++)
+                {
+                    faceSetValue = _indices[coordIndex];
+                    faceset.Add(faceSetValue);
+                    faceType++;
+
+                    if (_texIndices != null)
+                    {
+                        texSetValue = _texIndices[coordIndex];
+                        texset.Add(texSetValue);
+                    }
+
+                    if (coordIndex > 0 && (coordIndex + 1) % FACE_RESTART_INDEX == 0)
+                    {
+                        for (int k = 0; k < faceType; k++)
+                        {
+                            switch (faceType)
+                            {
+                                case 3:
+                                    v = Vertex.Zero;
+                                    v.Position = _coords[faceset[k]];
+
+                                    // Flip Z and Y
+                                    //tmp = v.Position.Z;
+                                    //v.Position.Z = -v.Position.Y;
+                                    //v.Position.Y = tmp;
+
+                                    if (texset != null && texset.Count > 0 && _texCoords != null && _texCoords.Length > 0)
+                                    {
+                                        v.TexCoord = _texCoords[texset[k]];
+                                    }
+                                    else if (genTexCoordPerVertex && texturing && _bbox != null)
+                                    {
+                                        //v.TexCoord = MathHelpers.uv(v.Position.x);
+                                        v = MathHelpers.uv(_bbox, new Vertex[] { v }, at_origin: false)[0];
+                                    }
+
+                                    if (_normals != null && _normals.Length > 0)
+                                    {
+                                        v.Normal = _normals[faceset[k]];
+                                    }
+
+                                    verticies3.Add(v);
+                                    break;
+
+                                case 4:
+                                    v = Vertex.Zero;
+                                    v.Position = _coords[faceset[k]];
+
+                                    // Flip Z and Y
+                                    tmp = v.Position.Z;
+                                    v.Position.Z = -v.Position.Y;
+                                    v.Position.Y = tmp;
+
+                                    if (texset != null && texset.Count > 0 && _texCoords != null && _texCoords.Length > 0)
+                                    {
+                                        v.TexCoord = _texCoords[texset[k]];
+                                    }
+                                    else if (genTexCoordPerVertex && texturing && _bbox != null)
+                                    {
+                                        v = MathHelpers.uv(_bbox, new Vertex[] { v }, at_origin: false)[0];
+                                    }
+
+                                    if (_normals != null && _normals.Length > 0)
+                                    {
+                                        v.Normal = _normals[faceset[k]];
+                                    }
+                                    //v.Position = new Vector4(_coords[faceset[k]]);
+
+                                    verticies4.Add(v);
+                                    break;
+
+                                case 2:
+                                    v = Vertex.Zero;
+                                    //v.Position = new Vector3(_coords[faceset[k]]);
+
+                                    verticies2.Add(v);
+                                    break;
+                            }
+                        }
+
+                        faceSetIndex++;
+                        faceType = 0;
+                        faceset.Clear();
+                        texset.Clear();
+                    }
+                }
+            }
+
+            //Dont buffer geometry here, just interleave
+        }
+
 
         public static void Interleave(BoundingBox _bbox,
             out int vbo_interleaved3, out int NumVerticies,

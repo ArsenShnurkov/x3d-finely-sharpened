@@ -11,56 +11,27 @@ namespace X3D
 {
     public partial class Cylinder
     {
-        #region Rendering Methods
-
-        private int vbo;
-        private int verts;
         private Shape parentShape;
 
+        // Use IndexedFaceSet but dont connect it to the actual scene graph the current Cone is in.
+        private IndexedFaceSet ifs1;
+
+        #region Rendering Methods
 
         public override void Load()
         {
             base.Load();
 
-            List<Vertex> geometry = new List<Vertex>();
-            Vector3 p, a, b, c;
-            Vector2 uv;
-            int numVertices = 80;
-            float phi = 0;
-            float angleSegment = (2.0f * (float)Math.PI) / (numVertices);
-            float geoScale = 0.065f;
-            float geoHeight = this.height * geoScale;
-            float xRadius = this.radius * geoScale;
-            float yRadius = this.radius * geoScale;
+            buildCylinderGeometry();
+        }
 
-            // Shaft
-            for (int j = 0; j <= numVertices + 1; j++)
-            {
-                a = new Vector3((float)Math.Cos(phi), 0, 0);
-                b = new Vector3(0, 0, (float)Math.Sin(phi));
-                c = new Vector3(0, j % 2 == 0 ? geoHeight : -geoHeight, 0);
-
-                p = (a * xRadius + b * yRadius) + c;
-                uv = MathHelpers.uv((p.X / geoHeight) * 1.0f, (p.Y / radius) * 1.0f);
-
-                geometry.Add(new Vertex(p, uv)); 
-
-                phi += angleSegment;
-            }
-
-            if (this.top)
-            {
-
-            }
-
-            if (this.bottom)
-            {
-
-            }
+        public override void PreRenderOnce(RenderingContext rc)
+        {
+            base.PreRenderOnce(rc);
 
             parentShape = GetParent<Shape>();
 
-            Buffering.BufferShaderGeometry(geometry, out vbo, out verts);
+            ifs1.PreRenderOnce(rc);
         }
 
         public override void Render(RenderingContext rc)
@@ -68,21 +39,43 @@ namespace X3D
             base.Render(rc);
 
 
-            GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
-            int uniformSize = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "size");
-            int uniformScale = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "scale");
-            var size = new Vector3(1, 1, 1);
-            var scale = new Vector3(1.0f, 1.0f, 1.0f);
-            GL.Uniform3(uniformSize, size);
-            GL.Uniform3(uniformScale, scale);
+            rc.PushMatricies();
 
+            rc.matricies.Scale = new Vector3(2 * this.radius, (1f * height), 2 * radius);  // Too easy, almost feel like im cheating here.
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-            Buffering.ApplyBufferPointers(parentShape.CurrentShader);
-            //Buffering.ApplyBufferPointers(parentShape.uniforms);
-            GL.DrawArrays(PrimitiveType.TriangleStrip, 0, verts);
+            rc.matricies.Scale *= new Vector3(0.1f, 0.1f, 0.1f);
+
+            
+
+            ifs1.Render(rc);
+
+            rc.PopMatricies();
         }
 
         #endregion
+
+        private void buildCylinderGeometry()
+        {
+            Normal normal;
+            Coordinate coordinate;
+
+            ifs1 = new IndexedFaceSet();
+            coordinate = new Coordinate();
+            normal = new Normal();
+
+            ifs1.normalPerVertex = true;
+            ifs1.normalIndex = "0 1 17 16 -1 0 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 -1 0 16 31 15 -1 1 2 18 17 -1 2 3 19 18 -1 3 4 20 19 -1 4 5 21 20 -1 5 6 22 21 -1 6 7 23 22 -1 7 8 24 23 -1 8 9 25 24 -1 9 10 26 25 -1 10 11 27 26 -1 11 12 28 27 -1 12 13 29 28 -1 13 14 30 29 -1 14 15 31 30 -1 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 -1";
+            ifs1.coordIndex = "0 1 17 16 -1 0 15 14 13 12 11 10 9 8 7 6 5 4 3 2 1 -1 0 16 31 15 -1 1 2 18 17 -1 2 3 19 18 -1 3 4 20 19 -1 4 5 21 20 -1 5 6 22 21 -1 6 7 23 22 -1 7 8 24 23 -1 8 9 25 24 -1 9 10 26 25 -1 10 11 27 26 -1 11 12 28 27 -1 12 13 29 28 -1 13 14 30 29 -1 14 15 31 30 -1 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 -1";
+            coordinate.point = "1.0 1.0 0.0, 0.9238795 1.0 0.38268343, 0.70710677 1.0 0.70710677, 0.38268343 1.0 0.9238795, 6.123234E-17 1.0 1.0, -0.38268343 1.0 0.9238795, -0.70710677 1.0 0.70710677, -0.9238795 1.0 0.38268343, -1.0 1.0 1.2246469E-16, -0.9238795 1.0 -0.38268343, -0.70710677 1.0 -0.70710677, -0.38268343 1.0 -0.9238795, -1.8369701E-16 1.0 -1.0, 0.38268343 1.0 -0.9238795, 0.70710677 1.0 -0.70710677, 0.9238795 1.0 -0.38268343, 1.0 -1.0 0.0, 0.9238795 -1.0 0.38268343, 0.70710677 -1.0 0.70710677, 0.38268343 -1.0 0.9238795, 6.123234E-17 -1.0 1.0, -0.38268343 -1.0 0.9238795, -0.70710677 -1.0 0.70710677, -0.9238795 -1.0 0.38268343, -1.0 -1.0 1.2246469E-16, -0.9238795 -1.0 -0.38268343, -0.70710677 -1.0 -0.70710677, -0.38268343 -1.0 -0.9238795, -1.8369701E-16 -1.0 -1.0, 0.38268343 -1.0 -0.9238795, 0.70710677 -1.0 -0.70710677, 0.9238795 -1.0 -0.38268343,";
+            normal.vector = "0.89090914 0.45418155 -2.2690927E-16, 0.82309276 0.45418155 0.34093618, 0.6299679 0.45418155 0.6299679, 0.34093618 0.45418155 0.82309276, 0.0 0.45418155 0.89090914, -0.34093618 0.45418155 0.82309276, -0.6299679 0.45418155 0.6299679, -0.82309276 0.45418155 0.34093618, -0.89090914 0.45418155 1.260607E-17, -0.82309276 0.45418155 -0.34093618, -0.6299679 0.45418155 -0.6299679, -0.34093618 0.45418155 -0.82309276, -1.3866677E-16 0.45418155 -0.89090914, 0.34093618 0.45418155 -0.82309276, 0.6299679 0.45418155 -0.6299679, 0.82309276 0.45418155 -0.34093618, 0.89090914 -0.45418155 -1.8909105E-16, 0.82309276 -0.45418155 0.34093618, 0.6299679 -0.45418155 0.6299679, 0.34093618 -0.45418155 0.82309276, 0.0 -0.45418155 0.89090914, -0.34093618 -0.45418155 0.82309276, -0.6299679 -0.45418155 0.6299679, -0.82309276 -0.45418155 0.34093618, -0.89090914 -0.45418155 5.042428E-17, -0.82309276 -0.45418155 -0.34093618, -0.6299679 -0.45418155 -0.6299679, -0.34093618 -0.45418155 -0.82309276, -1.3866677E-16 -0.45418155 -0.89090914, 0.34093618 -0.45418155 -0.82309276, 0.6299679 -0.45418155 -0.6299679, 0.82309276 -0.45418155 -0.34093618, ";
+            
+            ifs1.coordinate = coordinate;
+            ifs1.normal = normal;
+            ifs1.Items.Add(coordinate);
+            ifs1.Items.Add(normal);
+            ifs1.Children.Add(coordinate);
+            ifs1.Children.Add(normal);
+            ifs1.Parent = this.Parent;
+        }
     }
 }

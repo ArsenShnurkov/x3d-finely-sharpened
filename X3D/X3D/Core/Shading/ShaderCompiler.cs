@@ -5,11 +5,56 @@ using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using X3D.Core.Shading;
+using System.IO;
 
 namespace X3D.Core
 {
     public class ShaderCompiler
     {
+
+        public static string GetShaderSource(string fileAbsolutePath, string basePath)
+        {
+            string @base = System.IO.Path.GetFullPath(basePath);
+
+            return File.ReadAllText(@base + fileAbsolutePath);
+        }
+
+        /// <summary>
+        /// Create a copy of a Shader program using same source but linked in another new program instance.
+        /// </summary>
+        /// <param name="copyTarget">
+        /// The shader to derive a new instance from.
+        /// </param>
+        /// <param name="link">
+        /// If the shader copy is to be linked
+        /// </param>
+        /// <returns></returns>
+        public static ComposedShader CreateNewInstance(ComposedShader copyTarget, bool link = true)
+        {
+            ComposedShader derived;
+            ShaderPart partClone;
+
+            derived = new ComposedShader();
+            derived.language = copyTarget.language;
+            derived.IsBuiltIn = copyTarget.IsBuiltIn;
+
+            foreach(ShaderPart part in copyTarget.ShaderParts)
+            {
+                partClone = new ShaderPart();
+                partClone.ShaderSource = part.ShaderSource;
+                partClone.Type = part.Type;
+
+                derived.ShaderParts.Add(partClone);
+            }
+
+            if (link)
+            {
+                derived.Link();
+            }
+
+            return derived;
+        }
+
         public static ComposedShader BuildDefaultShader()
         {
             var defaultsh = new ComposedShader();

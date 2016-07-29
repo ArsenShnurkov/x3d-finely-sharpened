@@ -1,4 +1,6 @@
-﻿using OpenTK;
+﻿// TODO: calculate texcoords using spherical equation in shader
+
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,8 +60,8 @@ namespace X3D
             base.Render(rc);
 
             var size = new Vector3(1, 1, 1);
-            var scale = new Vector3(1, 1, 1);
-            //var scale = new Vector3(0.04f, 0.04f, 0.04f);
+            //var scale = new Vector3(1, 1, 1);
+            var scale = new Vector3(0.04f, 0.04f, 0.04f);
 
             // Refactor tessellation 
 

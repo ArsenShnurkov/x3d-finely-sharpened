@@ -17,6 +17,9 @@ using X3D.Core.Shading.DefaultUniforms;
 
 namespace X3D
 {
+    /// <summary>
+    /// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/enveffects.html#Background
+    /// </summary>
     public partial class Background
     {
         private int tex_cube;
@@ -38,6 +41,10 @@ namespace X3D
         private float[] skyAngles;
         private float groundDivisor;
         private float skyDivisor;
+        private Vector3 bboxOuter, bboxInner;
+
+        private Vector3[] colors;
+        private float[] angles;
 
         #region Private Methods
 
@@ -118,6 +125,9 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
         {
             base.Load();
 
+            Vector3 min, max;
+            int i;
+
             generateCube = !(string.IsNullOrEmpty(frontUrl) || string.IsNullOrEmpty(backUrl)
                 || string.IsNullOrEmpty(topUrl) || string.IsNullOrEmpty(bottomUrl)
                 || string.IsNullOrEmpty(leftUrl) || string.IsNullOrEmpty(rightUrl));
@@ -142,6 +152,22 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 this.skyColors = X3DTypeConverters.MFVec3f(skyColor);
                 this.skyAngles = X3DTypeConverters.Floats(skyAngle);
 
+                // Assign colors with matching angles
+                colors = new Vector3[groundColors.Length + skyColors.Length];
+                for(i=0; i < skyColors.Length; i++)
+                    colors[i] = skyColors[i];
+                for (i = skyColors.Length; i < skyColors.Length + groundColors.Length; i++)
+                    colors[i] = groundColors[i - skyColors.Length];
+                angles = new float[groundAngles.Length + skyAngles.Length + 2];
+                angles[0] = 0;
+                for (i = 0; i < skyAngles.Length; i++)
+                    angles[i + 1] = skyAngles[i];
+                angles[skyAngles.Length + 1] = 0;
+                for (i = 0; i < groundAngles.Length; i++)
+                    angles[i + skyAngles.Length + 2] = 1.5f + groundAngles[i];
+                
+
+
                 groundDivisor = (1.0f / groundColors.Length) * (float)Math.PI; // how many colors divided over 90 degrees (lower hemisphere)
                 skyDivisor = (1.0f / groundColors.Length) * (float)Math.PI; // how many colors divided over 90 degrees (upper hemisphere)
 
@@ -151,21 +177,31 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 scaleSky = Vector3.One * 6.0f; // slightly bigger than ground hemisphere
                 _shapeOuter = new Shape();
                 _shapeOuter.Load();
-                _shapeOuter.IncludeDefaultShader(DefaultShader.vertexShaderSource,
-                                                 DefaultShader.fragmentShaderSource);
+                _shapeOuter.IncludeDefaultShader(BackgroundShader.vertexShaderSource, // Make use of the BackgroundShader for Skydome Linear Interpolation
+                                                 BackgroundShader.fragmentShaderSource);
                 _shapeOuter.CurrentShader.Use();
                 List<Vertex> geometryOuterSphere = BuildSphereGeometryQuads(60, Vector3.Zero, 1.0f);
                 Buffering.BufferShaderGeometry(geometryOuterSphere, out _vbo_interleaved_outer, out NumVerticiesOuter);
+
+                min = Vector3.Zero;
+                max = Vector3.Zero;
+                BoundingBox.CalculateBoundingBox(geometryOuterSphere, out max, out min);
+                bboxOuter = max - min;
 
                 // inner hemisphere (ground)
 
                 scaleGround = Vector3.One * 5.6f;
                 _shapeInner = new Shape();
                 _shapeInner.Load();
-                _shapeInner.IncludeDefaultShader(DefaultShader.vertexShaderSource,
-                                                 DefaultShader.fragmentShaderSource);
+                _shapeInner.IncludeDefaultShader(BackgroundShader.vertexShaderSource,
+                                                 BackgroundShader.fragmentShaderSource);
                 List<Vertex> geometryInnerHemisphere = BuildHemisphereGeometryQuads(60, new Vector3(0, 0.0f,0), 1.0f, false);
                 Buffering.BufferShaderGeometry(geometryInnerHemisphere, out _vbo_interleaved_inner, out NumVerticiesInner);
+
+                min = Vector3.Zero;
+                max = Vector3.Zero;
+                BoundingBox.CalculateBoundingBox(geometryInnerHemisphere, out max, out min);
+                bboxInner = max - min;
             }
 
             if (generateCube)
@@ -200,8 +236,6 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
             //GL.Disable(EnableCap.DepthTest);
 
-            //TODO: in shader perform a Slerp https://en.wikipedia.org/wiki/Slerp
-
             if (generateSkyAndGround)
             {
                 rc.PushMatricies();
@@ -211,28 +245,33 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 if (texture2d)
                     GL.Disable(EnableCap.Texture2D);
 
+                Matrix4 mat4;
                 // Outer sky Sphere
                 this._shapeOuter.Render(rc);
 
                 _shapeOuter.CurrentShader.Use();
 
-                Matrix4 mat4;
+
 
 #if APPLY_BACKDROP
-                mat4 = rc.cam.ViewMatrix;
+                mat4 = rc.cam.GetWorldOrientation();
                 _shapeOuter.CurrentShader.SetFieldValue("modelview", ref mat4);
 #endif
                 _shapeOuter.CurrentShader.SetFieldValue("scale", scaleSky);
                 _shapeOuter.CurrentShader.SetFieldValue("size", size);
-                _shapeOuter.CurrentShader.SetFieldValue("coloringEnabled", 1);
-                _shapeOuter.CurrentShader.SetFieldValue("texturingEnabled", 0);
+                _shapeOuter.CurrentShader.SetFieldValue("skyColor", this.colors, 255 * 3);
+                _shapeOuter.CurrentShader.SetFieldValue("skyAngle", this.angles, 255);
+                _shapeOuter.CurrentShader.SetFieldValue("skyColors", this.colors.Length);
+                _shapeOuter.CurrentShader.SetFieldValue("isGround", 0);
+                _shapeOuter.CurrentShader.SetFieldValue("bbox", bboxOuter);
+
+
 
 #if APPLY_BACKDROP
                 GL.DepthMask(false);
 #endif
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved_outer);
                 Buffering.ApplyBufferPointers(_shapeOuter.CurrentShader);
-                //Buffering.ApplyBufferPointers(_shapeOuter.uniforms);
                 GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticiesOuter);
 
 #if APPLY_BACKDROP
@@ -253,15 +292,17 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 #endif
                 _shapeInner.CurrentShader.SetFieldValue("scale", scaleGround);
                 _shapeInner.CurrentShader.SetFieldValue("size", size);
-                _shapeInner.CurrentShader.SetFieldValue("coloringEnabled", 1);
-                _shapeInner.CurrentShader.SetFieldValue("texturingEnabled", 0);
+                _shapeInner.CurrentShader.SetFieldValue("skyColor", this.colors, 255 * 3);
+                _shapeInner.CurrentShader.SetFieldValue("skyAngle", this.angles, 255);
+                _shapeInner.CurrentShader.SetFieldValue("skyColors", this.colors.Length);
+                _shapeInner.CurrentShader.SetFieldValue("isGround", 1);
+                _shapeInner.CurrentShader.SetFieldValue("bbox", bboxInner);
 
 #if APPLY_BACKDROP
                 GL.DepthMask(false);
 #endif
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved_inner);
                 Buffering.ApplyBufferPointers(_shapeInner.CurrentShader);
-                //Buffering.ApplyBufferPointers(_shapeInner.uniforms);
                 GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticiesInner);
 
 #if APPLY_BACKDROP
@@ -409,8 +450,6 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                     anglePrev = angle;
                 }
             }
-
-
 
 
             return new Vector4(colorPalette[colorIndex], 1.0f);

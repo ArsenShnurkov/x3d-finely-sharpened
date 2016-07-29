@@ -28,6 +28,7 @@ namespace X3D
         private const int RESTART_INDEX = -1;
         private Shape parentShape;
         private Shape _shape4;
+        private ComposedShader quadShader;
 
         private BoundingBox _bbox;
         private bool RGBA = false, RGB = false, coloring = false, texturing = false, generateColorMap = false;
@@ -37,6 +38,9 @@ namespace X3D
         private readonly float tessLevelInner = 137; // 3
         private readonly float tessLevelOuter = 115; // 2
 
+        List<Vertex> interleaved3;
+        List<Vertex> interleaved4;
+
         public override void PreRenderOnce(RenderingContext rc)
         {
             base.PreRenderOnce(rc);
@@ -45,6 +49,10 @@ namespace X3D
 
             parentShape = GetParent<Shape>();
 
+            
+
+
+
             _shape4 = new Shape();
             _shape4.Load();
 
@@ -52,10 +60,10 @@ namespace X3D
 
             
 
-            texCoordinate = (TextureCoordinate)this.Items.FirstOrDefault(n => n.GetType() == typeof(TextureCoordinate));
-            coordinate = (Coordinate)this.Items.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
-            colorNode = (Color)this.Items.FirstOrDefault(n => n.GetType() == typeof(Color));
-            colorRGBANode = (ColorRGBA)this.Items.FirstOrDefault(n => n.GetType() == typeof(ColorRGBA));
+            texCoordinate = (TextureCoordinate)this.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(TextureCoordinate));
+            coordinate = (Coordinate)this.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
+            colorNode = (Color)this.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Color));
+            colorRGBANode = (ColorRGBA)this.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(ColorRGBA));
 
             RGBA = colorRGBANode != null;
             RGB = colorNode != null;
@@ -95,12 +103,32 @@ namespace X3D
 
                 this._bbox = MathHelpers.CalcBoundingBox(this, restartIndex);
 
-                Buffering.Interleave(this._bbox, 
-                    out _vbo_interleaved, out NumVerticies,
-                    out _vbo_interleaved4, out NumVerticies4,
+
+
+                Buffering.Interleave(this._bbox,
+                    out interleaved3,
+                    out interleaved4,
                     _indices, _texIndices, _coords,
                     _texCoords, null, _colorIndicies, color, restartIndex, true,
                     this.colorPerVertex, this.coloring, this.texturing);
+
+
+                // BUFFER GEOMETRY
+                if (interleaved3.Count > 0)
+                {
+                    Buffering.BufferShaderGeometry(interleaved3, out _vbo_interleaved, out NumVerticies);
+                }
+
+
+
+                if (interleaved4.Count > 0)
+                {
+                    quadShader = ShaderCompiler.CreateNewInstance(parentShape.CurrentShader, true);
+
+                    Buffering.BufferShaderGeometry(interleaved4, out _vbo_interleaved4, out NumVerticies4);
+                }
+
+                
             }
 
             Console.WriteLine("IndexedFaceSet [loaded]");
@@ -176,7 +204,7 @@ namespace X3D
                             }
 
 
-                            shape = _shape4;
+                            //shape = _shape4;
                             vbo = _vbo_interleaved4;
                             verticies_num = NumVerticies4;
 
@@ -196,41 +224,35 @@ namespace X3D
                         }
                         else
                         {
-                            shape = parentShape;
-                            type = PrimitiveType.Triangles;
-                            vbo = _vbo_interleaved;
-                            verticies_num = NumVerticies;
-
-                            if (verticies_num > 0)
+                            if (NumVerticies > 0)
                             {
-                                GL.UseProgram(shape.CurrentShader.ShaderHandle);
+                                GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
 
-                                shape.CurrentShader.SetFieldValue("size", size);
-                                shape.CurrentShader.SetFieldValue("scale", scale);
+                                parentShape.CurrentShader.SetFieldValue("size", size);
+                                parentShape.CurrentShader.SetFieldValue("scale", scale);
 
-                                GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-                                Buffering.ApplyBufferPointers(shape.CurrentShader);
-                                //Buffering.ApplyBufferPointers(shape.uniforms);
-                                GL.DrawArrays(type, 0, verticies_num);
+                                GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
+                                Buffering.ApplyBufferPointers(parentShape.CurrentShader);
+                                GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
+
+                                GL.UseProgram(0);
                             }
 
 
-                            shape = _shape4;
-                            type = PrimitiveType.Quads;
-                            vbo = _vbo_interleaved4;
-                            verticies_num = NumVerticies4;
-
-                            if (verticies_num > 0)
+                            if (NumVerticies4 > 0)
                             {
-                                GL.UseProgram(shape.CurrentShader.ShaderHandle);
+                                GL.UseProgram(quadShader.ShaderHandle);
 
-                                shape.CurrentShader.SetFieldValue("size", size);
-                                shape.CurrentShader.SetFieldValue("scale", scale);
+                                parentShape.ApplyGeometricTransformations(rc, quadShader, this);
 
-                                GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-                                Buffering.ApplyBufferPointers(shape.CurrentShader);
-                                //Buffering.ApplyBufferPointers(shape.uniforms);
-                                GL.DrawArrays(type, 0, verticies_num);
+                                quadShader.SetFieldValue("size", size);
+                                quadShader.SetFieldValue("scale", scale);
+
+                                GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved4);
+                                Buffering.ApplyBufferPointers(quadShader);
+                                GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies4);
+
+                                GL.UseProgram(0);
                             }
                         }
                     }

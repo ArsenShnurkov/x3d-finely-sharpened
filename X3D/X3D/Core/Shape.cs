@@ -54,6 +54,75 @@ namespace X3D
 
         #region Render Methods
 
+        public void ApplyGeometricTransformations(RenderingContext rc, ComposedShader shader, SceneGraphNode context)
+        {
+            shader.Use();
+
+            RefreshDefaultUniforms(shader);
+            //RefreshMaterialUniforms();
+
+            if (shader.IsTessellator)
+                RefreshTessUniforms(shader);
+
+
+            Matrix4 view = Matrix4.LookAt(new Vector3(4, 3, 3),  // Camera is at (4,3,3), in World Space
+                new Vector3(0, 0, 0),  // and looks at the origin
+                new Vector3(0, 1, 0) // Head is up (set to 0,-1,0 to look upside-down)
+            );
+
+            Matrix4 model; // applied transformation hierarchy
+
+            SceneGraphNode transform_context = context == null ? this : context;
+
+            List<Transform> transformationHierarchy = transform_context.AscendantByType<Transform>().Select(t => (Transform)t).ToList();
+            Matrix4 modelview = Matrix4.Identity * rc.matricies.worldview;
+
+            // using Def_Use/Figure02.1Hut.x3d Cone and Cylinder 
+            Vector3 x3dScale = new Vector3(0.06f, 0.06f, 0.06f); // scaling down to conform with X3D standard (note this was done manually and might need tweaking)
+
+            //x3dScale = Vector3.One;
+
+            Quaternion modelrotation = Quaternion.Identity;
+            Matrix4 modelrotations = Matrix4.Identity;
+
+            foreach (Transform transform in transformationHierarchy)
+            {
+                modelview *= Matrix4.CreateTranslation(transform.Translation * x3dScale);
+                //modelrotation = new Quaternion(transform.Rotation.X, transform.Rotation.Y, transform.Rotation.Z, transform.Rotation.W);
+                //modelrotations *= Matrix4.CreateFromQuaternion(modelrotation);
+
+                //modelrotations *= MathHelpers.CreateRotation(ref modelrotation);
+            }
+
+            model = modelview;
+
+            Matrix4 cameraTransl = Matrix4.CreateTranslation(rc.cam.Position);
+
+            Quaternion q = rc.cam.Orientation;
+
+            Matrix4 cameraRot;
+
+            cameraRot = Matrix4.CreateFromQuaternion(q); // cameraRot = MathHelpers.CreateRotation(ref q);
+
+
+            Matrix4 MVP = modelrotations * (model * cameraTransl) * (cameraRot) // position and orient the Shape relative to the world and camera
+
+                ; // this is the MVP matrix
+
+
+            shader.SetFieldValue("modelview", ref MVP); //GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);
+            shader.SetFieldValue("projection", ref rc.matricies.projection);
+            shader.SetFieldValue("camscale", rc.cam.Scale.X); //GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
+            shader.SetFieldValue("X3DScale", rc.matricies.Scale); //GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
+            shader.SetFieldValue("coloringEnabled", 0); //GL.Uniform1(uniforms.a_coloringEnabled, 0);
+            shader.SetFieldValue("texturingEnabled", this.texturingEnabled ? 1 : 0); //GL.Uniform1(uniforms.a_texturingEnabled, this.texturingEnabled ? 1 : 0);
+
+            if (shader.IsBuiltIn == false)
+            {
+                shader.ApplyFieldsAsUniforms(rc);
+            }
+        }
+
         public void IncludeDefaultShader(string vertexShaderSource, string fragmentShaderSource)
         {
             CurrentShader = ShaderCompiler.ApplyShader(vertexShaderSource, fragmentShaderSource);
@@ -92,32 +161,34 @@ namespace X3D
 
         }
 
-        public void RefreshTessUniforms()
+        public void RefreshTessUniforms(ComposedShader shader = null)
         {
+            if (shader == null) shader = CurrentShader;
             if (CurrentShader.HasErrors) return;
 
-            Uniforms.Modelview = GL.GetUniformLocation(CurrentShader.ShaderHandle, "modelview");
-            Uniforms.Projection = GL.GetUniformLocation(CurrentShader.ShaderHandle, "projection");
-            Uniforms.NormalMatrix = GL.GetUniformLocation(CurrentShader.ShaderHandle, "normalmatrix");
-            Uniforms.LightPosition = GL.GetUniformLocation(CurrentShader.ShaderHandle, "LightPosition");
-            Uniforms.AmbientMaterial = GL.GetUniformLocation(CurrentShader.ShaderHandle, "AmbientMaterial");
-            Uniforms.DiffuseMaterial = GL.GetUniformLocation(CurrentShader.ShaderHandle, "DiffuseMaterial");
-            //Uniforms.TessLevelInner = GL.GetUniformLocation(CurrentShader.ShaderHandle, "TessLevelInner");
-            //Uniforms.TessLevelOuter = GL.GetUniformLocation(CurrentShader.ShaderHandle, "TessLevelOuter");
+            Uniforms.Modelview = GL.GetUniformLocation(shader.ShaderHandle, "modelview");
+            Uniforms.Projection = GL.GetUniformLocation(shader.ShaderHandle, "projection");
+            Uniforms.NormalMatrix = GL.GetUniformLocation(shader.ShaderHandle, "normalmatrix");
+            Uniforms.LightPosition = GL.GetUniformLocation(shader.ShaderHandle, "LightPosition");
+            Uniforms.AmbientMaterial = GL.GetUniformLocation(shader.ShaderHandle, "AmbientMaterial");
+            Uniforms.DiffuseMaterial = GL.GetUniformLocation(shader.ShaderHandle, "DiffuseMaterial");
+            //Uniforms.TessLevelInner = GL.GetUniformLocation(shader.ShaderHandle, "TessLevelInner");
+            //Uniforms.TessLevelOuter = GL.GetUniformLocation(shader.ShaderHandle, "TessLevelOuter");
         }
 
-        public void RefreshDefaultUniforms()
+        public void RefreshDefaultUniforms(ComposedShader shader = null)
         {
-            if (CurrentShader.HasErrors) return;
+            if (shader == null) shader = CurrentShader;
+            if (shader.HasErrors) return;
 
-            //uniforms.a_position = GL.GetAttribLocation(CurrentShader.ShaderHandle, "position");
-            //uniforms.a_normal = GL.GetAttribLocation(CurrentShader.ShaderHandle, "normal");
-            //uniforms.a_color = GL.GetAttribLocation(CurrentShader.ShaderHandle, "color");
-            //uniforms.a_texcoord = GL.GetAttribLocation(CurrentShader.ShaderHandle, "texcoord");
+            //uniforms.a_position = GL.GetAttribLocation(shader.ShaderHandle, "position");
+            //uniforms.a_normal = GL.GetAttribLocation(shader.ShaderHandle, "normal");
+            //uniforms.a_color = GL.GetAttribLocation(shader.ShaderHandle, "color");
+            //uniforms.a_texcoord = GL.GetAttribLocation(shader.ShaderHandle, "texcoord");
 
-            uniforms.a_coloringEnabled = GL.GetUniformLocation(CurrentShader.ShaderHandle, "coloringEnabled");
-            uniforms.a_texturingEnabled = GL.GetUniformLocation(CurrentShader.ShaderHandle, "texturingEnabled");
-            uniforms.sampler = GL.GetUniformLocation(CurrentShader.ShaderHandle, "_MainTex");
+            uniforms.a_coloringEnabled = GL.GetUniformLocation(shader.ShaderHandle, "coloringEnabled");
+            uniforms.a_texturingEnabled = GL.GetUniformLocation(shader.ShaderHandle, "texturingEnabled");
+            uniforms.sampler = GL.GetUniformLocation(shader.ShaderHandle, "_MainTex");
         }
 
         //public void RefreshMaterialUniforms()
@@ -176,64 +247,9 @@ namespace X3D
             if (linkedShaders != null)
             {
                 CurrentShader = linkedShaders;
-                this.CurrentShader.Use();
 
-                RefreshDefaultUniforms();
-                //RefreshMaterialUniforms();
-
-                if (this.CurrentShader.IsTessellator)
-                    RefreshTessUniforms();
-
-
-                Matrix4 view = Matrix4.LookAt(new Vector3(4, 3, 3),  // Camera is at (4,3,3), in World Space
-                    new Vector3(0, 0, 0),  // and looks at the origin
-                    new Vector3(0, 1, 0) // Head is up (set to 0,-1,0 to look upside-down)
-                );
-
-                Matrix4 model; // applied transformation hierarchy
-
-                List<Transform> transformationHierarchy = this.AscendantByType<Transform>().Select(t => (Transform)t).ToList();
-                Matrix4 modelview = Matrix4.Identity * rc.matricies.worldview;
-
-                // using Def_Use/Figure02.1Hut.x3d Cone and Cylinder 
-                Vector3 x3dScale = new Vector3(0.08f, 0.08f, 0.08f); // scaling down to conform with X3D standard (note this was done manually and might need tweaking)
-
-                foreach (Transform transform in transformationHierarchy)
-                {
-                    modelview *= Matrix4.CreateTranslation(transform.Translation * x3dScale);
-
-                }
-                model = modelview;
-
-                Matrix4 cameraTransl = Matrix4.CreateTranslation(rc.cam.Position);
-
-                Quaternion q = rc.cam.Orientation;
-
-                Matrix4 cameraRot;
-
-                cameraRot = Matrix4.CreateFromQuaternion(q); // cameraRot = MathHelpers.CreateRotation(ref q);
-
-
-                Matrix4 MVP =  (model * cameraTransl) * cameraRot // position and orient the Shape relative to the world and camera
-
-                    ; // this is the MVP matrix
-
-
-                CurrentShader.SetFieldValue("modelview", ref MVP); //GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);
-                CurrentShader.SetFieldValue("projection", ref rc.matricies.projection);
-                CurrentShader.SetFieldValue("camscale", rc.cam.Scale.X); //GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
-                CurrentShader.SetFieldValue("X3DScale", rc.matricies.Scale); //GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
-                CurrentShader.SetFieldValue("coloringEnabled", 0); //GL.Uniform1(uniforms.a_coloringEnabled, 0);
-                CurrentShader.SetFieldValue("texturingEnabled", this.texturingEnabled ? 1 : 0); //GL.Uniform1(uniforms.a_texturingEnabled, this.texturingEnabled ? 1 : 0);
-
-                if (CurrentShader.IsBuiltIn == false)
-                {
-                    CurrentShader.ApplyFieldsAsUniforms(rc);
-                }
-
+                ApplyGeometricTransformations(rc, CurrentShader, this);
             }
-
-
         }
 
         public override void PostRender(RenderingContext rc)

@@ -71,6 +71,8 @@ namespace X3D
 
             GetParent<Shape>().IncludeComposedShader(this);
         }
+
+
         public ComposedShader Use()
         {
             if(!HasErrors) GL.UseProgram(this.ShaderHandle);
@@ -201,6 +203,46 @@ namespace X3D
                 SetFieldValue(name, ref m);
             }
         }
+
+        public void SetFieldValue(string name, float[] value, int sizeConstrain = -1)
+        {
+            if (HasErrors) return;
+
+            float[] floats = value;
+
+            if(sizeConstrain > 0)
+            {
+                float[] tmp = new float[sizeConstrain];
+                value.CopyTo(tmp, 0);
+                floats = tmp;
+            }
+
+            GL.Uniform1(GL.GetUniformLocation(this.ShaderHandle, name), floats.Length, floats);
+
+            //UpdateField(name, X3DTypeConverters.ToString(value));
+        }
+        public void SetFieldValue(string name, Vector3[] value, int sizeConstrain = -1)
+        {
+            if (HasErrors) return;
+
+            List<float> vectors = new List<float>();
+
+            foreach(Vector3 vec in value)
+            {
+                vectors.Add(vec.X);
+                vectors.Add(vec.Y);
+                vectors.Add(vec.Z);
+            }
+
+            float[] floats = vectors.ToArray();
+
+            SetFieldValue(name, floats, sizeConstrain);
+
+            //GL.Uniform3 (GL.GetUniformLocation(this.ShaderHandle, name), floats.Length, floats);
+
+            //UpdateField(name, X3DTypeConverters.ToString(value));
+        }
+
 
         public void SetFieldValue(string name, int value)
         {

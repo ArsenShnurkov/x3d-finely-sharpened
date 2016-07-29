@@ -73,8 +73,6 @@ namespace X3D
         {
             Normal normal, normal2;
             Coordinate coordinate, coordinate2;
-            
-            //bottomRadius
 
             ifs1 = new IndexedFaceSet();
             coordinate = new Coordinate();

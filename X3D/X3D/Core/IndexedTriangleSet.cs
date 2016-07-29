@@ -42,10 +42,10 @@ namespace X3D
 
 
 
-            texCoordinate = (TextureCoordinate)this.Items.FirstOrDefault(n => n.GetType() == typeof(TextureCoordinate));
-            coordinate = (Coordinate)this.Items.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
-            colorNode = (Color)this.Items.FirstOrDefault(n => n.GetType() == typeof(Color));
-            colorRGBANode = (ColorRGBA)this.Items.FirstOrDefault(n => n.GetType() == typeof(ColorRGBA));
+            texCoordinate = (TextureCoordinate)this.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(TextureCoordinate));
+            coordinate = (Coordinate)this.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
+            colorNode = (Color)this.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Color));
+            colorRGBANode = (ColorRGBA)this.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(ColorRGBA));
 
             RGBA = colorRGBANode != null;
             RGB = colorNode != null;
