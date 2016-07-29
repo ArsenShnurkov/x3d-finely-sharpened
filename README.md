@@ -55,6 +55,14 @@ Example 5 - #3
 ![alt text](screenshots/screenshot7.png "X3D Runtime Viewer Example 5")
 
 
+Example 6 - Minimal X3D Construction Set Implementation, demonstrating simple terrain computation. 
+![alt text](screenshots/ConstructionSet.png "X3D Runtime Viewer Example 6")
+
+
+
+
+
+
 
 Notices
 ```
