@@ -9,15 +9,16 @@ using System.Reflection;
 using System.Threading;
 using X3D.Engine;
 using X3D.Parser;
-using x3druntime.ui.opentk;
 
-namespace X3D
+namespace X3D.ConstructionSet
 {
     public class BuilderApplication : GameWindow
     {
         private const int FRAMES_TO_RENDER = 1; // set to -1 to disable frame limit
 
         #region Fields and Properties
+
+        public static IConstructionSet ConstructionSet;
 
         public static string X3DExamplesDirectory = System.IO.Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "..\\..\\..\\..\\x3d-examples\\");
         public static string TempFileLocation = Path.GetTempPath();
@@ -42,7 +43,6 @@ namespace X3D
 
         public static void ExecuteBuildTasks(RenderingContext rc)
         {
-            Console.WriteLine("ElevationBuilder by Gerallt Franke 2013 - 2016");
             Console.WriteLine("Builds an ElevationGrid given parameters outputting in X3D XML encoding");
 
             
@@ -52,6 +52,8 @@ namespace X3D
             Shape shape;
             Image newImage;
             Bitmap bmp;
+
+            ConstructionSet.ElevationBuilder = builder;
 
             // Setup scene graph
             builder.BuildShapeDom(out root, out shape);
@@ -77,7 +79,8 @@ namespace X3D
             //elevation = builder.BuildHeightmapFromTexture(20, 20, bmp, 400.0f); // build a rather large height map
 
             // build mountain on the fly using perlin noise shader: (requires OpenGL 4.x)
-            elevation = builder.BuildHeightmapFromPerlin(rc, _perlin, out largePerlinImage);
+            Console.WriteLine("Using perlin noise generator");
+            elevation = builder.BuildHeightmapFromGenerator(rc, _perlin, out largePerlinImage, 40, 40, 20, 20, 20); // build a rather large height map
 
             outputX3D(root, shape, elevation);
         }
@@ -314,7 +317,8 @@ namespace X3D
             bw.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
             {
                 builder = new BuilderApplication(VSync, Resolution.Size800x600, new GraphicsMode(32, 16, 0, 4));
-                builder.Title = "Initilising..";
+                builder.Title = "Initilising Construction Set..";
+                builder.Visible = false;
 
                 if (VSync == VSyncMode.Off)
                 {
@@ -332,7 +336,7 @@ namespace X3D
             });
 
             bw.RunWorkerAsync();
-            closureEvent.WaitOne();
+            //closureEvent.WaitOne();
 
             return builder;
         }
