@@ -8,7 +8,7 @@
 	<Scene>
 		<NavigationInfo headlight="false"
 		                visibilityLimit="0.0"
-		                type='"EXAMINE", "ANY"'
+		                type='"WALK"'
 		                avatarSize="0.25, 1.75, 0.75"
 		                />
 		<Background DEF="WO_World"
