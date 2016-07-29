@@ -1,22 +1,14 @@
 ﻿#define NO_DTD_VALIDATION
 
 using System;
-using System.Xml;
-using System.Xml.Serialization;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Runtime.InteropServices;
 using System.IO;
-using System.Xml.Linq;
-using System.Xml.XPath;
-
 using System.Net;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using OpenTK;
-using OpenTK.Graphics.OpenGL4;
+using System.Xml;
+using System.Xml.Linq;
 using X3D.Parser;
-using System.Text;
+using X3D.Parser.X3DB;
 
 /*
 createX3DFromStream
@@ -43,8 +35,6 @@ namespace X3D.Engine
         public static string BaseURL { get; set; }
         public static X3DMIMEType BaseMIME { get; set; }
 
-        internal static Queue<ImageTexture> _texturesToBuffer = new Queue<ImageTexture>();
-        internal static int[] _texturesBuffered;
         private static Regex regProto = new Regex("[a-zA-Z]+[:][/][/]", RegexOptions.Compiled);
 
         public void Dispose()
@@ -82,8 +72,8 @@ namespace X3D.Engine
             {
                 case X3DMIMEType.X3D:
                     return _x3dfromString(data);
-                    //case X3DMIMEType.ClassicVRML:
                     //case X3DMIMEType.X3DBinary:
+                    //case X3DMIMEType.ClassicVRML:
                     //case X3DMIMEType.VRML:
                     //case X3DMIMEType.UNKNOWN:
             }
@@ -96,6 +86,8 @@ namespace X3D.Engine
             {
                 case X3DMIMEType.X3D:
                     return _x3dfromStream(data);
+                case X3DMIMEType.X3DBinary:
+                    return X3DBinaryCompression.FromStream(data);
                     //case X3DMIMEType.ClassicVRML:
                     //case X3DMIMEType.X3DBinary:
                     //case X3DMIMEType.VRML:
@@ -401,13 +393,22 @@ namespace X3D.Engine
                     // Read all bytes now so that we quickly loose lock to file
                     MemoryStream ms = new MemoryStream(bytes);
 
-                    if (GetMIMETypeByURL(url) == X3DMIMEType.UNKNOWN)
+                    X3DMIMEType mimeType = GetMIMETypeByURL(url);
+
+                    switch (mimeType)
                     {
-                        resource = (Stream)ms;
-                    }
-                    else
-                    {
-                        resource = fromStream((Stream)ms);
+                        case X3DMIMEType.UNKNOWN:
+                            resource = (Stream)ms;
+                            break;
+                        case X3DMIMEType.X3D:
+                            resource = fromStream((Stream)ms);
+                            break;
+                        case X3DMIMEType.X3DBinary:
+                            resource = fromStream((Stream)ms, mimeType);
+                            break;
+                        default:
+                            resource = null;
+                            break;
                     }
                     return true;
                 }
@@ -697,6 +698,8 @@ namespace X3D.Engine
                     return true;
                 case ".xml":
                     return true;
+                case ".x3db":
+                    return true;
                 case "model/x3d+xml":
                     return true;
                 case "model/x3d+binary":
@@ -706,8 +709,6 @@ namespace X3D.Engine
                 case "x-world/x-vrml":
                     return false;
                 case "model/vrml":
-                    return false;
-                case ".x3db":
                     return false;
                 case ".x3dv":
                     return false;
