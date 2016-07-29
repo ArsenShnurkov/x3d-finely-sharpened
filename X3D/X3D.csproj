@@ -130,6 +130,8 @@
     <Compile Include="X3D\Math\MatrixExtensions.cs" />
     <Compile Include="X3D\Math\QuaternionExtensions.cs" />
     <Compile Include="X3D\Math\VectorExtensions.cs" />
+    <Compile Include="X3D\Parser\X3DBinaryCompression.cs" />
+    <Compile Include="X3D\Parser\X3DBinaryEncoders.cs" />
     <Compile Include="X3D\Parser\X3DRuntimeValidator.cs" />
     <Compile Include="X3D\Parser\X3DSceneGraphXMLSerializer.cs" />
     <Compile Include="X3D\Parser\X3DTypeConverters.cs" />
@@ -194,10 +196,16 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FastInfoSet\FastInfoSet.csproj">
+      <Project>{8986b478-578a-4825-997d-9b53b8034e43}</Project>
+      <Name>FastInfoSet</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_IncrementBeforeBuild="True" BuildVersion_UseGlobalSettings="False" BuildVersion_AssemblyInfoFilename="" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_AssemblyInfoFilename="" BuildVersion_UseGlobalSettings="False" BuildVersion_IncrementBeforeBuild="True" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
