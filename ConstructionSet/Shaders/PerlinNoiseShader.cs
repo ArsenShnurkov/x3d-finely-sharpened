@@ -1,8 +1,12 @@
-﻿namespace X3D.Core.Shading
+﻿using System;
+
+namespace X3D.Core.Shading
 {
     public class PerlinNoiseShader
     {
-        public static string vertexShaderSource = ShaderHelpers.getShaderSource("PerlinNoiseVertexShader.shader");
-        public static string fragmentShaderSource = ShaderHelpers.getShaderSource("PerlinNoiseFragmentShader.shader");
+        private static string @base = AppDomain.CurrentDomain.BaseDirectory + "..\\..\\Shaders\\";
+
+        public static string vertexShaderSource = ShaderCompiler.GetShaderSource("PerlinNoiseVertexShader.shader", @base);
+        public static string fragmentShaderSource = ShaderCompiler.GetShaderSource("PerlinNoiseFragmentShader.shader", @base);
     }
 }
