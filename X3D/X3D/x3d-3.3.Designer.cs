@@ -8785,17 +8785,17 @@ namespace X3D
         private string _containerField = "children";
         
 
-        [XmlAttributeAttribute(DataType = "integer")]
+        [XmlAttributeAttribute()] // DataType = "integer"
         [System.ComponentModel.DefaultValueAttribute(-1)]
-        public string whichChoice
+        public int whichChoice
         {
             get
             {
-                return this._whichChoice.ToString();
+                return this._whichChoice;
             }
             set
             {
-                this.WhichChoice = int.Parse(value);
+                this.WhichChoice = value;
             }
         }
 
