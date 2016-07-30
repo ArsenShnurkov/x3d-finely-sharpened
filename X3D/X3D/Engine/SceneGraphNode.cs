@@ -317,10 +317,40 @@ namespace X3D
             return lst;
         }
 
-        public List<SceneGraphNode> AscendantByType<T>()
+        public List<T> DecendantsByType<T>() where T : SceneGraphNode
+        {
+            // Breadth first search for decendant node by type
+            Queue<SceneGraphNode> work_items;
+            SceneGraphNode node;
+            List<T> lst = new List<T>();
+            Type t = typeof(T);
+
+            work_items = new Queue<SceneGraphNode>();
+            work_items.Enqueue(this);
+
+            do
+            {
+                node = work_items.Dequeue();
+
+                if (t.IsInstanceOfType(node))
+                {
+                    lst.Add((T)node);
+                }
+
+                foreach (SceneGraphNode child in node.Children)
+                {
+                    work_items.Enqueue(child);
+                }
+            }
+            while (work_items.Count > 0);
+
+            return lst;
+        }
+
+        public List<T> AscendantByType<T>() where T : SceneGraphNode
         {
             SceneGraphNode parent;
-            List<SceneGraphNode> lst = new List<SceneGraphNode>();
+            List<T> lst = new List<T>();
             Type t = typeof(T);
 
             parent = this.Parent;
@@ -329,7 +359,7 @@ namespace X3D
             {
                 if (t.IsInstanceOfType(parent))
                 {
-                    lst.Add(parent);
+                    lst.Add((T)parent);
                 }
 
                 parent = parent.Parent;
@@ -447,6 +477,30 @@ namespace X3D
             catch (Exception ex) { }
 
             return null;
+        }
+
+        public bool HasAttribute(string name)
+        {
+            Type type;
+            PropertyInfo propertyInfo;
+
+            type = this.GetType();
+
+            try
+            {
+                propertyInfo = type.GetProperty(name);
+
+                if (propertyInfo != null)
+                {
+                    return true;
+                }
+            }
+            catch 
+            {
+                return false;
+            }
+
+            return false;
         }
 
         #endregion

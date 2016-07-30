@@ -51,6 +51,7 @@ namespace X3D.Engine
 
         public Vector3 DollyDirection = Vector3.UnitZ;
         public Vector3 Scale = Vector3.One;
+        public Vector2 OrbitLocalOrientation = Vector2.Zero;
 
         public float camera_roll = 0.0f;
         public float camera_yaw = 0.0f;
@@ -189,30 +190,6 @@ namespace X3D.Engine
             //this.Right = Vector3.UnitX;
         }
 
-        public Vector3 getMovement() { return Position; }
-		public Vector3 applyMovement(Vector3 direction) 
-		{
-			// HasChanges = true;
-
-			return Position = direction;
-		}
-
-		public bool PositionChanged()
-		{
-			return PrevPosition.X != Position.X 
-				|| PrevPosition.Y != Position.Y
-					|| PrevPosition.Z != Position.Z;
-		}
-
-		public bool OrientationChanged()
-		{
-			return false;
-			//return PrevOrientation.X != Orientation.X
-			//	|| PrevOrientation.Y != Orientation.Y
-			//		|| PrevOrientation.Z != Orientation.Z
-			//		|| PrevOrientation.W != Orientation.W;
-		}
-
         /// <summary>
         /// Get the current orientation and return it in a Matrix with no translations applied.
         /// </summary>
@@ -257,8 +234,6 @@ namespace X3D.Engine
 		{
             GL.Viewport(0, 0, Width, Height);
 
-
-            HasChanges = PositionChanged() || OrientationChanged();
 
             Vector3 PlayerPosition = new Vector3(Position.X + NavigationInfo.AvatarSize.X, 
                         Position.Y + NavigationInfo.AvatarSize.Y, 
@@ -385,55 +360,45 @@ namespace X3D.Engine
 
         public void invert()
 		{
-			invNeg();
+            InvNeg();
 		}
 
-		public bool invNeg()
+		public bool InvNeg()
 		{
 			if(inverted)
 			{
-				return invPos();
+				return InvPos();
 			}
 
-			var cam = this.getMovement();
+			var cam = this.Position;
 			Vector3 moveTo = cam;
 			Vector3 pos = Vector3.UnitZ * -1.0f;
 
 			moveTo = moveTo + pos;
-			this.applyMovement(moveTo);
+            Position = moveTo;
 
 			crouched = true;
 
 			return true;
 		}
 
-		public bool invPos()
+		public bool InvPos()
 		{
 			if(!inverted)
 			{
-				return invNeg();
+				return InvNeg();
 			}
 
-			var cam = this.getMovement(); // clone
+			var cam = this.Position; // clone
 			Vector3 moveTo = cam;
 			Vector3 pos = Vector3.UnitZ;
 
 			moveTo = moveTo + pos;
-			this.applyMovement(moveTo);
+			this.Position = moveTo;
 
 			crouched = false;
 
 			return true;
-		}
-
-		public void move(Vector3 direction, double frame_time)
-		{
-			//MoveX(direction.x);
-			//MoveY(direction.y);
-
-		    moveViewOriented(direction, frame_time);
-
-			//HasChanges = true;
 		}
 
 		public void update(int frame_time)
@@ -519,31 +484,30 @@ namespace X3D.Engine
         public void ApplyPitch(float radians)
         {
             //Check bounds with the max pitch rate so that we aren't moving too fast
-            //if (degrees < -max_pitch)
+            //if (radians < -max_pitch)
             //{
-            //    degrees = -max_pitch;
+            //    radians = -max_pitch;
             //}
-            //else if (degrees > max_pitch)
+            //else if (radians > max_pitch)
             //{
-            //    degrees = max_pitch;
+            //    radians = max_pitch;
             //}
-            //camera_pitch += degrees;
+            //camera_pitch += radians;
 
             ////Check bounds for the camera pitch
-            //if (camera_pitch > MathHelpers.PI2)
+            //if (camera_pitch > MathHelpers.TwoPi)
             //{
-            //    camera_pitch -= MathHelpers.PI2;
+            //    camera_pitch -= MathHelpers.TwoPi;
             //}
-            //else if (camera_pitch < -MathHelpers.PI2)
+            //else if (camera_pitch < -MathHelpers.TwoPi)
             //{
-            //    camera_pitch += MathHelpers.PI2;
+            //    camera_pitch += MathHelpers.TwoPi;
             //}
 
-            camera_pitch += radians;
 
             //degrees = MathHelpers.ClampCircular(degrees, 0.0f, MathHelpers.PI2);
 
-            //camera_pitch = degrees;
+            camera_pitch += radians;
 
             Pitch(radians);
         }
@@ -551,39 +515,39 @@ namespace X3D.Engine
         public void ApplyYaw(float radians)
         {
             //Check bounds with the max heading rate so that we aren't moving too fast
-            //if (degrees < -max_yaw)
+            //if (radians < -max_yaw)
             //{
-            //    degrees = -max_yaw;
+            //    radians = -max_yaw;
             //}
-            //else if (degrees > max_yaw)
+            //else if (radians > max_yaw)
             //{
-            //    degrees = max_yaw;
+            //    radians = max_yaw;
             //}
             ////This controls how the heading is changed if the camera is pointed straight up or down
             ////The heading delta direction changes
-            //if (camera_pitch > 90 && camera_pitch < 270 || (camera_pitch < -90 && camera_pitch > -270))
+            //if (camera_pitch > MathHelpers.PIOver2 && camera_pitch < MathHelpers.ThreePIOver2 
+            //    || (camera_pitch < -MathHelpers.PIOver2 && camera_pitch > -MathHelpers.ThreePIOver2))
             //{
-            //    camera_yaw -= degrees;
+            //    camera_yaw -= radians;
             //}
             //else
             //{
-            //    camera_yaw += degrees;
+            //    camera_yaw += radians;
             //}
             ////Check bounds for the camera heading
-            //if (camera_yaw > 360.0f)
+            //if (camera_yaw > MathHelpers.TwoPi)
             //{
-            //    camera_yaw -= 360.0f;
+            //    camera_yaw -= MathHelpers.TwoPi;
             //}
-            //else if (camera_yaw < -360.0f)
+            //else if (camera_yaw < -MathHelpers.TwoPi)
             //{
-            //    camera_yaw += 360.0f;
+            //    camera_yaw += MathHelpers.TwoPi;
             //}
 
-            camera_yaw += radians;
 
             //degrees = MathHelpers.ClampCircular(degrees, 0.0f, MathHelpers.PI2);
 
-            //camera_yaw = degrees;
+            camera_yaw += radians;
 
 
 
@@ -611,41 +575,21 @@ namespace X3D.Engine
             Position += new Vector3(x, y, 0);
         }
 
-        public void OrbitXY(float x, float y)
-        {
-            // TBD                 
+        public void ScaleXY(float x, float y)
+        {                
             Scale.X = Scale.X + x * .02f;
             Scale.Y = Scale.Y + y * .02f;
+        }
 
+        public void OrbitObjectsXY(float x, float y)
+        {
+            OrbitLocalOrientation.X += x;
+            OrbitLocalOrientation.Y += y;
 
+            //OrbitLocalOrientation *= 0.005f;
         }
 
         #endregion
-
-        public void moveViewOriented(Vector3 direction, double frameTime) 
-		{  
-			//  if(direction.X != 0 || direction.Y != 0 || direction.Z != 0) 
-			//  {      
-			//      cameraMat = new Matrix4.identity();
-			//      
-			//      if (vrEnabled == true) 
-			//      {
-			//        vrEuler = eulerFromQuaternion(vrPosition['orientation'], VrPositionCoordinateOrder.YXZ);
-			//
-			//        cameraMat = cameraMat.rotateZ(camera.zAngle - vrEuler[1]);
-			//      } 
-			//      else 
-			//      {
-			//        cameraMat = cameraMat.rotateZ(camera.zAngle);
-			//      }
-			//      
-			//      cameraMat = mat4_inverse(cameraMat);
-			//      cameraMat = mat4MultiplyVec3(cameraMat, direction);
-			//  }
-
-			// Send desired movement direction to the player mover for collision detection against the map
-			//playerMover.move(direction, frameTime);
-		}
 
 		public void Reset()
 		{
@@ -660,7 +604,7 @@ namespace X3D.Engine
             camera_yaw = 0;
 		}
 
-		public void setOrigin(Vector3 origin, Vector3 rotation)
+		public void SetOrigin(Vector3 origin, Vector3 rotation)
 		{
 			Position = Origin = origin;
 			Rotation = OriginRotation = rotation;

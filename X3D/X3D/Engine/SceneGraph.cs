@@ -2,12 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Xml.XPath;
-using System.Xml.Linq;
-using X3D.Core;
-using X3D.Parser;
-using System.Xml;
 using System.Linq;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
+using X3D.Parser;
 
 namespace X3D.Engine
 {
@@ -15,17 +14,37 @@ namespace X3D.Engine
     /// http://en.wikipedia.org/wiki/Scene_graph
     /// http://www.drdobbs.com/jvm/understanding-scene-graphs/184405094
     /// http://edutechwiki.unige.ch/en/X3DV#The_scene_graph
-    /// 
-    /// DEF/USE Semantics
-    /// http://www.web3d.org/documents/specifications/19775-1/V3.2/Part01/concepts.html#DEFL_USESemantics
     /// </summary>
     public class SceneGraph
     {
-        private SceneGraphNode _root;
-        private int __lastid = 0;
-        private Dictionary<string, SceneGraphNode> defUseScope = new Dictionary<string, SceneGraphNode>();
+        #region Public Fields
 
         public bool Loaded { get; set; }
+
+        /// <summary>
+        /// DEF/USE Semantics
+        /// See: http://www.web3d.org/documents/specifications/19775-1/V3.2/Part01/concepts.html#DEFL_USESemantics
+        /// </summary>
+        public Dictionary<string, SceneGraphNode> defUseScope = new Dictionary<string, SceneGraphNode>();
+
+        /// <summary>
+        /// List of event ROUTE nodes in runtime state.
+        /// Managed by Event Graph model.
+        /// </summary>
+        public List<ROUTE> Routes = new List<ROUTE>();
+
+        public EventGraph EventGraph = new EventGraph();
+
+        #endregion
+
+        #region Private Fields
+
+        private SceneGraphNode _root;
+        private int __lastid = 0;
+
+        #endregion
+
+        #region Constructors
 
         public SceneGraph(XDocument xml)
         {
@@ -40,7 +59,13 @@ namespace X3D.Engine
             // PASS 1
             build_scene_iterativily(nav);
 
+            // PASS 2
             Optimise();
+
+            // PASS 3
+            // ROUTE and event propagation
+            EventGraph.AssignSceneGraph(this);
+            EventGraph.CreateEventGraph();
 
             Loaded = true;
         }
@@ -55,12 +80,14 @@ namespace X3D.Engine
             Loaded = true;
         }
 
+        #endregion
+
+        #region Public Methods
+
         public SceneGraphNode GetRoot()
         {
             return _root;
         }
-
-        #region Scene Builder
 
         /// <summary>
         /// Optimises the current scene graph.
@@ -69,9 +96,42 @@ namespace X3D.Engine
         /// </summary>
         public void Optimise()
         {
+            // No optimisations implemented yet
+
             //node_reuser();
         }
 
+        public override string ToString()
+        {
+            string graph;
+            Stack<SceneGraphNode> work_items;
+            SceneGraphNode node;
+            SceneGraphNode root;
+
+            graph = "";
+            root = this.GetRoot();
+            work_items = new Stack<SceneGraphNode>();
+            work_items.Push(root);
+
+            do
+            {
+                node = work_items.Pop();
+                // TODO: display DEF attribute value and node name
+                graph += "".PadLeft(node.Depth, ' ') + node.ToString() + " " + node.Depth.ToString() + "/" + node._id.ToString() + "\n";
+
+                foreach (X3DNode child in node.Children)
+                {
+                    work_items.Push(child);
+                }
+            }
+            while (work_items.Count > 0);
+
+            return graph;
+        }
+
+        #endregion
+
+        #region Private Methods
 
         private int make_id()
         {
@@ -96,12 +156,12 @@ namespace X3D.Engine
             do
             {
                 child = XMLParser.ParseXMLElement(nav);
-                
+
                 if (child != null)
                 {
                     IXmlLineInfo lineInfo;
                     lineInfo = (IXmlLineInfo)nav;
-                    
+
                     child.XMLDocumentLocation = new OpenTK.Vector2(lineInfo.LinePosition, lineInfo.LineNumber);
 
 #if DEBUG_SCENE_GRAPH
@@ -148,7 +208,7 @@ namespace X3D.Engine
                         {
                             defUseScope.Add(child.DEF, child);
                         }
-                        
+
                     }
                     else if (!string.IsNullOrEmpty(child.USE))
                     {
@@ -178,6 +238,16 @@ namespace X3D.Engine
 
 
                         }
+                    }
+
+                    #endregion
+
+                    #region Event Model
+
+                    if(child.GetType() == typeof(ROUTE))
+                    {
+                        // Quick way to get all ROUTE nodes
+                        Routes.Add((ROUTE)child);
                     }
 
                     #endregion
@@ -232,10 +302,6 @@ namespace X3D.Engine
             while (nav.NodeType != XPathNodeType.Root && !nav.IsSamePosition(startPosition));
         }
 
-        #endregion
-
-        #region Search
-
         private SceneGraphNode depth_first_search_iterative(int id)
         {
             Stack<SceneGraphNode> work_items;
@@ -264,6 +330,7 @@ namespace X3D.Engine
 
             return null;
         }
+
         private SceneGraphNode breadth_first_search_iterative(int id)
         {
             Queue<SceneGraphNode> work_items;
@@ -295,32 +362,5 @@ namespace X3D.Engine
 
         #endregion
 
-        public override string ToString()
-        {
-            string graph;
-            Stack<SceneGraphNode> work_items;
-            SceneGraphNode node;
-            SceneGraphNode root;
-
-            graph = "";
-            root = this.GetRoot();
-            work_items = new Stack<SceneGraphNode>();
-            work_items.Push(root);
-
-            do
-            {
-                node = work_items.Pop();
-                // TODO: display DEF attribute value and node name
-                graph += "".PadLeft(node.Depth, ' ') + node.ToString() + " " + node.Depth.ToString() + "/" + node._id.ToString() + "\n";
-
-                foreach (X3DNode child in node.Children)
-                {
-                    work_items.Push(child);
-                }
-            }
-            while (work_items.Count > 0);
-
-            return graph;
-        }
     }
 }

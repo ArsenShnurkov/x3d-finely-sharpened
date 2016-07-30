@@ -35,17 +35,13 @@ namespace X3D.Engine
         {
             if (!X3D.LoaderOnlyEnabled && X3D.RuntimeExecutionEnabled)
             {
-                // Establish event routes between nodes and their fields ..
+                // PROPAGATE events (per timestamp) just before scene rendering
 
-                // TODO: Setup and use Event Graph, Event Utilities, and Event Propagation
-
-                
+                sg.EventGraph.PropagateEvents(rc);
             }
 
             if (X3D.RuntimePresentationEnabled)
             {
-                //BufferSystemTextures();
-
                 draw_scenegraph_dfs_iterative(sg.GetRoot(), rc);
             }
             
