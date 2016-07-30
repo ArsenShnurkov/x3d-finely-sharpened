@@ -9,8 +9,10 @@ namespace X3D
 {
     public class MathHelpers
     {
-        public const float PI = (float)Math.PI;
-        public const float PI_OVER_180 = (float)Math.PI / 180.0f;
+        public const float PI = (float)Math.PI; // 180 degrees
+        public const float PIOver2 = PI / 2.0f; // 90 degrees
+        public const float ThreePIOver2 = (3.0f * PI) / 2.0f; // 270 degrees
+        public const float PI_OVER_180 = (float)Math.PI / 180.0f; // radian ratio (used to convert radians to degrees)
         public const float Zenith = (float)Math.PI / 2.0f;
         public const float PI2 = 2.0f * (float)Math.PI;
         public const float PiOver180 = PI_OVER_180;
