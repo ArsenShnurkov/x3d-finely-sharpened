@@ -103,6 +103,7 @@ PARTLY: X3D Validation and invalid node pruning (Applied on the fly in the Runti
 TODO: Node Prototyping
 PARTLY: grouping
 PARTLY: event propagation between X3D nodes and their fields, and any shader uniforms
+PARTLY: event graph and event thread processor setup for a given scene graph as well as events firing once per timestamp
 TODO: networking: inline, import, export, etc
 TODO: Collision on planes and solid geometry 
 PARTLY: scene graph and event graph models
