@@ -16,7 +16,9 @@
     <meta content='../license.html' name='license'/>
   </head>
   <Scene>
-    <Background skyColor='1 1 1'/>
+    <Background groundAngle='1.309 1.570796' groundColor='0.1 0.1 0.0   0.4 0.25 0.2   0.9 0.6 0.6' 
+			       skyAngle='1.309 1.571' 		skyColor='0.0 0.2 0.7   0.0 0.5 1.0   1.0 1.0 1.0' />
+				   
     <Viewpoint description='Switch among multiple children' orientation='-0.668 -0.724 -0.174 0.7' position='-1.93 1.78 3.28'/>
     <!-- Authors can manually change whichChoice values (from 0 through 3) to show each child shape -->
     <Switch DEF='Switcher' whichChoice='0'>
@@ -24,25 +26,25 @@
         <Appearance>
           <Material diffuseColor='1 0 0'/>
         </Appearance>
-        <Box/>
+        <Box />
       </Shape>
       <Shape DEF='ConeShape'>
         <Appearance>
           <Material diffuseColor='1 1 0'/>
         </Appearance>
-        <Cone/>
+        <Cone />
       </Shape>
       <Shape DEF='CylinderShape'>
         <Appearance>
           <Material diffuseColor='0 1 0'/>
         </Appearance>
-        <Cylinder/>
+        <Cylinder />
       </Shape>
       <Shape DEF='SphereShape'>
         <Appearance>
           <Material diffuseColor='0 0 1'/>
         </Appearance>
-        <Sphere/>
+        <Sphere />
       </Shape>
     </Switch>
     <Group DEF='AnimationGroup'>
