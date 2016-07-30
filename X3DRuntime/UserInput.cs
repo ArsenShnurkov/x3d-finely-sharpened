@@ -70,13 +70,16 @@ namespace x3druntime.ui.opentk
                     if (window.WindowState == OpenTK.WindowState.Normal)
                     {
                         window.WindowState = WindowState.Fullscreen;
+                        lockMouseCursor = true;
                     }
                     else
                     {
                         window.WindowState = WindowState.Normal;
+                        lockMouseCursor = false;
                     }
 
-                    lockMouseCursor = !lockMouseCursor;
+                    isFullscreen = !isFullscreen;
+
                     ToggleCursor();
 
                     break;
@@ -216,7 +219,7 @@ namespace x3druntime.ui.opentk
                 {
                     //ActiveCamera.Horizon();
                     //ActiveCamera.Yaw(-10.0f * 0.007f);
-                    ActiveCamera.ApplyYaw(-playerDirectionMagnitude * movementSpeed);
+                    ActiveCamera.ApplyYaw(-playerDirectionMagnitude * 0.3f);
                     //ActiveCamera.ApplyRotation();
 
                     //this.heading += 1.0f;
@@ -228,7 +231,7 @@ namespace x3druntime.ui.opentk
                 {
                     //ActiveCamera.Horizon();
                     //ActiveCamera.Yaw(10.0f * 0.007f);
-                    ActiveCamera.ApplyYaw(playerDirectionMagnitude * movementSpeed);
+                    ActiveCamera.ApplyYaw(playerDirectionMagnitude * 0.3f);
                     //ActiveCamera.ApplyRotation();
                     //this.heading -= 1.0f;
                     //this.yrot = this.heading;
@@ -238,7 +241,7 @@ namespace x3druntime.ui.opentk
                 if (Keyboard[Key.Up])
                 {
                     //ActiveCamera.Pitch(10.0f * 0.007f);
-                    ActiveCamera.ApplyPitch(-playerDirectionMagnitude * movementSpeed);
+                    ActiveCamera.ApplyPitch(-playerDirectionMagnitude * 0.3f);
                     //ActiveCamera.ApplyRotation();
 
                     //this.xpos += (float)Math.Sin(this.heading * Math.PI / 180.0) * 0.05f;
@@ -254,7 +257,7 @@ namespace x3druntime.ui.opentk
                 if (Keyboard[Key.Down])
                 {
                     //ActiveCamera.Pitch(-10.0f * 0.007f);
-                    ActiveCamera.ApplyPitch(playerDirectionMagnitude * movementSpeed);
+                    ActiveCamera.ApplyPitch(playerDirectionMagnitude * 0.3f);
                     //ActiveCamera.ApplyRotation();
 
                     //this.xpos -= (float)Math.Sin(this.heading * Math.PI / 180.0) * 0.05f;
@@ -286,8 +289,6 @@ namespace x3druntime.ui.opentk
             {
                 ActiveCamera.ApplyRotation();
             }
-
-            ActiveCamera.move(direction, e.Time);
         }
     }
 }
