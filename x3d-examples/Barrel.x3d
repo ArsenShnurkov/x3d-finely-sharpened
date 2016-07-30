@@ -5,7 +5,8 @@
 		<meta name="generator" content="Blender 2.75 (sub 0)" />
 	</head>
 	<Scene>
-
+		<NavigationInfo type="EXAMINE" />
+		
 		<Transform DEF="Cylinder1_Cylinder1_auv_TRANSFORM"
 		           translation="0.000000 0.000000 0.000000"
 		           scale="1.000000 1.000000 1.000000"
