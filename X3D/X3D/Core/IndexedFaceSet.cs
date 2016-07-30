@@ -103,8 +103,6 @@ namespace X3D
 
                 this._bbox = MathHelpers.CalcBoundingBox(this, restartIndex);
 
-
-
                 Buffering.Interleave(this._bbox,
                     out interleaved3,
                     out interleaved4,
