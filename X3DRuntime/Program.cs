@@ -1,4 +1,4 @@
-﻿//#define VSYNC_ACTIVE
+﻿//#define VSYNC_OFF
 
 using System;
 using System.Collections.Generic;
@@ -22,6 +22,7 @@ namespace x3druntime.ui.opentk
         private const int EXIT_SUCCESS = 0;
         private static VSyncMode VSync;
         private static BackgroundWorker bw;
+        private static Thread th;
         private static AutoResetEvent closureEvent;
         private static bool restartRequired = false;
         private static bool quitRequired = false;
@@ -46,8 +47,8 @@ namespace x3druntime.ui.opentk
         public static int Main(string[] args)
         {
 
-#if VSYNC_ACTIVE
-            VSync=VSyncMode.Off;
+#if VSYNC_OFF
+            VSync = VSyncMode.Off;
 #else
             VSync = VSyncMode.On;
 #endif
@@ -81,27 +82,40 @@ namespace x3druntime.ui.opentk
             url = App.SelectFile();
 
             closureEvent = new AutoResetEvent(false);
-            bw = new BackgroundWorker();
+            //bw = new BackgroundWorker();
 
-            bw.WorkerReportsProgress = true;
-            bw.WorkerSupportsCancellation = true;
-            bw.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
+            ThreadStart ts = new ThreadStart(() =>
             {
                 browser = new X3DBrowser(VSync, url, Resolution.Size800x600, new GraphicsMode(32, 16, 0, 4));
                 browser.Title = "Initilising..";
-#if VSYNC_ACTIVE
+#if VSYNC_OFF
                 browser.Run();
 #else
                 browser.Run(60);
 #endif
             });
+            th = new Thread(ts);
 
-            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
-            {
-                closureEvent.Set();
-            });
+            //            bw.WorkerReportsProgress = true;
+            //            bw.WorkerSupportsCancellation = true;
+            //            bw.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
+            //            {
+            //                browser = new X3DBrowser(VSync, url, Resolution.Size800x600, new GraphicsMode(32, 16, 0, 4));
+            //                browser.Title = "Initilising..";
+            //#if VSYNC_OFF
+            //                browser.Run();
+            //#else
+            //                browser.Run(60);
+            //#endif
+            //            });
 
-            bw.RunWorkerAsync();
+            //            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
+            //            {
+            //                closureEvent.Set();
+            //            });
+
+            th.Start();
+            //bw.RunWorkerAsync();
             closureEvent.WaitOne();
 
             if (!quitRequired && restartRequired)
@@ -112,9 +126,13 @@ namespace x3druntime.ui.opentk
 
             if (quitRequired)
             {
-                bw.CancelAsync();
+                th.Abort();
+                //bw.CancelAsync();
                 //System.Windows.Forms.Application.Exit();
-                System.Threading.Thread.CurrentThread.Abort();
+                //System.Threading.Thread.CurrentThread.Abort();
+                //Environment.Exit(0);
+                //Application.Exit();
+                System.Diagnostics.Process.GetCurrentProcess().Kill(); // Fast !
             }
         }
     }
