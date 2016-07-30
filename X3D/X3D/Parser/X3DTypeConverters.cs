@@ -151,8 +151,6 @@ namespace X3D.Parser
                 return false;
             }
 
-
-
             if (str.Contains("\""))
             {
                 str = str.Replace("\"", "");
@@ -166,55 +164,11 @@ namespace X3D.Parser
             str = Regex.Replace(str, "\\s+", " ");
 
             return str.Split(' ').Length > 1;
-
-            //if(str.Contains("\"")||str.Contains("'")) {
-            //    return true;
-            //}
-            //return false;
         }
 
         public static string[] GetMFString(string str)
         {
             return MFString(str).ToArray();
-
-            //if (string.IsNullOrEmpty(str))
-            //{
-            //    return new string[] { };
-            //}
-
-            //if (str.StartsWith(DATA_TEXT_PLAIN))
-            //{
-            //    string source = str.Remove(0, DATA_TEXT_PLAIN.Length);
-
-            //    return new string[] { source };
-            //}
-
-            //str = str.Trim();
-
-
-            //if (str.StartsWith("'"))
-            //{
-            //    str = str.Remove(0);
-            //}
-            //if (str.EndsWith("'"))
-            //{
-            //    str = str.Substring(0, str.Length - 2);
-            //}
-
-            //if (str.StartsWith("\""))
-            //{
-            //    str = str.Remove(0);
-            //}
-            //if (str.EndsWith("\""))
-            //{
-            //    str = str.Substring(0, str.Length - 2);
-            //}
-
-
-            //str = Regex.Replace(str, "\\s+", " ");
-
-            //return str.Split(' ');
-           
         }
 
         public static string removeQuotes(string mfstring)
@@ -388,6 +342,12 @@ namespace X3D.Parser
             //                   float.Parse(mc[2].Value),
             //                   float.Parse(mc[3].Value));
         }
+
+        public static int[] Integers(string value)
+        {
+            return ParseIndicies(value);
+        }
+
         public static float[] Floats(string value)
         {
             if (string.IsNullOrEmpty(value))
