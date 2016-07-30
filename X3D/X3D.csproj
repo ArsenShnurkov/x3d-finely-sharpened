@@ -83,6 +83,7 @@
     <Compile Include="X3D\Core\Appearance.cs" />
     <Compile Include="X3D\Core\Background.cs" />
     <Compile Include="X3D\Core\Box.cs" />
+    <Compile Include="X3D\Core\IntegerSequencer.cs" />
     <Compile Include="X3D\Core\NavigationInfo.cs" />
     <Compile Include="X3D\Core\Shading\BuiltIn\CrosshairShader.cs" />
     <Compile Include="X3D\Core\Shading\BuiltIn\ColorDiscardShader.cs" />
@@ -91,12 +92,15 @@
     <Compile Include="X3D\Core\Switch.cs" />
     <Compile Include="X3D\Core\Text.cs" />
     <Compile Include="X3D\Core\TextureBackground.cs" />
+    <Compile Include="X3D\Core\TimeSensor.cs" />
     <Compile Include="X3D\Core\ViewpointGroup.cs" />
     <Compile Include="X3D\Engine\ConstructionSet\Delegates.cs" />
     <Compile Include="X3D\Engine\ConstructionSet\IConstructionSet.cs" />
     <Compile Include="X3D\Engine\ConstructionSet\IElevationBuilder.cs" />
     <Compile Include="X3D\Engine\ConstructionSet\IHeightMapGenerator.cs" />
     <Compile Include="X3D\Engine\ConstructionSet\IPerlinNoiseTexture.cs" />
+    <Compile Include="X3D\Engine\EventGraph.cs" />
+    <Compile Include="X3D\Engine\EventRoute.cs" />
     <Compile Include="X3D\Engine\SceneCamera.cs" />
     <Compile Include="X3D\Engine\Consts.cs" />
     <Compile Include="X3D\Engine\Crosshair.cs" />
