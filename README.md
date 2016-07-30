@@ -15,7 +15,7 @@ With software like Blender as well as libraries like OpenTK, X3D as a markup for
 A copy of the OpenTK library ships along as the engine uses it at the moment as a point of reference to OpenGL. Currently we're a bit low on documentation but I have included a few X3D examples pulled from random sources on the www.
 ```
 
-This engine has had a massive overhaul, now we support shader and script programming - we are working on implementing both the Interchange and Interactive profiles... Some important components such as the Route Graph and Prototyping are absent, right now there are a small number of issues on the backlog currently being investigated so stay tuned!
+This engine has had a massive overhaul, now we support shader and script programming - we are working on implementing both the Interchange and Interactive profiles... Some important components such as Prototyping and Sensors are absent, right now there are a small number of issues on the backlog currently being investigated so stay tuned!
 
 
 
@@ -26,7 +26,7 @@ This engine has had a massive overhaul, now we support shader and script program
 ![alt text](screenshots/ship.png "Example Ship Scene")
 
 
-Example 1 - test of tessellated Icosahedron IndexedTriangleSet textured geometry
+Example 1 - test of tessellated Icosahedron IndexedTriangleSet textured geometry.
 Written in pure X3D using GLSL shader scripts, as well as ECMAScript for user interactivity.
 ![alt text](screenshots/screenshot1.png "X3D Runtime Viewer Example 1")
 
