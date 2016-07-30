@@ -50,6 +50,9 @@ namespace X3D
         [XmlIgnore]
         public ComposedShader CurrentShader = null;
 
+        [XmlIgnore]
+        public Vector3 centerOfRotation = new Vector3(0.0f, -0.09f, 0.0f); // TODO: calculate from bounding box center
+
         #endregion
 
         #region Render Methods
@@ -83,7 +86,19 @@ namespace X3D
             //x3dScale = Vector3.One;
 
             Quaternion modelrotation = Quaternion.Identity;
-            Matrix4 modelrotations = Matrix4.Identity;
+            Matrix4 modelLocalRotation = Matrix4.Identity;
+
+
+            if (rc.cam.OrbitLocalOrientation != Vector2.Zero)
+            {
+                // Center of Rotation based on center of bounding box 
+                Quaternion qLocal = QuaternionExtensions.EulerToQuat(0, -rc.cam.OrbitLocalOrientation.X, -rc.cam.OrbitLocalOrientation.Y);
+
+                Matrix4 mat4CenterOfRotation = Matrix4.CreateTranslation(centerOfRotation);
+                Matrix4 origin = Matrix4.CreateTranslation(new Vector3(0, 0, 0));
+
+                modelLocalRotation = mat4CenterOfRotation * Matrix4.CreateFromQuaternion(qLocal);
+            }
 
             foreach (Transform transform in transformationHierarchy)
             {
@@ -105,7 +120,7 @@ namespace X3D
             cameraRot = Matrix4.CreateFromQuaternion(q); // cameraRot = MathHelpers.CreateRotation(ref q);
 
 
-            Matrix4 MVP = modelrotations * (model * cameraTransl) * (cameraRot) // position and orient the Shape relative to the world and camera
+            Matrix4 MVP =  ((modelLocalRotation * model) * cameraTransl) * cameraRot // position and orient the Shape relative to the world and camera
 
                 ; // this is the MVP matrix
 

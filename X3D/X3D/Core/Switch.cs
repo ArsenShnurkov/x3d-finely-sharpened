@@ -29,14 +29,14 @@ namespace X3D
 
             if (debug && Shadow != null && Shadow.Count > 0)
             {
-                if (choice >= 0 && choice < Shadow.Count)
-                {
-                    Console.WriteLine("switching to child {0} {1}", Shadow[choice], Shadow[choice]._id);
-                }
-                else
-                {
-                    Console.WriteLine("switching to child {0} {1}", Shadow[choice], Shadow[choice]._id);
-                }
+                //if (choice >= 0 && choice < Shadow.Count)
+                //{
+                //    Console.WriteLine("switching to child {0} {1}", Shadow[choice], Shadow[choice]._id);
+                //}
+                //else
+                //{
+                //    Console.WriteLine("switching to child {0} {1}", Shadow[choice], Shadow[choice]._id);
+                //}
             }
 
             if (Shadow != null && Shadow.Count > 0)
