@@ -18,6 +18,20 @@ namespace X3D
         public const float PiOver180 = PI_OVER_180;
         public const float TwoPi = PI2;
 
+        public static double FractionalPart(double n)
+        {
+            double fraction;
+
+            fraction = n - Math.Floor(n);
+
+            return fraction;
+        }
+
+        public static double RoundFractional(double n, double interval)
+        {
+            return Math.Round(n * interval, 0) / interval;
+        }
+
         /// <summary>
         /// Build a rotation matrix from the specified quaternion.
         /// </summary>

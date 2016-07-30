@@ -38,14 +38,13 @@ namespace X3D
             double delta;
             decimal f;
 
-            // make use of the 
             worldTime += rc.Time;
 
             time = worldTime;
 
             delta = (time - startTime) / (double)cycleInterval;
 
-            f = (decimal)RoundFractional(fractionalPart(delta), cycleInterval);
+            f = (decimal)MathHelpers.RoundFractional(MathHelpers.FractionalPart(delta), cycleInterval);
 
             if (f == 0.0m && time > startTime)
             {
@@ -55,20 +54,6 @@ namespace X3D
             {
                 fraction_changed = (float)f;
             }
-        }
-
-        private double fractionalPart(double n)
-        {
-            double fraction;
-
-            fraction = n - Math.Floor(n);
-
-            return fraction;
-        }
-
-        private double RoundFractional(double n, double interval)
-        {
-            return Math.Round(n * interval, 0) / interval;
         }
 
         #endregion
