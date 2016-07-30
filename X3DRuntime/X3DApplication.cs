@@ -42,10 +42,12 @@ namespace x3druntime.ui.opentk
         private bool mouseDragging = false;
         private bool? lockMouseCursor = null;
         private float dx = 0, dy = 0;
+        private Vector2 mouseDelta = Vector2.Zero;
         private Crosshair _crosshair;
         private bool showCrosshair = true;
         private bool fastFlySpeed = false;
         private bool slowFlySpeed = false;
+        private bool isFullscreen = false;
 
         /// <param name="window">
         /// A window or display which is used to render the X3D application
@@ -66,93 +68,74 @@ namespace x3druntime.ui.opentk
             //ActiveCamera = new Camera(this.window.Width, this.window.Height);
             ActiveCamera = new SceneCamera(this.window.Width, this.window.Height);
 
-            this.Mouse.WheelChanged += Mouse_WheelChanged;
-            this.window.MouseLeave += Window_MouseLeave;
-            this.Mouse.ButtonDown += (object sender, MouseButtonEventArgs e) =>
+            if(NavigationInfo.NavigationType == NavigationType.Examine)
             {
-                if (e.IsPressed && e.Button == MouseButton.Left) {
-                    ispanning = true;
-                    iszooming = false;
-                }
-                else if (e.IsPressed && e.Button == MouseButton.Right) {
-                    iszooming = true;
-                    ispanning = false;
-                }
-                mouseDragging = true;
-            };
-            this.Mouse.ButtonUp += (object sender, MouseButtonEventArgs e) =>
-            {
-                mouseDragging = false;
-            };
-            
-            this.Mouse.Move += (object sender, MouseMoveEventArgs e) =>
-            {
-                dx = ((float)e.XDelta);
-                dy = ((float)e.YDelta);
-
-                LockMouseCursor();
-
-
-                if (NavigationInfo.NavigationType == NavigationType.Examine)
+                this.Mouse.WheelChanged += Mouse_WheelChanged;
+                this.window.MouseLeave += Window_MouseLeave;
+                this.Mouse.ButtonDown += (object sender, MouseButtonEventArgs e) =>
                 {
-                    // MOUSE ORBIT/PAN NAVIGATION
-                    if (mouseDragging)
+                    if (e.IsPressed && e.Button == MouseButton.Left)
                     {
+                        iszooming = true;
+                        ispanning = false;
+                    }
+                    else if (e.IsPressed && e.Button == MouseButton.Right)
+                    {
+                        ispanning = true;
+                        iszooming = false;
+                    }
+                    mouseDragging = true;
+                };
+                this.Mouse.ButtonUp += (object sender, MouseButtonEventArgs e) =>
+                {
+                    mouseDragging = false;
+                };
+            }
+        }
 
-                        if (ispanning)
-                        {
-                            ActiveCamera.PanXY(dx * mouseScale, dy * mouseScale);
-                        }
-                        else if (iszooming)
-                        {
-                            ActiveCamera.OrbitXY(dx, dy);
-                        }
+        private void updateCamera()
+        {
+
+            if (NavigationInfo.NavigationType == NavigationType.Examine)
+            {
+                // MOUSE ORBIT/PAN NAVIGATION
+                if (mouseDragging)
+                {
+
+                    if (ispanning)
+                    {
+                        ActiveCamera.PanXY(mouseDelta.X * mouseScale, mouseDelta.Y * mouseScale);
+
+                        //ActiveCamera.ScaleXY(mouseDelta.X, mouseDelta.Y);
+                    }
+                    else if (iszooming)
+                    {
+                        // orbits using shape's centerOfRotation
+                        ActiveCamera.OrbitObjectsXY(mouseDelta.X / 0.5f, -1 * mouseDelta.Y / 0.5f);
                     }
                 }
+            }
+            
+            if (NavigationInfo.NavigationType == NavigationType.Fly || NavigationInfo.NavigationType == NavigationType.Walk)
+            {
+                // TEST new camera walk/fly implementation:
 
-                if (NavigationInfo.NavigationType == NavigationType.Fly || NavigationInfo.NavigationType == NavigationType.Walk)
-                {
-                    // TEST new camera walk/fly implementation:
+                Vector3 direction = Vector3.Zero;
 
-                    Vector3 direction = Vector3.Zero;
+                //if (Math.Abs(mouseDelta.X) > Math.Abs(mouseDelta.Y))
+                //    direction.X = (dx > 0) ? 0.1f : -0.1f;
+                //else
+                //    direction.Y = (dy > 0) ? 0.1f : -0.1f;
 
-                    if (Math.Abs(dx) > Math.Abs(dy))
-                        direction.X = (dx > 0) ? 0.1f : -0.1f;
-                    else
-                        direction.Y = (dy > 0) ? 0.1f : -0.1f;
+                direction = new Vector3(mouseDelta);
 
+                float xAngle = (direction.X);
+                float yAngle = (direction.Y);
 
-
-                    float xAngle = (direction.X);
-                    float yAngle = (direction.Y);
-
-                    //xAngle = dx * 0.001f;
-                    //yAngle = dy * 0.001f;
-
-                    //xAngle = MathHelpers.ClampCircular(xAngle, 0.0f, MathHelpers.TwoPi);
-                    //yAngle = MathHelpers.ClampCircular(yAngle, 0.0f, MathHelpers.TwoPi);
-
-                    //xAngle = MathHelper.ClampCircular(xAngle, 0.0, TwoPi);
-                    //yAngle = MathHelper.ClampCircular(yAngle, 0.0, HalfPi);
-
-                    //    while (xAngle < 0)
-                    //      xAngle += TwoPi;
-                    //    while (xAngle >= TwoPi)
-                    //      xAngle -= TwoPi;
-                    //
-                    //    while (yAngle < -HalfPi)
-                    //      yAngle = -HalfPi;
-                    //    while (yAngle > HalfPi)
-                    //      yAngle = HalfPi;
-
-
-                    ActiveCamera.ApplyYaw(xAngle);
-                    ActiveCamera.ApplyPitch(yAngle);
-                    ActiveCamera.ApplyRotation();
-                }
-
-
-            };
+                ActiveCamera.ApplyYaw(xAngle);
+                ActiveCamera.ApplyPitch(yAngle);
+                ActiveCamera.ApplyRotation();
+            }
         }
 
         public void Init(string url, string mime_type)
@@ -269,7 +252,7 @@ namespace x3druntime.ui.opentk
 
                 Renderer.Draw(scene.SceneGraph, rc);
 
-                if (showCrosshair)
+                if (showCrosshair && NavigationInfo.NavigationType != NavigationType.Examine)
                 {
                     rc.PushMatricies();
                     this._crosshair.Render(rc);
@@ -310,10 +293,69 @@ namespace x3druntime.ui.opentk
             }
         }
 
-
         public void FrameUpdated(FrameEventArgs e)
         {
             ApplyKeyBindings(e);
+
+            Rectangle screen = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
+
+            if(NavigationInfo.NavigationType != NavigationType.Examine)
+            {
+                if (this.window.WindowState == WindowState.Fullscreen)
+                {
+                    mouseDelta = new Vector2
+                    (
+                       System.Windows.Forms.Cursor.Position.X - (screen.Width / 2.0f),
+                       System.Windows.Forms.Cursor.Position.Y - (screen.Height / 2.0f)
+                    );
+
+                    mouseDelta *= 0.005f;
+                }
+                else
+                {
+                    //mouseDelta = new Vector2
+                    //(
+                    //    window.Bounds.Left + (System.Windows.Forms.Cursor.Position.X - (window.Width / 2.0f) ),
+                    //    window.Bounds.Top + (System.Windows.Forms.Cursor.Position.Y - (window.Height / 2.0f))
+                    //);
+                }
+
+                updateCamera();
+
+                LockMouseCursor();
+            }
+            else
+            {
+
+
+                if (this.window.WindowState == WindowState.Fullscreen)
+                {
+                    mouseDelta = new Vector2
+                    (
+                       System.Windows.Forms.Cursor.Position.X - (screen.Width / 2.0f),
+                       System.Windows.Forms.Cursor.Position.Y - (screen.Height / 2.0f)
+                    );
+
+                    mouseDelta *= 0.005f;
+
+                    updateCamera();
+
+                    LockMouseCursor();
+                }
+                else
+                {
+                    mouseDelta = new Vector2
+                    (
+                       System.Windows.Forms.Cursor.Position.X - screen.Width,
+                       System.Windows.Forms.Cursor.Position.Y - screen.Height
+                    );
+
+                    mouseDelta *= 0.0005f;
+
+                    updateCamera();
+                }
+            }
+
         }
 
         public void Dispose()
@@ -345,10 +387,47 @@ namespace x3druntime.ui.opentk
 
             if (lockMouseCursor.HasValue && lockMouseCursor.Value == true)
             {
-                System.Windows.Forms.Cursor.Position = new System.Drawing.Point(window.Bounds.Left + (window.Bounds.Width / 2),
-        window.Bounds.Top + (window.Bounds.Height / 2));
+                //        System.Windows.Forms.Cursor.Position = new System.Drawing.Point(window.Bounds.Left + (window.Bounds.Width / 2),
+                //window.Bounds.Top + (window.Bounds.Height / 2));
+
+                
+
+                if (this.isFullscreen)
+                {
+                    Rectangle screen = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
+
+                    System.Windows.Forms.Cursor.Position = new Point(screen.Width / 2,
+                        screen.Height / 2);
+                }
+                else
+                {
+                    //System.Windows.Forms.Cursor.Position = new Point(
+                    //    window.Bounds.Left + window.Width / 2,
+                    //    window.Bounds.Top + window.Height / 2
+                    //    );
+                }
+
+                //if (this.window.WindowState == WindowState.Fullscreen)
+                //{
+                //    SetCursorPos((screen.Width / 2) + (int)dx, (screen.Height / 2) + (int)dy);
+
+                //    //System.Windows.Forms.Cursor.Position = new Point(
+                //    //    window.Width / 2,
+                //    //     window.Height / 2
+                //    //);
+                //}
+                //else
+                //{
+                //    System.Windows.Forms.Cursor.Position = new Point(
+                //        this.window.Bounds.Left + window.Width / 2,
+                //        this.window.Bounds.Top + window.Height / 2
+                //    );
+                //}
             }
         }
+
+        [DllImport("user32.dll")]
+        static extern bool SetCursorPos(int X, int Y);
 
         #region test orbital control
 
