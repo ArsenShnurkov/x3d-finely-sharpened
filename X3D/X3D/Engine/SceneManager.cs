@@ -736,7 +736,7 @@ namespace X3D.Engine
 
         public static void Draw(SceneManager scene, RenderingContext rc)
         {
-            Renderer.Scene(scene, rc);
+            Runtime.Scene(scene, rc);
         }
 
         //public static int CreateTexture(ImageTexture indexableTexture)

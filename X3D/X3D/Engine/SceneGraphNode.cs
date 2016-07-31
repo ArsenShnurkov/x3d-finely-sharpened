@@ -26,6 +26,7 @@ namespace X3D
         private string _containerField = "children";
         private string _class;
         private string _name;
+        private bool _isHidden = false;
 
         #endregion
 
@@ -154,6 +155,25 @@ namespace X3D
             }
         }
 
+        /// <summary>
+        /// If true, disabled the node from any Render() calls. KeepAlive() is then called instead.
+        /// </summary>
+        [XmlIgnore]
+        public bool Hidden
+        {
+            get
+            {
+                return _isHidden;
+            }
+            set
+            {
+                _isHidden = value;
+            }
+        }
+
+        [XmlIgnore]
+        public bool IsPrototypeBase = false;
+
         #endregion
 
         #region Public Fields
@@ -275,6 +295,7 @@ namespace X3D
         public virtual void PreRenderOnce(RenderingContext rc) { }
         public virtual void PreRender() { }
         public virtual void Render(RenderingContext rc) { }
+        public virtual void KeepAlive(RenderingContext rc) { } 
         public virtual void PostRender(RenderingContext rc) { }
 
         #endregion

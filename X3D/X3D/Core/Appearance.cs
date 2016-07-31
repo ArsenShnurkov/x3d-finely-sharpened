@@ -16,6 +16,8 @@ namespace X3D
 
         #endregion
 
+        public Material material { get; set; } // set by containerField
+
         #region Rendering Methods
 
         public override void Load()

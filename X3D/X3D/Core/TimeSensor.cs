@@ -12,13 +12,20 @@ namespace X3D
     public partial class TimeSensor
     {
         [XmlIgnore]
+        public bool Enabled { get; set; }
+
+        [XmlIgnore]
         public float fraction_changed { get; private set; }
+
+        private double worldTime = 0;
 
         #region Rendering Methods
 
         public override void Load()
         {
             base.Load();
+
+            Enabled = true;
         }
 
         public override void PreRenderOnce(RenderingContext rc)
@@ -28,11 +35,11 @@ namespace X3D
             this.startTime = rc.Time;
         }
 
-        double worldTime = 0;
-
         public override void Render(RenderingContext rc)
         {
             base.Render(rc);
+
+            if (!Enabled) return;
 
             double time;
             double delta;
@@ -49,6 +56,11 @@ namespace X3D
             if (f == 0.0m && time > startTime)
             {
                 fraction_changed = 1.0f;
+
+                if (!this.loop)
+                {
+                    Enabled = false;
+                }
             }
             else
             {

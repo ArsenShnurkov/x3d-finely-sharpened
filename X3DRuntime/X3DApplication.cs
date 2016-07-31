@@ -250,7 +250,7 @@ namespace x3druntime.ui.opentk
 
 
 
-                Renderer.Draw(scene.SceneGraph, rc);
+                Runtime.Draw(scene.SceneGraph, rc);
 
                 if (showCrosshair && NavigationInfo.NavigationType != NavigationType.Examine)
                 {

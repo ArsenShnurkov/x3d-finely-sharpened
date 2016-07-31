@@ -29,6 +29,8 @@ namespace X3D.Engine
         /// </summary>
         public Dictionary<string, SceneGraphNode> defUseScope = new Dictionary<string, SceneGraphNode>();
 
+        public Dictionary<string, SceneGraphNode> nameScope = new Dictionary<string, SceneGraphNode>();
+
         /// <summary>
         /// List of event ROUTE nodes in runtime state.
         /// Managed by Event Graph model.
@@ -253,6 +255,29 @@ namespace X3D.Engine
                     {
                         // Quick way to get all ROUTE nodes
                         Routes.Add((ROUTE)child);
+                    }
+
+                    #endregion
+
+                    #region Prototyping
+
+                    if (!string.IsNullOrEmpty(child.name))
+                    {
+                        this.nameScope.Add(child.name, child);
+
+                        if (child.GetType() == typeof(ProtoInstance))
+                        {
+                            ProtoInstance protoInstance = (ProtoInstance)child;
+
+                            if (this.nameScope.ContainsKey(child.name))
+                            {
+                                protoInstance.Prototype = (ProtoDeclare)this.nameScope[child.name];
+                            }
+                            else
+                            {
+                                Console.WriteLine("[Warning] Could not immediatly find ProtoDeclare \"{0}\". Placing ProtoDeclare above ProtoInstance usually fixes this warning.", child.name);
+                            }
+                        }
                     }
 
                     #endregion

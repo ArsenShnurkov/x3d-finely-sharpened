@@ -84,8 +84,12 @@
     <Compile Include="X3D\Core\Background.cs" />
     <Compile Include="X3D\Core\Box.cs" />
     <Compile Include="X3D\Core\IntegerSequencer.cs" />
+    <Compile Include="X3D\Core\Prototyping\fieldValue.cs" />
+    <Compile Include="X3D\Core\Prototyping\IS.cs" />
     <Compile Include="X3D\Core\NavigationInfo.cs" />
-    <Compile Include="X3D\Core\ProtoInstance.cs" />
+    <Compile Include="X3D\Core\Prototyping\ProtoBody.cs" />
+    <Compile Include="X3D\Core\Prototyping\ProtoDeclare.cs" />
+    <Compile Include="X3D\Core\Prototyping\ProtoInstance.cs" />
     <Compile Include="X3D\Core\Shading\BuiltIn\CrosshairShader.cs" />
     <Compile Include="X3D\Core\Shading\BuiltIn\ColorDiscardShader.cs" />
     <Compile Include="X3D\Core\Shading\BuiltIn\CubeMapBackgroundShader.cs" />
@@ -120,7 +124,7 @@
     <Compile Include="X3D\Core\IndexedTriangleSet.cs" />
     <Compile Include="X3D\Core\Material.cs" />
     <Compile Include="X3D\Engine\RenderingContext.cs" />
-    <Compile Include="X3D\Core\field.cs" />
+    <Compile Include="X3D\Core\Prototyping\field.cs" />
     <Compile Include="X3D\Core\Shading\ShaderPart.cs" />
     <Compile Include="X3D\Core\Shading\ShaderCompiler.cs" />
     <Compile Include="X3D\Core\Shape.cs" />
@@ -154,7 +158,7 @@
     <Compile Include="X3D\x3d-3.3.Designer.cs" />
     <Compile Include="X3D\Parser\XMLParser.cs" />
     <Compile Include="X3D\Engine\SceneGraph.cs" />
-    <Compile Include="X3D\Engine\Renderer.cs" />
+    <Compile Include="X3D\Engine\Runtime.cs" />
     <Compile Include="X3D\BuildSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="X3D\Engine\SceneManager.cs" />
