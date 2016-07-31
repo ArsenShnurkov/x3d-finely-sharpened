@@ -63,6 +63,13 @@ namespace X3D.Engine
         public int Width;
         public int Height;
 
+        /// <summary>
+        /// Value used for debugging
+        /// </summary>
+        public Vector3 calibTrans = Vector3.Zero;
+        public Vector3 calibOrient = Vector3.Zero;
+        public Vector3 calibSpeed = new Vector3(0.01f, 0.01f, 0.01f);
+
         public SceneCamera(int viewportWidth, int viewportHeight)
 		{
             // Keyboard navigation parameters
