@@ -29,6 +29,9 @@ namespace X3D
 
         #region Public Fields
 
+        [XmlAttribute("depthMask")]
+        public bool depthMask = true;
+
         [XmlIgnore]
         public List<ComposedShader> ComposedShaders = new List<ComposedShader>();
 
@@ -112,6 +115,8 @@ namespace X3D
 
                 //modelrotations *= MathHelpers.CreateRotation(ref modelrotation);
             }
+
+
 
             model = modelview;
 
@@ -310,9 +315,39 @@ namespace X3D
                     }
                 }
 
-                ApplyGeometricTransformations(rc, CurrentShader, this);
+                if (depthMask)
+                {
+                    ApplyGeometricTransformations(rc, CurrentShader, this);
+                }
+                else
+                {
+                    //REFACTOR!!
+
+                    var shader = CurrentShader;
+
+                    shader.Use();
+
+                    RefreshDefaultUniforms(shader);
+
+                    if (shader.IsTessellator)
+                        RefreshTessUniforms(shader);
+
+                    //Matrix4 MVP = rc.cam.GetWorldOrientation() ;
+
+                    //shader.SetFieldValue("modelview", ref MVP);
+
+                    //shader.SetFieldValue("modelview", ref MVP); //GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);
+                    shader.SetFieldValue("projection", ref rc.matricies.projection);
+                    shader.SetFieldValue("camscale", rc.cam.Scale.X); //GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
+                    shader.SetFieldValue("X3DScale", rc.matricies.Scale); //GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
+                    shader.SetFieldValue("coloringEnabled", 0); //GL.Uniform1(uniforms.a_coloringEnabled, 0);
+                    shader.SetFieldValue("texturingEnabled", this.texturingEnabled ? 1 : 0); //GL.Uniform1(uniforms.a_texturingEnabled, this.texturingEnabled ? 1 : 0);
+
+                }
+                
 
                 ApplyMaterials(CurrentShader); // apply materials should really be done once at load but havent figured it out fully
+
             }
         }
 
@@ -321,6 +356,7 @@ namespace X3D
             base.PostRender(rc);
 
             CurrentShader.Deactivate();
+
 
             GL.BindTexture(TextureTarget.Texture2D, 0);
 
