@@ -11,6 +11,7 @@ namespace X3D
     {
         public const float PI = (float)Math.PI; // 180 degrees
         public const float PIOver2 = PI / 2.0f; // 90 degrees
+        public const float PIOver4 = PI / 4.0f; // 45 degrees
         public const float ThreePIOver2 = (3.0f * PI) / 2.0f; // 270 degrees
         public const float PI_OVER_180 = (float)Math.PI / 180.0f; // radian ratio (used to convert radians to degrees)
         public const float Zenith = (float)Math.PI / 2.0f;
