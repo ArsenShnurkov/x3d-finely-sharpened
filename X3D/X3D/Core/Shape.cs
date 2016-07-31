@@ -12,16 +12,25 @@ using X3D.Core.Shading.DefaultUniforms;
 
 namespace X3D
 {
+
     public partial class Shape : X3DShapeNode
     {
+        #region Private Fields
+
         private bool hasShaders;
         private List<X3DShaderNode> shaders;
+        private readonly float tessLevelInner = 137; // 3
+        private readonly float tessLevelOuter = 115; // 2
+
+        private List<ShaderMaterial> shaderMaterials;
+        private static Random r = new Random();
+
+        #endregion
+
+        #region Public Fields
 
         [XmlIgnore]
         public List<ComposedShader> ComposedShaders = new List<ComposedShader>();
-
-        #region Test Shader
-
 
         [XmlIgnore]
         public bool texturingEnabled;
@@ -39,12 +48,6 @@ namespace X3D
         public TessShaderUniforms Uniforms = new TessShaderUniforms();
 
         [XmlIgnore]
-        public float TessLevelInner = 137; // 3
-
-        [XmlIgnore]
-        public float TessLevelOuter = 115; // 2
-
-        [XmlIgnore]
         public Matrix3 NormalMatrix = Matrix3.Identity;
 
         [XmlIgnore]
@@ -55,7 +58,7 @@ namespace X3D
 
         #endregion
 
-        #region Render Methods
+        #region Public Methods
 
         public void ApplyGeometricTransformations(RenderingContext rc, ComposedShader shader, SceneGraphNode context)
         {
@@ -93,11 +96,12 @@ namespace X3D
             {
                 // Center of Rotation based on center of bounding box 
                 Quaternion qLocal = QuaternionExtensions.EulerToQuat(0, -rc.cam.OrbitLocalOrientation.X, -rc.cam.OrbitLocalOrientation.Y);
+                Quaternion qAdjust = QuaternionExtensions.EulerToQuat(MathHelpers.PIOver2, 0.0f, 0.0f); 
 
                 Matrix4 mat4CenterOfRotation = Matrix4.CreateTranslation(centerOfRotation);
                 Matrix4 origin = Matrix4.CreateTranslation(new Vector3(0, 0, 0));
 
-                modelLocalRotation = mat4CenterOfRotation * Matrix4.CreateFromQuaternion(qLocal);
+                modelLocalRotation = mat4CenterOfRotation * Matrix4.CreateFromQuaternion(qLocal) * Matrix4.CreateFromQuaternion(qAdjust);
             }
 
             foreach (Transform transform in transformationHierarchy)
@@ -120,7 +124,7 @@ namespace X3D
             cameraRot = Matrix4.CreateFromQuaternion(q); // cameraRot = MathHelpers.CreateRotation(ref q);
 
 
-            Matrix4 MVP =  ((modelLocalRotation * model) * cameraTransl) * cameraRot // position and orient the Shape relative to the world and camera
+            Matrix4 MVP = ((modelLocalRotation * model) * cameraTransl) * cameraRot // position and orient the Shape relative to the world and camera
 
                 ; // this is the MVP matrix
 
@@ -138,6 +142,7 @@ namespace X3D
             }
         }
 
+        //TODO: refactor Shader code 
         public void IncludeDefaultShader(string vertexShaderSource, string fragmentShaderSource)
         {
             CurrentShader = ShaderCompiler.ApplyShader(vertexShaderSource, fragmentShaderSource);
@@ -151,7 +156,7 @@ namespace X3D
             shader.Use();
 
             RefreshDefaultUniforms();
-            //RefreshMaterialUniforms();
+
             if (shader.IsTessellator)
             {
                 RefreshTessUniforms();
@@ -163,10 +168,10 @@ namespace X3D
         public void IncludeTesselationShaders(string tessControlShaderSource, string tessEvalShaderSource,
                                               string geometryShaderSource)
         {
-            CurrentShader = ShaderCompiler.ApplyShader(DefaultShader.vertexShaderSource, 
+            CurrentShader = ShaderCompiler.ApplyShader(DefaultShader.vertexShaderSource,
                                                        DefaultShader.fragmentShaderSource,
-                                                       tessControlShaderSource, 
-                                                       tessEvalShaderSource, 
+                                                       tessControlShaderSource,
+                                                       tessEvalShaderSource,
                                                        geometryShaderSource);
 
 
@@ -206,35 +211,68 @@ namespace X3D
             uniforms.sampler = GL.GetUniformLocation(shader.ShaderHandle, "_MainTex");
         }
 
-        //public void RefreshMaterialUniforms()
-        //{
-        //    if (CurrentShader.HasErrors) return;
-        //
-        //    Materials.ambientIntensity = GL.GetUniformLocation(CurrentShader.ShaderHandle, "ambientIntensity");
-        //    Materials.diffuseColor = GL.GetUniformLocation(CurrentShader.ShaderHandle, "diffuseColor");
-        //    Materials.emissiveColor = GL.GetUniformLocation(CurrentShader.ShaderHandle, "emissiveColor");
-        //    Materials.shininess = GL.GetUniformLocation(CurrentShader.ShaderHandle, "shininess");
-        //    Materials.specularColor = GL.GetUniformLocation(CurrentShader.ShaderHandle, "specularColor");
-        //    Materials.transparency = GL.GetUniformLocation(CurrentShader.ShaderHandle, "transparency");
-        //}
 
-        //public void SetSampler(int sampler)
-        //{
-        //    GL.Uniform1(uniforms.sampler, sampler);
-        //}
+        #endregion
+
+
+        public void CollectMaterials()
+        {
+            ShaderMaterial shaderMaterial;
+            List<Material> materials;
+            Appearance appearance;
+
+            materials = new List<Material>();
+            appearance = this.ItemsByType<Appearance>().FirstOrDefault();
+
+            if (appearance != null)
+                materials = appearance.ItemsByType<Material>();
+
+            shaderMaterials = new List<ShaderMaterial>();
+
+            foreach (Material material in materials)
+            {
+                shaderMaterial = ShaderMaterial.FromX3DMaterial(material);
+
+                shaderMaterials.Add(shaderMaterial);
+            }
+        }
+
+        public void ApplyMaterials(ComposedShader shader)
+        {
+            List<Material> materials;
+            Appearance appearance;
+
+            materials = new List<Material>();
+            appearance = this.ItemsByType<Appearance>().FirstOrDefault();
+
+            if(appearance != null)
+                materials = appearance.ItemsByType<Material>();
+
+            shader.SetFieldValue("materialsEnabled", materials.Any() ? 1 : 0);
+
+            if (materials.Any())
+            {
+                shader.SetFieldValue("materialsCount", shaderMaterials.Count);
+
+                Buffering.BufferMaterials(shader, shaderMaterials, "materials");
+            }
+        }
+
+        #region Render Methods
 
         public override void Load()
         {
             base.Load();
+            ComposedShader @default;
 
-            var @default = ShaderCompiler.BuildDefaultShader();
-            @default.Link();
-            @default.Use();
+            @default = ShaderCompiler.BuildDefaultShader();
+
             CurrentShader = @default;
             IncludeComposedShader(@default);
 
+            CollectMaterials();
+
             RefreshDefaultUniforms();
-            //RefreshMaterialUniforms();
         }
 
         public override void PreRender()
@@ -245,8 +283,6 @@ namespace X3D
 
             shaders = this.DecendantsByType(typeof(X3DShaderNode)).Select(n => (X3DShaderNode)n).ToList();
             hasShaders = shaders.Any();
-
-            
         }
 
         public override void Render(RenderingContext rc)
@@ -263,7 +299,20 @@ namespace X3D
             {
                 CurrentShader = linkedShaders;
 
+                if (CurrentShader.IsTessellator)
+                {
+                    if (CurrentShader.IsBuiltIn)
+                    {
+                        // its a built in system shader so we are using the the fixed parameter inbuilt tesselator
+                        CurrentShader.SetFieldValue("TessLevelInner", this.tessLevelInner);
+                        CurrentShader.SetFieldValue("TessLevelOuter", this.tessLevelOuter);
+
+                    }
+                }
+
                 ApplyGeometricTransformations(rc, CurrentShader, this);
+
+                ApplyMaterials(CurrentShader); // apply materials should really be done once at load but havent figured it out fully
             }
         }
 
@@ -272,6 +321,7 @@ namespace X3D
             base.PostRender(rc);
 
             CurrentShader.Deactivate();
+
             GL.BindTexture(TextureTarget.Texture2D, 0);
 
             rc.PopMatricies();
