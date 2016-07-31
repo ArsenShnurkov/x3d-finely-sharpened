@@ -28,7 +28,7 @@ namespace X3D
         private const int RESTART_INDEX = -1;
         private Shape parentShape;
         private Shape _shape4;
-        private ComposedShader quadShader;
+        private ComposedShader quadShader = null;
 
         private BoundingBox _bbox;
         private bool RGBA = false, RGB = false, coloring = false, texturing = false, generateColorMap = false;
@@ -154,7 +154,24 @@ namespace X3D
                 {
                     if (parentShape.CurrentShader != null)
                     {
+
                         parentShape.CurrentShader.Use();
+
+                        if (parentShape.depthMask == false)
+                        {
+                            //REFACTOR!!
+                            Matrix4 mat4 = Matrix4.Identity;
+                            //Quaternion qRotFix = QuaternionExtensions.EulerToQuat(rc.cam.calibOrient.X, rc.cam.calibOrient.Y, rc.cam.calibOrient.Z);
+                            //mat4 *= Matrix4.CreateTranslation(rc.cam.calibTrans) * Matrix4.CreateFromQuaternion(qRotFix);
+                            Quaternion qRotFix = QuaternionExtensions.EulerToQuat(0.15f, 3.479997f, 0f);
+                            mat4 *= Matrix4.CreateTranslation(new Vector3(0f, 0f, -0.29f)) * Matrix4.CreateFromQuaternion(qRotFix);
+                            // test weapon/gun rendering fixed in front of player
+                            //TODO: port this to X3D
+
+                            parentShape.CurrentShader.SetFieldValue("modelview", ref mat4);
+                            if (quadShader != null) quadShader.SetFieldValue("modelview", ref mat4);
+                            //GL.DepthMask(false);
+                        }
 
                         parentShape.CurrentShader.SetFieldValue("size", size);
                         parentShape.CurrentShader.SetFieldValue("scale", scale);
@@ -227,8 +244,35 @@ namespace X3D
                             {
                                 GL.UseProgram(quadShader.ShaderHandle);
 
-                                parentShape.ApplyGeometricTransformations(rc, quadShader, this);
+                                if (parentShape.depthMask)
+                                {
+                                    parentShape.ApplyGeometricTransformations(rc, quadShader, this);
+                                }
+                                else
+                                {
+                                    //REFACTOR!!
+                                    Matrix4 mat4 = Matrix4.Identity;
+                                    //Quaternion qRotFix = QuaternionExtensions.EulerToQuat(rc.cam.calibOrient.X, rc.cam.calibOrient.Y, rc.cam.calibOrient.Z);
+                                    //mat4 *= Matrix4.CreateTranslation(rc.cam.calibTrans) * Matrix4.CreateFromQuaternion(qRotFix);
+                                    Quaternion qRotFix = QuaternionExtensions.EulerToQuat(0.15f, 3.479997f, 0f);
+                                    mat4 *= Matrix4.CreateTranslation(new Vector3(0f, 0f, -0.29f)) * Matrix4.CreateFromQuaternion(qRotFix);
 
+                                    // test weapon/gun rendering fixed in front of player
+                                    //TODO: port this to X3D
+
+                                    quadShader.SetFieldValue("modelview", ref mat4);
+
+                                    var shader = quadShader;
+
+                                    parentShape.RefreshDefaultUniforms(shader);
+
+                                    shader.SetFieldValue("projection", ref rc.matricies.projection);
+                                    shader.SetFieldValue("camscale", rc.cam.Scale.X); //GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
+                                    shader.SetFieldValue("X3DScale", rc.matricies.Scale); //GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
+                                    shader.SetFieldValue("coloringEnabled", 0); //GL.Uniform1(uniforms.a_coloringEnabled, 0);
+                                    shader.SetFieldValue("texturingEnabled", parentShape.texturingEnabled ? 1 : 0); //GL.Uniform1(uniforms.a_texturingEnabled, this.texturingEnabled ? 1 : 0);
+
+                                }
                                 quadShader.SetFieldValue("size", size);
                                 quadShader.SetFieldValue("scale", scale);
 
@@ -240,6 +284,11 @@ namespace X3D
 
                                 GL.UseProgram(0);
                             }
+                        }
+
+                        if (parentShape.depthMask == false)
+                        {
+                            //GL.DepthMask(true);
                         }
                     }
                 }
