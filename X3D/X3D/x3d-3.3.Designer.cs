@@ -86,6 +86,7 @@ namespace X3D
     {
 
         private string _containerField;
+        private List<object> _items = new List<object>();
 
         public Appearance()
         {
@@ -103,6 +104,38 @@ namespace X3D
             set
             {
                 this._containerField = value;
+            }
+        }
+
+        /* 
+  SFNode [in,out] fillProperties   NULL [FillProperties]
+  SFNode [in,out] lineProperties   NULL [LineProperties]
+  SFNode [in,out] material         NULL [X3DMaterialNode]
+  SFNode [in,out] metadata         NULL [X3DMetadataObject]
+  MFNode [in,out] shaders          []   [X3DShaderNode]
+  SFNode [in,out] texture          NULL [X3DTextureNode]
+  SFNode [in,out] textureTransform NULL [X3DTextureTransformNode]
+             */
+
+        [XmlElementAttribute("ComposedShader", typeof(ComposedShader))]
+        [XmlElementAttribute("FillProperties", typeof(FillProperties))]
+        [XmlElementAttribute("LineProperties", typeof(LineProperties))]
+        [XmlElementAttribute("TextureTransform", typeof(TextureTransform))]
+        [XmlElementAttribute("Material", typeof(Material))]
+        [XmlElementAttribute("ImageTexture", typeof(ImageTexture))]
+        //[XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D))]
+        [XmlElementAttribute("ImageTexture3D", typeof(ImageTexture3D))]
+        [XmlElementAttribute("PixelTexture3D", typeof(PixelTexture3D))]
+        //TODO: add more types that are valid children of Appearance node
+        public List<object> Items
+        {
+            get
+            {
+                return this._items;
+            }
+            set
+            {
+                this._items = value;
             }
         }
     }
@@ -5858,13 +5891,13 @@ namespace X3D
 
         private float _ambientIntensity;
 
-        private Vector3 _diffuseColor;
+        internal Vector3 _diffuseColor;
 
-        private Vector3 _emissiveColor;
+        internal Vector3 _emissiveColor;
 
         private float _shininess;
 
-        private Vector3 _specularColor;
+        internal Vector3 _specularColor;
 
         private float _transparency;
 
@@ -8216,6 +8249,7 @@ namespace X3D
     {
 
         private string _containerField = "children";
+        private List<object> _items = new List<object>();
 
         [XmlAttributeAttribute(DataType = "NMTOKEN")]
         [System.ComponentModel.DefaultValueAttribute("children")]
@@ -8228,6 +8262,20 @@ namespace X3D
             set
             {
                 this._containerField = value;
+            }
+        }
+
+        [XmlElementAttribute("Appearance", typeof(Appearance))]
+        //TODO: add more types that are valid children of Shape node
+        public List<object> Items
+        {
+            get
+            {
+                return this._items;
+            }
+            set
+            {
+                this._items = value;
             }
         }
     }
