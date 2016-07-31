@@ -1,5 +1,7 @@
 ﻿//#define DEBUG_SCENE_GRAPH
 
+//TODO: implement containerField
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -175,6 +177,9 @@ namespace X3D.Engine
                     {
                         child.Parent = parent;
                         child.Parents.Add(parent);
+
+                        //TODO: implement containerField
+
                         parent.Children.Add(child);
                     }
                     else

@@ -10610,18 +10610,18 @@ namespace X3D
         private List<field> _field = new List<field>();
         private List<object> _items = new List<object>();
 
-        [XmlElementAttribute("field")]
-        public List<field> field
-        {
-            get
-            {
-                return this._field;
-            }
-            set
-            {
-                this._field = value;
-            }
-        }
+        //[XmlElementAttribute("field")]
+        //public List<field> field
+        //{
+        //    get
+        //    {
+        //        return this._field;
+        //    }
+        //    set
+        //    {
+        //        this._field = value;
+        //    }
+        //}
 
         [XmlElementAttribute("field", typeof(field))]
         public List<object> Items

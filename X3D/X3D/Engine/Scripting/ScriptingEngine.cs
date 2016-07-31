@@ -102,8 +102,11 @@ namespace X3D.Engine
             const string JS_REF = "javascript:";
 
             script = script.TrimStart();
-            script = script.StartsWith(ES_REF) ? script.Remove(0, ES_REF.Length - 1) : script;
-            script = script.StartsWith(JS_REF) ? script.Remove(0, JS_REF.Length - 1) : script;
+
+            string start = script.Substring(0, ES_REF.Length).ToLower();
+
+            script = start.StartsWith(ES_REF) ? script.Remove(0, ES_REF.Length) : script;
+            script = start.StartsWith(JS_REF) ? script.Remove(0, JS_REF.Length) : script;
 
             using (InternalHandle handle = v8.Compile(script, SOURCE_NAME, false).AsInternalHandle)
             {
