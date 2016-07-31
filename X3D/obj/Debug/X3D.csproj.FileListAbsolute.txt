@@ -22,3 +22,11 @@ D:\projects\X3D\x3d-finely-sharpened\X3D\bin\Debug\V8.Net.SharedTypes.dll
 D:\projects\X3D\x3d-finely-sharpened\X3D\obj\Debug\X3D.csprojResolveAssemblyReference.cache
 D:\projects\X3D\x3d-finely-sharpened\X3D\bin\Debug\FastInfoSet.dll
 D:\projects\X3D\x3d-finely-sharpened\X3D\bin\Debug\FastInfoSet.pdb
+D:\projects\X3D\x3d-finely-sharpened\X3D\bin\Debug\X3D\Shaders\BackgroundFragmentShader.shader
+D:\projects\X3D\x3d-finely-sharpened\X3D\bin\Debug\X3D\Shaders\BackgroundVertexShader.shader
+D:\projects\X3D\x3d-finely-sharpened\X3D\bin\Debug\X3D\Shaders\DefaultFragmentShader.shader
+D:\projects\X3D\x3d-finely-sharpened\X3D\bin\Debug\X3D\Shaders\DefaultVertexShader.shader
+D:\projects\X3D\x3d-finely-sharpened\X3D\bin\Debug\X3D\Shaders\MaterialFragmentShader.shader
+D:\projects\X3D\x3d-finely-sharpened\X3D\bin\Debug\X3D\Shaders\MaterialVertexShader.shader
+D:\projects\X3D\x3d-finely-sharpened\X3D\bin\Debug\X3D\Shaders\PerlinNoiseFragmentShader.shader
+D:\projects\X3D\x3d-finely-sharpened\X3D\bin\Debug\X3D\Shaders\PerlinNoiseVertexShader.shader
