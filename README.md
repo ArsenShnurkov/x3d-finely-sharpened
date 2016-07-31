@@ -110,7 +110,8 @@ PARTLY: scene graph and event graph models
 PARTLY: transformations, and better conformance with standard
 PARTLY: all texturing related nodes esp. TextureProperties, and refactor ImageTexturing
 TODO: animations & interpolators and VW timing
-TODO: lighting; phong shading, lit and unlit models, X3D Materials
+PARTLY: X3D Materials interpolated with textures optionally with lighting
+TODO: lighting; phong shading, lit and unlit models
 TODO: Navigation component; LOD, Billboard, Collision, ..
 TODO: Binary space partition, quadtree, or octtree optimisations
 TODO: Raycasting engine component
