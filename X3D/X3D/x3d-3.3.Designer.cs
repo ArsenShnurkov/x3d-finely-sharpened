@@ -85,27 +85,27 @@ namespace X3D
     public partial class Appearance : X3DAppearanceNode
     {
 
-        private string _containerField;
+        //// private string _containerField;
         private List<object> _items = new List<object>();
 
         public Appearance()
         {
-            this._containerField = "appearance";
+            this.containerField = "appearance";
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("appearance")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("appearance")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
 
         /* 
   SFNode [in,out] fillProperties   NULL [FillProperties]
@@ -154,14 +154,14 @@ namespace X3D
 
         private float _endAngle;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public Arc2D()
         {
             this._radius = ((float)(1F));
             this._startAngle = ((float)(0F));
             this._endAngle = ((float)(1.570796F));
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -206,19 +206,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [XmlIncludeAttribute(typeof(X3DParametricGeometryNode))]
@@ -279,7 +279,7 @@ namespace X3D
 
         private bool _solid;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ArcClose2D()
         {
@@ -288,7 +288,7 @@ namespace X3D
             this._endAngle = ((float)(1.570796F));
             this._closureType = ArcClose2dTypeValues.PIE;
             this._solid = false;
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -361,19 +361,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -393,12 +393,12 @@ namespace X3D
 
         private List<string> _url;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public AudioClip()
         {
             this._url = new List<string>();
-            this._containerField = "source";
+            this.containerField = "source";
         }
 
         [XmlAttributeAttribute()]
@@ -414,19 +414,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("source")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("source")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     public abstract partial class X3DSoundSourceNode : X3DTimeDependentNode
@@ -441,18 +441,6 @@ namespace X3D
             this._pitch = ((float)(1F));
         }
 
-        [XmlAttributeAttribute()]
-        public string description
-        {
-            get
-            {
-                return this._description;
-            }
-            set
-            {
-                this._description = value;
-            }
-        }
 
         [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "1")]
@@ -579,16 +567,16 @@ namespace X3D
 
     public abstract partial class X3DShapeNode : X3DChildNode
     {
-/*
-  SFNode  [in,out] appearance NULL     [X3DAppearanceNode]
-  SFNode  [in,out] geometry   NULL     [X3DGeometryNode]
-  SFNode  [in,out] metadata   NULL     [X3DMetadataObject]
-  SFVec3f []       bboxCenter 0 0 0    (-∞,∞)
-  SFVec3f []       bboxSize   -1 -1 -1 [0,∞) or −1 −1 −1
-*/
+        /*
+          SFNode  [in,out] appearance NULL     [X3DAppearanceNode]
+          SFNode  [in,out] geometry   NULL     [X3DGeometryNode]
+          SFNode  [in,out] metadata   NULL     [X3DMetadataObject]
+          SFVec3f []       bboxCenter 0 0 0    (-∞,∞)
+          SFVec3f []       bboxSize   -1 -1 -1 [0,∞) or −1 −1 −1
+        */
         public X3DGeometryNode geometry { get; set; }
         public X3DAppearanceNode appearance { get; set; }
-        
+
         //TODO: Shape's bounding box
     }
 
@@ -613,7 +601,7 @@ namespace X3D
 
         private string _topUrl;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public Background()
         {
@@ -623,7 +611,7 @@ namespace X3D
             this._frontUrl = string.Empty;
             this._bottomUrl = string.Empty;
             this._backUrl = string.Empty;
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute("backUrl")]
@@ -704,19 +692,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -827,7 +815,7 @@ namespace X3D
     public abstract partial class X3DViewpointNode : X3DBindableNode
     {
 
-        private string _description;
+        //private string _description;
 
         private bool _jump;
 
@@ -846,18 +834,18 @@ namespace X3D
             this._retainUserOffsets = false;
         }
 
-        [XmlAttributeAttribute()]
-        public string description
-        {
-            get
-            {
-                return this._description;
-            }
-            set
-            {
-                this._description = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //public string description
+        //{
+        //    get
+        //    {
+        //        return this._description;
+        //    }
+        //    set
+        //    {
+        //        this._description = value;
+        //    }
+        //}
 
         [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
@@ -908,12 +896,12 @@ namespace X3D
 
         private string _axisOfRotation;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public Billboard()
         {
             this._axisOfRotation = "0 1 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -930,19 +918,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     public abstract partial class X3DGroupingNode : X3DChildNode
@@ -962,26 +950,26 @@ namespace X3D
     public partial class BooleanFilter : X3DChildNode
     {
 
-        private string _containerField;
+        //// private string _containerField;
 
-        public BooleanFilter()
-        {
-            this._containerField = "children";
-        }
+        //public BooleanFilter()
+        //{
+        //    // this.containerField = "children";
+        //}
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -995,12 +983,12 @@ namespace X3D
 
         private List<bool> _keyValue;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public BooleanSequencer()
         {
             this._keyValue = new List<bool>();
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -1016,19 +1004,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -1065,12 +1053,12 @@ namespace X3D
 
         private bool _toggle;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public BooleanToggle()
         {
             this._toggle = false;
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -1087,19 +1075,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -1111,26 +1099,26 @@ namespace X3D
     public partial class BooleanTrigger : X3DTriggerNode
     {
 
-        private string _containerField;
+        //// private string _containerField;
 
-        public BooleanTrigger()
-        {
-            this._containerField = "children";
-        }
+        //public BooleanTrigger()
+        //{
+        //    // this.containerField = "children";
+        //}
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -1155,14 +1143,14 @@ namespace X3D
 
         private bool _solid;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public Box()
         {
             this._size = "2 2 2";
             this._vec3 = new Vector3(2, 2, 2);
             this._solid = true;
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -1207,19 +1195,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -1233,12 +1221,12 @@ namespace X3D
 
         private float _radius;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Circle2D()
         {
             this._radius = ((float)(1F));
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -1255,19 +1243,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -1283,13 +1271,13 @@ namespace X3D
 
         private string _plane;
 
-        private string _containerField;
+        // private string _containerField;
 
         public ClipPlane()
         {
             this._enabled = true;
             this._plane = "0 1 0 0";
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -1320,19 +1308,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -1346,12 +1334,12 @@ namespace X3D
 
         private bool _enabled;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Collision()
         {
             this._enabled = true;
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -1368,19 +1356,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -1394,11 +1382,11 @@ namespace X3D
 
         private string _color;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Color()
         {
-            this._containerField = "color";
+            this.containerField = "color";
         }
 
         [XmlAttributeAttribute()]
@@ -1414,19 +1402,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("color")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("color")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
 
         public static Color ToColor(System.Drawing.Color col)
         {
@@ -1464,20 +1452,20 @@ namespace X3D
     public abstract partial class X3DVertexAttributeNode : X3DGeometricPropertyNode
     {
 
-        private string _name;
+        // private string _name;
 
-        [XmlAttributeAttribute()]
-        public string name
-        {
-            get
-            {
-                return this._name;
-            }
-            set
-            {
-                this._name = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //public string name
+        //{
+        //    get
+        //    {
+        //        return this._name;
+        //    }
+        //    set
+        //    {
+        //        this._name = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -1515,11 +1503,11 @@ namespace X3D
 
         private string _color;
 
-        private string _containerField;
+        // private string _containerField;
 
         public ColorRGBA()
         {
-            this._containerField = "color";
+            this.containerField = "color";
         }
 
         [XmlAttributeAttribute()]
@@ -1535,19 +1523,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("color")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("color")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -1561,11 +1549,11 @@ namespace X3D
 
         private string _keyValue;
 
-        private string _containerField;
+        // private string _containerField;
 
         public ColorInterpolator()
         {
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -1581,19 +1569,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -1638,7 +1626,7 @@ namespace X3D
 
         private bool _solid;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Cone()
         {
@@ -1647,7 +1635,7 @@ namespace X3D
             this._side = true;
             this._bottom = true;
             this._solid = true;
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -1720,19 +1708,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -1746,11 +1734,11 @@ namespace X3D
 
         private string _point;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Coordinate()
         {
-            this._containerField = "coord";
+            this.containerField = "coord";
         }
 
         [XmlAttributeAttribute()]
@@ -1766,19 +1754,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("coord")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("coord")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -1792,11 +1780,11 @@ namespace X3D
 
         private string _point;
 
-        private string _containerField;
+        // private string _containerField;
 
         public CoordinateDouble()
         {
-            this._containerField = "coord";
+            this.containerField = "coord";
         }
 
         [XmlAttributeAttribute()]
@@ -1812,19 +1800,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("coord")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("coord")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -1838,11 +1826,11 @@ namespace X3D
 
         private string _keyValue;
 
-        private string _containerField;
+        // private string _containerField;
 
         public CoordinateInterpolator()
         {
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -1858,19 +1846,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -1884,11 +1872,11 @@ namespace X3D
 
         private string _keyValue;
 
-        private string _containerField;
+        // private string _containerField;
 
         public CoordinateInterpolator2D()
         {
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -1904,19 +1892,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -1940,7 +1928,7 @@ namespace X3D
 
         private bool _solid;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Cylinder()
         {
@@ -1950,7 +1938,7 @@ namespace X3D
             this._side = true;
             this._top = true;
             this._solid = true;
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -2037,19 +2025,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -2071,7 +2059,7 @@ namespace X3D
 
         private float _offset;
 
-        private string _containerField;
+        // private string _containerField;
 
         public CylinderSensor()
         {
@@ -2080,7 +2068,7 @@ namespace X3D
             this._maxAngle = ((float)(-1F));
             this._minAngle = ((float)(0F));
             this._offset = ((float)(0F));
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -2153,19 +2141,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -2206,20 +2194,20 @@ namespace X3D
     public abstract partial class X3DPointingDeviceSensorNode : X3DSensorNode
     {
 
-        private string _description;
+        //private string _description;
 
-        [XmlAttributeAttribute()]
-        public string description
-        {
-            get
-            {
-                return this._description;
-            }
-            set
-            {
-                this._description = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //public string description
+        //{
+        //    get
+        //    {
+        //        return this._description;
+        //    }
+        //    set
+        //    {
+        //        this._description = value;
+        //    }
+        //}
     }
 
     [XmlIncludeAttribute(typeof(X3DPickSensorNode))]
@@ -2442,13 +2430,13 @@ namespace X3D
 
         private bool _global;
 
-        private string _containerField;
+        // private string _containerField;
 
         public DirectionalLight()
         {
             this._direction = "0 0 -1";
             this._global = false;
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -2479,19 +2467,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -2589,14 +2577,14 @@ namespace X3D
 
         private bool _solid;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Disk2D()
         {
             this._innerRadius = ((float)(0F));
             this._outerRadius = ((float)(1F));
             this._solid = false;
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -2641,19 +2629,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     public partial class ElevationGrid : X3DGeometryNode
@@ -2681,7 +2669,7 @@ namespace X3D
 
         internal float _zSpacing;
 
-        private string _containerField;
+        // private string _containerField;
 
         public ElevationGrid()
         {
@@ -2695,7 +2683,7 @@ namespace X3D
             this._xSpacing = ((float)(1F));
             this._zDimension = 2;
             this._zSpacing = ((float)(1F));
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlElementAttribute("Color", typeof(Color))]
@@ -2868,19 +2856,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -2896,12 +2884,12 @@ namespace X3D
 
         private string _numComponents;
 
-        private string _containerField;
+        // private string _containerField;
 
         public FloatVertexAttribute()
         {
             this._numComponents = "4";
-            this._containerField = "attrib";
+            this.containerField = "attrib";
         }
 
         [XmlAttributeAttribute()]
@@ -2931,19 +2919,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("attrib")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("attrib")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -2957,11 +2945,11 @@ namespace X3D
 
         private string _depth;
 
-        private string _containerField;
+        // private string _containerField;
 
         public FogCoordinate()
         {
-            this._containerField = "fogCoord";
+            this.containerField = "fogCoord";
         }
 
         [XmlAttributeAttribute()]
@@ -2977,19 +2965,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("fogCoord")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("fogCoord")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this._containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -3003,11 +2991,11 @@ namespace X3D
 
         private string _value;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Matrix3VertexAttribute()
         {
-            this._containerField = "attrib";
+            this.containerField = "attrib";
         }
 
         [XmlAttributeAttribute()]
@@ -3023,19 +3011,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("attrib")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("attrib")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -3049,11 +3037,11 @@ namespace X3D
 
         private string _value;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Matrix4VertexAttribute()
         {
-            this._containerField = "attrib";
+            this.containerField = "attrib";
         }
 
         [XmlAttributeAttribute()]
@@ -3069,19 +3057,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("attrib")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("attrib")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     public partial class MultiTextureCoordinate : X3DTextureCoordinateNode
@@ -3089,12 +3077,12 @@ namespace X3D
 
         private List<object> _items;
 
-        private string _containerField;
+        // private string _containerField;
 
         public MultiTextureCoordinate()
         {
             this._items = new List<object>();
-            this._containerField = "texCoord";
+            this.containerField = "texCoord";
         }
 
         [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
@@ -3112,112 +3100,31 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("texCoord")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("texCoord")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     public partial class ProtoInstance : X3DPrototypeInstance
     {
 
-        private string _dEF;
 
-        private string _uSE;
-
-        private string _name;
-
-        private string _class;
-
-        private string _containerField;
-
-        public ProtoInstance()
-        {
-            this._containerField = "children";
-        }
-
-        [XmlAttributeAttribute(DataType = "ID")]
-        public string DEF
-        {
-            get
-            {
-                return this._dEF;
-            }
-            set
-            {
-                this._dEF = value;
-            }
-        }
-
-        [XmlAttributeAttribute(DataType = "IDREF")]
-        public string USE
-        {
-            get
-            {
-                return this._uSE;
-            }
-            set
-            {
-                this._uSE = value;
-            }
-        }
-
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        public string name
-        {
-            get
-            {
-                return this._name;
-            }
-            set
-            {
-                this._name = value;
-            }
-        }
-
-        [XmlAttributeAttribute(DataType = "NMTOKENS")]
-        public string @class
-        {
-            get
-            {
-                return this._class;
-            }
-            set
-            {
-                this._class = value;
-            }
-        }
-
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
     }
 
-    public abstract partial class X3DPrototypeInstance
+    public abstract partial class X3DPrototypeInstance : SceneGraphNode
     {
 
-        public X3DPrototypeInstance()
-        {
-        }
+
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -3249,7 +3156,7 @@ namespace X3D
 
         private string _spine;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Extrusion()
         {
@@ -3263,7 +3170,7 @@ namespace X3D
             this._scale = "1 1";
             this._solid = true;
             this._spine = "0 0 0 0 1 0";
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -3406,19 +3313,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     public partial class FillProperties : X3DAppearanceChildNode
@@ -3432,7 +3339,7 @@ namespace X3D
 
         private string _hatchColor;
 
-        private string _containerField;
+        // private string _containerField;
 
         public FillProperties()
         {
@@ -3440,7 +3347,7 @@ namespace X3D
             this._hatched = true;
             this._hatchStyle = "1";
             this._hatchColor = "1 1 1";
-            this._containerField = "fillProperties";
+            this.containerField = "fillProperties";
         }
 
         [XmlAttributeAttribute()]
@@ -3499,19 +3406,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("fillProperties")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("fillProperties")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [XmlIncludeAttribute(typeof(X3DTextureNode))]
@@ -3551,14 +3458,14 @@ namespace X3D
 
         private float _visibilityRange;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Fog()
         {
             this._color = "1 1 1";
             this._fogType = fogTypeValues.LINEAR;
             this._visibilityRange = ((float)(0F));
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -3603,19 +3510,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -3657,7 +3564,7 @@ namespace X3D
 
         private bool _topToBottom;
 
-        private string _containerField;
+        // private string _containerField;
 
         public FontStyle()
         {
@@ -3669,7 +3576,7 @@ namespace X3D
             this._spacing = ((float)(1F));
             this._style = fontStyleValues.PLAIN;
             this._topToBottom = true;
-            this._containerField = "fontStyle";
+            this.containerField = "fontStyle";
         }
 
         [XmlIgnore]
@@ -3803,19 +3710,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("fontStyle")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("fontStyle")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -3853,26 +3760,26 @@ namespace X3D
     public partial class Group : X3DGroupingNode
     {
 
-        private string _containerField;
+        // private string _containerField;
 
         public Group()
         {
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -3887,13 +3794,13 @@ namespace X3D
         private List<string> _url;
         private string _urlmfstring;
 
-        private string _containerField;
+        // private string _containerField;
 
         public ImageTexture()
         {
             this._url = new List<string>();
             this._urlmfstring = string.Empty;
-            this._containerField = "texture";
+            this.containerField = "texture";
         }
 
         [XmlAttributeAttribute()]
@@ -3909,19 +3816,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("texture")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("texture")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -3945,13 +3852,13 @@ namespace X3D
 
         private string _texCoordIndex;
 
-        private string _containerField;
+        // private string _containerField;
 
         public IndexedFaceSet()
         {
             this._convex = true;
             this._creaseAngle = ((float)(0F));
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -4034,19 +3941,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -4176,7 +4083,7 @@ namespace X3D
 
         private string _point;
 
-        private string _containerField;
+        // private string _containerField;
 
         public GeoCoordinate()
         {
@@ -4184,7 +4091,7 @@ namespace X3D
             this._geoOrigin = new GeoOrigin();
             this._geoSystem.Add("\"GD\"");
             this._geoSystem.Add("\"WE\"");
-            this._containerField = "coord";
+            this.containerField = "coord";
         }
 
         public GeoOrigin GeoOrigin
@@ -4225,19 +4132,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("coord")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("coord")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -4255,7 +4162,7 @@ namespace X3D
 
         private bool _rotateYUp;
 
-        private string _containerField;
+        // private string _containerField;
 
         public GeoOrigin()
         {
@@ -4264,7 +4171,7 @@ namespace X3D
             this._geoSystem.Add("\"WE\"");
             this._geoCoords = "0 0 0";
             this._rotateYUp = false;
-            this._containerField = "geoOrigin";
+            this.containerField = "geoOrigin";
         }
 
         [XmlAttributeAttribute()]
@@ -4308,19 +4215,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geoOrigin")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geoOrigin")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -4334,11 +4241,11 @@ namespace X3D
 
         private string _vector;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Normal()
         {
-            this._containerField = "normal";
+            this.containerField = "normal";
         }
 
         [XmlAttributeAttribute()]
@@ -4354,19 +4261,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("normal")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("normal")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -4394,7 +4301,7 @@ namespace X3D
 
         private string _weight;
 
-        private string _containerField;
+        // private string _containerField;
 
         public NurbsTextureCoordinate()
         {
@@ -4402,7 +4309,7 @@ namespace X3D
             this._vDimension = "0";
             this._uOrder = "3";
             this._vOrder = "3";
-            this._containerField = "texCoord";
+            this.containerField = "texCoord";
         }
 
         [XmlAttributeAttribute()]
@@ -4513,19 +4420,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("texCoord")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("texCoord")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -4539,11 +4446,11 @@ namespace X3D
 
         private string _point;
 
-        private string _containerField;
+        // private string _containerField;
 
         public TextureCoordinate()
         {
-            this._containerField = "texCoord";
+            this.containerField = "texCoord";
         }
 
         [XmlAttributeAttribute()]
@@ -4559,19 +4466,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("texCoord")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("texCoord")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -4585,11 +4492,11 @@ namespace X3D
 
         private string _point;
 
-        private string _containerField;
+        // private string _containerField;
 
         public TextureCoordinate3D()
         {
-            this._containerField = "texCoord";
+            this.containerField = "texCoord";
         }
 
         [XmlAttributeAttribute()]
@@ -4605,19 +4512,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("texCoord")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("texCoord")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -4631,11 +4538,11 @@ namespace X3D
 
         private string _point;
 
-        private string _containerField;
+        // private string _containerField;
 
         public TextureCoordinate4D()
         {
-            this._containerField = "texCoord";
+            this.containerField = "texCoord";
         }
 
         [XmlAttributeAttribute()]
@@ -4651,19 +4558,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("texCoord")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("texCoord")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -4679,12 +4586,12 @@ namespace X3D
 
         private string _parameter;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public TextureCoordinateGenerator()
         {
             this._mode = textureCoordinateGeneratorModeValues.SPHERE;
-            this._containerField = "texCoord";
+            this.containerField = "texCoord";
         }
 
         [XmlAttributeAttribute()]
@@ -4714,19 +4621,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("texCoord")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("texCoord")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -4790,13 +4697,13 @@ namespace X3D
 
         private string _coordIndex;
 
-        private string _containerField;
+        // private string _containerField;
 
         public IndexedLineSet()
         {
             this._items = new List<object>();
             this._colorPerVertex = true;
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlElementAttribute("Color", typeof(Color))]
@@ -4857,19 +4764,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -4883,11 +4790,11 @@ namespace X3D
 
         private string _index;
 
-        private string _containerField;
+        // private string _containerField;
 
         public IndexedTriangleFanSet()
         {
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -4903,19 +4810,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -4930,11 +4837,11 @@ namespace X3D
         private string _index;
         internal int[] _indicies;
 
-        private string _containerField;
+        // private string _containerField;
 
         public IndexedTriangleSet()
         {
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -4951,19 +4858,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -4977,11 +4884,11 @@ namespace X3D
 
         private string _index;
 
-        private string _containerField;
+        // private string _containerField;
 
         public IndexedTriangleStripSet()
         {
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -4997,19 +4904,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -5029,7 +4936,7 @@ namespace X3D
 
         private List<string> _url;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Inline()
         {
@@ -5037,7 +4944,7 @@ namespace X3D
             this._load = true;
             this._bboxCenter = "0 0 0";
             this._bboxSize = "-1 -1 -1";
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -5095,19 +5002,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -5121,11 +5028,11 @@ namespace X3D
 
         private string _keyValue;
 
-        private string _containerField;
+        // private string _containerField;
 
         public IntegerSequencer()
         {
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -5141,19 +5048,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -5167,12 +5074,12 @@ namespace X3D
 
         private string _integerKey;
 
-        private string _containerField;
+        // private string _containerField;
 
         public IntegerTrigger()
         {
             this._integerKey = "-1";
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute(DataType = "integer")]
@@ -5189,19 +5096,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -5213,26 +5120,26 @@ namespace X3D
     public partial class KeySensor : X3DKeyDeviceSensorNode
     {
 
-        private string _containerField;
+        // private string _containerField;
 
         public KeySensor()
         {
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -5250,14 +5157,14 @@ namespace X3D
 
         private float _linewidthScaleFactor;
 
-        private string _containerField;
+        // private string _containerField;
 
         public LineProperties()
         {
             this._applied = true;
             this._linetype = "1";
             this._linewidthScaleFactor = ((float)(0F));
-            this._containerField = "lineProperties";
+            this.containerField = "lineProperties";
         }
 
         [XmlAttributeAttribute()]
@@ -5302,19 +5209,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("lineProperties")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("lineProperties")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -5348,7 +5255,7 @@ namespace X3D
 
         private bool _generateMipMaps;
 
-        private string _containerField;
+        // private string _containerField;
 
         public TextureProperties()
         {
@@ -5363,7 +5270,7 @@ namespace X3D
             this._textureCompression = textureCompressionModeValues.FASTEST;
             this._texturePriority = ((float)(0F));
             this._generateMipMaps = false;
-            this._containerField = "textureProperties";
+            this.containerField = "textureProperties";
         }
 
         [XmlAttributeAttribute()]
@@ -5520,19 +5427,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("textureProperties")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("textureProperties")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -5647,12 +5554,12 @@ namespace X3D
 
         private string _vertexCount;
 
-        private string _containerField;
+        // private string _containerField;
 
         public LineSet()
         {
             this._items = new List<object>();
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlElementAttribute("Color", typeof(Color))]
@@ -5686,19 +5593,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -5718,7 +5625,7 @@ namespace X3D
 
         private float _visibilityRange;
 
-        private string _containerField;
+        // private string _containerField;
 
         public LocalFog()
         {
@@ -5726,7 +5633,7 @@ namespace X3D
             this._color = "1 1 1";
             this._fogType = fogTypeValues.LINEAR;
             this._visibilityRange = ((float)(0F));
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -5785,19 +5692,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -5815,13 +5722,13 @@ namespace X3D
 
         private string _range;
 
-        private string _containerField;
+        // private string _containerField;
 
         public LOD()
         {
             this._forceTransitions = false;
             this._center = "0 0 0";
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -5865,19 +5772,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -5901,7 +5808,7 @@ namespace X3D
 
         private float _transparency;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Material()
         {
@@ -5911,7 +5818,7 @@ namespace X3D
             this._shininess = ((float)(0.2F));
             this._specularColor = new Vector3(0, 0, 0);
             this._transparency = ((float)(0F));
-            this._containerField = "material";
+            this.containerField = "material";
         }
 
         [XmlAttributeAttribute()]
@@ -5998,19 +5905,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("material")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("material")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -6056,7 +5963,7 @@ namespace X3D
 
         private bool _separateBackColor;
 
-        private string _containerField;
+        // private string _containerField;
 
         public TwoSidedMaterial()
         {
@@ -6073,7 +5980,7 @@ namespace X3D
             this._transparency = ((float)(0F));
             this._backTransparency = ((float)(0F));
             this._separateBackColor = false;
-            this._containerField = "material";
+            this.containerField = "material";
         }
 
         [XmlAttributeAttribute()]
@@ -6258,19 +6165,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("material")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("material")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -6284,12 +6191,13 @@ namespace X3D
 
         private List<bool> _value;
 
-        private metadataContainerFieldValues _containerField;
+        private metadataContainerFieldValues meta_containerField;
 
         public MetadataBoolean()
         {
             this._value = new List<bool>();
-            this._containerField = metadataContainerFieldValues.metadata;
+            this.containerField = "metadata";
+            meta_containerField = metadataContainerFieldValues.metadata;
         }
 
         [XmlAttributeAttribute()]
@@ -6307,15 +6215,16 @@ namespace X3D
 
         [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(metadataContainerFieldValues.metadata)]
-        public metadataContainerFieldValues containerField
+        public metadataContainerFieldValues MetaContainerField
         {
             get
             {
-                return this._containerField;
+                return (metadataContainerFieldValues)Enum.Parse(typeof(metadataContainerFieldValues), this.containerField);
             }
             set
             {
-                this._containerField = value;
+                this.containerField = value.ToString();
+                meta_containerField = value;
             }
         }
     }
@@ -6339,22 +6248,22 @@ namespace X3D
     public abstract partial class X3DMetadataObject : X3DNode
     {
 
-        private string _name;
+        //private string _name;
 
         private string _reference;
 
-        [XmlAttributeAttribute()]
-        public string name
-        {
-            get
-            {
-                return this._name;
-            }
-            set
-            {
-                this._name = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //public string name
+        //{
+        //    get
+        //    {
+        //        return this._name;
+        //    }
+        //    set
+        //    {
+        //        this._name = value;
+        //    }
+        //}
 
         [XmlAttributeAttribute()]
         public string reference
@@ -6381,11 +6290,11 @@ namespace X3D
 
         private string _value;
 
-        private metadataContainerFieldValues _containerField;
+        //private metadataContainerFieldValues _containerField;
 
         public MetadataDouble()
         {
-            this._containerField = metadataContainerFieldValues.metadata;
+            this.containerField = "metadata";
         }
 
         [XmlAttributeAttribute()]
@@ -6401,19 +6310,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(metadataContainerFieldValues.metadata)]
-        public metadataContainerFieldValues containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //[System.ComponentModel.DefaultValueAttribute(metadataContainerFieldValues.metadata)]
+        //public metadataContainerFieldValues containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -6427,11 +6336,11 @@ namespace X3D
 
         private string _value;
 
-        private metadataContainerFieldValues _containerField;
+        //private metadataContainerFieldValues _containerField;
 
         public MetadataFloat()
         {
-            this._containerField = metadataContainerFieldValues.metadata;
+            this.containerField = "metadata";
         }
 
         [XmlAttributeAttribute()]
@@ -6447,19 +6356,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(metadataContainerFieldValues.metadata)]
-        public metadataContainerFieldValues containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //[System.ComponentModel.DefaultValueAttribute(metadataContainerFieldValues.metadata)]
+        //public metadataContainerFieldValues containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -6473,11 +6382,11 @@ namespace X3D
 
         private string _value;
 
-        private metadataContainerFieldValues _containerField;
+        //private metadataContainerFieldValues _containerField;
 
         public MetadataInteger()
         {
-            this._containerField = metadataContainerFieldValues.metadata;
+            this.containerField = "metadata";
         }
 
         [XmlAttributeAttribute()]
@@ -6493,19 +6402,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(metadataContainerFieldValues.metadata)]
-        public metadataContainerFieldValues containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //[System.ComponentModel.DefaultValueAttribute(metadataContainerFieldValues.metadata)]
+        //public metadataContainerFieldValues containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     public partial class MetadataSet
@@ -6527,12 +6436,12 @@ namespace X3D
 
         private List<string> _value;
 
-        private metadataContainerFieldValues _containerField;
+        //private metadataContainerFieldValues _containerField;
 
         public MetadataString()
         {
             this._value = new List<string>();
-            this._containerField = metadataContainerFieldValues.metadata;
+            this.containerField = "metadata";
         }
 
         [XmlAttributeAttribute()]
@@ -6548,19 +6457,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(metadataContainerFieldValues.metadata)]
-        public metadataContainerFieldValues containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //[System.ComponentModel.DefaultValueAttribute(metadataContainerFieldValues.metadata)]
+        //public metadataContainerFieldValues containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -6580,7 +6489,7 @@ namespace X3D
 
         private float _speed;
 
-        private string _containerField;
+        // private string _containerField;
 
         public MovieTexture()
         {
@@ -6588,7 +6497,7 @@ namespace X3D
             this._repeatS = true;
             this._repeatT = true;
             this._speed = ((float)(1F));
-            this._containerField = "texture";
+            this.containerField = "texture";
         }
 
         [XmlAttributeAttribute()]
@@ -6646,19 +6555,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("texture")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("texture")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -6682,7 +6591,7 @@ namespace X3D
 
         private List<string> _source;
 
-        private string _containerField;
+        // private string _containerField;
 
         public MultiTexture()
         {
@@ -6692,7 +6601,7 @@ namespace X3D
             this._items = new List<object>();
             this._alpha = ((float)(1F));
             this._color = "1 1 1";
-            this._containerField = "texture";
+            this.containerField = "texture";
         }
 
         [XmlElementAttribute("ImageTexture", typeof(ImageTexture))]
@@ -6778,19 +6687,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("texture")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("texture")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -6804,12 +6713,12 @@ namespace X3D
 
         private string _image;
 
-        private string _containerField;
+        // private string _containerField;
 
         public PixelTexture()
         {
             this._image = "0 0 0";
-            this._containerField = "texture";
+            this.containerField = "texture";
         }
 
         [XmlAttributeAttribute()]
@@ -6826,19 +6735,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("texture")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("texture")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -6852,12 +6761,12 @@ namespace X3D
 
         private List<object> _items;
 
-        private string _containerField;
+        // private string _containerField;
 
         public MultiTextureTransform()
         {
             this._items = new List<object>();
-            this._containerField = "textureTransform";
+            this.containerField = "textureTransform";
         }
 
         [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
@@ -6874,19 +6783,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("textureTransform")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("textureTransform")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -6906,7 +6815,7 @@ namespace X3D
 
         private string _translation;
 
-        private string _containerField;
+        // private string _containerField;
 
         public TextureTransform()
         {
@@ -6914,7 +6823,7 @@ namespace X3D
             this._rotation = ((float)(0F));
             this._scale = "1 1";
             this._translation = "0 0";
-            this._containerField = "textureTransform";
+            this.containerField = "textureTransform";
         }
 
         [XmlAttributeAttribute()]
@@ -6973,19 +6882,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("textureTransform")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("textureTransform")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -7019,7 +6928,7 @@ namespace X3D
 
         private float _visibilityLimit;
 
-        private string _containerField;
+        // private string _containerField;
 
         public NavigationInfo()
         {
@@ -7031,7 +6940,7 @@ namespace X3D
             this._transitionType.Add("\"LINEAR\"");
             this._transitionTime = 1D;
             this._visibilityLimit = ((float)(0F));
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -7130,19 +7039,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -7156,11 +7065,11 @@ namespace X3D
 
         private string _keyValue;
 
-        private string _containerField;
+        // private string _containerField;
 
         public NormalInterpolator()
         {
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -7176,19 +7085,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -7202,11 +7111,11 @@ namespace X3D
 
         private string _keyValue;
 
-        private string _containerField;
+        // private string _containerField;
 
         public OrientationInterpolator()
         {
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -7222,19 +7131,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -7254,7 +7163,7 @@ namespace X3D
 
         private string _offset;
 
-        private string _containerField;
+        // private string _containerField;
 
         public PlaneSensor()
         {
@@ -7262,7 +7171,7 @@ namespace X3D
             this._maxPosition = "-1 -1";
             this._minPosition = "0 0";
             this._offset = "0 0 0";
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -7321,19 +7230,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -7353,7 +7262,7 @@ namespace X3D
 
         private bool _global;
 
-        private string _containerField;
+        // private string _containerField;
 
         public PointLight()
         {
@@ -7361,7 +7270,7 @@ namespace X3D
             this._location = "0 0 0";
             this._radius = ((float)(100F));
             this._global = true;
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -7420,19 +7329,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -7446,12 +7355,12 @@ namespace X3D
 
         private List<object> _items;
 
-        private string _containerField;
+        // private string _containerField;
 
         public PointSet()
         {
             this._items = new List<object>();
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlElementAttribute("Color", typeof(Color))]
@@ -7472,19 +7381,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -7498,11 +7407,11 @@ namespace X3D
 
         private string _lineSegments;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Polyline2D()
         {
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -7518,19 +7427,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -7544,11 +7453,11 @@ namespace X3D
 
         private string _point;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Polypoint2D()
         {
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -7564,19 +7473,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -7590,11 +7499,11 @@ namespace X3D
 
         private string _keyValue;
 
-        private string _containerField;
+        // private string _containerField;
 
         public PositionInterpolator()
         {
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -7610,19 +7519,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -7636,11 +7545,11 @@ namespace X3D
 
         private string _keyValue;
 
-        private string _containerField;
+        // private string _containerField;
 
         public PositionInterpolator2D()
         {
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -7656,19 +7565,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -7682,12 +7591,12 @@ namespace X3D
 
         private string _center;
 
-        private string _containerField;
+        // private string _containerField;
 
         public ProximitySensor()
         {
             this._center = "0 0 0";
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -7704,19 +7613,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -7732,13 +7641,13 @@ namespace X3D
 
         private bool _solid;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Rectangle2D()
         {
             this._size = "2 2";
             this._solid = false;
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -7769,19 +7678,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -7795,11 +7704,11 @@ namespace X3D
 
         private string _keyValue;
 
-        private string _containerField;
+        // private string _containerField;
 
         public ScalarInterpolator()
         {
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -7815,19 +7724,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -7843,11 +7752,11 @@ namespace X3D
 
         private string _key;
 
-        private string _containerField;
+        // private string _containerField;
 
         public EaseInEaseOut()
         {
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -7876,19 +7785,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -7908,13 +7817,13 @@ namespace X3D
 
         private bool _normalizeVelocity;
 
-        private string _containerField;
+        // private string _containerField;
 
         public SplinePositionInterpolator()
         {
             this._closed = false;
             this._normalizeVelocity = false;
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -7971,19 +7880,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -8003,13 +7912,13 @@ namespace X3D
 
         private bool _normalizeVelocity;
 
-        private string _containerField;
+        // private string _containerField;
 
         public SplinePositionInterpolator2D()
         {
             this._closed = false;
             this._normalizeVelocity = false;
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -8066,19 +7975,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -8098,13 +8007,13 @@ namespace X3D
 
         private bool _normalizeVelocity;
 
-        private string _containerField;
+        // private string _containerField;
 
         public SplineScalarInterpolator()
         {
             this._closed = false;
             this._normalizeVelocity = false;
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -8161,19 +8070,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -8189,12 +8098,12 @@ namespace X3D
 
         private bool _normalizeVelocity;
 
-        private string _containerField;
+        // private string _containerField;
 
         public SquadOrientationInterpolator()
         {
             this._normalizeVelocity = false;
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -8224,19 +8133,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -8248,22 +8157,22 @@ namespace X3D
     public partial class Shape : X3DShapeNode
     {
 
-        private string _containerField = "children";
+        //private string _containerField = "children";
         private List<object> _items = new List<object>();
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
 
         [XmlElementAttribute("Appearance", typeof(Appearance))]
         //TODO: add more types that are valid children of Shape node
@@ -8309,7 +8218,7 @@ namespace X3D
 
         private bool _spatialize;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Sound()
         {
@@ -8322,7 +8231,7 @@ namespace X3D
             this._minFront = ((float)(1F));
             this._priority = ((float)(0F));
             this._spatialize = true;
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlElementAttribute("AudioClip", typeof(AudioClip))]
@@ -8466,19 +8375,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -8502,13 +8411,13 @@ namespace X3D
 
         private bool _solid;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Sphere()
         {
             this._radius = ((float)(1F));
             this._solid = true;
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -8539,19 +8448,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -8565,12 +8474,12 @@ namespace X3D
 
         private string _offset;
 
-        private string _containerField;
+        // private string _containerField;
 
         public SphereSensor()
         {
             this._offset = "0 1 0 0";
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -8587,19 +8496,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -8625,7 +8534,7 @@ namespace X3D
 
         private bool _global;
 
-        private string _containerField;
+        // private string _containerField;
 
         public SpotLight()
         {
@@ -8636,7 +8545,7 @@ namespace X3D
             this._location = "0 0 0";
             this._radius = ((float)(100F));
             this._global = true;
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -8737,19 +8646,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -8763,12 +8672,12 @@ namespace X3D
 
         private bool _deletionAllowed;
 
-        private string _containerField;
+        // private string _containerField;
 
         public StringSensor()
         {
             this._deletionAllowed = true;
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -8785,19 +8694,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     public class X3DSwitchNode : X3DGroupingNode
@@ -8830,8 +8739,8 @@ namespace X3D
     public partial class Switch : X3DSwitchNode
     {
         internal bool debug = false;
-        private string _containerField = "children";
-        
+        //private string _containerField = "children";
+
 
         [XmlAttributeAttribute()] // DataType = "integer"
         [System.ComponentModel.DefaultValueAttribute(-1)]
@@ -8847,19 +8756,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -8881,7 +8790,7 @@ namespace X3D
 
         private List<string> _strings;
 
-        private List<object> _items;
+        //private List<object> _items;
 
         private string _length;
 
@@ -8889,7 +8798,7 @@ namespace X3D
 
         private bool _solid;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Text()
         {
@@ -8900,7 +8809,7 @@ namespace X3D
             this._fontStyle = new FontStyle();
             this._maxExtent = ((float)(0F));
             this._solid = false;
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         public FontStyle FontStyle
@@ -8995,19 +8904,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
 
     }
 
@@ -9038,7 +8947,7 @@ namespace X3D
 
         private bool _topToBottom;
 
-        private string _containerField;
+        // private string _containerField;
 
         public ScreenFontStyle()
         {
@@ -9052,7 +8961,7 @@ namespace X3D
             this._spacing = ((float)(1F));
             this._style = fontStyleValues.PLAIN;
             this._topToBottom = true;
-            this._containerField = "fontStyle";
+            this.containerField = "fontStyle";
         }
 
         [XmlAttributeAttribute()]
@@ -9178,19 +9087,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("fontStyle")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("fontStyle")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -9204,12 +9113,12 @@ namespace X3D
 
         private List<object> _items;
 
-        private string _containerField;
+        // private string _containerField;
 
         public TextureBackground()
         {
             this._items = new List<object>();
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlElementAttribute("ImageTexture", typeof(ImageTexture))]
@@ -9229,19 +9138,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -9257,13 +9166,13 @@ namespace X3D
 
         private bool _enabled;
 
-        private string _containerField;
+        // private string _containerField;
 
         public TimeSensor()
         {
             this._cycleInterval = 1D;
             this._enabled = true;
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -9294,19 +9203,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -9318,26 +9227,26 @@ namespace X3D
     public partial class TimeTrigger : X3DTriggerNode
     {
 
-        private string _containerField;
+        // private string _containerField;
 
         public TimeTrigger()
         {
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -9349,26 +9258,26 @@ namespace X3D
     public partial class TouchSensor : X3DTouchSensorNode
     {
 
-        private string _containerField;
+        // private string _containerField;
 
         public TouchSensor()
         {
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -9390,7 +9299,7 @@ namespace X3D
 
         private string _translation;
 
-        private string _containerField;
+        // private string _containerField;
 
         private Vector3 _vec3Scale, _vec3Trans;
         private Vector4 _vec4Rot, _vec4ScaleOrientation;
@@ -9402,7 +9311,7 @@ namespace X3D
             this._scale = "1 1 1";
             this._scaleOrientation = "0 0 1 0";
             this._translation = "0 0 0";
-            this._containerField = "children";
+            // this.containerField = "children";
             this._vec3Trans = Vector3.Zero;
             this._vec3Scale = Vector3.One;
             this._vec4Rot = Vector4.UnitZ;
@@ -9535,19 +9444,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -9561,11 +9470,11 @@ namespace X3D
 
         private string _fanCount;
 
-        private string _containerField;
+        // private string _containerField;
 
         public TriangleFanSet()
         {
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -9581,19 +9490,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -9605,26 +9514,26 @@ namespace X3D
     public partial class TriangleSet : X3DComposedGeometryNode
     {
 
-        private string _containerField;
+        // private string _containerField;
 
         public TriangleSet()
         {
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -9640,12 +9549,12 @@ namespace X3D
 
         private bool _solid;
 
-        private string _containerField;
+        // private string _containerField;
 
         public TriangleSet2D()
         {
             this._solid = false;
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -9675,19 +9584,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -9701,11 +9610,11 @@ namespace X3D
 
         private string _stripCount;
 
-        private string _containerField;
+        // private string _containerField;
 
         public TriangleStripSet()
         {
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -9721,19 +9630,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -9751,7 +9660,7 @@ namespace X3D
 
         private string _position;
 
-        private string _containerField;
+        // private string _containerField;
 
         public Viewpoint()
         {
@@ -9760,7 +9669,7 @@ namespace X3D
             this._fieldOfView = ((float)(0.7854F));
             this._position = "0 0 10";
             this.Position = new Vector3(0, 0, 10);
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlIgnore]
@@ -9813,19 +9722,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -9839,12 +9748,12 @@ namespace X3D
 
         private string _center;
 
-        private string _containerField;
+        // private string _containerField;
 
         public VisibilitySensor()
         {
             this._center = "0 0 0";
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -9861,19 +9770,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -9889,12 +9798,12 @@ namespace X3D
 
         private string _title;
 
-        private string _containerField;
+        // private string _containerField;
 
         public WorldInfo()
         {
             this._info = new List<string>();
-            this._containerField = "children";
+            // this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -9923,19 +9832,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -9949,22 +9858,27 @@ namespace X3D
     public partial class component : SceneGraphNode, SceneGraphStructureStatement
     {
 
-        private componentNames _name;
+        private componentNames _component_name;
 
         private string _level;
 
         [XmlAttributeAttribute()]
-        public componentNames name
+        public componentNames Name
         {
             get
             {
-                return this._name;
+                _component_name = (componentNames)Enum.Parse(typeof(componentNames), this.name);
+
+                return _component_name;
             }
             set
             {
-                this._name = value;
+                this._component_name = value;
+                this.name = value.ToString();
             }
         }
+
+
 
         [XmlAttributeAttribute(DataType = "integer")]
         public string level
@@ -10153,12 +10067,12 @@ namespace X3D
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [XmlTypeAttribute(AnonymousType = true)]
     [XmlRootAttribute(Namespace = "", IsNullable = false)]
-    public partial class unit : SceneGraphStructureStatement
+    public partial class unit : SceneGraphNode, SceneGraphStructureStatement
     {
 
         private unitCategories _category;
 
-        private string _name;
+        //private string _name;
 
         private double _conversionFactor;
 
@@ -10175,18 +10089,18 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        public string name
-        {
-            get
-            {
-                return this._name;
-            }
-            set
-            {
-                this._name = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //public string name
+        //{
+        //    get
+        //    {
+        //        return this._name;
+        //    }
+        //    set
+        //    {
+        //        this._name = value;
+        //    }
+        //}
 
         [XmlAttributeAttribute()]
         public double conversionFactor
@@ -10321,15 +10235,10 @@ namespace X3D
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [XmlTypeAttribute(AnonymousType = true)]
     [XmlRootAttribute(Namespace = "", IsNullable = false)]
-    public partial class IS : SceneGraphStructureStatement
+    public partial class IS : SceneGraphNode, SceneGraphStructureStatement
     {
 
-        private List<connect> _items;
-
-        public IS()
-        {
-            this._items = new List<connect>();
-        }
+        private List<connect> _items = new List<connect>();
 
         [XmlElementAttribute("connect")]
         public List<connect> Items
@@ -10351,7 +10260,7 @@ namespace X3D
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [XmlTypeAttribute(AnonymousType = true)]
     [XmlRootAttribute(Namespace = "", IsNullable = false)]
-    public partial class connect : SceneGraphStructureStatement
+    public partial class connect : SceneGraphNode, SceneGraphStructureStatement
     {
 
         private string _nodeField;
@@ -10387,9 +10296,9 @@ namespace X3D
 
     public partial class field : SceneGraphNode, SceneGraphStructureStatement
     {
-        [XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute("")]
-        public string name { get; set; }
+        //[XmlAttributeAttribute()]
+        //[System.ComponentModel.DefaultValueAttribute("")]
+        //public string name { get; set; }
 
         [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("")]
@@ -10407,6 +10316,20 @@ namespace X3D
     public partial class fieldValue : SceneGraphNode, SceneGraphStructureStatement
     {
 
+        private string _value;
+
+        [XmlAttribute]
+        public string value
+        {
+            get
+            {
+                return _value;
+            }
+            set
+            {
+                _value = value;
+            }
+        }
 
     }
 
@@ -10481,7 +10404,7 @@ namespace X3D
     public partial class meta : SceneGraphNode, SceneGraphStructureStatement
     {
 
-        private string _name;
+        //private string _name;
 
         private string _content;
 
@@ -10493,18 +10416,18 @@ namespace X3D
 
         private string _scheme;
 
-        [XmlAttributeAttribute()]
-        public string name
-        {
-            get
-            {
-                return this._name;
-            }
-            set
-            {
-                this._name = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //public string name
+        //{
+        //    get
+        //    {
+        //        return this._name;
+        //    }
+        //    set
+        //    {
+        //        this._name = value;
+        //    }
+        //}
 
         [XmlAttributeAttribute()]
         public string content
@@ -10590,18 +10513,18 @@ namespace X3D
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [XmlTypeAttribute(AnonymousType = true)]
     [XmlRootAttribute(Namespace = "", IsNullable = false)]
-    public partial class ExternProtoDeclare : SceneGraphStructureStatement
+    public partial class ExternProtoDeclare : SceneGraphNode, SceneGraphStructureStatement
     {
 
         private List<field> _field;
 
-        private string _name;
+        //private string _name;
 
         private List<string> _url;
 
-        private string _appinfo;
+        //private string _appinfo;
 
-        private string _documentation;
+        //private string _documentation;
 
         public ExternProtoDeclare()
         {
@@ -10622,18 +10545,18 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        public string name
-        {
-            get
-            {
-                return this._name;
-            }
-            set
-            {
-                this._name = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //public string name
+        //{
+        //    get
+        //    {
+        //        return this._name;
+        //    }
+        //    set
+        //    {
+        //        this._name = value;
+        //    }
+        //}
 
         [XmlAttributeAttribute()]
         public List<string> url
@@ -10648,31 +10571,31 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute()]
-        public string appinfo
-        {
-            get
-            {
-                return this._appinfo;
-            }
-            set
-            {
-                this._appinfo = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //public string appinfo
+        //{
+        //    get
+        //    {
+        //        return this._appinfo;
+        //    }
+        //    set
+        //    {
+        //        this._appinfo = value;
+        //    }
+        //}
 
-        [XmlAttributeAttribute()]
-        public string documentation
-        {
-            get
-            {
-                return this._documentation;
-            }
-            set
-            {
-                this._documentation = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //public string documentation
+        //{
+        //    get
+        //    {
+        //        return this._documentation;
+        //    }
+        //    set
+        //    {
+        //        this._documentation = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -10681,15 +10604,11 @@ namespace X3D
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [XmlTypeAttribute(AnonymousType = true)]
     [XmlRootAttribute(Namespace = "", IsNullable = false)]
-    public partial class ProtoInterface : SceneGraphStructureStatement
+    public partial class ProtoInterface : SceneGraphNode, SceneGraphStructureStatement
     {
 
-        private List<field> _field;
-
-        public ProtoInterface()
-        {
-            this._field = new List<field>();
-        }
+        private List<field> _field = new List<field>();
+        private List<object> _items = new List<object>();
 
         [XmlElementAttribute("field")]
         public List<field> field
@@ -10703,14 +10622,44 @@ namespace X3D
                 this._field = value;
             }
         }
+
+        [XmlElementAttribute("field", typeof(field))]
+        public List<object> Items
+        {
+            get
+            {
+                return this._items;
+            }
+            set
+            {
+                this._items = value;
+            }
+        }
     }
 
-    public partial class ProtoBody : SceneGraphStructureStatement
+    public partial class ProtoDeclare : SceneGraphNode, SceneGraphStructureStatement
+    {
+        private List<object> _items = new List<object>();
+
+        [XmlElementAttribute("ProtoInterface", typeof(ProtoInterface))]
+        [XmlElementAttribute("ProtoBody", typeof(ProtoBody))]
+        public List<object> Items
+        {
+            get
+            {
+                return this._items;
+            }
+            set
+            {
+                this._items = value;
+            }
+        }
+    }
+
+    public partial class ProtoBody : SceneGraphNode, SceneGraphStructureStatement
     {
 
-        public ProtoBody()
-        {
-        }
+
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -10793,7 +10742,7 @@ namespace X3D
 
         private Scene _scene = new Scene();
 
-        private x3dVersion  _version;
+        //private x3dVersion _version;
         private string _versionstr;
 
         private profileNames _profile;
@@ -10833,7 +10782,7 @@ namespace X3D
             set
             {
                 this._versionstr = value;
-                switch(value)
+                switch (value)
                 {
                     case "3.0":
                         this._version = x3dVersion.X3D_3_0;
@@ -10889,7 +10838,7 @@ namespace X3D
 
         private string _siteID;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public DISEntityManager()
         {
@@ -10898,7 +10847,7 @@ namespace X3D
             this._applicationID = "0";
             this._port = "0";
             this._siteID = "0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("DISEntityTypeMapping", typeof(DISEntityTypeMapping))]
@@ -10971,19 +10920,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -11011,7 +10960,7 @@ namespace X3D
 
         private string _subcategory;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public DISEntityTypeMapping()
         {
@@ -11023,7 +10972,7 @@ namespace X3D
             this._kind = "0";
             this._specific = "0";
             this._subcategory = "0";
-            this._containerField = "mapping";
+            //this.containerField = "mapping";
         }
 
         [XmlAttributeAttribute()]
@@ -11137,19 +11086,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("mapping")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("mapping")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -11277,7 +11226,7 @@ namespace X3D
 
         private string _geoCoords;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public EspduTransform()
         {
@@ -11334,7 +11283,7 @@ namespace X3D
             this._geoSystem.Add("\"GD\"");
             this._geoSystem.Add("\"WE\"");
             this._geoCoords = "0 0 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -12141,19 +12090,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -12226,7 +12175,7 @@ namespace X3D
 
         private string _geoCoords;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ReceiverPdu()
         {
@@ -12254,7 +12203,7 @@ namespace X3D
             this._geoSystem.Add("\"GD\"");
             this._geoSystem.Add("\"WE\"");
             this._geoCoords = "0 0 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -12577,19 +12526,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -12647,7 +12596,7 @@ namespace X3D
 
         private string _geoCoords;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public SignalPdu()
         {
@@ -12674,7 +12623,7 @@ namespace X3D
             this._geoSystem.Add("\"GD\"");
             this._geoSystem.Add("\"WE\"");
             this._geoCoords = "0 0 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -12996,19 +12945,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -13098,7 +13047,7 @@ namespace X3D
 
         private string _geoCoords;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public TransmitterPdu()
         {
@@ -13142,7 +13091,7 @@ namespace X3D
             this._geoSystem.Add("\"GD\"");
             this._geoSystem.Add("\"WE\"");
             this._geoCoords = "0 0 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -13689,19 +13638,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -13741,7 +13690,7 @@ namespace X3D
 
         private double _zSpacing;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public GeoElevationGrid()
         {
@@ -13761,7 +13710,7 @@ namespace X3D
             this._yScale = ((float)(1F));
             this._zDimension = "2";
             this._zSpacing = 1D;
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlElementAttribute("Color", typeof(Color))]
@@ -13966,19 +13915,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -13994,7 +13943,7 @@ namespace X3D
 
         private string _geoCoords;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public GeoLocation()
         {
@@ -14002,7 +13951,7 @@ namespace X3D
             this._geoSystem.Add("\"GD\"");
             this._geoSystem.Add("\"WE\"");
             this._geoCoords = "0 0 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -14032,19 +13981,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     public partial class GeoLOD : X3DChildNode
@@ -14070,14 +14019,14 @@ namespace X3D
 
         private List<string> _summary;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public GeoMetadata()
         {
             this._summary = new List<string>();
             this._url = new List<string>();
             this._items = new List<object>();
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("GeoCoordinate", typeof(GeoCoordinate))]
@@ -14129,19 +14078,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -14159,7 +14108,7 @@ namespace X3D
 
         private string _keyValue;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public GeoPositionInterpolator()
         {
@@ -14167,7 +14116,7 @@ namespace X3D
             this._geoOrigin = new GeoOrigin();
             this._geoSystem.Add("\"GD\"");
             this._geoSystem.Add("\"WE\"");
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         public GeoOrigin GeoOrigin
@@ -14208,19 +14157,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -14240,7 +14189,7 @@ namespace X3D
 
         private List<string> _geoSystem;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public GeoProximitySensor()
         {
@@ -14250,7 +14199,7 @@ namespace X3D
             this._geoCenter = "0 0 0";
             this._geoSystem.Add("\"GD\"");
             this._geoSystem.Add("\"WE\"");
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         public GeoOrigin GeoOrigin
@@ -14306,19 +14255,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -14334,7 +14283,7 @@ namespace X3D
 
         private List<string> _geoSystem;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public GeoTouchSensor()
         {
@@ -14342,7 +14291,7 @@ namespace X3D
             this._geoOrigin = new GeoOrigin();
             this._geoSystem.Add("\"GD\"");
             this._geoSystem.Add("\"WE\"");
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         public GeoOrigin GeoOrigin
@@ -14370,19 +14319,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -14406,7 +14355,7 @@ namespace X3D
 
         private string _translation;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public GeoTransform()
         {
@@ -14418,7 +14367,7 @@ namespace X3D
             this._scale = "1 1 1";
             this._scaleOrientation = "0 0 1 0";
             this._translation = "0 0 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -14504,19 +14453,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -14540,7 +14489,7 @@ namespace X3D
 
         private float _speedFactor;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public GeoViewpoint()
         {
@@ -14552,7 +14501,7 @@ namespace X3D
             this._fieldOfView = ((float)(0.7854F));
             this._position = "0 0 100000";
             this._speedFactor = ((float)(1F));
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         public GeoOrigin GeoOrigin
@@ -14636,19 +14585,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -14660,7 +14609,7 @@ namespace X3D
     public partial class HAnimDisplacer : X3DGeometricPropertyNode
     {
 
-        private featurePointNames _name;
+        //private featurePointNames _name;
 
         private string _coordIndex;
 
@@ -14668,26 +14617,26 @@ namespace X3D
 
         private float _weight;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public HAnimDisplacer()
         {
             this._weight = ((float)(0F));
-            this._containerField = "displacers";
+            this.containerField = "displacers";
         }
 
-        [XmlAttributeAttribute()]
-        public featurePointNames name
-        {
-            get
-            {
-                return this._name;
-            }
-            set
-            {
-                this._name = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //public featurePointNames name
+        //{
+        //    get
+        //    {
+        //        return this._name;
+        //    }
+        //    set
+        //    {
+        //        this._name = value;
+        //    }
+        //}
 
         [XmlAttributeAttribute()]
         public string coordIndex
@@ -14729,19 +14678,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("displacers")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("displacers")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -14995,7 +14944,7 @@ namespace X3D
 
         private List<X3DNode> _items;
 
-        private jointNames _name;
+        //private jointNames _name;
 
         private string _center;
 
@@ -15023,7 +14972,7 @@ namespace X3D
 
         private string _bboxSize;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public HAnimJoint()
         {
@@ -15037,7 +14986,7 @@ namespace X3D
             this._stiffness = "0 0 0";
             this._bboxCenter = "0 0 0";
             this._bboxSize = "-1 -1 -1";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("HAnimDisplacer", typeof(HAnimDisplacer))]
@@ -15055,18 +15004,18 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute()]
-        public jointNames name
-        {
-            get
-            {
-                return this._name;
-            }
-            set
-            {
-                this._name = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //public jointNames name
+        //{
+        //    get
+        //    {
+        //        return this._name;
+        //    }
+        //    set
+        //    {
+        //        this._name = value;
+        //    }
+        //}
 
         [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
@@ -15246,19 +15195,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -15272,7 +15221,7 @@ namespace X3D
 
         private List<HAnimDisplacer> _hAnimDisplacer;
 
-        private segmentNames _name;
+        //private segmentNames _name;
 
         private float _mass;
 
@@ -15280,7 +15229,7 @@ namespace X3D
 
         private string _momentsOfInertia;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public HAnimSegment()
         {
@@ -15288,7 +15237,7 @@ namespace X3D
             this._mass = ((float)(0F));
             this._centerOfMass = "0 0 0";
             this._momentsOfInertia = "0 0 0 0 0 0 0 0 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("HAnimDisplacer")]
@@ -15304,18 +15253,18 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute()]
-        public segmentNames name
-        {
-            get
-            {
-                return this._name;
-            }
-            set
-            {
-                this._name = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //public segmentNames name
+        //{
+        //    get
+        //    {
+        //        return this._name;
+        //    }
+        //    set
+        //    {
+        //        this._name = value;
+        //    }
+        //}
 
         [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(typeof(float), "0")]
@@ -15359,19 +15308,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -15959,7 +15908,7 @@ namespace X3D
     public partial class HAnimSite : X3DGroupingNode
     {
 
-        private string _name;
+        //private string _name;
 
         private string _center;
 
@@ -15971,7 +15920,7 @@ namespace X3D
 
         private string _translation;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public HAnimSite()
         {
@@ -15980,21 +15929,21 @@ namespace X3D
             this._scale = "1 1 1";
             this._scaleOrientation = "0 0 1 0";
             this._translation = "0 0 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        public string name
-        {
-            get
-            {
-                return this._name;
-            }
-            set
-            {
-                this._name = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //public string name
+        //{
+        //    get
+        //    {
+        //        return this._name;
+        //    }
+        //    set
+        //    {
+        //        this._name = value;
+        //    }
+        //}
 
         [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute("0 0 0")]
@@ -16066,19 +16015,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -16092,12 +16041,12 @@ namespace X3D
 
         private List<object> _items;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public Contour2D()
         {
             this._items = new List<object>();
-            this._containerField = "trimmingContour";
+            this.containerField = "trimmingContour";
         }
 
         [XmlElementAttribute("ContourPolyline2D", typeof(ContourPolyline2D))]
@@ -16115,19 +16064,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("trimmingContour")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("trimmingContour")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -16139,26 +16088,26 @@ namespace X3D
     public partial class ContourPolyline2D : X3DNurbsControlCurveNode
     {
 
-        private string _containerField;
+        //// private string _containerField;
 
-        public ContourPolyline2D()
-        {
-            this._containerField = "children";
-        }
+        //public ContourPolyline2D()
+        //{
+        //    // this.containerField = "children";
+        //}
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -16203,14 +16152,14 @@ namespace X3D
 
         private string _weight;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public NurbsCurve2D()
         {
             this._closed = false;
             this._order = "3";
             this._tessellation = "0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -16281,19 +16230,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -16317,14 +16266,14 @@ namespace X3D
 
         private string _weight;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public NurbsCurve()
         {
             this._closed = false;
             this._order = "3";
             this._tessellation = "0";
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlElementAttribute("Coordinate", typeof(Coordinate))]
@@ -16410,19 +16359,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [XmlIncludeAttribute(typeof(X3DNurbsSurfaceGeometryNode))]
@@ -16661,12 +16610,12 @@ namespace X3D
 
         private string _weight;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public NurbsOrientationInterpolator()
         {
             this._order = "3";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("Coordinate", typeof(Coordinate))]
@@ -16724,19 +16673,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -16750,12 +16699,12 @@ namespace X3D
 
         private List<object> _items;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public NurbsPatchSurface()
         {
             this._items = new List<object>();
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlElementAttribute("Coordinate", typeof(Coordinate))]
@@ -16776,19 +16725,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -16808,12 +16757,12 @@ namespace X3D
 
         private string _weight;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public NurbsPositionInterpolator()
         {
             this._order = "3";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("Coordinate", typeof(Coordinate))]
@@ -16871,19 +16820,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -16911,7 +16860,7 @@ namespace X3D
 
         private string _bboxSize;
 
-        private string _containerField;
+        // private string _containerField;
 
         public NurbsSet()
         {
@@ -16923,7 +16872,7 @@ namespace X3D
             this._tessellationScale = ((float)(1F));
             this._bboxCenter = "0 0 0";
             this._bboxSize = "-1 -1 -1";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("NurbsPatchSurface")]
@@ -17033,19 +16982,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -17063,14 +17012,14 @@ namespace X3D
 
         private bool _solid;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public NurbsSweptSurface()
         {
             this._items = new List<object>();
             this._ccw = true;
             this._solid = true;
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlElementAttribute("ContourPolyline2D", typeof(ContourPolyline2D))]
@@ -17117,19 +17066,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -17147,14 +17096,14 @@ namespace X3D
 
         private bool _solid;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public NurbsSwungSurface()
         {
             this._items = new List<object>();
             this._ccw = true;
             this._solid = true;
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlElementAttribute("ContourPolyline2D", typeof(ContourPolyline2D))]
@@ -17200,19 +17149,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -17226,12 +17175,12 @@ namespace X3D
 
         private List<object> _items;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public NurbsTrimmedSurface()
         {
             this._items = new List<object>();
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlElementAttribute("Contour2D", typeof(Contour2D))]
@@ -17253,19 +17202,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -17293,7 +17242,7 @@ namespace X3D
 
         private string _weight;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public NurbsSurfaceInterpolator()
         {
@@ -17301,7 +17250,7 @@ namespace X3D
             this._vDimension = "0";
             this._uOrder = "3";
             this._vOrder = "3";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("Coordinate", typeof(Coordinate))]
@@ -17414,19 +17363,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -17438,41 +17387,41 @@ namespace X3D
     public partial class CADAssembly : X3DGroupingNode
     {
 
-        private string _name;
+        //private string _name;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public CADAssembly()
         {
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
-        [XmlAttributeAttribute()]
-        public string name
-        {
-            get
-            {
-                return this._name;
-            }
-            set
-            {
-                this._name = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //public string name
+        //{
+        //    get
+        //    {
+        //        return this._name;
+        //    }
+        //    set
+        //    {
+        //        this._name = value;
+        //    }
+        //}
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -17490,13 +17439,13 @@ namespace X3D
 
         private string _bboxSize;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public CADFace()
         {
             this._bboxCenter = "0 0 0";
             this._bboxSize = "-1 -1 -1";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("LOD", typeof(LOD))]
@@ -17543,19 +17492,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -17565,20 +17514,20 @@ namespace X3D
     public abstract partial class X3DProductStructureChildNode : X3DChildNode
     {
 
-        private string _name;
+        //private string _name;
 
-        [XmlAttributeAttribute()]
-        public string name
-        {
-            get
-            {
-                return this._name;
-            }
-            set
-            {
-                this._name = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //public string name
+        //{
+        //    get
+        //    {
+        //        return this._name;
+        //    }
+        //    set
+        //    {
+        //        this._name = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -17590,30 +17539,30 @@ namespace X3D
     public partial class CADLayer : X3DGroupingNode
     {
 
-        private string _name;
+        //private string _name;
 
         private List<bool> _visible;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public CADLayer()
         {
             this._visible = new List<bool>();
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
-        [XmlAttributeAttribute()]
-        public string name
-        {
-            get
-            {
-                return this._name;
-            }
-            set
-            {
-                this._name = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //public string name
+        //{
+        //    get
+        //    {
+        //        return this._name;
+        //    }
+        //    set
+        //    {
+        //        this._name = value;
+        //    }
+        //}
 
         [XmlAttributeAttribute()]
         public List<bool> visible
@@ -17628,19 +17577,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -17668,7 +17617,7 @@ namespace X3D
 
         private string _bboxSize;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public CADPart()
         {
@@ -17680,7 +17629,7 @@ namespace X3D
             this._translation = "0 0 0";
             this._bboxCenter = "0 0 0";
             this._bboxSize = "-1 -1 -1";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("CADFace", typeof(CADFace))]
@@ -17795,19 +17744,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -17821,11 +17770,11 @@ namespace X3D
 
         private string _index;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public IndexedQuadSet()
         {
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
         [XmlAttributeAttribute()]
@@ -17841,19 +17790,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -17865,26 +17814,26 @@ namespace X3D
     public partial class QuadSet : X3DComposedGeometryNode
     {
 
-        private string _containerField;
+        //// private string _containerField;
 
         public QuadSet()
         {
-            this._containerField = "geometry";
+            this.containerField = "geometry";
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("geometry")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("geometry")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -17898,12 +17847,12 @@ namespace X3D
 
         private List<string> _url;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public PackagedShader()
         {
             this._url = new List<string>();
-            this._containerField = "shaders";
+            this.containerField = "shaders";
         }
 
         [XmlAttributeAttribute()]
@@ -17919,19 +17868,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("shaders")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("shaders")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -17974,7 +17923,7 @@ namespace X3D
         */
         private bool _activate;
         private List<ShaderPart> _parts = new List<ShaderPart>();
-        private string _containerField = "shaders";
+        //private string _containerField = "shaders";
         private bool _isValid;
         private bool _isSelected;
         private List<field> _fields = new List<field>();
@@ -18031,19 +17980,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("shaders")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("shaders")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
 
         [XmlElementAttribute("field")]
         public List<field> fields
@@ -18064,12 +18013,12 @@ namespace X3D
 
         private List<ShaderProgram> _shaderProgram;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ProgramShader()
         {
             this._shaderProgram = new List<ShaderProgram>();
-            this._containerField = "shaders";
+            this.containerField = "shaders";
         }
 
         [XmlElementAttribute("ShaderProgram")]
@@ -18085,19 +18034,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("shaders")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("shaders")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     public partial class ShaderProgram : X3DNodeMixedContent
@@ -18107,13 +18056,13 @@ namespace X3D
 
         private shaderPartTypeValues _type;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ShaderProgram()
         {
             this._url = new List<string>();
             this._type = shaderPartTypeValues.VERTEX;
-            this._containerField = "programs";
+            this.containerField = "programs";
         }
 
         [XmlAttributeAttribute()]
@@ -18143,19 +18092,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("programs")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("programs")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -18190,13 +18139,13 @@ namespace X3D
         private string _url;
         private string _source = string.Empty;
         private shaderPartTypeValues _type;
-        private string _containerField;
+        //// private string _containerField;
 
         public ShaderPart()
         {
             this._url = "";
             this._type = shaderPartTypeValues.VERTEX;
-            this._containerField = "parts";
+            this.containerField = "parts";
         }
 
         public string[] MFString
@@ -18241,19 +18190,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("parts")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("parts")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -18267,12 +18216,12 @@ namespace X3D
 
         private List<object> _items;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ComposedCubeMapTexture()
         {
             this._items = new List<object>();
-            this._containerField = "texture";
+            this.containerField = "texture";
         }
 
         [XmlElementAttribute("ImageTexture", typeof(ImageTexture))]
@@ -18291,19 +18240,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("texture")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("texture")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -18329,13 +18278,13 @@ namespace X3D
 
         private string _size;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public GeneratedCubeMapTexture()
         {
             this._update = GeneratedCubeMapTextureUpdate.NONE;
             this._size = "128";
-            this._containerField = "texture";
+            this.containerField = "texture";
         }
 
         [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
@@ -18380,19 +18329,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("texture")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("texture")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -18424,12 +18373,12 @@ namespace X3D
 
         private List<string> _url;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ImageCubeMapTexture()
         {
             this._url = new List<string>();
-            this._containerField = "texture";
+            this.containerField = "texture";
         }
 
         [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance))]
@@ -18459,19 +18408,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("texture")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("texture")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -18491,7 +18440,7 @@ namespace X3D
 
         private List<ProtoInstance> _protoInstance;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ComposedTexture3D()
         {
@@ -18499,7 +18448,7 @@ namespace X3D
             this._movieTexture = new List<MovieTexture>();
             this._pixelTexture = new List<PixelTexture>();
             this._imageTexture = new List<ImageTexture>();
-            this._containerField = "texture";
+            this.containerField = "texture";
         }
 
         [XmlElementAttribute("ImageTexture")]
@@ -18554,19 +18503,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("texture")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("texture")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -18659,12 +18608,12 @@ namespace X3D
 
         private List<string> _url;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ImageTexture3D()
         {
             this._url = new List<string>();
-            this._containerField = "texture";
+            this.containerField = "texture";
         }
 
         [XmlAttributeAttribute()]
@@ -18680,19 +18629,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("texture")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("texture")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -18706,12 +18655,12 @@ namespace X3D
 
         private string _image;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public PixelTexture3D()
         {
             this._image = "0 0 0 0";
-            this._containerField = "texture";
+            this.containerField = "texture";
         }
 
         [XmlAttributeAttribute()]
@@ -18728,19 +18677,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("texture")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("texture")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -18754,12 +18703,12 @@ namespace X3D
 
         private string _matrix;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public TextureTransformMatrix3D()
         {
             this._matrix = "1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1";
-            this._containerField = "textureTransform";
+            this.containerField = "textureTransform";
         }
 
         [XmlAttributeAttribute()]
@@ -18776,19 +18725,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("textureTransform")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("textureTransform")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -18808,7 +18757,7 @@ namespace X3D
 
         private string _translation;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public TextureTransform3D()
         {
@@ -18816,7 +18765,7 @@ namespace X3D
             this._rotation = "0 0 1 0";
             this._scale = "1 1 1";
             this._translation = "0 0 0";
-            this._containerField = "textureTransform";
+            this.containerField = "textureTransform";
         }
 
         [XmlAttributeAttribute()]
@@ -18875,19 +18824,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("textureTransform")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("textureTransform")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -18905,14 +18854,14 @@ namespace X3D
 
         private string _position;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public OrthoViewpoint()
         {
             this._centerOfRotation = "0 0 0";
             this._fieldOfView = "-1 -1 1 1";
             this._position = "0 0 10";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -18957,19 +18906,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -18985,7 +18934,7 @@ namespace X3D
 
         private string _center;
 
-        private string _description;
+        //private string _description;
 
         private bool _displayed;
 
@@ -18993,7 +18942,7 @@ namespace X3D
 
         private string _size;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ViewpointGroup()
         {
@@ -19002,7 +18951,7 @@ namespace X3D
             this._displayed = true;
             this._retainUserOffsets = false;
             this._size = "0 0 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("GeoViewpoint", typeof(GeoViewpoint), Order = 0)]
@@ -19036,18 +18985,18 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute()]
-        public string description
-        {
-            get
-            {
-                return this._description;
-            }
-            set
-            {
-                this._description = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //public string description
+        //{
+        //    get
+        //    {
+        //        return this._description;
+        //    }
+        //    set
+        //    {
+        //        this._description = value;
+        //    }
+        //}
 
         [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
@@ -19091,19 +19040,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -19117,12 +19066,12 @@ namespace X3D
 
         private string _clipBoundary;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public Viewport()
         {
             this._clipBoundary = "0 1 0 1";
-            this._containerField = "viewport";
+            this.containerField = "viewport";
         }
 
         [XmlAttributeAttribute()]
@@ -19139,19 +19088,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("viewport")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("viewport")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -19183,7 +19132,7 @@ namespace X3D
 
         private List<string> _sizeUnits;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public Layout()
         {
@@ -19201,7 +19150,7 @@ namespace X3D
             this._size = "1 1";
             this._sizeUnits.Add("\"WORLD\"");
             this._sizeUnits.Add("\"WORLD\"");
-            this._containerField = "layout";
+            this.containerField = "layout";
         }
 
         [XmlAttributeAttribute()]
@@ -19284,19 +19233,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("layout")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("layout")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -19333,26 +19282,26 @@ namespace X3D
     public partial class ScreenGroup : X3DGroupingNode
     {
 
-        private string _containerField;
+        //// private string _containerField;
 
-        public ScreenGroup()
-        {
-            this._containerField = "children";
-        }
+        //public ScreenGroup()
+        //{
+        //// this.containerField = "children";
+        //}
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -19366,12 +19315,12 @@ namespace X3D
 
         private string _anchorPoint;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public BallJoint()
         {
             this._anchorPoint = "0 0 0";
-            this._containerField = "joints";
+            this.containerField = "joints";
         }
 
         [XmlAttributeAttribute()]
@@ -19388,19 +19337,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("joints")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("joints")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -19502,7 +19451,7 @@ namespace X3D
 
         private bool _useGlobalGravity;
 
-        private RigidBodyContainerField _containerField;
+        //private RigidBodyContainerField _containerField;
 
         public RigidBody()
         {
@@ -19526,7 +19475,7 @@ namespace X3D
             this._orientation = "0 0 1 0";
             this._useFiniteRotation = false;
             this._useGlobalGravity = true;
-            this._containerField = RigidBodyContainerField.bodies;
+            this.containerField = "bodies";
         }
 
         [XmlElementAttribute("Box", typeof(Box), Order = 0)]
@@ -19839,19 +19788,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(RigidBodyContainerField.bodies)]
-        public RigidBodyContainerField containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //[System.ComponentModel.DefaultValueAttribute(RigidBodyContainerField.bodies)]
+        //public RigidBodyContainerField containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -19865,12 +19814,12 @@ namespace X3D
 
         private object _item;
 
-        private string _containerField;
+        //// private string _containerField;
 
-        public CollidableOffset()
-        {
-            this._containerField = "children";
-        }
+        //public CollidableOffset()
+        //{
+        //    // this.containerField = "children";
+        //}
 
         [XmlElementAttribute("CollidableOffset", typeof(CollidableOffset), Order = 0)]
         [XmlElementAttribute("CollidableShape", typeof(CollidableShape), Order = 0)]
@@ -19887,19 +19836,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -19913,12 +19862,12 @@ namespace X3D
 
         private object _item;
 
-        private string _containerField;
+        //// private string _containerField;
 
-        public CollidableShape()
-        {
-            this._containerField = "children";
-        }
+        //public CollidableShape()
+        //{
+        //    // this.containerField = "children";
+        //}
 
         [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
         [XmlElementAttribute("Shape", typeof(Shape), Order = 0)]
@@ -19934,19 +19883,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -20091,7 +20040,7 @@ namespace X3D
 
         private string _surfaceSpeed;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public CollisionCollection()
         {
@@ -20106,7 +20055,7 @@ namespace X3D
             this._softnessConstantForceMix = ((float)(0.0001F));
             this._softnessErrorCorrection = ((float)(0.8F));
             this._surfaceSpeed = "0 0";
-            this._containerField = "collider";
+            this.containerField = "collider";
         }
 
         [XmlElementAttribute("CollidableOffset", typeof(CollidableOffset), Order = 0)]
@@ -20250,19 +20199,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("collider")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("collider")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -20278,13 +20227,13 @@ namespace X3D
 
         private bool _useGeometry;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public CollisionSpace()
         {
             this._items = new List<object>();
             this._useGeometry = false;
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("CollidableOffset", typeof(CollidableOffset), Order = 0)]
@@ -20317,19 +20266,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -20406,12 +20355,12 @@ namespace X3D
 
         private object _item;
 
-        private string _containerField;
+        //// private string _containerField;
 
-        public CollisionSensor()
-        {
-            this._containerField = "children";
-        }
+        //public CollisionSensor()
+        //{
+        //    // this.containerField = "children";
+        //}
 
         [XmlElementAttribute("CollisionCollection", typeof(CollisionCollection), Order = 0)]
         [XmlElementAttribute("ProtoInstance", typeof(ProtoInstance), Order = 0)]
@@ -20427,19 +20376,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -20481,7 +20430,7 @@ namespace X3D
 
         private string _surfaceSpeed;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public Contact()
         {
@@ -20501,7 +20450,7 @@ namespace X3D
             this._softnessConstantForceMix = ((float)(0.0001F));
             this._softnessErrorCorrection = ((float)(0.8F));
             this._surfaceSpeed = "0 0";
-            this._containerField = "contacts";
+            this.containerField = "contacts";
         }
 
         [XmlElementAttribute(Order = 0)]
@@ -20712,19 +20661,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("contacts")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("contacts")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -20764,7 +20713,7 @@ namespace X3D
 
         private float _suspensionForce;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public DoubleAxisHingeJoint()
         {
@@ -20782,7 +20731,7 @@ namespace X3D
             this._stop1ErrorCorrection = ((float)(0.8F));
             this._suspensionErrorCorrection = ((float)(0.8F));
             this._suspensionForce = ((float)(0F));
-            this._containerField = "joints";
+            this.containerField = "joints";
         }
 
         [XmlAttributeAttribute()]
@@ -20981,19 +20930,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("joints")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("joints")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -21039,7 +20988,7 @@ namespace X3D
 
         private float _stop3ErrorCorrection;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public MotorJoint()
         {
@@ -21060,7 +21009,7 @@ namespace X3D
             this._stop2ErrorCorrection = ((float)(0.8F));
             this._stop3Bounce = ((float)(0F));
             this._stop3ErrorCorrection = ((float)(0.8F));
-            this._containerField = "joints";
+            this.containerField = "joints";
         }
 
         [XmlAttributeAttribute()]
@@ -21301,19 +21250,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("joints")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("joints")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -21351,7 +21300,7 @@ namespace X3D
 
         private bool _preferAccuracy;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public RigidBodyCollection()
         {
@@ -21368,7 +21317,7 @@ namespace X3D
             this._iterations = "10";
             this._maxCorrectionSpeed = ((float)(-1F));
             this._preferAccuracy = false;
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("BallJoint", typeof(BallJoint), Order = 0)]
@@ -21560,19 +21509,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -21596,7 +21545,7 @@ namespace X3D
 
         private float _stopErrorCorrection;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public SingleAxisHingeJoint()
         {
@@ -21606,7 +21555,7 @@ namespace X3D
             this._minAngle = ((float)(-3.141593F));
             this._stopBounce = ((float)(0F));
             this._stopErrorCorrection = ((float)(0.8F));
-            this._containerField = "joints";
+            this.containerField = "joints";
         }
 
         [XmlAttributeAttribute()]
@@ -21693,19 +21642,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("joints")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("joints")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -21729,7 +21678,7 @@ namespace X3D
 
         private float _stopErrorCorrection;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public SliderJoint()
         {
@@ -21739,7 +21688,7 @@ namespace X3D
             this._sliderForce = ((float)(0F));
             this._stopBounce = ((float)(0F));
             this._stopErrorCorrection = ((float)(1F));
-            this._containerField = "joints";
+            this.containerField = "joints";
         }
 
         [XmlAttributeAttribute()]
@@ -21826,19 +21775,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("joints")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("joints")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -21864,7 +21813,7 @@ namespace X3D
 
         private float _stop2ErrorCorrection;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public UniversalJoint()
         {
@@ -21875,7 +21824,7 @@ namespace X3D
             this._stop1ErrorCorrection = ((float)(0.8F));
             this._stop2Bounce = ((float)(0F));
             this._stop2ErrorCorrection = ((float)(0.8F));
-            this._containerField = "joints";
+            this.containerField = "joints";
         }
 
         [XmlAttributeAttribute()]
@@ -21976,19 +21925,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("joints")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("joints")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     public partial class LinePickSensor : X3DPickSensorNode
@@ -21998,12 +21947,12 @@ namespace X3D
 
         private List<object> _items;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public LinePickSensor()
         {
             this._items = new List<object>();
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("IndexedLineSet", typeof(IndexedLineSet), Order = 0)]
@@ -22058,19 +22007,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -22081,33 +22030,33 @@ namespace X3D
     public partial class Anchor : X3DGroupingNode
     {
 
-        private string _description;
+        //private string _description;
 
         private List<string> _parameter;
 
         private List<string> _url;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public Anchor()
         {
             this._url = new List<string>();
             this._parameter = new List<string>();
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
-        [XmlAttributeAttribute()]
-        public string description
-        {
-            get
-            {
-                return this._description;
-            }
-            set
-            {
-                this._description = value;
-            }
-        }
+        //[XmlAttributeAttribute()]
+        //public string description
+        //{
+        //    get
+        //    {
+        //        return this._description;
+        //    }
+        //    set
+        //    {
+        //        this._description = value;
+        //    }
+        //}
 
         [XmlAttributeAttribute()]
         public List<string> parameter
@@ -22135,19 +22084,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     public partial class LayoutGroup : X3DNode
@@ -22181,7 +22130,7 @@ namespace X3D
 
         private bool _pickable;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public PickableGroup()
         {
@@ -22193,7 +22142,7 @@ namespace X3D
             this._nurbsPatchSurface = new List<NurbsPatchSurface>();
             this._objectType.Add("\"ALL\"");
             this._pickable = true;
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("NurbsPatchSurface", Order = 0)]
@@ -22288,19 +22237,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     public partial class PointPickSensor : X3DPickSensorNode
@@ -22310,13 +22259,13 @@ namespace X3D
 
         private List<object> _items;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public PointPickSensor()
         {
             this._items = new List<object>();
             this._item = new PointSet();
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("PointSet", Order = 0)]
@@ -22370,19 +22319,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     public partial class StaticGroup : X3DChildNode
@@ -22406,12 +22355,12 @@ namespace X3D
 
         private List<object> _items;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public PrimitivePickSensor()
         {
             this._items = new List<object>();
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("Box", typeof(Box), Order = 0)]
@@ -22468,19 +22417,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -22496,12 +22445,12 @@ namespace X3D
 
         private List<object> _items;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public VolumePickSensor()
         {
             this._items = new List<object>();
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("Arc2D", typeof(Arc2D), Order = 0)]
@@ -22587,19 +22536,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -22615,13 +22564,13 @@ namespace X3D
 
         private string _initialValue;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ColorDamper()
         {
             this._initialDestination = "0.8 0.8 0.8";
             this._initialValue = "0.8 0.8 0.8";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -22652,19 +22601,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -22782,13 +22731,13 @@ namespace X3D
 
         private string _initialValue;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public CoordinateDamper()
         {
             this._initialDestination = "0 0 0";
             this._initialValue = "0 0 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -22819,19 +22768,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -22847,13 +22796,13 @@ namespace X3D
 
         private string _initialValue;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public OrientationDamper()
         {
             this._initialDestination = "0 1 0 0";
             this._initialValue = "0 1 0 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -22884,19 +22833,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -22912,13 +22861,13 @@ namespace X3D
 
         private string _initialValue;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public PositionDamper()
         {
             this._initialDestination = "0 0 0";
             this._initialValue = "0 0 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -22949,19 +22898,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -22977,13 +22926,13 @@ namespace X3D
 
         private string _initialValue;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public PositionDamper2D()
         {
             this._initialDestination = "0 0";
             this._initialValue = "0 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -23014,19 +22963,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -23042,13 +22991,13 @@ namespace X3D
 
         private float _initialValue;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ScalarDamper()
         {
             this._initialDestination = ((float)(0F));
             this._initialValue = ((float)(0F));
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -23079,19 +23028,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -23107,12 +23056,12 @@ namespace X3D
 
         private string _initialValue;
 
-        private string _containerField;
+        //// private string _containerField;
 
-        public TexCoordDamper2D()
-        {
-            this._containerField = "children";
-        }
+        //public TexCoordDamper2D()
+        //{
+        //    // this.containerField = "children";
+        //}
 
         [XmlAttributeAttribute()]
         public string initialDestination
@@ -23140,19 +23089,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -23168,13 +23117,13 @@ namespace X3D
 
         private string _initialValue;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ColorChaser()
         {
             this._initialDestination = "0.8 0.8 0.8";
             this._initialValue = "0.8 0.8 0.8";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -23205,19 +23154,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -23233,13 +23182,13 @@ namespace X3D
 
         private string _initialValue;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public CoordinateChaser()
         {
             this._initialDestination = "0 0 0";
             this._initialValue = "0 0 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -23270,19 +23219,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -23298,13 +23247,13 @@ namespace X3D
 
         private string _initialValue;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public OrientationChaser()
         {
             this._initialDestination = "0 1 0 0";
             this._initialValue = "0 1 0 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -23335,19 +23284,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -23363,13 +23312,13 @@ namespace X3D
 
         private string _initialValue;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public PositionChaser()
         {
             this._initialDestination = "0 0 0";
             this._initialValue = "0 0 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -23400,19 +23349,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -23428,13 +23377,13 @@ namespace X3D
 
         private string _initialValue;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public PositionChaser2D()
         {
             this._initialDestination = "0 0";
             this._initialValue = "0 0";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -23465,19 +23414,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -23493,13 +23442,13 @@ namespace X3D
 
         private float _initialValue;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ScalarChaser()
         {
             this._initialDestination = ((float)(0F));
             this._initialValue = ((float)(0F));
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlAttributeAttribute()]
@@ -23530,19 +23479,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -23558,12 +23507,12 @@ namespace X3D
 
         private string _initialValue;
 
-        private string _containerField;
+        //// private string _containerField;
 
-        public TexCoordChaser2D()
-        {
-            this._containerField = "children";
-        }
+        //public TexCoordChaser2D()
+        //{
+        //    // this.containerField = "children";
+        //}
 
         [XmlAttributeAttribute()]
         public string initialDestination
@@ -23591,19 +23540,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -23617,11 +23566,11 @@ namespace X3D
 
         private object _item;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public BoundedPhysicsModel()
         {
-            this._containerField = "physics";
+            this.containerField = "physics";
         }
 
         [XmlElementAttribute("Arc2D", typeof(Arc2D), Order = 0)]
@@ -23670,19 +23619,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("physics")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("physics")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -23725,12 +23674,12 @@ namespace X3D
 
         private string _force;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ForcePhysicsModel()
         {
             this._force = "0 -9.8 0";
-            this._containerField = "physics";
+            this.containerField = "physics";
         }
 
         [XmlAttributeAttribute()]
@@ -23747,19 +23696,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("physics")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("physics")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -23779,7 +23728,7 @@ namespace X3D
 
         private float _turbulence;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public WindPhysicsModel()
         {
@@ -23787,7 +23736,7 @@ namespace X3D
             this._gustiness = ((float)(0.1F));
             this._speed = ((float)(0.1F));
             this._turbulence = ((float)(0F));
-            this._containerField = "physics";
+            this.containerField = "physics";
         }
 
         [XmlAttributeAttribute()]
@@ -23846,19 +23795,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("physics")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("physics")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -23876,14 +23825,14 @@ namespace X3D
 
         private string _position;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ConeEmitter()
         {
             this._angle = ((float)(0.7854F));
             this._direction = "0 1 0";
             this._position = "0 0 0";
-            this._containerField = "emitter";
+            this.containerField = "emitter";
         }
 
         [XmlAttributeAttribute()]
@@ -23928,19 +23877,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("emitter")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("emitter")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -24034,12 +23983,12 @@ namespace X3D
 
         private string _position;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ExplosionEmitter()
         {
             this._position = "0 0 0";
-            this._containerField = "emitter";
+            this.containerField = "emitter";
         }
 
         [XmlAttributeAttribute()]
@@ -24056,19 +24005,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("emitter")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("emitter")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -24084,13 +24033,13 @@ namespace X3D
 
         private string _position;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public PointEmitter()
         {
             this._direction = "0 1 0";
             this._position = "0 0 0";
-            this._containerField = "emitter";
+            this.containerField = "emitter";
         }
 
         [XmlAttributeAttribute()]
@@ -24121,19 +24070,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("emitter")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("emitter")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -24151,13 +24100,13 @@ namespace X3D
 
         private string _direction;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public PolylineEmitter()
         {
             this._coordIndex = "-1";
             this._direction = "0 1 0";
-            this._containerField = "emitter";
+            this.containerField = "emitter";
         }
 
         [XmlElementAttribute("Coordinate", typeof(Coordinate), Order = 0)]
@@ -24203,19 +24152,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("emitter")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("emitter")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -24231,12 +24180,12 @@ namespace X3D
 
         private string _coordIndex;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public SurfaceEmitter()
         {
             this._coordIndex = "-1";
-            this._containerField = "emitter";
+            this.containerField = "emitter";
         }
 
         [XmlElementAttribute("Arc2D", typeof(Arc2D), Order = 0)]
@@ -24299,19 +24248,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("emitter")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("emitter")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -24331,14 +24280,14 @@ namespace X3D
 
         private bool _internal;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public VolumeEmitter()
         {
             this._coordIndex = "-1";
             this._direction = "0 1 0";
             this._internal = true;
-            this._containerField = "emitter";
+            this.containerField = "emitter";
         }
 
         [XmlElementAttribute("Coordinate", typeof(Coordinate), Order = 0)]
@@ -24398,19 +24347,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("emitter")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("emitter")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -24454,7 +24403,7 @@ namespace X3D
 
         private string _texCoordKey;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ParticleSystem()
         {
@@ -24470,7 +24419,7 @@ namespace X3D
             this._particleLifetime = ((float)(5F));
             this._particleSize = "0.02 0.02";
             this._geometryType = "QUAD";
-            this._containerField = "children";
+            //// this.containerField = "children";
         }
 
         [XmlElementAttribute("Color", typeof(Color), Order = 0)]
@@ -24694,19 +24643,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("children")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -24724,14 +24673,14 @@ namespace X3D
 
         private float _retainedOpacity;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public BoundaryEnhancementVolumeStyle()
         {
             this._boundaryOpacity = ((float)(0.9F));
             this._opacityFactor = ((float)(2F));
             this._retainedOpacity = ((float)(0.2F));
-            this._containerField = "renderStyle";
+            this.containerField = "renderStyle";
         }
 
         [XmlAttributeAttribute()]
@@ -24776,19 +24725,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("renderStyle")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("renderStyle")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -24846,14 +24795,14 @@ namespace X3D
 
         private string _parallelColor;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public CartoonVolumeStyle()
         {
             this._colorSteps = "4";
             this._orthogonalColor = "1 1 1 1";
             this._parallelColor = "0 0 0 1";
-            this._containerField = "renderStyle";
+            this.containerField = "renderStyle";
         }
 
         [XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
@@ -24914,19 +24863,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("renderStyle")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("renderStyle")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     public partial class ComposedVolumeStyle : X3DComposableVolumeRenderStyleNode
@@ -24952,13 +24901,13 @@ namespace X3D
 
         private float _gradientThreshold;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public EdgeEnhancementVolumeStyle()
         {
             this._edgeColor = "0 0 0 1";
             this._gradientThreshold = ((float)(0.4F));
-            this._containerField = "renderStyle";
+            this.containerField = "renderStyle";
         }
 
         [XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
@@ -25005,19 +24954,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("renderStyle")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("renderStyle")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -25031,11 +24980,11 @@ namespace X3D
 
         private object _item;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public OpacityMapVolumeStyle()
         {
-            this._containerField = "renderStyle";
+            this.containerField = "renderStyle";
         }
 
         [XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
@@ -25058,19 +25007,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("renderStyle")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("renderStyle")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -25086,13 +25035,13 @@ namespace X3D
 
         private ProjectionVolumeStyleType _type;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ProjectionVolumeStyle()
         {
             this._intensityThreshold = ((float)(0F));
             this._type = ProjectionVolumeStyleType.MAX;
-            this._containerField = "renderStyle";
+            this.containerField = "renderStyle";
         }
 
         [XmlAttributeAttribute()]
@@ -25123,19 +25072,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("renderStyle")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("renderStyle")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -25171,7 +25120,7 @@ namespace X3D
 
         private ShadedVolumeStylePhaseFunction _phaseFunction;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ShadedVolumeStyle()
         {
@@ -25179,7 +25128,7 @@ namespace X3D
             this._lighting = false;
             this._shadows = false;
             this._phaseFunction = ShadedVolumeStylePhaseFunction.HenyeyGreenstein;
-            this._containerField = "renderStyle";
+            this.containerField = "renderStyle";
         }
 
         [XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
@@ -25241,19 +25190,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("renderStyle")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("renderStyle")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -25287,14 +25236,14 @@ namespace X3D
 
         private float _silhouetteSharpness;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public SilhouetteEnhancementVolumeStyle()
         {
             this._silhouetteBoundaryOpacity = ((float)(0F));
             this._silhouetteRetainedOpacity = ((float)(1F));
             this._silhouetteSharpness = ((float)(0.5F));
-            this._containerField = "renderStyle";
+            this.containerField = "renderStyle";
         }
 
         [XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
@@ -25355,19 +25304,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("renderStyle")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("renderStyle")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -25385,13 +25334,13 @@ namespace X3D
 
         private string _warmColor;
 
-        private string _containerField;
+        //// private string _containerField;
 
         public ToneMappedVolumeStyle()
         {
             this._coolColor = "0 0 1 0";
             this._warmColor = "1 1 0 0";
-            this._containerField = "renderStyle";
+            this.containerField = "renderStyle";
         }
 
         [XmlElementAttribute("ComposedTexture3D", typeof(ComposedTexture3D), Order = 0)]
@@ -25438,19 +25387,19 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("renderStyle")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
+        //[System.ComponentModel.DefaultValueAttribute("renderStyle")]
+        //public string containerField
+        //{
+        //    get
+        //    {
+        //        return this._containerField;
+        //    }
+        //    set
+        //    {
+        //        this.containerField = value;
+        //    }
+        //}
     }
 }
 #pragma warning restore

@@ -243,7 +243,7 @@ namespace X3D.Core.Shading
             verticies3 = new List<Vertex>(); // buffer verticies of different face types separatly
             verticies4 = new List<Vertex>();
             Vertex v;
-            Vector4 c;
+            //Vector4 c;
             float tmp;
 
             if (restartIndex.HasValue)
@@ -465,7 +465,7 @@ namespace X3D.Core.Shading
             List<Vertex> verticies3 = new List<Vertex>(); // buffer verticies of different face types separatly
             List<Vertex> verticies4 = new List<Vertex>();
             Vertex v;
-            Vector4 c;
+            //Vector4 c;
             float tmp;
 
             if (restartIndex.HasValue)

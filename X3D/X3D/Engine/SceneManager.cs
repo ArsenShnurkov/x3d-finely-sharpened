@@ -152,8 +152,8 @@ namespace X3D.Engine
                 return FetchSingle(url_mfstring, out resource);
             }
 
-            resource = null;
-            return false;
+            //resource = null;
+            //return false;
         }
 
         private static bool DoesURLHaveProtocol(string url)

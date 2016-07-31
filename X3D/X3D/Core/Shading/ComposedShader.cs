@@ -59,6 +59,11 @@ namespace X3D
         [XmlIgnore]
         public bool IsBuiltIn { get; internal set; }
 
+        public ComposedShader()
+        {
+            this.containerField = "shaders";
+        }
+
         public override void Load()
         {
             Fields = new List<field>();
@@ -173,7 +178,7 @@ namespace X3D
                     UpdateField(name, X3DTypeConverters.ToString((Matrix4)convValue));
                 }
             }
-            catch (Exception ex)
+            catch 
             {
                 Console.WriteLine("error");
             }

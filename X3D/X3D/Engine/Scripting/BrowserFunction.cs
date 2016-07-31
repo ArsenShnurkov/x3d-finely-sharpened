@@ -20,7 +20,7 @@ namespace X3D.Engine
             {
                 Assembly asm;
                 AssemblyProductAttribute productName;
-                AssemblyVersionAttribute ver;
+                //AssemblyVersionAttribute ver;
                 AssemblyDescriptionAttribute desc;
 
                 asm = Assembly.GetAssembly(typeof(BrowserFunction));

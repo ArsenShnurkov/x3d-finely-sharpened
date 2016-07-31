@@ -66,7 +66,7 @@ namespace X3D.Engine
                                 {
                                     engine.Execute("____$=" + sourceFragment + ";____$();", ScriptingEngine.SOURCE_NAME, false);
                                 }
-                                catch (Exception ex) { }
+                                catch { }
                             }
                             else
                             {

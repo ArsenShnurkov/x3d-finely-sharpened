@@ -116,7 +116,7 @@ namespace x3druntime.ui.opentk
             {
                 Assembly asm;
                 AssemblyProductAttribute productName;
-                AssemblyVersionAttribute ver;
+                //AssemblyVersionAttribute ver;
                 AssemblyDescriptionAttribute desc;
 
                 asm = Assembly.GetAssembly(typeof(X3D.Parser.XMLParser));
@@ -130,8 +130,8 @@ namespace x3druntime.ui.opentk
         }
 
 
-        private DateTime before;
-        private DateTime after;
+        //private DateTime before;
+        //private DateTime after;
         private DateTime _prev;
         private System.Threading.Timer tmrTitleUpdate;
         private string title;

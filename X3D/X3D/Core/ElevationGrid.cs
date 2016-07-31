@@ -46,8 +46,8 @@ namespace X3D
 
         private int PatchMatrix;
         private int TransposedPatchMatrix;
-        private float TessLevelInner = 3;
-        private float TessLevelOuter = 2;
+        //private float TessLevelInner = 3;
+        //private float TessLevelOuter = 2;
         private TessShaderUniforms Uniforms = new TessShaderUniforms();
         private Color colorNode;
         private ColorRGBA colorRGBANode;

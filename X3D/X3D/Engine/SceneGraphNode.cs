@@ -18,8 +18,14 @@ namespace X3D
 
         #region Private Fields
 
+        private string _description;
+        private string _documentation;
+        private string _appinfo;
         private string _dEF;
         private string _uSE;
+        private string _containerField = "children";
+        private string _class;
+        private string _name;
 
         #endregion
 
@@ -31,9 +37,48 @@ namespace X3D
 
         #endregion
 
-        #region Public Fields
+        #region Public Properties
 
-        [XmlAttributeAttribute(DataType = "ID")]
+        [XmlAttribute()]
+        public string description
+        {
+            get
+            {
+                return this._description;
+            }
+            set
+            {
+                this._description = value;
+            }
+        }
+
+        [XmlAttribute()]
+        public string documentation
+        {
+            get
+            {
+                return this._documentation;
+            }
+            set
+            {
+                this._documentation = value;
+            }
+        }
+
+        [XmlAttribute()]
+        public string appinfo
+        {
+            get
+            {
+                return this._appinfo;
+            }
+            set
+            {
+                _appinfo = value;
+            }
+        }
+
+        [XmlAttribute(DataType = "ID")]
         public string DEF
         {
             get
@@ -46,7 +91,7 @@ namespace X3D
             }
         }
 
-        [XmlAttributeAttribute(DataType = "IDREF")]
+        [XmlAttribute(DataType = "IDREF")]
         public string USE
         {
             get
@@ -58,6 +103,60 @@ namespace X3D
                 this._uSE = value;
             }
         }
+
+        /// <summary>
+        /// The containerField is responsible for defining where the SceneGraphNode belongs.
+        /// For example, if "children" is defined, the node belongs as a child of its parent. 
+        /// Formally: If "children" is defined, the node will appear as a child in the Children property of its parent.
+        /// Otherwise, insert the node into the property name "container" specified by containerField.
+        /// 
+        /// Types may be; ["children", "appearance", "geometry", "material", "displacers", "trimmingContour", "shaders", "programs", 
+        /// "parts", "texture", "textureTransform", "viewport", "layout", "source", "joints", "collider", "contacts", "physics",
+        /// "emitter", "renderStyle", "normal", "texCoord"].
+        /// </summary>
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
+        [System.ComponentModel.DefaultValueAttribute("children")]
+        public string containerField
+        {
+            get
+            {
+                return this._containerField;
+            }
+            set
+            {
+                this._containerField = value;
+            }
+        }
+
+        [XmlAttributeAttribute(DataType = "NMTOKEN")]
+        public string name
+        {
+            get
+            {
+                return this._name;
+            }
+            set
+            {
+                this._name = value;
+            }
+        }
+
+        [XmlAttributeAttribute(DataType = "NMTOKENS")]
+        public string @class
+        {
+            get
+            {
+                return this._class;
+            }
+            set
+            {
+                this._class = value;
+            }
+        }
+
+        #endregion
+
+        #region Public Fields
 
         /// <summary>
         /// The line number and column number the element was parsed from in the XML document.
@@ -140,7 +239,7 @@ namespace X3D
         public bool HasRendered = false;
 
         [XmlIgnore]
-        public bool? isValid;
+        public bool? hasValid;
 
         [XmlIgnore]
         public int Depth { get; set; }
@@ -446,7 +545,7 @@ namespace X3D
                     return;
                 }
             }
-            catch (Exception ex) { }
+            catch { }
 
             try
             {
@@ -459,7 +558,7 @@ namespace X3D
                     return;
                 }
             }
-            catch (Exception ex) { }
+            catch  { }
 
         }
 
@@ -486,7 +585,7 @@ namespace X3D
                     return value;
                 }
             }
-            catch (Exception ex) { }
+            catch  { }
 
             try
             {
@@ -499,7 +598,7 @@ namespace X3D
                     return value;
                 }
             }
-            catch (Exception ex) { }
+            catch  { }
 
             return null;
         }

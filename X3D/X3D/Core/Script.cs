@@ -18,7 +18,7 @@ namespace X3D
         private head parentHead = null;
         private bool isHeadScript = false;
         private bool compiled = false;
-        private bool executed = false;
+        //private bool executed = false;
         private int headScriptIndex = -1;
         private int numHeadScripts = 0;
 
@@ -137,7 +137,7 @@ namespace X3D
                     engine.OnRenderFrame(rc);
                 }
 
-                executed = true;
+                //executed = true;
             }
         }
 

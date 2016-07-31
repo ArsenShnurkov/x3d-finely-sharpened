@@ -423,7 +423,7 @@ namespace X3D.Parser
             List<float> lst = new List<float>();
             float[] vec3;
 
-            int i = 0;
+            //int i = 0;
             foreach (Match m in mc)
             {
                 vec3 = Floats(m.Value.Replace(",", ""));
@@ -525,7 +525,7 @@ namespace X3D.Parser
         {
             int stride = 1;
 
-            int i = 0, j;
+            int i = 0;
             Vector3[] arr = new Vector3[index_set.Length * stride];
 
             foreach (int index in index_set)

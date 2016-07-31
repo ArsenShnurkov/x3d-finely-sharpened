@@ -35,8 +35,8 @@ namespace X3D.ConstructionSet
         private static Bitmap largePerlinImage;
         private int frame = 0;
         
-        public OpenTK.Input.KeyboardDevice Keyboard { get { return this.InputDriver.Keyboard[0]; } }
-        public OpenTK.Input.MouseDevice Mouse { get { return this.InputDriver.Mouse[0]; } }
+        //public new OpenTK.Input.KeyboardDevice Keyboard { get { return this.InputDriver.Keyboard[0]; } }
+        //public new OpenTK.Input.MouseDevice Mouse { get { return this.InputDriver.Mouse[0]; } }
         public OpenTK.Input.JoystickDevice Joystick { get { return this.InputDriver.Joysticks[0]; } }
 
         #endregion
@@ -50,8 +50,8 @@ namespace X3D.ConstructionSet
             ElevationGrid elevation;
             X3D root;
             Shape shape;
-            Image newImage;
-            Bitmap bmp;
+            //Image newImage;
+            //Bitmap bmp;
 
             ConstructionSet.ElevationBuilder = builder;
 
@@ -347,7 +347,7 @@ namespace X3D.ConstructionSet
             {
                 Assembly asm;
                 AssemblyProductAttribute productName;
-                AssemblyVersionAttribute ver;
+                //AssemblyVersionAttribute ver;
                 AssemblyDescriptionAttribute desc;
 
                 asm = Assembly.GetAssembly(typeof(Parser.XMLParser));

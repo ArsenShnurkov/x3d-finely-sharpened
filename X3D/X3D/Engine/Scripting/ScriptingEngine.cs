@@ -98,6 +98,13 @@ namespace X3D.Engine
         {
             if (isDisposing) return;
 
+            const string ES_REF = "ecmascript:";
+            const string JS_REF = "javascript:";
+
+            script = script.TrimStart();
+            script = script.StartsWith(ES_REF) ? script.Remove(0, ES_REF.Length - 1) : script;
+            script = script.StartsWith(JS_REF) ? script.Remove(0, JS_REF.Length - 1) : script;
+
             using (InternalHandle handle = v8.Compile(script, SOURCE_NAME, false).AsInternalHandle)
             {
                 if (!handle.IsError)

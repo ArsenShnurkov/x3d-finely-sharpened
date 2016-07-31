@@ -19,7 +19,7 @@ namespace x3druntime.ui.opentk
         /// <summary>
         /// The current rotation.
         /// </summary>
-        private static float rotation = 0.0f;
+        //private static float rotation = 0.0f;
 
         /// <summary>
         /// The current time in the Virtual World

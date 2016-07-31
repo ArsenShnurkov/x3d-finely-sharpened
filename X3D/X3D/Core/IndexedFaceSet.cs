@@ -144,7 +144,7 @@ namespace X3D
             {
 
                 Shape shape;
-                PrimitiveType type;
+                //PrimitiveType type;
                 int vbo;
                 int verticies_num;
 

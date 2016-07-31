@@ -41,7 +41,7 @@ namespace x3druntime.ui.opentk
         private float mouseScale = 0.01f;
         private bool mouseDragging = false;
         private bool? lockMouseCursor = null;
-        private float dx = 0, dy = 0;
+        //private float dx = 0, dy = 0;
         private Vector2 mouseDelta = Vector2.Zero;
         private Crosshair _crosshair;
         private bool showCrosshair = true;

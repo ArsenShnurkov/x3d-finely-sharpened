@@ -20,6 +20,8 @@ namespace X3D
         [XmlIgnore]
         public static x3dVersion X3DEngineVersion = x3dVersion.X3D_3_3;
 
+        private x3dVersion _version = x3dVersion.X3D_3_3;
+
         [XmlIgnore]
         public static profileNames X3DEngineProfile = profileNames.Interactive;
 

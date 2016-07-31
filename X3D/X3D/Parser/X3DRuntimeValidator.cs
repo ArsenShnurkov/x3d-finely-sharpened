@@ -26,7 +26,7 @@ namespace X3D.Parser
             bool warned0 = false;
             bool warned1 = false;
 
-            node.isValid = null;
+            node.hasValid = null;
 
             // X3D VALIDATION
 
@@ -38,7 +38,7 @@ namespace X3D.Parser
 
             //TODO: test other X3D node relationships
 
-            node.isValid = passed;
+            node.hasValid = passed;
 
             node.alreadyWarned = warned0 || warned1;
 

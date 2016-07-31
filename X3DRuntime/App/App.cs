@@ -155,7 +155,7 @@ namespace x3druntime.ui.opentk
                 SendMessage3(hTextBox, WM_GETTEXT, len + 1, sb);
                 return sb.ToString();
             }
-            catch (Exception ex)
+            catch 
             {
                 return string.Empty;
             }

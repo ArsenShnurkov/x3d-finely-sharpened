@@ -34,10 +34,10 @@ namespace X3D.Engine
         /// </summary>
         private SceneGraph sg;
 
-        private BackgroundWorker bw;
+        //private BackgroundWorker bw;
         private Thread propagator;
         private bool isPropagating = false;
-        private bool suspended = false;
+        //private bool suspended = false;
         #endregion
 
         #region Constructors

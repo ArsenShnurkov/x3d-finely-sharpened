@@ -21,7 +21,7 @@ namespace x3druntime.ui.opentk
     {
         private const int EXIT_SUCCESS = 0;
         private static VSyncMode VSync;
-        private static BackgroundWorker bw;
+        //private static BackgroundWorker bw;
         private static Thread th;
         private static AutoResetEvent closureEvent;
         private static bool restartRequired = false;
