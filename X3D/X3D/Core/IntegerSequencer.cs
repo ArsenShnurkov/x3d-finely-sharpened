@@ -12,11 +12,17 @@ namespace X3D
     /// </summary>
     public partial class IntegerSequencer
     {
+        #region Private Fields
+
         private float _set_fraction;
         private int _value_changed;
         private float[] _keys;
         private int[] _keyValues;
         private Dictionary<float, int> map = new Dictionary<float, int>();
+
+        #endregion
+
+        #region Public Fields
 
         [XmlIgnore]
         public float set_fraction
@@ -50,6 +56,8 @@ namespace X3D
                 this._value_changed = value;
             }
         }
+
+        #endregion
 
         #region Rendering Methods
 
@@ -90,6 +98,5 @@ namespace X3D
         }
 
         #endregion
-
     }
 }

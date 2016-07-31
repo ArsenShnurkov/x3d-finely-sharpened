@@ -35,9 +35,6 @@ namespace X3D
         private int _vbo_interleaved, _vbo_interleaved4;
         private int NumVerticies, NumVerticies4;
 
-        private readonly float tessLevelInner = 137; // 3
-        private readonly float tessLevelOuter = 115; // 2
-
         List<Vertex> interleaved3;
         List<Vertex> interleaved4;
 
@@ -48,9 +45,6 @@ namespace X3D
             int? restartIndex = null;
 
             parentShape = GetParent<Shape>();
-
-            
-
 
 
             _shape4 = new Shape();
@@ -118,10 +112,12 @@ namespace X3D
                 }
 
 
-
                 if (interleaved4.Count > 0)
                 {
                     quadShader = ShaderCompiler.CreateNewInstance(parentShape.CurrentShader, true);
+
+                    //BUG: materials not rendering for quad shader
+                    //parentShape.ApplyMaterials(quadShader);
 
                     Buffering.BufferShaderGeometry(interleaved4, out _vbo_interleaved4, out NumVerticies4);
                 }
@@ -167,21 +163,11 @@ namespace X3D
                         {
                             Vector4 lightPosition = new Vector4(0.25f, 0.25f, 1f, 0f);
 
-                            if (parentShape.CurrentShader.IsBuiltIn)
-                            {
-                                // its a built in system shader so we are using the the fixed variable inbuilt tesselator
-                                parentShape.CurrentShader.SetFieldValue("TessLevelInner", this.tessLevelInner);
-                                parentShape.CurrentShader.SetFieldValue("TessLevelOuter", this.tessLevelOuter);
-                            }
-
                             parentShape.CurrentShader.SetFieldValue("normalmatrix", ref parentShape.NormalMatrix);
                             //GL.UniformMatrix3(parentShape.Uniforms.NormalMatrix, false, ref parentShape.NormalMatrix);
                             GL.Uniform3(parentShape.Uniforms.LightPosition, 1, ref lightPosition.X);
                             GL.Uniform3(parentShape.Uniforms.AmbientMaterial, X3DTypeConverters.ToVec3(OpenTK.Graphics.Color4.Aqua)); // 0.04f, 0.04f, 0.04f
                             GL.Uniform3(parentShape.Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f);
-
-
-
 
                             shape = parentShape;
                             vbo = _vbo_interleaved;
@@ -245,6 +231,8 @@ namespace X3D
 
                                 quadShader.SetFieldValue("size", size);
                                 quadShader.SetFieldValue("scale", scale);
+
+                                parentShape.ApplyMaterials(quadShader);
 
                                 GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved4);
                                 Buffering.ApplyBufferPointers(quadShader);

@@ -1,7 +1,9 @@
-﻿using System;
+﻿using OpenTK;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using X3D.Parser;
 
 namespace X3D
 {
@@ -10,6 +12,7 @@ namespace X3D
     /// </summary>
     public partial class Extrusion
     {
+        private Shape parentShape;
 
         public override void Load()
         {
@@ -18,10 +21,10 @@ namespace X3D
             // Compute the Spine-aligned cross-section plane (SCP)
             // (remembering computation only has to be done once at load)
 
+            parentShape = GetParent<Shape>();
 
+            //buildExtrusionGeometry();
         }
-
-
 
         public override void Render(RenderingContext rc)
         {
@@ -30,5 +33,7 @@ namespace X3D
             // render the computed SCP 
 
         }
+
+
     }
 }

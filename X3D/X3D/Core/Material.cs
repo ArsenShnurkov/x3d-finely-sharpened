@@ -17,9 +17,12 @@ using System.Linq;
 using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
+using X3D.Parser;
 
 namespace X3D
 {
+
+
     /// <summary>
     /// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/shape.html#Material
     /// </summary>
@@ -39,15 +42,24 @@ Material : X3DMaterialNode {
         public override void Load()
         {
             base.Load();
-
-
         }
 
         public override void Render(RenderingContext rc)
         {
             base.Render(rc);
+        }
 
-
+        public override string ToString()
+        {
+            return string.Format(
+                "Material <ambientIntensity=\"{0}\", diffuse=\"{1}\", emissive=\"{2}\", shininess=\"{3}\", specular=\"{4}\", transparency=\"{5}\">",
+                ambientIntensity,
+                X3DTypeConverters.ToString(this._diffuseColor),
+                X3DTypeConverters.ToString(this._emissiveColor),
+                this._shininess,
+                X3DTypeConverters.ToString(this._specularColor),
+                this._transparency
+            );
         }
     }
 }
