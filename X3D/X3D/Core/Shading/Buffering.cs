@@ -23,6 +23,80 @@ namespace X3D.Core.Shading
     /// </summary>
     public class Buffering
     {
+        public static bool BufferMaterials(ComposedShader shader, List<ShaderMaterial> materials, string name)
+        {
+            int uboMaterial;
+            int uboIndex; // Index to use for the buffer binding. All binding indicies start from 0
+            ShaderMaterial[] _materials; 
+            ShaderMaterial[] tmp;
+
+            _materials = new ShaderMaterial[10]; // finely-sharpened imposes a limit of 10 of materials per object
+            tmp = materials.ToArray();
+            Array.Copy(tmp, _materials, tmp.Length);
+
+            uboIndex = 0;
+            uboMaterial = GL.GenBuffer();
+
+            GL.BindBuffer(BufferTarget.UniformBuffer, uboMaterial);
+
+            // Allocate Memory Request
+            GL.BufferData<ShaderMaterial>(BufferTarget.UniformBuffer,
+                (IntPtr)(_materials.Length * ShaderMaterial.Size),
+                _materials, BufferUsageHint.StaticDraw);
+
+
+            // Bind the created Uniform Buffer to the Buffer Index
+            GL.BindBufferRange(BufferRangeTarget.UniformBuffer,
+                               uboIndex,
+                               uboMaterial,
+                               (IntPtr)0, 
+                               _materials.Length * ShaderMaterial.Size
+                                );
+
+
+            // Cleanup
+            GL.BindBuffer(BufferTarget.UniformBuffer, 0);
+
+            return true;
+        }
+
+        public static bool BufferMaterial(ComposedShader shader, ShaderMaterial material, string name, out int uboMaterial)
+        {
+            int uboIndex; // Index to use for the buffer binding (All good things start at 0 )
+            //int uniformBlockLocation;
+
+            uboIndex = 0; 
+
+            //uniformBlockLocation = GL.GetUniformBlockIndex(shader.ShaderHandle, name);
+
+            //if(UniformBlockLocation > -1)
+            //{
+            //    GL.UniformBlockBinding(shader.ShaderHandle, uniformBlockLocation, uboIndex);
+            //}
+
+
+            uboMaterial = GL.GenBuffer();
+
+            GL.BindBuffer(BufferTarget.UniformBuffer, uboMaterial);
+
+            // Allocate Memory Request
+            GL.BufferData(BufferTarget.UniformBuffer, 
+                (IntPtr)(ShaderMaterial.Size), (IntPtr)(null), BufferUsageHint.DynamicDraw);
+
+            // Bind the created Uniform Buffer to the Buffer Index
+            GL.BindBufferRange(BufferRangeTarget.UniformBuffer,
+                               uboIndex, 
+                               uboMaterial, 
+                               (IntPtr)0, ShaderMaterial.Size
+                                );
+
+
+            GL.BufferSubData<ShaderMaterial>(BufferTarget.UniformBuffer, (IntPtr)0, ShaderMaterial.Size, ref material);
+            GL.BindBuffer(BufferTarget.UniformBuffer, 0);
+
+            return true;
+        }
+
         /// <summary>
         /// Precondition: Apply Buffer Pointers right before GL.DrawArrays or GL.DrawElements, 
         /// requires default pointers to be bound in the shader after linking.

@@ -1,10 +1,11 @@
-﻿using System;
+﻿//TODO: standardize shader variables to be same as x3dom http://doc.x3dom.org/tutorials/lighting/customShader/
+// this way there shouldn't be any trouble porting ShaderParts
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
 using OpenTK.Graphics.OpenGL4;
-using X3D.Core;
 using X3D.Core;
 using OpenTK;
 using X3D.Parser;
@@ -246,9 +247,10 @@ namespace X3D
 
         public void SetFieldValue(string name, int value)
         {
-            if (HasErrors) return;  
-            
+            if (HasErrors) return;
+
             GL.Uniform1(GL.GetUniformLocation(this.ShaderHandle, name), value);
+
 
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }

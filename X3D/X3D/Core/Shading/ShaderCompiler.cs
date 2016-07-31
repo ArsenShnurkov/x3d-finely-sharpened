@@ -55,12 +55,22 @@ namespace X3D.Core
             return derived;
         }
 
-        public static ComposedShader BuildDefaultShader()
+        public static ComposedShader BuildDefaultShader(List<ShaderPart> additionalShaderParts = null)
         {
             var defaultsh = new ComposedShader();
 
             defaultsh.IsBuiltIn = true; // specifies this is a built in system shader
             defaultsh.language = "GLSL";
+
+            if (additionalShaderParts != null)
+            {
+                // FORWARD DECLARATION of additional shader parts
+                foreach (ShaderPart part in additionalShaderParts)
+                {
+                    defaultsh.ShaderParts.Add(part);
+                }
+            }
+
             defaultsh.ShaderParts.Add(new ShaderPart()
             {
                 ShaderSource = DefaultShader.vertexShaderSource,
