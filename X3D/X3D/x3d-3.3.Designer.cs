@@ -3117,8 +3117,20 @@ namespace X3D
 
     public partial class ProtoInstance : X3DPrototypeInstance
     {
+        private List<object> _items = new List<object>();
 
-
+        [XmlElementAttribute("fieldValue", typeof(fieldValue))]
+        public List<object> Items
+        {
+            get
+            {
+                return this._items;
+            }
+            set
+            {
+                this._items = value;
+            }
+        }
     }
 
     public abstract partial class X3DPrototypeInstance : SceneGraphNode
