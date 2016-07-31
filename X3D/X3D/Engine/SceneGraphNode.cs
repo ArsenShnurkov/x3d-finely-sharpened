@@ -317,13 +317,13 @@ namespace X3D
             return lst;
         }
 
-        public List<T> DecendantsByType<T>() where T : SceneGraphNode
+        public List<Sgn> DecendantsByType<Sgn>() where Sgn : SceneGraphNode
         {
             // Breadth first search for decendant node by type
             Queue<SceneGraphNode> work_items;
             SceneGraphNode node;
-            List<T> lst = new List<T>();
-            Type t = typeof(T);
+            List<Sgn> lst = new List<Sgn>();
+            Type t = typeof(Sgn);
 
             work_items = new Queue<SceneGraphNode>();
             work_items.Enqueue(this);
@@ -334,7 +334,7 @@ namespace X3D
 
                 if (t.IsInstanceOfType(node))
                 {
-                    lst.Add((T)node);
+                    lst.Add((Sgn)node);
                 }
 
                 foreach (SceneGraphNode child in node.Children)
@@ -347,11 +347,11 @@ namespace X3D
             return lst;
         }
 
-        public List<T> AscendantByType<T>() where T : SceneGraphNode
+        public List<Sgn> AscendantByType<Sgn>() where Sgn : SceneGraphNode
         {
             SceneGraphNode parent;
-            List<T> lst = new List<T>();
-            Type t = typeof(T);
+            List<Sgn> lst = new List<Sgn>();
+            Type t = typeof(Sgn);
 
             parent = this.Parent;
             
@@ -359,7 +359,7 @@ namespace X3D
             {
                 if (t.IsInstanceOfType(parent))
                 {
-                    lst.Add((T)parent);
+                    lst.Add((Sgn)parent);
                 }
 
                 parent = parent.Parent;
@@ -380,6 +380,31 @@ namespace X3D
                 lst.Add(ascendant);
 
                 ascendant = ascendant.Parent;
+            }
+
+            return lst;
+        }
+
+        public List<Sgn> ItemsByType<Sgn>() where Sgn : SceneGraphNode
+        {
+            // Look for children in Items list (if available) that match specified type
+            List<Sgn> lst = new List<Sgn>();
+            Type t = typeof(Sgn);
+            PropertyInfo prop;
+
+            prop = this.GetType().GetProperty("Items", BindingFlags.Public | BindingFlags.Instance);
+
+            if (prop != null)
+            {
+                List<object> value = (List<object>)prop.GetValue(this, null);
+
+                foreach(object o in value)
+                {
+                    if (o.GetType() == t)
+                    {
+                        lst.Add((Sgn)o);
+                    }
+                }
             }
 
             return lst;
