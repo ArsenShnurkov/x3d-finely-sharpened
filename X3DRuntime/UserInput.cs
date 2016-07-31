@@ -152,6 +152,62 @@ namespace x3druntime.ui.opentk
             movementSpeed = fastFlySpeed ? 10.0f : 1.0f;
             movementSpeed = slowFlySpeed ? 0.01f : movementSpeed;
 
+
+
+            // Calibrator (for translation debugging)
+            if (Keyboard[Key.Number1])
+            {
+                ActiveCamera.calibTrans.X += ActiveCamera.calibSpeed.X;
+            }
+            if (Keyboard[Key.Number2])
+            {
+                ActiveCamera.calibTrans.X -= ActiveCamera.calibSpeed.X;
+            }
+            if (Keyboard[Key.Number3])
+            {
+                ActiveCamera.calibTrans.Y += ActiveCamera.calibSpeed.Y;
+            }
+            if (Keyboard[Key.Number4])
+            {
+                ActiveCamera.calibTrans.Y -= ActiveCamera.calibSpeed.Y;
+            }
+            if (Keyboard[Key.Number5])
+            {
+                ActiveCamera.calibTrans.Z += ActiveCamera.calibSpeed.Z;
+            }
+            if (Keyboard[Key.Number6])
+            {
+                ActiveCamera.calibTrans.Z -= ActiveCamera.calibSpeed.Z;
+            }
+
+            // Calibrator (for orientation debugging)
+            if (Keyboard[Key.Number6])
+            {
+                ActiveCamera.calibOrient.X += ActiveCamera.calibSpeed.X;
+            }
+            if (Keyboard[Key.Number7])
+            {
+                ActiveCamera.calibOrient.X -= ActiveCamera.calibSpeed.X;
+            }
+            if (Keyboard[Key.Number8])
+            {
+                ActiveCamera.calibOrient.Y += ActiveCamera.calibSpeed.Y;
+            }
+            if (Keyboard[Key.Number9])
+            {
+                ActiveCamera.calibOrient.Y -= ActiveCamera.calibSpeed.Y;
+            }
+            if (Keyboard[Key.Minus])
+            {
+                ActiveCamera.calibOrient.Z += ActiveCamera.calibSpeed.Z;
+            }
+            if (Keyboard[Key.Plus])
+            {
+                ActiveCamera.calibOrient.Z -= ActiveCamera.calibSpeed.Z;
+            }
+
+
+
             if (Keyboard[Key.Escape] || Keyboard[Key.Q])
             {
                 // QUIT APPLICATION
