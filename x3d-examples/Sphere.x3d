@@ -18,7 +18,7 @@
   <Scene>
 	<NavigationInfo type='"EXAMINE"'/>
     <Background skyColor='1 1 1'/>
-    <Viewpoint description='Sphere View' position='-0.09000976 0.6099998 -35.60003'/>
+
     <Shape>
       <Sphere/>
       <Appearance>
