@@ -4,6 +4,13 @@ X3D browser/engine written in C#
 
 Featuring the latest bleeding edge developmental work on the X3D C# language binding. 
 
+Quick run through
+* a pure C# engine implementation (no Unity)
+* full core support
+* shaders, scripting
+* event model and propagation
+* striving for ISO/IEC X3D v3.3 standard compliancy
+* OpenGL 4.0
 
 Intro
 ```
