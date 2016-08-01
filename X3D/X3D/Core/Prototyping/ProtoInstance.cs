@@ -1,4 +1,10 @@
-﻿using System;
+﻿// Only ProtoInstance can access its ProtoDeclare
+// Events are not passed in to where the prototype is declared,
+// instead, ProtoInstance creates a new shadow-instance of the ProtoDeclare. 
+// All the nodes under the proto declare are shadow-copied under the ProtoInstance
+// becoming part of the Scene Graph again as a new instance but managed explicitly by ProtoInstance.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +14,16 @@ using System.Xml.Serialization;
 
 namespace X3D
 {
+    public class _ProtoDeclareInstance
+    {
+        public ProtoDeclare declare;
+
+        internal _ProtoDeclareInstance()
+        {
+
+        }
+    }
+
     public partial class ProtoInstance
     {
         private List<fieldValue> fieldValues;
@@ -19,6 +35,25 @@ namespace X3D
         /// </summary>
         [XmlIgnore]
         public ProtoDeclare Prototype { get; set; } // NOTE: scene graph sets this field automatically if ProtoDeclare is declared above ProtoInstance so we dont have to search for node
+
+        /// <summary>
+        /// Shadow copy of the ProtoDeclare.
+        /// Events should be routed to and from this underlying instance leaving the original ProtoDeclare untouched.
+        /// Leaving the ProtoDeclare untouched 
+        /// </summary>
+        internal _ProtoDeclareInstance underlyingInstance;
+
+        private _ProtoDeclareInstance CreateInstance()
+        {
+            _ProtoDeclareInstance ins;
+
+            ins = new _ProtoDeclareInstance();
+
+            ins.declare = Prototype;
+
+
+            return ins;
+        }
 
         public override void Load()
         {
@@ -34,6 +69,8 @@ namespace X3D
 
                 f.value = value.value;
             }
+
+            //this.underlyingInstance = 
         }
 
         public override void Render(RenderingContext rc)
