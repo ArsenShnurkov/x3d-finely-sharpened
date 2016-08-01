@@ -66,7 +66,7 @@ function clockTrigger (timeValue)
 }
 ]]>
         </Script>
-        <!-- Clock tickles Script to wake up and compute a new value --> 			<!-- GF: the script doesnt 'wake up', instead executes the already pre compiled script function as required. -->
+        <!-- Clock tickles Script to wake up and compute a new value -->
         <ROUTE fromField='newColor' fromNode='MaterialModulatorScript' toField='diffuseColor' toNode='MaterialNode'/>
         <TimeSensor DEF='ModulationClock' cycleInterval='0.1' loop='true'/>
         <ROUTE fromField='cycleTime' fromNode='ModulationClock' toField='clockTrigger' toNode='MaterialModulatorScript'/>
