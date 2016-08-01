@@ -21,13 +21,19 @@ void main()
 {
     tcPosition[ID] = vPosition[ID];
 
+    float inner;
+    float outer;
+
+    inner = TessLevelInner > 0 ? TessLevelInner : 137; // 3
+    outer = TessLevelInner > 0 ? TessLevelInner : 115; // 2
+
     if (ID == 0) {
-        gl_TessLevelInner[0] = TessLevelInner;
-        gl_TessLevelInner[1] = TessLevelInner;
-        gl_TessLevelOuter[0] = TessLevelOuter;
-        gl_TessLevelOuter[1] = TessLevelOuter;
-        gl_TessLevelOuter[2] = TessLevelOuter;
-        gl_TessLevelOuter[3] = TessLevelOuter;
+        gl_TessLevelInner[0] = inner;
+        gl_TessLevelInner[1] = inner;
+        gl_TessLevelOuter[0] = outer;
+        gl_TessLevelOuter[1] = outer;
+        gl_TessLevelOuter[2] = outer;
+        gl_TessLevelOuter[3] = outer;
     }
 }
 ";

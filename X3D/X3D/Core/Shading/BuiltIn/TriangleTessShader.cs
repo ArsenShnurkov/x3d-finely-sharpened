@@ -21,12 +21,19 @@ uniform float TessLevelOuter;
 
 void main()
 {
+    float inner;
+    float outer;
+
+    inner = TessLevelInner > 0 ? TessLevelInner : 137; // 3
+    outer = TessLevelInner > 0 ? TessLevelInner : 115; // 2
+
     tcPosition[ID] = vPosition[ID];
+
     if (ID == 0) {
-        gl_TessLevelInner[0] = TessLevelInner;
-        gl_TessLevelOuter[0] = TessLevelOuter;
-        gl_TessLevelOuter[1] = TessLevelOuter;
-        gl_TessLevelOuter[2] = TessLevelOuter;
+        gl_TessLevelInner[0] = inner;
+        gl_TessLevelOuter[0] = outer;
+        gl_TessLevelOuter[1] = outer;
+        gl_TessLevelOuter[2] = outer;
     }
 }
 ";

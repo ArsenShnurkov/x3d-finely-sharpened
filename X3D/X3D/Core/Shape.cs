@@ -309,8 +309,8 @@ namespace X3D
                     if (CurrentShader.IsBuiltIn)
                     {
                         // its a built in system shader so we are using the the fixed parameter inbuilt tesselator
-                        CurrentShader.SetFieldValue("TessLevelInner", this.tessLevelInner);
-                        CurrentShader.SetFieldValue("TessLevelOuter", this.tessLevelOuter);
+                        //CurrentShader.SetFieldValue("TessLevelInner", this.tessLevelInner);
+                        //CurrentShader.SetFieldValue("TessLevelOuter", this.tessLevelOuter);
 
                     }
                 }
