@@ -28,6 +28,19 @@ namespace X3D.Engine
 
         #region Public Methods
 
+        public void Subscribe(ref activeRouteDelegate eventCascade)
+        {
+            eventCascade += () =>
+            {
+                string error;
+
+                if (this.ExecuteEvent(out error))
+                {
+
+                }
+            };
+        }
+
         public bool ExecuteEvent(out string error)
         {
             bool executed = false;
@@ -43,7 +56,29 @@ namespace X3D.Engine
 
             if (!toValue.Equals(fromValue))
             {
-                this.To.setAttribute(this.Route.toField, fromValue);
+                // Different field access requirements depending on node
+
+                if(this.To.GetType() == typeof(Script))
+                {
+                    // Informally: All events passed though Script node are redirected 
+                    // to fields that map to variables or functions defined in the compiled Script 
+                    // or as global variables defined in other scripts.
+
+                    // Formally: Update Script field-node-children to reflect new value changes,
+                    // the fields in turn must update variables in the script node to new values.
+
+                }
+                else if (this.To.GetType() == typeof(ProtoInstance))
+                {
+                    // Informally: All events passed through ProtoInstance must redirect 
+                    // to the first-child of the associated ProtoDeclare.
+
+                    // Formally: Update 
+                }
+                else
+                {
+                    this.To.setAttribute(this.Route.toField, fromValue);
+                }
             }
 
             executed = true;

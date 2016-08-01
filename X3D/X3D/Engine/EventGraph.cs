@@ -9,11 +9,14 @@ using System.Threading;
 
 namespace X3D.Engine
 {
+    public delegate void activeRouteDelegate();
+
     /// <summary>
     /// Implements the runtime behaviour of events between nodes of the Scene Graph.
     /// </summary>
     public class EventGraph
     {
+        AutoResetEvent suspend = new AutoResetEvent(false);
 
         #region Private Fields
 
@@ -38,10 +41,16 @@ namespace X3D.Engine
         private Thread propagator;
         private bool isPropagating = false;
         //private bool suspended = false;
+
+        
+        public event activeRouteDelegate eventCascade;
+        private bool cascadeReady = false;
+
         #endregion
 
         #region Constructors
-        AutoResetEvent suspend = new AutoResetEvent(false);
+
+        
         public EventGraph()
         {
             ThreadStart ts = new ThreadStart(() =>
@@ -91,6 +100,8 @@ namespace X3D.Engine
             //    bw.RunWorkerAsync();
             //    suspended = false;
             //}
+
+            //BUG: event model slowing down framerate when in fullscreen even though it is on another thread
 
             if (!propagator.IsAlive && !isPropagating)
             {
@@ -157,6 +168,8 @@ namespace X3D.Engine
 
         #region Private Methods
 
+
+
         private void traverseEventGraph()
         {
             EventRoute @event;
@@ -166,34 +179,59 @@ namespace X3D.Engine
 
             //TODO: only queue events where values have changed; maybe set up notification system
 
-
-
-            while (queue.Count > 0)
+            if (!cascadeReady)
             {
+                while (queue.Count > 0)
+                {
 #if DEBUG_EVENTS
                 Console.WriteLine("Dequeue event");
 #endif
-                @event = queue.Dequeue();
+                    @event = queue.Dequeue();
 #if DEBUG_EVENTS
                 Console.WriteLine("Executing {0}", @event);
 #endif
-                if (@event.ExecuteEvent(out error))
-                {
-                    nextDispatch.Add(@event);
+                    @event.Subscribe(ref eventCascade);
+
+
+
+
                 }
+
+                cascadeReady = true;
             }
 
-            queue.Clear();
-
-            for (i = 0; i < nextDispatch.Count; i++)
+            if (cascadeReady)
             {
-                next = nextDispatch[i];
-
-#if DEBUG_EVENTS
-                Console.WriteLine("Enqueue event {0}", next);
-#endif
-                queue.Enqueue(next);
+                if(eventCascade != null)
+                    eventCascade();
             }
+
+//            while (queue.Count > 0)
+//            {
+//#if DEBUG_EVENTS
+//                Console.WriteLine("Dequeue event");
+//#endif
+//                @event = queue.Dequeue();
+//#if DEBUG_EVENTS
+//                Console.WriteLine("Executing {0}", @event);
+//#endif
+//                if (@event.ExecuteEvent(out error))
+//                {
+//                    nextDispatch.Add(@event);
+//                }
+//            }
+
+//            queue.Clear();
+
+//            for (i = 0; i < nextDispatch.Count; i++)
+//            {
+//                next = nextDispatch[i];
+
+//#if DEBUG_EVENTS
+//                Console.WriteLine("Enqueue event {0}", next);
+//#endif
+//                queue.Enqueue(next);
+//            }
         }
 
         #endregion

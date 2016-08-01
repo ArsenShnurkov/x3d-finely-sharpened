@@ -37,6 +37,8 @@ namespace X3D.Engine
             {
                 // PROPAGATE events (per timestamp) just before scene rendering
 
+                //BUG: event model slowing down framerate when in fullscreen even though it is on another thread
+
                 sg.EventGraph.PropagateEvents(rc);
             }
 

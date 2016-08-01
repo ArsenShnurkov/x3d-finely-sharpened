@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
@@ -26,10 +27,16 @@ namespace X3D.Engine
         /// <summary>
         /// DEF/USE Semantics
         /// See: http://www.web3d.org/documents/specifications/19775-1/V3.2/Part01/concepts.html#DEFL_USESemantics
+        /// Also, name scope: http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/concepts.html#Runtimenamescope
         /// </summary>
         public Dictionary<string, SceneGraphNode> defUseScope = new Dictionary<string, SceneGraphNode>();
 
-        public Dictionary<string, SceneGraphNode> nameScope = new Dictionary<string, SceneGraphNode>();
+        /// <summary>
+        /// See, name scope: http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/concepts.html#Runtimenamescope
+        /// </summary>
+        public List<KeyValuePair<string, SceneGraphNode>> nameScope = new List<KeyValuePair<string, SceneGraphNode>>(); // slow
+
+
 
         /// <summary>
         /// List of event ROUTE nodes in runtime state.
@@ -263,20 +270,34 @@ namespace X3D.Engine
 
                     if (!string.IsNullOrEmpty(child.name))
                     {
-                        this.nameScope.Add(child.name, child);
+                        this.nameScope.Add(new KeyValuePair<string,SceneGraphNode>(child.name, child));
 
                         if (child.GetType() == typeof(ProtoInstance))
                         {
                             ProtoInstance protoInstance = (ProtoInstance)child;
+                            
+                            object _value = this.nameScope.FirstOrDefault(n => n.Key == child.name); // slow
 
-                            if (this.nameScope.ContainsKey(child.name))
+                            if (_value != null)
                             {
-                                protoInstance.Prototype = (ProtoDeclare)this.nameScope[child.name];
+                                protoInstance.Prototype = (ProtoDeclare)_value;
                             }
                             else
                             {
                                 Console.WriteLine("[Warning] Could not immediatly find ProtoDeclare \"{0}\". Placing ProtoDeclare above ProtoInstance usually fixes this warning.", child.name);
                             }
+                        }
+                        else if (child.GetType() == typeof(ProtoDeclare))
+                        {
+                            child.Hidden = true; // Not renderable.
+                            child.PassthroughAllowed = false; // not considered part of the Runtime SceneGraph or EventGraph, 
+                                                              // ProtoDeclare is only a SceneGraphStructureStatement.
+
+                            // Only ProtoInstance can access its ProtoDeclare
+                            // Events are not passed in to where the prototype is declared,
+                            // instead, ProtoInstance creates a new shadow-instance of the ProtoDeclare. 
+                            // All the nodes under the proto declare are shadow-copied under the ProtoInstance
+                            // becoming part of the Scene Graph again as a new instance but managed explicitly by ProtoInstance.
                         }
                     }
 
