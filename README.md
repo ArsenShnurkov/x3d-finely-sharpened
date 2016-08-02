@@ -160,7 +160,7 @@ Licence
 
 New BSD Licence
 
-Copyright © 2013 - 2016, Mr Gerallt G. Franke of Melbourne/Tasmania, Australia
+Copyright © 2013 - 2016 the x3d-finely-sharpened project, Mr Gerallt G. Franke Melbourne/Tasmania, Australia
 
 All rights reserved.
 
