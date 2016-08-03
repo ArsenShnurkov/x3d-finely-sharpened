@@ -334,6 +334,8 @@ namespace X3D
                 }
 
                 loadedGeometry = _handle.HasGeometry;
+
+                bbox.EnableRendering();
             }
         }
 
@@ -443,7 +445,7 @@ namespace X3D
                     }
                 }
 
-
+                shader.SetFieldValue("lightingEnabled", 1);
 
                 if (depthMask)
                 {
@@ -478,6 +480,17 @@ namespace X3D
                 RenderShape(rc);
 
             }
+
+            RenderBoundingBox(rc);
+        }
+
+        private void RenderBoundingBox(RenderingContext rc)
+        {
+            rc.PushMatricies();
+
+            bbox.Render(this, rc);
+
+            rc.PopMatricies();
         }
 
         private void RenderShape(RenderingContext rc)
