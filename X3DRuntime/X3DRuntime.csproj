@@ -155,6 +155,10 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Shaders\BackgroundFragmentShader.shader" />
+    <None Include="Shaders\DefaultFragmentShader.shader" />
+    <None Include="Shaders\DefaultVertexShader.shader" />
+    <None Include="Shaders\MaterialFragmentShader.shader" />
+    <None Include="Shaders\MaterialVertexShader.shader" />
     <None Include="Shaders\PerlinNoiseFragmentShader.shader" />
     <None Include="Shaders\BackgroundVertexShader.shader" />
     <None Include="Shaders\PerlinNoiseVertexShader.shader" />

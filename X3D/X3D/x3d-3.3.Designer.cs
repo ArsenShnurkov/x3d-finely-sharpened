@@ -43,7 +43,7 @@ namespace X3D
     using Engine;
     using Core;
     using System.CodeDom.Compiler;
-
+    using Core.Shading;
     public enum X3DMIMEType
     {
         X3D,
@@ -226,7 +226,16 @@ namespace X3D
     [XmlIncludeAttribute(typeof(X3DComposedGeometryNode))]
     public abstract partial class X3DGeometryNode : X3DNode
     {
-
+        public virtual void CollectGeometry(RenderingContext rc,
+                                            out GeometryHandle handle,
+                                            out BoundingBox bbox,
+                                            out bool coloring,
+                                            out bool texturing)
+        {
+            handle = GeometryHandle.Zero;
+            bbox = BoundingBox.Zero;
+            coloring = texturing = false;
+        }
     }
 
     [XmlIncludeAttribute(typeof(X3DGeometricPropertyNode))]
