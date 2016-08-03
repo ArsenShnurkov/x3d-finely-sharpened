@@ -40,6 +40,9 @@ namespace X3D
 
         #region Public Properties
 
+        //[XmlIgnore]
+        //public X3DMetadataObject metadata { get; set; }
+
         [XmlAttribute()]
         public string description
         {
@@ -557,11 +560,14 @@ namespace X3D
 
             try
             {
-                propertyInfo = type.GetProperty(name);
+                propertyInfo = type.GetProperty(name, BindingFlags.Public | BindingFlags.Instance);
 
                 if(propertyInfo != null)
                 {
-                    propertyInfo.SetValue(this, Convert.ChangeType(value, propertyInfo.PropertyType), null);
+                    var @new = !propertyInfo.PropertyType.IsInstanceOfType(value) 
+                        ? Convert.ChangeType(value, propertyInfo.PropertyType) : value;
+
+                    propertyInfo.SetValue(this, @new, null);
 
                     return;
                 }
@@ -597,7 +603,7 @@ namespace X3D
 
             try
             {
-                propertyInfo = type.GetProperty(name);
+                propertyInfo = type.GetProperty(name, BindingFlags.Public | BindingFlags.Instance);
 
                 if (propertyInfo != null)
                 {
@@ -633,7 +639,7 @@ namespace X3D
 
             try
             {
-                propertyInfo = type.GetProperty(name);
+                propertyInfo = type.GetProperty(name, BindingFlags.Public | BindingFlags.Instance);
 
                 if (propertyInfo != null)
                 {

@@ -188,8 +188,20 @@ namespace X3D.Engine
                         child.Parents.Add(parent);
 
                         //TODO: implement containerField
-
                         parent.Children.Add(child);
+
+                        // Apply Container Field
+                        if (!string.IsNullOrEmpty(child.containerField) && child.containerField != "children")
+                        {
+                            if (parent.HasAttribute(child.containerField))
+                            {
+                                parent.setAttribute(child.containerField, child);
+                            }
+                            else
+                            {
+                                Console.WriteLine("[warning] could not apply containerField reference \"{0}\" to parent \"{1}\"", child.containerField, parent);
+                            }
+                        }
                     }
                     else
                     {

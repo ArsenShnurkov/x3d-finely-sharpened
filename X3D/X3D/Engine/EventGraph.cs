@@ -193,8 +193,6 @@ namespace X3D.Engine
                     @event.Subscribe(ref eventCascade);
 
 
-
-
                 }
 
                 cascadeReady = true;
