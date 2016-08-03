@@ -19,7 +19,7 @@
     <Background groundAngle='1.309 1.570796' groundColor='0.1 0.1 0.0 0.4 0.25 0.2 0.6 0.6 0.6' skyAngle='1.309 1.571' skyColor='0.0 0.2 0.7 0.0 0.5 1.0 1.0 1.0 1.0'/>
     <Viewpoint description='Side View' position='0 0 3'/>
     <Viewpoint description='Book View' orientation='-1 0 0 0.68' position='0 1.11 1.93'/>
-	
+	<NavigationInfo type="WALK" />
 	
 	<Transform translation="0 0 0.0">
 		<Shape>
@@ -34,7 +34,7 @@
 		</Shape>
 
 	
-		<Transform translation="0 0 -4.0">
+		<Transform translation="0 0 -40.0">
 			<Shape>
 			   <Appearance>
 				<Material diffuseColor="0.1 0.1 0.9" specularColor="1.0 1.0 1.0" />
@@ -49,7 +49,7 @@
 		
 		
 		
-		<Transform translation="4.0 0 0">
+		<Transform translation="40.0 0 0">
 			<Shape>
 			   <Appearance>
 				<Material diffuseColor="0.1 0.1 0.9" specularColor="1.0 1.0 1.0" />
@@ -62,7 +62,7 @@
 			</Shape>
 		</Transform>
 		
-		<Transform translation="-4.0 0 0">
+		<Transform translation="-40.0 0 0">
 			<Shape>
 			   <Appearance>
 				<Material diffuseColor="0.1 0.1 0.9" specularColor="1.0 1.0 1.0" />

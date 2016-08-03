@@ -17,7 +17,7 @@
   </head>
   <Scene>
     <Background skyColor='1 1 1'/>
-    <Viewpoint description='Book View' orientation='-0.747 -0.624 -0.231 1.05' position='-1.81 3.12 2.59'/>
+    
     <Shape>
       <Box size='1 2 3'/>
       <Appearance>

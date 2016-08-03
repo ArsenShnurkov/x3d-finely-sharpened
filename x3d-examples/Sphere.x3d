@@ -23,7 +23,7 @@
       <Sphere/>
       <Appearance>
 		<ImageTexture  url='"spectrum.jpg"'/>
-        <Material/>
+        <Material diffuseColor="0.1 0.1 0.9" specularColor="1.0, 1.0, 1.0" />
       </Appearance>
     </Shape>
   </Scene>
