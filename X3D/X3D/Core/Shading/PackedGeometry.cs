@@ -36,7 +36,7 @@ namespace X3D.Core.Shading
 
         private const int RESTART_INDEX = -1;
 
-        public void Interleave()
+        public void Interleave(bool calcBounds = true)
         {
             Buffering.Interleave(out this.bbox,
                  out this.interleaved3,
@@ -52,8 +52,18 @@ namespace X3D.Core.Shading
                  false,
                  true,
                  this.Coloring,
-                 this.Texturing
+                 this.Texturing, 
+                 calcBounds
                  );
+        }
+
+        public GeometryHandle CreateHandle()
+        {
+            GeometryHandle handle;
+
+            handle = Buffering.BufferShaderGeometry(this);
+
+            return handle;
         }
 
         public static PackedGeometry InterleavePacks(List<PackedGeometry> packs)
@@ -135,13 +145,13 @@ namespace X3D.Core.Shading
                 //packed.bbox4 = BoundingBox.CalculateBoundingBox(packed.interleaved4);
                 //packed.bbox = BoundingBox.Max(packed.bbox3, packed.bbox4);
 
-                Buffering.Interleave(packed.bbox,
-                    out packed.interleaved3,
-                    out packed.interleaved4,
-                    packed._indices, packed._texIndices, packed._coords,
-                    packed._texCoords, null, packed._colorIndicies, packed.color,
-                    packed.restartIndex, true,
-                    packed.colorPerVertex, packed.Coloring, packed.Texturing);
+                //Buffering.Interleave(out packed.bbox,
+                //    out packed.interleaved3,
+                //    out packed.interleaved4,
+                //    packed._indices, packed._texIndices, packed._coords,
+                //    packed._texCoords, null, packed._colorIndicies, packed.color,
+                //    packed.restartIndex, true,
+                //    packed.colorPerVertex, packed.Coloring, packed.Texturing);
 
             }
 
@@ -236,6 +246,5 @@ namespace X3D.Core.Shading
 
             return packed;
         }
-
     }
 }
