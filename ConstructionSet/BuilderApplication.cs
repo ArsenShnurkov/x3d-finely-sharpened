@@ -18,7 +18,7 @@ namespace X3D.ConstructionSet
 
         #region Fields and Properties
 
-        public static IConstructionSet ConstructionSet;
+        public static IConstructionSet ConstructionSet = X3DConsructionSet.GetConstructionSetProvider();
 
         public static string X3DExamplesDirectory = System.IO.Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "..\\..\\..\\..\\x3d-examples\\");
         public static string TempFileLocation = Path.GetTempPath();
@@ -336,7 +336,7 @@ namespace X3D.ConstructionSet
             });
 
             bw.RunWorkerAsync();
-            //closureEvent.WaitOne();
+            closureEvent.WaitOne();
 
             return builder;
         }
