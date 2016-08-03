@@ -11,11 +11,11 @@ namespace X3D
 {
     public abstract class ShapeGeometry
     {
-        public int NumElements;
-        private int NumVerticies, NumVerticies4;
+        //public int NumElements;
+        //private int NumVerticies, NumVerticies4;
 
-        private int _vbo_interleaved, _vbo_interleaved4;
-        private Shape parentShape;
+        //private int _vbo_interleaved, _vbo_interleaved4;
+        //private Shape parentShape;
 
         #region Geometry
 
@@ -33,23 +33,23 @@ namespace X3D
 
         #region Rendering Methods
 
-        public void Load(Shape parentShape)
-        {
-            this.parentShape = parentShape;
+        //public void Load(Shape parentShape)
+        //{
+        //    this.parentShape = parentShape;
 
-            Buffering.Interleave(null, out _vbo_interleaved, out NumVerticies,
-                out _vbo_interleaved4, out NumVerticies4,
-                this.Indices, this.Indices, this.Vertices, this.Texcoords, this.Normals, null, null);
-        }
+        //    Buffering.Interleave(null, out _vbo_interleaved, out NumVerticies,
+        //        out _vbo_interleaved4, out NumVerticies4,
+        //        this.Indices, this.Indices, this.Vertices, this.Texcoords, this.Normals, null, null);
+        //}
 
-        public void Render(RenderingContext rc)
-        {
-            GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
-            Buffering.ApplyBufferPointers(parentShape.CurrentShader);
-            //Buffering.ApplyBufferPointers(parentShape.uniforms);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
-        }
+        //public void Render(RenderingContext rc)
+        //{
+        //    GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
+        //    GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
+        //    Buffering.ApplyBufferPointers(parentShape.CurrentShader);
+        //    //Buffering.ApplyBufferPointers(parentShape.uniforms);
+        //    GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
+        //}
 
         #endregion
 
