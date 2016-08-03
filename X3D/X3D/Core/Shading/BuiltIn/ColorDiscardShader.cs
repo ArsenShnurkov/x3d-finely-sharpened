@@ -72,7 +72,10 @@ void main()
 
     // color discard threshold
 
-    if (c.r < vColorToDiscard.x && c.g < vColorToDiscard.y && c.b < vColorToDiscard.z) 
+    vec4 thres = vec4(0.1, 0.1, 0.1, 1.0);
+    //vec4 thres = vColorToDiscard;
+
+    if (c.r < thres.x && c.g < thres.y && c.b < thres.z) 
         discard;
 }
 ";
