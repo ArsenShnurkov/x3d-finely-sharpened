@@ -21,19 +21,13 @@ out vec4 vColor;
 out lowp vec2 uv;
 out vec3 vPosition;
 out vec3 N;
-out vec4 worldPos;
-
-out vec4 camera;
 
 void main()
 {
 	mat4 model = projection * modelview;
 
 	vPosition = X3DScale * camscale * scale * size * position;
-	worldPos = model * vec4(vPosition, 1.);
-
-	gl_Position = worldPos;
-
+	gl_Position = model * vec4(vPosition, 1.0);
 	vColor = color;
 
 	//gl_TexCoord[0] = gl_MultiTexCoord0; 
@@ -41,10 +35,9 @@ void main()
 	N = normalize(gl_NormalMatrix * gl_Normal);
 
 	vec4 eyePos = gl_ModelViewMatrixInverse * vec4(0., 0., 0., 1.);
-	camera = eyePos;
 	eyeVec = normalize(eyePos.xyz - position.xyz);
 
-	vec4 lightPos = modelview * vec4(1., 0., 0., 1.); // gl_ModelViewMatrixInverse  gl_LightSource[0].position.xyz
+	vec4 lightPos = modelview * vec4(1.0, 0.0, 0.0, 1.0); // gl_ModelViewMatrixInverse  gl_LightSource[0].position.xyz
 	lightVec = normalize(lightPos.xyz - position.xyz);
 
 	uv = texcoord;
