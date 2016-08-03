@@ -390,8 +390,9 @@ namespace X3D.Parser
             // (kept for reference) 
 
             // ([-+]?[0-9]+[.]?[0-9]?[eE]?[-+]?[0-9]?)+
+            // [+-]?(?=\d*[.eE])(?=\.?\d)\d*\.?\d*(?:[eE][+-]?\d+)?
 
-            Regex regMFInt32 = new Regex("([-+]?[0-9]+[.]?[0-9]?[eE]?[-+]?[0-9]?)+"); // [+-]?\\d+\\.\\d+
+            Regex regMFInt32 = new Regex("[+-]?(?=\\d*[.eE])(?=\\.?\\d)\\d*\\.?\\d*(?:[eE][+-]?\\d+)?"); // [+-]?\\d+\\.\\d+
             MatchCollection mc = regMFInt32.Matches(value);
             List<float> floats = new List<float>();
 
