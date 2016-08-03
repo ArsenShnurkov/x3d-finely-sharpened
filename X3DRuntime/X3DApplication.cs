@@ -36,6 +36,12 @@ namespace x3druntime.ui.opentk
         public string BaseMIME { get; set; }
 
         private static SceneManager scene;
+
+        private static Vector4 black = new Vector4(0.0f, 0.0f, 0.0f, 1.0f); // Black
+        private static Vector4 white = new Vector4(1.0f, 1.0f, 1.0f, 1.0f); // White
+        public static Vector4 ClearColor = black; 
+
+
         private SceneCamera ActiveCamera; //private Camera ActiveCamera;
         private bool ispanning, iszooming;
         private float mouseScale = 0.01f;
@@ -158,13 +164,12 @@ namespace x3druntime.ui.opentk
 
             // INITILISE SCENE
 
-
             GL.Disable(EnableCap.Normalize);
             // shade model upgraded from fixed function to shader side
             //GL.ShadeModel(ShadingModel.Flat);
             //GL.ShadeModel(ShadingModel.Smooth);                // Enable Smooth Shading
 
-            GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);           // Black Background
+            GL.ClearColor(ClearColor.X, ClearColor.Y, ClearColor.Z, ClearColor.W);           
             GL.ClearDepth(1.0f);                 // Depth Buffer Setup
             GL.Enable(EnableCap.DepthTest);                // Enables Depth Testing
             //GL.DepthMask(false);
@@ -220,7 +225,7 @@ namespace x3druntime.ui.opentk
             _prev = DateTime.Now;
             GL.Disable(EnableCap.Lighting);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.ClearColor(System.Drawing.Color.White);
+            GL.ClearColor(ClearColor.X, ClearColor.Y, ClearColor.Z, ClearColor.W);
             GL.Enable(EnableCap.DepthTest);
             GL.DepthMask(true);
             GL.DepthFunc(DepthFunction.Lequal);

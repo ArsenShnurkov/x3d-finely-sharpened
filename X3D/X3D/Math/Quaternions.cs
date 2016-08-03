@@ -72,11 +72,19 @@ public static class QuaternionExtensions
 
     //    return q;
     //}
-
+    public static Quaternion QuaternionFromEulerAnglesRad(Vector3 rotation)
+    {
+        return QuaternionFromEulerAnglesRad(rotation.X, rotation.Y, rotation.Z);
+    }
     public static Quaternion QuaternionFromEulerAnglesRad(float yaw, float pitch, float roll)
     {
-        return new Quaternion(pitch, yaw, roll);
+        var q = new Quaternion(pitch, yaw, roll);
 
+        q.Normalize();
+        q.Conjugate();
+        q.Normalize();
+
+        return q;
         //Quaternion q = new Quaternion();
 
         //float hRoll = roll * 0.5f;

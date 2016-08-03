@@ -90,7 +90,7 @@ namespace X3D
             generateTexCoordMap = texturing;
 
             Coloring = coloring;
-            Texturing = coloring;
+            Texturing = texturing;
 
             if (RGB && !RGBA)
             {

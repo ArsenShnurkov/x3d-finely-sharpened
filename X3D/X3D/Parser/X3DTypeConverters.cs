@@ -392,7 +392,7 @@ namespace X3D.Parser
             // ([-+]?[0-9]+[.]?[0-9]?[eE]?[-+]?[0-9]?)+
             // [+-]?(?=\d*[.eE])(?=\.?\d)\d*\.?\d*(?:[eE][+-]?\d+)?
 
-            Regex regMFInt32 = new Regex("[+-]?(?=\\d*[.eE])(?=\\.?\\d)\\d*\\.?\\d*(?:[eE][+-]?\\d+)?"); // [+-]?\\d+\\.\\d+
+            Regex regMFInt32 = new Regex(@"([-+]?[0-9]+[.]?[0-9]?[eE]?[-+]?[0-9]?)+"); // [+-]?\\d+\\.\\d+
             MatchCollection mc = regMFInt32.Matches(value);
             List<float> floats = new List<float>();
 
@@ -455,7 +455,9 @@ namespace X3D.Parser
             //int i = 0;
             foreach (Match m in mc)
             {
-                vec3 = Floats(m.Value.Replace(",", ""));
+                vec3 = m.Value.Replace(",", "").Split(' ').Select(s => float.Parse(s)).ToArray();
+
+                //vec3 = Floats(m.Value.Replace(",", "")); // still not parsing exponents correctly
 
                 switch(vec3.Length)
                 {

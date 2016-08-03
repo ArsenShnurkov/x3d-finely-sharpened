@@ -285,20 +285,17 @@ void main()
 	// TEXTURING
 
 
-
-
-	if (texturingEnabled == 1 && coloringEnabled == 1)
+	if (texturingEnabled == 1 && coloringEnabled == 0)
 	{
 		col_accum = texture_color;
-		col_accum = col_accum + vColor / 2;
 	}
-	else if (coloringEnabled == 1)
+	else if (texturingEnabled == 0 && coloringEnabled == 1)
 	{
 		col_accum = vColor;
 	}
-	else if (texturingEnabled == 1)
+	else if (texturingEnabled == 1 && coloringEnabled == 1)
 	{
-		col_accum = col_accum + texture_color / 2;
+		col_accum = vColor + texture_color / 2;
 	}
 	else
 	{
@@ -350,7 +347,7 @@ void main()
 
 
 	// MATERIALS
-	if (materialsEnabled == 1 && lightingEnabled == 1)
+	if (materialsEnabled == 1)
 	{
 		// MaterialFragmentShader.shader should be linked in so we can use the functions it provides.
 

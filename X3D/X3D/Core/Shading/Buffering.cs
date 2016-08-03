@@ -430,7 +430,7 @@ namespace X3D.Core.Shading
                             v.Position = _coords[faceset[k]];
 
                             maximum = MathHelpers.Max(v.Position, maximum);
-                            minimum = MathHelpers.Max(v.Position, minimum);
+                            minimum = MathHelpers.Min(v.Position, minimum);
 
                             // Flip Z and Y
                             //tmp = v.Position.Z;
@@ -480,8 +480,19 @@ namespace X3D.Core.Shading
                 {
                     Width = maximum.X - minimum.X,
                     Height = maximum.Y - minimum.Y,
-                    Depth = maximum.Z - minimum.Z
+                    Depth = maximum.Z - minimum.Z,
+
+                    Maximum = maximum,
+                    Minimum = minimum,
+
+                    TopLeft = new Vector3(0, 0, minimum.Z),
+                    BottomLeft = new Vector3(0, 0, minimum.Z),
+                    TopRight = new Vector3(0,0, maximum.Z),
+                    BottomRight = new Vector3(0, 0, maximum.Z)
                 };
+
+                // corners
+                // (min_x,min_y), (min_x,max_y), (max_x,max_y), (max_x,min_y)
             }
             else
             {

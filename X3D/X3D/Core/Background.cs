@@ -361,6 +361,7 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             _shaderInnerCube.SetFieldValue("size", size);
             _shaderInnerCube.SetFieldValue("coloringEnabled", 0);
             _shaderInnerCube.SetFieldValue("texturingEnabled", 1);
+            _shaderInnerCube.SetFieldValue("lightingEnabled", 0);
 
             _shaderInnerCube.SetFieldValue("projection", ref rc.matricies.projection);
             _shaderInnerCube.SetFieldValue("camscale", rc.cam.Scale.X); 
@@ -378,9 +379,9 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.TextureCubeMap, tex_cube);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, cubeHandle.vbo4);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, cubeHandle.vbo3);
             Buffering.ApplyBufferPointers(_shaderInnerCube);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, cubeHandle.NumVerticies4);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, cubeHandle.NumVerticies3);
 
 #if APPLY_BACKDROP
             GL.DepthMask(true);
