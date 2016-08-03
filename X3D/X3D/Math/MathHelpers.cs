@@ -351,6 +351,40 @@ namespace X3D
             return result;
         }
 
+        /// <summary>
+        /// Calculates the Minimum Vector
+        /// </summary>
+        public static Vector3 Min(Vector3 vector1, Vector3 vector2)
+        {
+            Vector3 result;
+
+            result = new Vector3()
+            {
+                X = Math.Min(vector1.X, vector2.X),
+                Y = Math.Min(vector1.Y, vector2.Y),
+                Z = Math.Min(vector1.Z, vector2.Z)
+            };
+
+            return result;
+        }
+
+        /// <summary>
+        /// Calculates the absolute value of each component in the specified vector
+        /// </summary>
+        public static Vector3 Abs(Vector3 vector)
+        {
+            Vector3 result;
+
+            result = new Vector3()
+            {
+                X = Math.Abs(vector.X),
+                Y = Math.Abs(vector.Y),
+                Z = Math.Abs(vector.Z)
+            };
+
+            return result;
+        }
+
         public static Vector2 uv(float u, float v)
         {
             return new Vector2(u, v);
