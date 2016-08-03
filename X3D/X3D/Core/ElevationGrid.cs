@@ -20,12 +20,12 @@ namespace X3D
     /// </summary>
     public partial class ElevationGrid
     {
-        private int _vbo_interleaved;
-        private int NumVerticies;
+        //private int _vbo_interleaved;
+        //private int NumVerticies;
         private Shape parentShape;
 
-        private bool RGBA = false, RGB = false, coloring = false, texturing = false, 
-            generateColorMap = false, generateTexCoordMap = false;
+        private bool RGBA = false, RGB = false, coloring = false, texturing = false;
+        private bool generateColorMap = false, generateTexCoordMap = false;
 
         [XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(true)]
@@ -44,8 +44,8 @@ namespace X3D
         [XmlIgnore]
         private int mapSize;
 
-        private int PatchMatrix;
-        private int TransposedPatchMatrix;
+        //private int PatchMatrix;
+        //private int TransposedPatchMatrix;
         //private float TessLevelInner = 3;
         //private float TessLevelOuter = 2;
         private TessShaderUniforms Uniforms = new TessShaderUniforms();
@@ -54,19 +54,27 @@ namespace X3D
         private TextureCoordinate texCoordinateNode;
         private float[] color;
         private bool _isLoaded = false;
-        private BoundingBox _bbox;
-        private readonly float tessLevelInner = 210; // 3
-        private readonly float tessLevelOuter = 1; // 2
-        private int bboxMaxWidth;
-        private int bboxMaxDepth;
-        private int bboxMaxHeight;
+        //private BoundingBox _bbox;
+        //private readonly float tessLevelInner = 210; // 3
+        //private readonly float tessLevelOuter = 1; // 2
+        //private int bboxMaxWidth;
+        //private int bboxMaxDepth;
+        //private int bboxMaxHeight;
 
-
-        #region Rendering Methods
-
-        public override void PostDescendantDeserialization()
+        public override void CollectGeometry(
+                                    RenderingContext rc,
+                                    out GeometryHandle handle,
+                                    out BoundingBox bbox,
+                                    out bool Coloring,
+                                    out bool Texturing)
         {
-            base.PostDescendantDeserialization();
+            List<Vertex> geometry;
+
+
+            handle = GeometryHandle.Zero;
+            bbox = BoundingBox.Zero;
+
+
 
             parentShape = GetParent<Shape>();
             colorNode = (Color)this.Children.FirstOrDefault(n => n.GetType() == typeof(Color));
@@ -81,6 +89,9 @@ namespace X3D
             texturing = texCoordinateNode != null || parentShape.texturingEnabled;
             generateTexCoordMap = texturing;
 
+            Coloring = coloring;
+            Texturing = coloring;
+
             if (RGB && !RGBA)
             {
                 color = X3DTypeConverters.Floats(colorNode.color);
@@ -91,13 +102,13 @@ namespace X3D
             }
 
             _isLoaded = true;
-        }
 
-        public override void PreRenderOnce(RenderingContext rc)
-        {
-            base.PreRenderOnce(rc);
 
-            List<Vertex> geometry;
+            ////
+            ////
+            ////
+
+
 
 
             if (construct)
@@ -146,153 +157,303 @@ namespace X3D
                 this._isLoaded = true;
             }
 
- 
+
             height_mapping();
 
-            _bbox = MathHelpers.CalcBoundingBox(this);
+            bbox = BoundingBox.CalcBoundingBox(this);
+            
+
+            geometry = BuildElevationGeometryQuads(bbox);
 
 
-            geometry = BuildElevationGeometryQuads();
+            //if (parentShape != null)
+            //{
+            //    // TESSELLATION
+            //    /*parentShape.IncludeTesselationShaders(QuadTessShader.tessControlShader,
+            //                                          QuadTessShader.tessEvalShader, 
+            //                                          QuadTessShader.geometryShaderSource); // */
 
+            //    parentShape.CurrentShader.Use();
 
-            if (parentShape != null)
-            {
-                // TESSELLATION
-                /*parentShape.IncludeTesselationShaders(QuadTessShader.tessControlShader,
-                                                      QuadTessShader.tessEvalShader, 
-                                                      QuadTessShader.geometryShaderSource); // */
+            //    ///////
+            //    //parentShape.CurrentShader.IsBuiltIn = false;
+            //    ////////////
 
-                parentShape.CurrentShader.Use();
+            //    //int uniformSize = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "size");
+            //    //int uniformScale = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "scale");
 
-                ///////
-                //parentShape.CurrentShader.IsBuiltIn = false;
-                ////////////
+            //    //var size = new Vector3(1, 1, 1);
+            //    ////var scale = new Vector3(1, 1, 1);
+            //    //var scale = new Vector3(0.5f, 0.5f, 0.5f);
 
-                //int uniformSize = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "size");
-                //int uniformScale = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "scale");
-
-                //var size = new Vector3(1, 1, 1);
-                ////var scale = new Vector3(1, 1, 1);
-                //var scale = new Vector3(0.5f, 0.5f, 0.5f);
-
-                //GL.Uniform3(uniformSize, size);
-                //GL.Uniform3(uniformScale, scale);
+            //    //GL.Uniform3(uniformSize, size);
+            //    //GL.Uniform3(uniformScale, scale);
 
 
 
-                //Uniforms.Modelview = GL.GetUniformLocation(parentShape.shaderProgramHandle, "modelview");
-                //Uniforms.Projection = GL.GetUniformLocation(parentShape.shaderProgramHandle, "projection");
-                //Uniforms.NormalMatrix = GL.GetUniformLocation(parentShape.shaderProgramHandle, "normalmatrix");
-                //Uniforms.LightPosition = GL.GetUniformLocation(parentShape.shaderProgramHandle, "LightPosition");
-                //Uniforms.AmbientMaterial = GL.GetUniformLocation(parentShape.shaderProgramHandle, "AmbientMaterial");
-                //Uniforms.DiffuseMaterial = GL.GetUniformLocation(parentShape.shaderProgramHandle, "DiffuseMaterial");
-                //Uniforms.TessLevelInner = GL.GetUniformLocation(parentShape.shaderProgramHandle, "TessLevelInner");
-                //Uniforms.TessLevelOuter = GL.GetUniformLocation(parentShape.shaderProgramHandle, "TessLevelOuter");
+            //    //Uniforms.Modelview = GL.GetUniformLocation(parentShape.shaderProgramHandle, "modelview");
+            //    //Uniforms.Projection = GL.GetUniformLocation(parentShape.shaderProgramHandle, "projection");
+            //    //Uniforms.NormalMatrix = GL.GetUniformLocation(parentShape.shaderProgramHandle, "normalmatrix");
+            //    //Uniforms.LightPosition = GL.GetUniformLocation(parentShape.shaderProgramHandle, "LightPosition");
+            //    //Uniforms.AmbientMaterial = GL.GetUniformLocation(parentShape.shaderProgramHandle, "AmbientMaterial");
+            //    //Uniforms.DiffuseMaterial = GL.GetUniformLocation(parentShape.shaderProgramHandle, "DiffuseMaterial");
+            //    //Uniforms.TessLevelInner = GL.GetUniformLocation(parentShape.shaderProgramHandle, "TessLevelInner");
+            //    //Uniforms.TessLevelOuter = GL.GetUniformLocation(parentShape.shaderProgramHandle, "TessLevelOuter");
 
-                bboxMaxWidth = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "bboxMaxWidth");
-                bboxMaxHeight = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "bboxMaxHeight");
-                bboxMaxDepth = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "bboxMaxDepth");
-                GL.Uniform1(bboxMaxWidth, _bbox.Width);
-                GL.Uniform1(bboxMaxHeight, _bbox.Height);
-                GL.Uniform1(bboxMaxDepth, _bbox.Depth);
+            //    int ulbboxMaxWidth = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "bboxMaxWidth");
+            //    int ulbboxMaxHeight = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "bboxMaxHeight");
+            //    int ulbboxMaxDepth = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "bboxMaxDepth");
+            //    GL.Uniform1(ulbboxMaxWidth, bbox.Width);
+            //    GL.Uniform1(ulbboxMaxHeight, bbox.Height);
+            //    GL.Uniform1(ulbboxMaxDepth, bbox.Depth);
 
-                PatchMatrix = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "B");
-                TransposedPatchMatrix = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "BT");
+            //    //PatchMatrix = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "B");
+            //    //TransposedPatchMatrix = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "BT");
 
-                Matrix4 bezier = new Matrix4
-                    (-1, 3, -3, 1,
-                    3, -6, 3, 0,
-                    -3, 3, 0, 0,
-                    1, 0, 0, 0);
+            //    //Matrix4 bezier = new Matrix4
+            //    //    (-1, 3, -3, 1,
+            //    //    3, -6, 3, 0,
+            //    //    -3, 3, 0, 0,
+            //    //    1, 0, 0, 0);
 
-                GL.UniformMatrix4(PatchMatrix, false, ref bezier);
-                GL.UniformMatrix4(TransposedPatchMatrix, true, ref bezier);
-            }
+            //    //GL.UniformMatrix4(PatchMatrix, false, ref bezier);
+            //    //GL.UniformMatrix4(TransposedPatchMatrix, true, ref bezier);
+            //}
 
-            Buffering.BufferShaderGeometry(geometry, out _vbo_interleaved, out NumVerticies);
+            Buffering.BufferShaderGeometry(geometry, out handle.vbo4, out handle.NumVerticies4);
         }
 
-        public override void Render(RenderingContext rc)
-        {
-            base.Render(rc);
+        #region Rendering Methods
 
-            if (!_isLoaded) return;
+        //public override void PostDescendantDeserialization()
+        //{
+        //    base.PostDescendantDeserialization();
 
-            parentShape.CurrentShader.Use();
+        //    parentShape = GetParent<Shape>();
+        //    colorNode = (Color)this.Children.FirstOrDefault(n => n.GetType() == typeof(Color));
+        //    colorRGBANode = (ColorRGBA)this.Children.FirstOrDefault(n => n.GetType() == typeof(ColorRGBA));
+        //    texCoordinateNode = (TextureCoordinate)this.Children.FirstOrDefault(n => n.GetType() == typeof(TextureCoordinate));
 
+        //    RGBA = colorRGBANode != null;
+        //    RGB = colorNode != null;
+        //    coloring = RGBA || RGB;
+        //    generateColorMap = coloring;
 
-            Matrix3 NormalMatrix = new Matrix3(rc.matricies.modelview); // NormalMatrix = M4GetUpper3x3(ModelviewMatrix);
-            Vector4 lightPosition = new Vector4(0.25f, 0.25f, 1f, 0f);
+        //    texturing = texCoordinateNode != null || parentShape.texturingEnabled;
+        //    generateTexCoordMap = texturing;
 
-            GL.Uniform1(parentShape.uniforms.a_coloringEnabled, coloring ? 1 : 0);
+        //    if (RGB && !RGBA)
+        //    {
+        //        color = X3DTypeConverters.Floats(colorNode.color);
+        //    }
+        //    else if (RGBA && !RGB)
+        //    {
+        //        color = X3DTypeConverters.Floats(colorRGBANode.color);
+        //    }
 
-            //GL.UniformMatrix3(Uniforms.NormalMatrix, false, ref NormalMatrix);
+        //    _isLoaded = true;
+        //}
 
-            //GL.Uniform1(Uniforms.TessLevelInner, TessLevelInner);
-            //GL.Uniform1(Uniforms.TessLevelOuter, TessLevelOuter);
-            //GL.Uniform3(Uniforms.LightPosition, 1, ref lightPosition.X);
-            //GL.Uniform3(Uniforms.AmbientMaterial, Helpers.ToVec3(OpenTK.Graphics.Color4.Aqua)); // 0.04f, 0.04f, 0.04f
-            //GL.Uniform3(Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f);
+        //public override void PreRenderOnce(RenderingContext rc)
+        //{
+        //    base.PreRenderOnce(rc);
 
-            //GL.PatchParameter(PatchParameterInt.PatchVertices, 16);
-            //GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved); // InterleavedArrayFormat.T2fC4fN3fV3f
-            //GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies); // Patches Quads Points  Lines
-
-
-
-
-            var size = new Vector3(1, 1, 1);
-            var scale = new Vector3(1, 1, 1);
-            //var scale = new Vector3(0.04f, 0.04f, 0.04f);
-
-            if (parentShape.ComposedShaders.Any(s => s.Linked))
-            {
-                if (parentShape.CurrentShader != null)
-                {
-                    parentShape.CurrentShader.Use();
-
-                    int uniformSize = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "size");
-                    int uniformScale = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "scale");
-
-                    GL.Uniform3(uniformSize, size);
-                    GL.Uniform3(uniformScale, scale);
-
-                    if (parentShape.CurrentShader.IsTessellator)
-                    {
-                        if (parentShape.CurrentShader.IsBuiltIn)
-                        {
-                            // its a built in system shader so we are using the the fixed variable inbuilt tesselator
-                            GL.Uniform1(parentShape.Uniforms.TessLevelInner, this.tessLevelInner);
-                            GL.Uniform1(parentShape.Uniforms.TessLevelOuter, this.tessLevelOuter);
-                        }
-                        else
-                        {
-                            //GL.Uniform1(parentShape.Uniforms.TessLevelInner, parentShape.TessLevelInner);
-                            //GL.Uniform1(parentShape.Uniforms.TessLevelOuter, parentShape.TessLevelOuter);
-                        }
+        //    List<Vertex> geometry;
 
 
-                        GL.UniformMatrix3(parentShape.Uniforms.NormalMatrix, false, ref parentShape.NormalMatrix);
-                        GL.Uniform3(parentShape.Uniforms.LightPosition, 1, ref lightPosition.X);
-                        GL.Uniform3(parentShape.Uniforms.AmbientMaterial, X3DTypeConverters.ToVec3(OpenTK.Graphics.Color4.Aqua)); // 0.04f, 0.04f, 0.04f
-                        GL.Uniform3(parentShape.Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f);
+        //    if (construct)
+        //    {
+        //        float sx = this.xSpacing;
+        //        float sz = this.zSpacing;
 
-                        GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
-                        //Buffering.ApplyBufferPointers(parentShape.uniforms);
-                        Buffering.ApplyBufferPointers(parentShape.CurrentShader);
-                        GL.PatchParameter(PatchParameterInt.PatchVertices, 16); 
-                        GL.DrawArrays(PrimitiveType.Patches, 0, NumVerticies);
-                    }
-                    else
-                    {
-                        GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
-                        Buffering.ApplyBufferPointers(parentShape.CurrentShader);
-                        //Buffering.ApplyBufferPointers(parentShape.uniforms);
-                        GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies);
-                    }
-                }
-            }
-        }
+        //        IConstructionSet constructionSet;
+        //        IPerlinNoiseGenerator perlinProvider;
+        //        Bitmap largePerlinImage;
+
+        //        constructionSet = SceneManager.GetCurrentConstructionSet();
+        //        perlinProvider = constructionSet.GetPerlinNoiseProvider();
+
+        //        ElevationGrid generated = constructionSet.ElevationBuilder.BuildHeightmapFromGenerator(
+        //            rc,
+        //            perlinProvider,
+        //            out largePerlinImage, 40, 40, 20, 20, 20); // build a rather large height map
+
+        //        largePerlinImage.Dispose();
+
+        //        Color genColorNode = (Color)generated.Children.FirstOrDefault(n => n.GetType() == typeof(Color));
+        //        this.RGB = coloring = generateColorMap = true;
+        //        this.height = generated.height;
+        //        this.color = X3DTypeConverters.Floats(genColorNode.color);
+        //        this.colorPerVertex = generated.colorPerVertex;
+        //        this.normalPerVertex = generated.normalPerVertex;
+        //        this.Children = generated.Children;
+        //        this.xSpacing = generated.xSpacing;
+        //        this.zSpacing = generated.zSpacing;
+        //        this.xDimension = generated.xDimension;
+        //        this.zDimension = generated.zDimension;
+        //    }
+
+
+
+
+
+        //    if (!this._isLoaded)
+        //    {
+        //        parentShape = GetParent<Shape>();
+
+        //        texturing = parentShape.texturingEnabled;
+        //        generateTexCoordMap = texturing && texCoordinateNode == null;
+
+        //        this._isLoaded = true;
+        //    }
+
+ 
+        //    height_mapping();
+
+        //    _bbox = MathHelpers.CalcBoundingBox(this);
+
+
+        //    geometry = BuildElevationGeometryQuads();
+
+
+        //    if (parentShape != null)
+        //    {
+        //        // TESSELLATION
+        //        /*parentShape.IncludeTesselationShaders(QuadTessShader.tessControlShader,
+        //                                              QuadTessShader.tessEvalShader, 
+        //                                              QuadTessShader.geometryShaderSource); // */
+
+        //        parentShape.CurrentShader.Use();
+
+        //        ///////
+        //        //parentShape.CurrentShader.IsBuiltIn = false;
+        //        ////////////
+
+        //        //int uniformSize = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "size");
+        //        //int uniformScale = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "scale");
+
+        //        //var size = new Vector3(1, 1, 1);
+        //        ////var scale = new Vector3(1, 1, 1);
+        //        //var scale = new Vector3(0.5f, 0.5f, 0.5f);
+
+        //        //GL.Uniform3(uniformSize, size);
+        //        //GL.Uniform3(uniformScale, scale);
+
+
+
+        //        //Uniforms.Modelview = GL.GetUniformLocation(parentShape.shaderProgramHandle, "modelview");
+        //        //Uniforms.Projection = GL.GetUniformLocation(parentShape.shaderProgramHandle, "projection");
+        //        //Uniforms.NormalMatrix = GL.GetUniformLocation(parentShape.shaderProgramHandle, "normalmatrix");
+        //        //Uniforms.LightPosition = GL.GetUniformLocation(parentShape.shaderProgramHandle, "LightPosition");
+        //        //Uniforms.AmbientMaterial = GL.GetUniformLocation(parentShape.shaderProgramHandle, "AmbientMaterial");
+        //        //Uniforms.DiffuseMaterial = GL.GetUniformLocation(parentShape.shaderProgramHandle, "DiffuseMaterial");
+        //        //Uniforms.TessLevelInner = GL.GetUniformLocation(parentShape.shaderProgramHandle, "TessLevelInner");
+        //        //Uniforms.TessLevelOuter = GL.GetUniformLocation(parentShape.shaderProgramHandle, "TessLevelOuter");
+
+        //        bboxMaxWidth = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "bboxMaxWidth");
+        //        bboxMaxHeight = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "bboxMaxHeight");
+        //        bboxMaxDepth = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "bboxMaxDepth");
+        //        GL.Uniform1(bboxMaxWidth, _bbox.Width);
+        //        GL.Uniform1(bboxMaxHeight, _bbox.Height);
+        //        GL.Uniform1(bboxMaxDepth, _bbox.Depth);
+
+        //        PatchMatrix = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "B");
+        //        TransposedPatchMatrix = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "BT");
+
+        //        Matrix4 bezier = new Matrix4
+        //            (-1, 3, -3, 1,
+        //            3, -6, 3, 0,
+        //            -3, 3, 0, 0,
+        //            1, 0, 0, 0);
+
+        //        GL.UniformMatrix4(PatchMatrix, false, ref bezier);
+        //        GL.UniformMatrix4(TransposedPatchMatrix, true, ref bezier);
+        //    }
+
+        //    Buffering.BufferShaderGeometry(geometry, out _vbo_interleaved, out NumVerticies);
+        //}
+
+        //public override void Render(RenderingContext rc)
+        //{
+        //    base.Render(rc);
+
+        //    if (!_isLoaded) return;
+
+        //    parentShape.CurrentShader.Use();
+
+
+        //    Matrix3 NormalMatrix = new Matrix3(rc.matricies.modelview); // NormalMatrix = M4GetUpper3x3(ModelviewMatrix);
+        //    Vector4 lightPosition = new Vector4(0.25f, 0.25f, 1f, 0f);
+
+        //    GL.Uniform1(parentShape.uniforms.a_coloringEnabled, coloring ? 1 : 0);
+
+        //    //GL.UniformMatrix3(Uniforms.NormalMatrix, false, ref NormalMatrix);
+
+        //    //GL.Uniform1(Uniforms.TessLevelInner, TessLevelInner);
+        //    //GL.Uniform1(Uniforms.TessLevelOuter, TessLevelOuter);
+        //    //GL.Uniform3(Uniforms.LightPosition, 1, ref lightPosition.X);
+        //    //GL.Uniform3(Uniforms.AmbientMaterial, Helpers.ToVec3(OpenTK.Graphics.Color4.Aqua)); // 0.04f, 0.04f, 0.04f
+        //    //GL.Uniform3(Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f);
+
+        //    //GL.PatchParameter(PatchParameterInt.PatchVertices, 16);
+        //    //GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved); // InterleavedArrayFormat.T2fC4fN3fV3f
+        //    //GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies); // Patches Quads Points  Lines
+
+
+
+
+        //    var size = new Vector3(1, 1, 1);
+        //    var scale = new Vector3(1, 1, 1);
+        //    //var scale = new Vector3(0.04f, 0.04f, 0.04f);
+
+        //    if (parentShape.ComposedShaders.Any(s => s.Linked))
+        //    {
+        //        if (parentShape.CurrentShader != null)
+        //        {
+        //            parentShape.CurrentShader.Use();
+
+        //            int uniformSize = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "size");
+        //            int uniformScale = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "scale");
+
+        //            GL.Uniform3(uniformSize, size);
+        //            GL.Uniform3(uniformScale, scale);
+
+        //            if (parentShape.CurrentShader.IsTessellator)
+        //            {
+        //                if (parentShape.CurrentShader.IsBuiltIn)
+        //                {
+        //                    // its a built in system shader so we are using the the fixed variable inbuilt tesselator
+        //                    GL.Uniform1(parentShape.Uniforms.TessLevelInner, this.tessLevelInner);
+        //                    GL.Uniform1(parentShape.Uniforms.TessLevelOuter, this.tessLevelOuter);
+        //                }
+        //                else
+        //                {
+        //                    //GL.Uniform1(parentShape.Uniforms.TessLevelInner, parentShape.TessLevelInner);
+        //                    //GL.Uniform1(parentShape.Uniforms.TessLevelOuter, parentShape.TessLevelOuter);
+        //                }
+
+
+        //                GL.UniformMatrix3(parentShape.Uniforms.NormalMatrix, false, ref parentShape.NormalMatrix);
+        //                GL.Uniform3(parentShape.Uniforms.LightPosition, 1, ref lightPosition.X);
+        //                GL.Uniform3(parentShape.Uniforms.AmbientMaterial, X3DTypeConverters.ToVec3(OpenTK.Graphics.Color4.Aqua)); // 0.04f, 0.04f, 0.04f
+        //                GL.Uniform3(parentShape.Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f);
+
+        //                GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
+        //                //Buffering.ApplyBufferPointers(parentShape.uniforms);
+        //                Buffering.ApplyBufferPointers(parentShape.CurrentShader);
+        //                GL.PatchParameter(PatchParameterInt.PatchVertices, 16); 
+        //                GL.DrawArrays(PrimitiveType.Patches, 0, NumVerticies);
+        //            }
+        //            else
+        //            {
+        //                GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
+        //                Buffering.ApplyBufferPointers(parentShape.CurrentShader);
+        //                //Buffering.ApplyBufferPointers(parentShape.uniforms);
+        //                GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies);
+        //            }
+        //        }
+        //    }
+        //}
 
         private void height_mapping()
         {
@@ -372,7 +533,7 @@ namespace X3D
             }
         }
 
-        public List<Vertex> BuildElevationGeometryQuads()
+        public List<Vertex> BuildElevationGeometryQuads(BoundingBox bbox)
         {
             int row, col;
             int index;
@@ -436,7 +597,7 @@ namespace X3D
                     {
                         /* Calculate texture coordinates for the Quadrilateral based on the ElevationGrid parameters */
 
-                        Vertex[] VT = MathHelpers.uv(_bbox, new Vertex[] { v1, v2, v3, v4 }, at_origin: false);
+                        Vertex[] VT = MathHelpers.uv(bbox, new Vertex[] { v1, v2, v3, v4 }, at_origin: false);
                         v1 = VT[0];
                         v2 = VT[1];
                         v3 = VT[2];

@@ -16,103 +16,131 @@ namespace X3D
 {
     public partial class Sphere
     {
-        private int vbo, NumVerticies;
-        private int vbo4, NumVerticies4; // not used
-        private readonly float tessLevelInner = 137; // 3
-        private readonly float tessLevelOuter = 115; // 2
+        //private int vbo, NumVerticies;
+        //private int vbo4, NumVerticies4; // not used
+        //private readonly float tessLevelInner = 137; // 3
+        //private readonly float tessLevelOuter = 115; // 2
+        internal PackedGeometry _pack;
 
         private Shape parentShape;
-        
 
-        #region Rendering Methods
-
-        public override void Load()
+        public override void CollectGeometry(
+                            RenderingContext rc,
+                            out GeometryHandle handle,
+                            out BoundingBox bbox,
+                            out bool coloring,
+                            out bool texturing)
         {
-            base.Load();
+            handle = GeometryHandle.Zero;
+            bbox = BoundingBox.Zero;
+            coloring = false;
+            texturing = false;
 
             parentShape = GetParent<Shape>();
 
-            // should be able to access shader here
+            _pack = new PackedGeometry();
+            _pack.restartIndex = -1;
+            _pack._indices = Faces;
+            _pack._coords = Verts;
+            _pack.bbox = BoundingBox.CalculateBoundingBox(Verts);
+            
+            _pack.Interleave();
 
-            if (parentShape != null)
-            {
-                // TESSELLATION
-                parentShape.IncludeTesselationShaders(TriangleTessShader.tessControlShader, 
-                                                      TriangleTessShader.tessEvalShader, 
-                                                      TriangleTessShader.geometryShaderSource);
-            }
+            // BUFFER GEOMETRY
+            handle = Buffering.BufferShaderGeometry(_pack);
+        }
+
+        #region Rendering Methods
+
+        //public override void Load()
+        //{
+        //    base.Load();
+
+        //    parentShape = GetParent<Shape>();
+
+        //    // should be able to access shader here
+
+        //    if (parentShape != null)
+        //    {
+        //        // TESSELLATION
+        //        parentShape.IncludeTesselationShaders(TriangleTessShader.tessControlShader, 
+        //                                              TriangleTessShader.tessEvalShader, 
+        //                                              TriangleTessShader.geometryShaderSource);
+        //    }
 
             
 
-            Buffering.Interleave(null, out vbo, out NumVerticies,
-                out vbo4, out NumVerticies4,
-                Faces, null, Verts, null, null, null, null,
-                restartIndex: -1, genTexCoordPerVertex: true);
-        }
+        //    Buffering.Interleave(null, out vbo, out NumVerticies,
+        //        out vbo4, out NumVerticies4,
+        //        Faces, null, Verts, null, null, null, null,
+        //        restartIndex: -1, genTexCoordPerVertex: true);
+        //}
 
-        public override void PreRenderOnce(RenderingContext rc)
-        {
-            base.PreRenderOnce(rc);
-        }
+        //public override void PreRenderOnce(RenderingContext rc)
+        //{
+        //    base.PreRenderOnce(rc);
+        //}
 
-        public override void Render(RenderingContext rc)
-        {
-            base.Render(rc);
+        //public override void Render(RenderingContext rc)
+        //{
+        //    base.Render(rc);
 
-            var size = new Vector3(1, 1, 1);
-            //var scale = new Vector3(1, 1, 1);
-            var scale = new Vector3(0.04f, 0.04f, 0.04f);
+        //    var size = new Vector3(1, 1, 1);
+        //    //var scale = new Vector3(1, 1, 1);
+        //    var scale = new Vector3(0.04f, 0.04f, 0.04f);
 
-            // Refactor tessellation 
+        //    // Refactor tessellation 
 
-            if (parentShape.ComposedShaders.Any(s => s.Linked))
-            {
-                if (parentShape.CurrentShader != null)
-                {
-                    parentShape.CurrentShader.Use();
+        //    if (parentShape.ComposedShaders.Any(s => s.Linked))
+        //    {
+        //        if (parentShape.CurrentShader != null)
+        //        {
+        //            parentShape.CurrentShader.Use();
 
-                    parentShape.CurrentShader.SetFieldValue("size", size);
-                    parentShape.CurrentShader.SetFieldValue("scale", scale);
+        //            parentShape.CurrentShader.SetFieldValue("size", size);
+        //            parentShape.CurrentShader.SetFieldValue("scale", scale);
 
-                    if (parentShape.CurrentShader.IsTessellator)
-                    {
-                        Vector4 lightPosition = new Vector4(0.25f, 0.25f, 1f, 0f);
+        //            parentShape.CurrentShader.SetFieldValue("spherical", 1);
 
-                        if (parentShape.CurrentShader.IsBuiltIn)
-                        {
-                            // its a built in system shader so we are using the the fixed variable inbuilt tesselator
-                            parentShape.CurrentShader.SetFieldValue("TessLevelInner", this.tessLevelInner);
-                            parentShape.CurrentShader.SetFieldValue("TessLevelOuter", this.tessLevelOuter);
-                        }
-                        else
-                        {
-                            //parentShape.CurrentShader.SetFieldValue("TessLevelInner", parentShape.TessLevelInner);
-                            //parentShape.CurrentShader.SetFieldValue("TessLevelOuter", parentShape.TessLevelOuter);
-                        }
+        //            if (parentShape.CurrentShader.IsTessellator)
+        //            {
+        //                Vector4 lightPosition = new Vector4(0.25f, 0.25f, 1f, 0f);
 
-                        parentShape.CurrentShader.SetFieldValue("normalmatrix", ref parentShape.NormalMatrix);
-                        //GL.UniformMatrix3(parentShape.Uniforms.NormalMatrix, false, ref parentShape.NormalMatrix);
-                        GL.Uniform3(parentShape.Uniforms.LightPosition, 1, ref lightPosition.X);
-                        GL.Uniform3(parentShape.Uniforms.AmbientMaterial, X3DTypeConverters.ToVec3(OpenTK.Graphics.Color4.Aqua)); // 0.04f, 0.04f, 0.04f
-                        GL.Uniform3(parentShape.Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f);
+        //                if (parentShape.CurrentShader.IsBuiltIn)
+        //                {
+        //                    // its a built in system shader so we are using the the fixed variable inbuilt tesselator
+        //                    parentShape.CurrentShader.SetFieldValue("TessLevelInner", this.tessLevelInner);
+        //                    parentShape.CurrentShader.SetFieldValue("TessLevelOuter", this.tessLevelOuter);
+        //                }
+        //                else
+        //                {
+        //                    //parentShape.CurrentShader.SetFieldValue("TessLevelInner", parentShape.TessLevelInner);
+        //                    //parentShape.CurrentShader.SetFieldValue("TessLevelOuter", parentShape.TessLevelOuter);
+        //                }
+
+        //                parentShape.CurrentShader.SetFieldValue("normalmatrix", ref parentShape.NormalMatrix);
+        //                //GL.UniformMatrix3(parentShape.Uniforms.NormalMatrix, false, ref parentShape.NormalMatrix);
+        //                GL.Uniform3(parentShape.Uniforms.LightPosition, 1, ref lightPosition.X);
+        //                GL.Uniform3(parentShape.Uniforms.AmbientMaterial, X3DTypeConverters.ToVec3(OpenTK.Graphics.Color4.Aqua)); // 0.04f, 0.04f, 0.04f
+        //                GL.Uniform3(parentShape.Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f);
 
 
-                        GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
-                        GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-                        Buffering.ApplyBufferPointers(parentShape.CurrentShader);
-                        //Buffering.ApplyBufferPointers(parentShape.uniforms);
-                        GL.DrawArrays(PrimitiveType.Patches, 0, NumVerticies);
-                    }
-                    else
-                    {
-                        GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-                        Buffering.ApplyBufferPointers(parentShape.CurrentShader);
-                        //Buffering.ApplyBufferPointers(parentShape.uniforms);
-                        GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
-                    }
-                }
-            }
-        }
+        //                GL.PatchParameter(PatchParameterInt.PatchVertices, 3);
+        //                GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+        //                Buffering.ApplyBufferPointers(parentShape.CurrentShader);
+        //                //Buffering.ApplyBufferPointers(parentShape.uniforms);
+        //                GL.DrawArrays(PrimitiveType.Patches, 0, NumVerticies);
+        //            }
+        //            else
+        //            {
+        //                GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+        //                Buffering.ApplyBufferPointers(parentShape.CurrentShader);
+        //                //Buffering.ApplyBufferPointers(parentShape.uniforms);
+        //                GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
+        //            }
+        //        }
+        //    }
+        //}
 
         #endregion
 
@@ -142,6 +170,7 @@ namespace X3D
             1, 6, 10, -1,
         };
  
+        //TODO: scale values correctly
         Vector3[] Verts = new Vector3[] 
         {
              new Vector3(0.000f,  0.000f,  1.000f),

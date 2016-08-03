@@ -14,11 +14,10 @@ namespace X3D
 {
     public partial class Text
     {
-        private Shape parentShape;
         private FontStyle fontStyle;
         private List<Vertex> verts = new List<Vertex>();
-        private int NumVerticies;
-        private int vbo;
+        //private int NumVerticies;
+        //private int vbo;
         private string _combined_text;
         private Vector3 _start_position;
         private Dictionary<string, ImageTexture> stringTextures = new Dictionary<string, ImageTexture>();
@@ -29,18 +28,23 @@ namespace X3D
         private System.Drawing.Color ForeColor { get; set; }
         private System.Drawing.Color BackColor { get; set; }
 
-
-        #region Rendering Methods
-
-        public override void Load()
+        public override void CollectGeometry(
+                            RenderingContext rc,
+                            out GeometryHandle handle,
+                            out BoundingBox bbox,
+                            out bool coloring,
+                            out bool texturing)
         {
-            base.Load();
+            handle = GeometryHandle.Zero;
+            bbox = BoundingBox.Zero;
+            coloring = false;
+            texturing = true;
+
             int line = 0;
             float newLinePositionY;
             List<Vertex> geometry = new List<Vertex>();
             Vertex v;
 
-            parentShape = GetParent<Shape>();
             fontStyle = this.FontStyle;
 
             float z = 0f;
@@ -48,7 +52,7 @@ namespace X3D
 
             string combined = string.Empty;
 
-            if(this._strings.Count == 0)
+            if (this._strings.Count == 0)
             {
                 this._strings.Add("Abc");
             }
@@ -110,33 +114,33 @@ namespace X3D
 
             _combined_text = combined;
 
-            UpdateString(combined);
-
-            if (parentShape != null)
-            {
-                // 2D Text Shader, used to apply transparancy alpha blending didnt work for some reason
-                parentShape.IncludeDefaultShader (ColorReplaceShader.vertexShaderSource, 
-                                                  ColorReplaceShader.fragmentShaderSource);
-            }
-
-            parentShape.CurrentShader.Use()
-                .SetFieldValue("threshold", new Vector4(0.1f, 0.1f, 0.1f, 1.0f));
+            UpdateString(combined, out bbox);
 
 
 
-            Buffering.BufferShaderGeometry(geometry, out vbo, out NumVerticies);
+
+
+            Buffering.BufferShaderGeometry(geometry, out handle.vbo4, out handle.NumVerticies4);
         }
 
-        private void UpdateString(String text)
+
+        #region Rendering Methods
+
+        public override void Load()
+        {
+            base.Load();
+
+        }
+
+        private void UpdateString(String text, out BoundingBox bbox)
         {
             Brush b;
             PointF p;
-            Rectangle boundingbox;
             Bitmap bmp;
 
-            boundingbox = CalculateBoundingBox(text);
+            bbox = BoundingBox.CalculateBoundingBox(text, Font);
 
-            bmp = new Bitmap(boundingbox.Width, boundingbox.Height);
+            bmp = new Bitmap((int)bbox.Width, (int)bbox.Height);
 
             bmp.MakeTransparent(BackColor);
 
@@ -162,7 +166,7 @@ namespace X3D
 
             bmp.RotateFlip(RotateFlipType.RotateNoneFlipX);
 
-            ImageTexture texture = ImageTexture.CreateTextureFromImage(bmp, boundingbox);
+            ImageTexture texture = ImageTexture.CreateTextureFromImage(bmp, new Rectangle(0,0, (int)bbox.Width, (int)bbox.Height));
 
             if (stringTextures.ContainsKey(text))
             {
@@ -177,74 +181,74 @@ namespace X3D
             }
         }
 
-        public override void Render(RenderingContext rc)
+        public void BindTextures(RenderingContext rc)
         {
-            base.Render(rc);
+            var stringTexture = stringTextures.First();
 
-            var size = new Vector3(1, 1, 1);
-            var scale = new Vector3(1, 1, 1);
-            //var scale = new Vector3(0.04f, 0.04f, 0.04f);
-
-            if (parentShape.ComposedShaders.Any(s => s.Linked))
-            {
-                if (parentShape.CurrentShader != null)
-                {
-                    rc.PushMatricies();
-
-                    parentShape.CurrentShader.Use();
-
-                    int uniformSize = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "size");
-                    int uniformScale = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "scale");
-
-                    var stringTexture = stringTextures.First();
-
-                    stringTexture.Value.Render(rc);
-
-                    GL.Uniform3(uniformSize, size);
-                    GL.Uniform3(uniformScale, scale);
-                    rc.matricies.Scale = scale;
-
-                    //GL.Enable(EnableCap.Blend);
-                    //GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-                    //GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
-                    //GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-
-                    //GL.ActiveTexture(TextureUnit.Texture0);
-                    //parentShape.SetSampler(0);
-                    GL.BindTexture(TextureTarget.Texture2D, stringTexture.Value.Index);
-                    GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-                    Buffering.ApplyBufferPointers(parentShape.CurrentShader);
-                    GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies);
-
-
-                    //GL.Disable(EnableCap.Blend);
-
-                    stringTexture.Value.Unbind();
-
-                    rc.PopMatricies();
-                }
-            }
+            stringTexture.Value.Render(rc);
+            GL.BindTexture(TextureTarget.Texture2D, stringTexture.Value.Index);
         }
+
+        public void UnbindTextures(RenderingContext rc)
+        {
+            var stringTexture = stringTextures.First();
+            stringTexture.Value.Unbind();
+        }
+
+        //public override void Render(RenderingContext rc)
+        //{
+        //    base.Render(rc);
+
+        //    var size = new Vector3(1, 1, 1);
+        //    var scale = new Vector3(1, 1, 1);
+        //    //var scale = new Vector3(0.04f, 0.04f, 0.04f);
+
+        //    if (parentShape.ComposedShaders.Any(s => s.Linked))
+        //    {
+        //        if (parentShape.CurrentShader != null)
+        //        {
+        //            rc.PushMatricies();
+
+        //            parentShape.CurrentShader.Use();
+
+        //            int uniformSize = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "size");
+        //            int uniformScale = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "scale");
+
+        //            var stringTexture = stringTextures.First();
+
+        //            stringTexture.Value.Render(rc);
+
+        //            GL.Uniform3(uniformSize, size);
+        //            GL.Uniform3(uniformScale, scale);
+        //            rc.matricies.Scale = scale;
+
+        //            //GL.Enable(EnableCap.Blend);
+        //            //GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+        //            //GL.BlendFunc(BlendingFactorSrc.One, BlendingFactorDest.OneMinusSrcAlpha);
+        //            //GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+
+        //            //GL.ActiveTexture(TextureUnit.Texture0);
+        //            //parentShape.SetSampler(0);
+        //            GL.BindTexture(TextureTarget.Texture2D, stringTexture.Value.Index);
+        //            GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+        //            Buffering.ApplyBufferPointers(parentShape.CurrentShader);
+        //            GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticies);
+
+
+        //            //GL.Disable(EnableCap.Blend);
+
+        //            stringTexture.Value.Unbind();
+
+        //            rc.PopMatricies();
+        //        }
+        //    }
+        //}
 
         #endregion
 
         #region Private Methods
 
-        private Rectangle CalculateBoundingBox(String text)
-        {
-            var bmp = new Bitmap(1, 1);
-            SizeF size;
 
-            using (Graphics g2D = Graphics.FromImage(bmp))
-            {
-                size = g2D.MeasureString(text, Font);
-            }
-
-            Width = (int)(size.Width);
-            Height = (int)(size.Height);
-
-            return new Rectangle(0, 0, Width, Height);
-        }
 
         #endregion
 

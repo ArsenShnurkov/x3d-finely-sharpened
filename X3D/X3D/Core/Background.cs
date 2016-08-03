@@ -23,12 +23,13 @@ namespace X3D
     public partial class Background
     {
         private int tex_cube;
-        private int NumVerticiesCube, NumVerticiesOuter, NumVerticiesInner;
-        private int _vbo_interleaved_cube, _vbo_interleaved_inner, _vbo_interleaved_outer;
+        //private int NumVerticiesCube, NumVerticiesOuter, NumVerticiesInner;
+        //private int _vbo_interleaved_cube, _vbo_interleaved_inner, _vbo_interleaved_outer;
+        private GeometryHandle cubeHandle, innerHandle, outerHandle;
         private CubeGeometry _cube = new CubeGeometry();
-        private Shape _shapeOuter;
-        private Shape _shapeInner;
-        private Shape _shapeInnerCube;
+        private ComposedShader _shaderOuter;
+        private ComposedShader _shaderInner;
+        private ComposedShader _shaderInnerCube;
         private Vector3 scaleSky;
         private Vector3 scaleGround;
         private Vector3 scaleCube;
@@ -45,6 +46,10 @@ namespace X3D
 
         private Vector3[] colors;
         private float[] angles;
+
+        bool texture2d;
+        Vector3 size = new Vector3(1, 1, 1);
+        Vector3 scale = new Vector3(2, 2, 2);
 
         #region Private Methods
 
@@ -128,6 +133,10 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             Vector3 min, max;
             int i;
 
+            cubeHandle = GeometryHandle.Zero;
+            innerHandle = GeometryHandle.Zero;
+            outerHandle = GeometryHandle.Zero;
+
             generateCube = !(string.IsNullOrEmpty(frontUrl) || string.IsNullOrEmpty(backUrl)
                 || string.IsNullOrEmpty(topUrl) || string.IsNullOrEmpty(bottomUrl)
                 || string.IsNullOrEmpty(leftUrl) || string.IsNullOrEmpty(rightUrl));
@@ -175,13 +184,12 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 // outer sphere (sky)
 
                 scaleSky = Vector3.One * 6.0f; // slightly bigger than ground hemisphere
-                _shapeOuter = new Shape();
-                _shapeOuter.Load();
-                _shapeOuter.IncludeDefaultShader(BackgroundShader.vertexShaderSource, // Make use of the BackgroundShader for Skydome Linear Interpolation
+                _shaderOuter = ShaderCompiler.ApplyShader(BackgroundShader.vertexShaderSource, // Make use of the BackgroundShader for Skydome Linear Interpolation
                                                  BackgroundShader.fragmentShaderSource);
-                _shapeOuter.CurrentShader.Use();
+                _shaderOuter.Link();
+
                 List<Vertex> geometryOuterSphere = BuildSphereGeometryQuads(60, Vector3.Zero, 1.0f);
-                Buffering.BufferShaderGeometry(geometryOuterSphere, out _vbo_interleaved_outer, out NumVerticiesOuter);
+                Buffering.BufferShaderGeometry(geometryOuterSphere, out outerHandle.vbo4, out outerHandle.NumVerticies4);
 
                 min = Vector3.Zero;
                 max = Vector3.Zero;
@@ -191,12 +199,12 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 // inner hemisphere (ground)
 
                 scaleGround = Vector3.One * 5.6f;
-                _shapeInner = new Shape();
-                _shapeInner.Load();
-                _shapeInner.IncludeDefaultShader(BackgroundShader.vertexShaderSource,
+                _shaderInner = ShaderCompiler.ApplyShader(BackgroundShader.vertexShaderSource,
                                                  BackgroundShader.fragmentShaderSource);
+                _shaderInner.Link();
+
                 List<Vertex> geometryInnerHemisphere = BuildHemisphereGeometryQuads(60, new Vector3(0, 0.0f,0), 1.0f, false);
-                Buffering.BufferShaderGeometry(geometryInnerHemisphere, out _vbo_interleaved_inner, out NumVerticiesInner);
+                Buffering.BufferShaderGeometry(geometryInnerHemisphere, out innerHandle.vbo4, out innerHandle.NumVerticies4);
 
                 min = Vector3.Zero;
                 max = Vector3.Zero;
@@ -212,14 +220,13 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 // innermost skybox
 
                 scaleCube = Vector3.One * 3.1f;
-                _shapeInnerCube = new Shape();
-                _shapeInnerCube.Load();
 
-                _shapeInnerCube.IncludeDefaultShader(CubeMapBackgroundShader.vertexShaderSource,
-                                                     CubeMapBackgroundShader.fragmentShaderSource);
+                _shaderInnerCube = ShaderCompiler.ApplyShader(CubeMapBackgroundShader.vertexShaderSource,
+                                                 CubeMapBackgroundShader.fragmentShaderSource);
+                _shaderInnerCube.Link();
 
                 int a, b;
-                Buffering.Interleave(null, out _vbo_interleaved_cube, out NumVerticiesCube,
+                Buffering.Interleave(null, out cubeHandle.vbo4, out cubeHandle.NumVerticies4,
                     out a, out b,
                     _cube.Indices, _cube.Indices, _cube.Vertices, _cube.Texcoords, _cube.Normals, null, null);
             }
@@ -230,134 +237,149 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
         {
             base.Render(rc);
 
-            bool texture2d;
-            var size = new Vector3(1, 1, 1);
-            var scale = new Vector3(2, 2, 2);
-
             //GL.Disable(EnableCap.DepthTest);
 
             if (generateSkyAndGround)
             {
-                rc.PushMatricies();
-
-                texture2d = GL.IsEnabled(EnableCap.Texture2D);
-
-                if (texture2d)
-                    GL.Disable(EnableCap.Texture2D);
-
-                Matrix4 mat4;
-                // Outer sky Sphere
-                this._shapeOuter.Render(rc);
-
-                _shapeOuter.CurrentShader.Use();
-
-
-
-#if APPLY_BACKDROP
-                mat4 = rc.cam.GetWorldOrientation();
-                _shapeOuter.CurrentShader.SetFieldValue("modelview", ref mat4);
-#endif
-                _shapeOuter.CurrentShader.SetFieldValue("scale", scaleSky);
-                _shapeOuter.CurrentShader.SetFieldValue("size", size);
-                _shapeOuter.CurrentShader.SetFieldValue("skyColor", this.colors, 255 * 3);
-                _shapeOuter.CurrentShader.SetFieldValue("skyAngle", this.angles, 255);
-                _shapeOuter.CurrentShader.SetFieldValue("skyColors", this.colors.Length);
-                _shapeOuter.CurrentShader.SetFieldValue("isGround", 0);
-                _shapeOuter.CurrentShader.SetFieldValue("bbox", bboxOuter);
-
-
-
-#if APPLY_BACKDROP
-                GL.DepthMask(false);
-#endif
-                GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved_outer);
-                Buffering.ApplyBufferPointers(_shapeOuter.CurrentShader);
-                GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticiesOuter);
-
-#if APPLY_BACKDROP
-                GL.DepthMask(true);
-#endif
-                rc.PopMatricies();
-
-
-                rc.PushMatricies();
-
-                // Inner ground Hemisphere
-                this._shapeInner.Render(rc);
-
-                _shapeInner.CurrentShader.Use();
-#if APPLY_BACKDROP
-                mat4 = rc.cam.GetWorldOrientation();
-                _shapeInner.CurrentShader.SetFieldValue("modelview", ref mat4);
-#endif
-                _shapeInner.CurrentShader.SetFieldValue("scale", scaleGround);
-                _shapeInner.CurrentShader.SetFieldValue("size", size);
-                _shapeInner.CurrentShader.SetFieldValue("skyColor", this.colors, 255 * 3);
-                _shapeInner.CurrentShader.SetFieldValue("skyAngle", this.angles, 255);
-                _shapeInner.CurrentShader.SetFieldValue("skyColors", this.colors.Length);
-                _shapeInner.CurrentShader.SetFieldValue("isGround", 1);
-                _shapeInner.CurrentShader.SetFieldValue("bbox", bboxInner);
-
-#if APPLY_BACKDROP
-                GL.DepthMask(false);
-#endif
-                GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved_inner);
-                Buffering.ApplyBufferPointers(_shapeInner.CurrentShader);
-                GL.DrawArrays(PrimitiveType.Quads, 0, NumVerticiesInner);
-
-#if APPLY_BACKDROP
-                GL.DepthMask(true);
-#endif
-
-                if (texture2d)
-                    GL.Enable(EnableCap.Texture2D);
-
-                rc.PopMatricies();
+                RenderSkydome(rc);
             }
 
             if (generateCube)
             {
-                rc.PushMatricies();
-
-                // Inner cubemapped skybox 
-                this._shapeInnerCube.Render(rc);
-
-                _shapeInnerCube.CurrentShader.Use();
-#if APPLY_BACKDROP
-                Matrix4 mat4 = rc.cam.GetWorldOrientation();
-                _shapeInnerCube.CurrentShader.SetFieldValue("modelview", ref mat4);
-#endif
-                _shapeInnerCube.CurrentShader.SetFieldValue("scale", scaleCube);
-                _shapeInnerCube.CurrentShader.SetFieldValue("size", size);
-                _shapeInnerCube.CurrentShader.SetFieldValue("coloringEnabled", 0);
-                _shapeInnerCube.CurrentShader.SetFieldValue("texturingEnabled", 1);
-
-
-                texture2d = GL.IsEnabled(EnableCap.Texture2D);
-
-                if (!texture2d)
-                    GL.Enable(EnableCap.Texture2D);
-
-#if APPLY_BACKDROP
-                GL.DepthMask(false);
-#endif
-
-                GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(TextureTarget.TextureCubeMap, tex_cube);
-                GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved_cube);
-                Buffering.ApplyBufferPointers(_shapeInnerCube.CurrentShader);
-                //Buffering.ApplyBufferPointers(_shapeInnerCube.uniforms);
-                GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticiesCube);
-
-#if APPLY_BACKDROP
-                GL.DepthMask(true);
-#endif
-
-                if (!texture2d)
-                    GL.Disable(EnableCap.Texture2D);
-
-                rc.PopMatricies();
+                RenderSkybox(rc);
             }
+        }
+
+        private void RenderSkydome(RenderingContext rc)
+        {
+            rc.PushMatricies();
+
+            texture2d = GL.IsEnabled(EnableCap.Texture2D);
+
+            if (texture2d)
+                GL.Disable(EnableCap.Texture2D);
+
+            Matrix4 mat4;
+            // Outer sky Sphere
+            //this._shapeOuter.Render(rc);
+
+            _shaderOuter.Use();
+
+
+
+#if APPLY_BACKDROP
+            mat4 = rc.cam.GetWorldOrientation();
+            _shaderOuter.SetFieldValue("modelview", ref mat4);
+#endif
+            _shaderOuter.SetFieldValue("scale", scaleSky);
+            _shaderOuter.SetFieldValue("size", size);
+            _shaderOuter.SetFieldValue("skyColor", this.colors, 255 * 3);
+            _shaderOuter.SetFieldValue("skyAngle", this.angles, 255);
+            _shaderOuter.SetFieldValue("skyColors", this.colors.Length);
+            _shaderOuter.SetFieldValue("isGround", 0);
+            _shaderOuter.SetFieldValue("bbox", bboxOuter);
+
+            _shaderOuter.SetFieldValue("projection", ref rc.matricies.projection);
+            _shaderOuter.SetFieldValue("camscale", rc.cam.Scale.X);
+            _shaderOuter.SetFieldValue("X3DScale", rc.matricies.Scale);
+
+#if APPLY_BACKDROP
+            GL.DepthMask(false);
+#endif
+            GL.BindBuffer(BufferTarget.ArrayBuffer, outerHandle.vbo4);
+            Buffering.ApplyBufferPointers(_shaderOuter);
+            GL.DrawArrays(PrimitiveType.Quads, 0, outerHandle.NumVerticies4);
+
+#if APPLY_BACKDROP
+            GL.DepthMask(true);
+#endif
+            rc.PopMatricies();
+
+
+            rc.PushMatricies();
+
+            // Inner ground Hemisphere
+            //RenderCube(rc);
+
+            _shaderInner.Use();
+#if APPLY_BACKDROP
+            mat4 = rc.cam.GetWorldOrientation();
+            _shaderInner.SetFieldValue("modelview", ref mat4);
+#endif
+            _shaderInner.SetFieldValue("scale", scaleGround);
+            _shaderInner.SetFieldValue("size", size);
+            _shaderInner.SetFieldValue("skyColor", this.colors, 255 * 3);
+            _shaderInner.SetFieldValue("skyAngle", this.angles, 255);
+            _shaderInner.SetFieldValue("skyColors", this.colors.Length);
+            _shaderInner.SetFieldValue("isGround", 1);
+            _shaderInner.SetFieldValue("bbox", bboxInner);
+
+            _shaderInner.SetFieldValue("projection", ref rc.matricies.projection);
+            _shaderInner.SetFieldValue("camscale", rc.cam.Scale.X);
+            _shaderInner.SetFieldValue("X3DScale", rc.matricies.Scale);
+
+#if APPLY_BACKDROP
+            GL.DepthMask(false);
+#endif
+            GL.BindBuffer(BufferTarget.ArrayBuffer, innerHandle.vbo4);
+            Buffering.ApplyBufferPointers(_shaderInner);
+            GL.DrawArrays(PrimitiveType.Quads, 0, innerHandle.NumVerticies4);
+
+#if APPLY_BACKDROP
+            GL.DepthMask(true);
+#endif
+
+            if (texture2d)
+                GL.Enable(EnableCap.Texture2D);
+
+            rc.PopMatricies();
+        }
+
+        private void RenderSkybox(RenderingContext rc)
+        {
+            rc.PushMatricies();
+
+            // Inner cubemapped skybox 
+            //this._shapeInnerCube.Render(rc);
+
+            _shaderInnerCube.Use();
+#if APPLY_BACKDROP
+            Matrix4 mat4 = rc.cam.GetWorldOrientation();
+            _shaderInnerCube.SetFieldValue("modelview", ref mat4);
+#endif
+            _shaderInnerCube.SetFieldValue("scale", scaleCube);
+            _shaderInnerCube.SetFieldValue("size", size);
+            _shaderInnerCube.SetFieldValue("coloringEnabled", 0);
+            _shaderInnerCube.SetFieldValue("texturingEnabled", 1);
+
+            _shaderInnerCube.SetFieldValue("projection", ref rc.matricies.projection);
+            _shaderInnerCube.SetFieldValue("camscale", rc.cam.Scale.X); 
+            _shaderInnerCube.SetFieldValue("X3DScale", rc.matricies.Scale); 
+
+
+            texture2d = GL.IsEnabled(EnableCap.Texture2D);
+
+            if (!texture2d)
+                GL.Enable(EnableCap.Texture2D);
+
+#if APPLY_BACKDROP
+            GL.DepthMask(false);
+#endif
+
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.TextureCubeMap, tex_cube);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, cubeHandle.vbo4);
+            Buffering.ApplyBufferPointers(_shaderInnerCube);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, cubeHandle.NumVerticies4);
+
+#if APPLY_BACKDROP
+            GL.DepthMask(true);
+#endif
+
+            if (!texture2d)
+                GL.Disable(EnableCap.Texture2D);
+
+            rc.PopMatricies();
         }
 
         public Vector4 GetLatitudeFillColorSky(float latitudeRatio, int segments)

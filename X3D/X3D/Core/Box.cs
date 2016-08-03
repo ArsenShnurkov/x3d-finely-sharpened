@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using win = System.Drawing;
 using X3D.Core;
+using X3D.Core.Shading;
 
 namespace X3D
 {
@@ -16,46 +17,77 @@ namespace X3D
     {
         private BoxGeometry _boxGeometry = new BoxGeometry();
         private Shape parentShape;
+        internal PackedGeometry _pack;
 
-        #region Render Methods
-
-        public override void Load()
+        public override void CollectGeometry(
+                            RenderingContext rc,
+                            out GeometryHandle handle,
+                            out BoundingBox bbox,
+                            out bool Coloring,
+                            out bool Texturing)
         {
-            base.Load();
+
+
+
+            handle = GeometryHandle.Zero;
+            bbox = BoundingBox.Zero;
+            Texturing = true;
+            Coloring = true;
 
             parentShape = GetParent<Shape>();
 
-            this._boxGeometry.Load(parentShape);
+
+            _pack = new PackedGeometry();
+            _pack._indices = this._boxGeometry.Indices;
+            _pack._coords = this._boxGeometry.Vertices;
+            _pack._colorIndicies = this._boxGeometry.Colors;
+            _pack._texCoords = this._boxGeometry.Texcoords;
+            _pack.restartIndex = -1;
+
+            _pack.Interleave();
+
+            // BUFFER GEOMETRY
+            handle = Buffering.BufferShaderGeometry(_pack);
+
+            //this._boxGeometry.Load(parentShape);
         }
 
-        public override void PreRender()
-        {
-            base.PreRender();
-        }
+        #region Render Methods
 
-        public override void Render(RenderingContext rc)
-        {
-            base.Render(rc);
+        //public override void Load()
+        //{
+        //    base.Load();
 
-            Vector3 zeroish = new Vector3(0.05f, 0.05f, 0.05f);
+        //}
 
-            GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
+        //public override void PreRender()
+        //{
+        //    base.PreRender();
+        //}
 
-            int uniformSize = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "size");
-            int uniformScale = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "scale");
+        //public override void Render(RenderingContext rc)
+        //{
+        //    base.Render(rc);
 
-            GL.Uniform3(uniformSize, this._vec3);
-            GL.Uniform3(uniformScale, zeroish);
+        //    Vector3 zeroish = new Vector3(0.05f, 0.05f, 0.05f);
 
-            this._boxGeometry.Render(rc);
-        }
+        //    GL.UseProgram(parentShape.CurrentShader.ShaderHandle);
 
-        public override void PostRender(RenderingContext rc)
-        {
-            base.PostRender(rc);
+        //    int uniformSize = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "size");
+        //    int uniformScale = GL.GetUniformLocation(parentShape.CurrentShader.ShaderHandle, "scale");
+
+        //    GL.Uniform3(uniformSize, this._vec3);
+        //    GL.Uniform3(uniformScale, zeroish);
+
+        //    this._boxGeometry.Render(rc);
+        //}
+
+        //public override void PostRender(RenderingContext rc)
+        //{
+        //    base.PostRender(rc);
 
 
-        }
+        //}
 
         #endregion
 

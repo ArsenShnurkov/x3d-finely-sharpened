@@ -15,11 +15,51 @@ namespace X3D
     {
         #region Rendering Methods
 
-        private Shape parentShape;
-
         // Use IndexedFaceSet but dont connect it to the actual scene graph the current Cone is in.
         private IndexedFaceSet ifs1; // with bottom face
         private IndexedFaceSet ifs2; // without bottom face
+
+        public override void CollectGeometry(
+                            RenderingContext rc,
+                            out GeometryHandle handle,
+                            out BoundingBox bbox,
+                            out bool Coloring,
+                            out bool Texturing)
+        {
+            PackedGeometry master;
+            PackedGeometry packed1;
+            PackedGeometry packed2;
+            List<PackedGeometry> packs;
+
+            handle = GeometryHandle.Zero;
+            bbox = BoundingBox.Zero;
+            Texturing = false;
+            Coloring = false;
+
+            packs = new List<PackedGeometry>();
+
+            if (this.bottom)
+            {
+                // Cone with bottom face
+
+                packed1 = PackedGeometry.Pack(ifs1);
+                packs.Add(packed1);
+            }
+            else
+            {
+                // Cone without bottom face
+
+                packed2 = PackedGeometry.Pack(ifs2);
+                packs.Add(packed2);
+            }
+
+            master = PackedGeometry.InterleavePacks(packs);
+
+            bbox = BoundingBox.CalculateBoundingBox(master);
+
+            // BUFFER GEOMETRY
+            handle = Buffering.BufferShaderGeometry(master);
+        }
 
         public override unsafe void Load()
         {
@@ -28,47 +68,24 @@ namespace X3D
             buildConeGeometry();
         }
 
-        public override void PreRenderOnce(RenderingContext rc)
-        {
-            base.PreRenderOnce(rc);
-
-            parentShape = GetParent<Shape>();
-
-            ifs1.PreRenderOnce(rc); // Cone with bottom face
-            ifs2.PreRenderOnce(rc); // Cone without bottom face
-        }
-
-        public override unsafe void Render(RenderingContext rc)
+        public override void Render(RenderingContext rc)
         {
             base.Render(rc);
 
-            rc.PushMatricies();
+            //rc.PushMatricies();
 
             rc.matricies.Scale = new Vector3(2 * bottomRadius, 1f * height, 2 * bottomRadius);  // Too easy, almost feel like im cheating here.
 
-            if (this.bottom)
-            {
-                // Cone with bottom face
-
-                ifs1.Render(rc);
-            }
-            else
-            {
-                // Cone without bottom face
-
-                ifs2.Render(rc);
-            }
-
-            rc.PopMatricies();
+            //rc.PopMatricies();
         }
 
-        #endregion
+            #endregion
 
-        /// <summary>
-        /// Defines two cone geometries: one with and without a bottom face.
-        /// Not computed for faster results.
-        /// TODO: need to translate bottom face verticies using bottomRadius.
-        /// </summary>
+            /// <summary>
+            /// Defines two cone geometries: one with and without a bottom face.
+            /// Not computed for faster results.
+            /// TODO: need to translate bottom face verticies using bottomRadius.
+            /// </summary>
         private void buildConeGeometry()
         {
             Normal normal, normal2;
@@ -90,10 +107,10 @@ namespace X3D
             coordinate2.point = "1.0 -0.8756627 -0.117456675, 0.9238795 -1.2577269 -0.13921875, 0.70710677 -1.5816252 -0.15766774, 0.38268343 -1.7980472 -0.16999497, 6.123234E-17 -1.8740444 -0.17432372, -0.38268343 -1.7980472 -0.16999497, -0.70710677 -1.5816252 -0.15766774, -0.9238795 -1.2577269 -0.13921875, -1.0 -0.8756627 -0.117456675, -0.9238795 -0.49359855 -0.0956946, -0.70710677 -0.16970019 -0.07724561, -0.38268343 0.04672177 -0.064918384, -1.8369701E-16 0.12271906 -0.060589638, 0.38268343 0.04672177 -0.064918384, 0.70710677 -0.16970019 -0.07724561, 0.9238795 -0.49359855 -0.0956946, 0.0 -0.98939675 1.8793068, ";
             normal.vector = "0.6391195 0.015301731 -0.76895523, 0.5904694 -0.2292303 -0.77382123, 0.45192572 -0.43653455 -0.7779465, 0.24458045 -0.57505083 -0.7807029, -8.903431E-17 -0.62369126 -0.78167075, -0.3229683 -0.768888 -0.55181766, -0.7054874 -0.70400196 -0.081662655, -0.5904694 -0.2292303 -0.77382123, -0.6391195 0.015301731 -0.76895523, -0.5904694 0.25983375 -0.76408917, -0.45192572 0.46713802 -0.7599639, -0.24458045 0.6056543 -0.7572076, -1.05142775E-16 0.6542947 -0.75623965, 0.3229683 0.79023224 -0.5207921, 0.7054874 0.7066935 -0.05359069, 0.5904694 0.25983375 -0.76408917, -9.4556915E-17 -0.01989544 0.99980205, ";
             normal2.vector = "0.8944272 -0.025431713 0.4464899, 0.826343 -0.3671603 0.42702532, 0.6324555 -0.6568638 0.410524, 0.34228247 -0.85043746 0.39949822, -1.4095714E-17 -0.9184115 0.3956265, -0.34228247 -0.85043746 0.39949822, -0.6324555 -0.6568638 0.410524, -0.826343 -0.3671603 0.42702532, -0.8944272 -0.025431713 0.4464899, -0.826343 0.31629685 0.46595448, -0.6324555 0.60600036 0.48245576, -0.34228247 0.799574 0.49348158, -2.6781856E-16 0.8675481 0.49735332, 0.34228247 0.799574 0.49348158, 0.6324555 0.60600036 0.48245576, 0.826343 0.31629685 0.46595448, -3.1518973E-17 -0.05686704 0.99838173, ";
-            ifs1.coordinate = coordinate;
-            ifs2.coordinate = coordinate2;
-            ifs1.normal = normal;
-            ifs2.normal = normal2;
+            //ifs1.coordinate = coordinate;
+            //ifs2.coordinate = coordinate2;
+            //ifs1.normal = normal;
+            //ifs2.normal = normal2;
             ifs1.Items.Add(coordinate);
             ifs1.Items.Add(normal);
             ifs2.Items.Add(coordinate2);
