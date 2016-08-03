@@ -10,12 +10,9 @@ using X3D.Core.Shading;
 
 namespace X3D
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public partial class Box
     {
-        private BoxGeometry _boxGeometry = new BoxGeometry();
+        internal static BoxGeometry _boxGeometry = new BoxGeometry();
         private Shape parentShape;
         internal PackedGeometry _pack;
 
@@ -38,16 +35,17 @@ namespace X3D
 
 
             _pack = new PackedGeometry();
-            _pack._indices = this._boxGeometry.Indices;
-            _pack._coords = this._boxGeometry.Vertices;
-            _pack._colorIndicies = this._boxGeometry.Colors;
-            _pack._texCoords = this._boxGeometry.Texcoords;
+            _pack._indices = _boxGeometry.Indices;
+            _pack._coords = _boxGeometry.Vertices;
+            //_pack._colorIndicies = _boxGeometry.Colors;
+            _pack._texCoords = _boxGeometry.Texcoords;
             _pack.restartIndex = -1;
 
             _pack.Interleave();
 
             // BUFFER GEOMETRY
-            handle = Buffering.BufferShaderGeometry(_pack);
+            handle = _pack.CreateHandle();
+            //handle = Buffering.BufferShaderGeometry(_pack);
 
             //this._boxGeometry.Load(parentShape);
         }

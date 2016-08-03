@@ -20,8 +20,7 @@ namespace X3D
     public partial class TextureBackground
     {
         private int tex_cube;
-        private int NumVerticies, NumVerticies4;
-        private int _vbo_interleaved, _vbo_interleaved4;
+        private GeometryHandle _handle;
         private CubeGeometry _cube = new CubeGeometry();
         private Shape _shape;
         private bool generateSkyAndGround = true;
@@ -203,9 +202,23 @@ namespace X3D
             _shape.IncludeDefaultShader(CubeMapBackgroundShader.vertexShaderSource,
                                         CubeMapBackgroundShader.fragmentShaderSource);
 
-            Buffering.Interleave(null, out _vbo_interleaved, out NumVerticies,
-                out _vbo_interleaved4, out NumVerticies4,
-                _cube.Indices, _cube.Indices, _cube.Vertices, _cube.Texcoords, _cube.Normals, null, null);
+
+            //Buffering.Interleave(null, out _vbo_interleaved, out NumVerticies,
+            //    out _vbo_interleaved4, out NumVerticies4,
+            //    _cube.Indices, _cube.Indices, _cube.Vertices, _cube.Texcoords, _cube.Normals, null, null);
+
+            PackedGeometry _pack = new PackedGeometry();
+            _pack._indices = _cube.Indices;
+            _pack._coords = _cube.Vertices;
+            _pack.Texturing = true;
+            //_pack._colorIndicies = _boxGeometry.Colors;
+            _pack._texCoords = _cube.Texcoords;
+            _pack.restartIndex = -1;
+
+            _pack.Interleave();
+
+            // BUFFER GEOMETRY
+            _handle = _pack.CreateHandle();
         }
 
         public override void Render(RenderingContext rc)
@@ -240,10 +253,10 @@ namespace X3D
             //GL.FrontFace(FrontFaceDirection.Cw);
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.TextureCubeMap, tex_cube);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo_interleaved);
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _handle.vbo3);
             Buffering.ApplyBufferPointers(_shape.CurrentShader);
             //Buffering.ApplyBufferPointers(_shape.uniforms);
-            GL.DrawArrays(PrimitiveType.Triangles, 0, NumVerticies);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, _handle.NumVerticies3);
 #if APPLY_BACKDROP
             GL.DepthMask(true);
 #endif

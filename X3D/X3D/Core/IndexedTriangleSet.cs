@@ -13,18 +13,18 @@ namespace X3D
     public partial class IndexedTriangleSet
     {
         internal PackedGeometry _pack;
-        internal Coordinate coordinate;
-        private TextureCoordinate texCoordinate;
-        internal Vector3[] _coords;
-        private float[] color;
-        private Color colorNode;
-        private ColorRGBA colorRGBANode;
-        private Vector2[] _texCoords;
+        //internal Coordinate coordinate;
+        //private TextureCoordinate texCoordinate;
+        //internal Vector3[] _coords;
+        //private float[] color;
+        //private Color colorNode;
+        //private ColorRGBA colorRGBANode;
+        //private Vector2[] _texCoords;
         private const int RESTART_INDEX = -1;
         //private Shape parentShape;
 
         //private BoundingBox _bbox;
-        private bool RGBA = false, RGB = false, coloring = false, texturing = false;
+        //private bool RGBA = false, RGB = false, coloring = false, texturing = false;
         //private int _vbo_interleaved, _vbo_interleaved4;
         //private int NumVerticies, NumVerticies4;
 
@@ -48,7 +48,9 @@ namespace X3D
             texturing = _pack.Texturing;
             bbox = _pack.bbox;
 
-            handle = Buffering.BufferShaderGeometry(_pack);
+            // BUFFER GEOMETRY
+            handle = _pack.CreateHandle();
+            //handle = Buffering.BufferShaderGeometry(_pack);
         }
 
         //public override void PreRenderOnce(RenderingContext rc)

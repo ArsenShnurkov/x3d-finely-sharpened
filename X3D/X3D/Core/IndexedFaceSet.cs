@@ -56,9 +56,10 @@ namespace X3D
             coloring = _pack.Coloring;
             texturing = _pack.Texturing;
             bbox = _pack.bbox;
-
+            
             // BUFFER GEOMETRY
-            handle = Buffering.BufferShaderGeometry(_pack);
+            handle = _pack.CreateHandle();
+            //handle = Buffering.BufferShaderGeometry(_pack);
 
             //int? restartIndex = null;
 
