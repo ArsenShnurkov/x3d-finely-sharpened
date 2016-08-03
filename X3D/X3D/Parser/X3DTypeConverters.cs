@@ -95,6 +95,34 @@ namespace X3D.Parser
             return t;
         }
 
+        public static float[] Vec3ToFloatArray(Vector3[] vectors)
+        {
+            List<float> floats = new List<float>();
+
+            foreach(Vector3 vector in vectors)
+            {
+                floats.Add(vector.X);
+                floats.Add(vector.Y);
+                floats.Add(vector.Z);
+            }
+
+            return floats.ToArray();
+        }
+        public static float[] Vec3ToFloatArray(Vector4[] vectors)
+        {
+            List<float> floats = new List<float>();
+
+            foreach (Vector4 vector in vectors)
+            {
+                floats.Add(vector.X);
+                floats.Add(vector.Y);
+                floats.Add(vector.Z);
+                floats.Add(vector.W);
+            }
+
+            return floats.ToArray();
+        }
+
         public static MFString MFString(string @string)
         {
             string tmp = removeQuotes(@string);
