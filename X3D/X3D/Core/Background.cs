@@ -132,6 +132,8 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
             Vector3 min, max;
             int i;
+            int a, b;
+            PackedGeometry _pack;
 
             cubeHandle = GeometryHandle.Zero;
             innerHandle = GeometryHandle.Zero;
@@ -225,10 +227,18 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                                                  CubeMapBackgroundShader.fragmentShaderSource);
                 _shaderInnerCube.Link();
 
-                int a, b;
-                Buffering.Interleave(null, out cubeHandle.vbo4, out cubeHandle.NumVerticies4,
-                    out a, out b,
-                    _cube.Indices, _cube.Indices, _cube.Vertices, _cube.Texcoords, _cube.Normals, null, null);
+                _pack = new PackedGeometry();
+                _pack._indices = _cube.Indices;
+                _pack._coords = _cube.Vertices;
+                _pack.Texturing = true;
+                //_pack._colorIndicies = _boxGeometry.Colors;
+                _pack._texCoords = _cube.Texcoords;
+                _pack.restartIndex = -1;
+
+                _pack.Interleave();
+
+                // BUFFER GEOMETRY
+                cubeHandle = _pack.CreateHandle();
             }
 
         }
