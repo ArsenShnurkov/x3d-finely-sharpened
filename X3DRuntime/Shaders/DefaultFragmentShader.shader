@@ -29,6 +29,7 @@ uniform vec3 DiffuseMaterial;
 uniform vec3 AmbientMaterial;
 uniform int coloringEnabled;
 uniform int texturingEnabled;
+uniform int lightingEnabled;
 
 uniform int materialsEnabled;
 uniform int materialsCount;
@@ -349,7 +350,7 @@ void main()
 
 
 	// MATERIALS
-	if (materialsEnabled == 1)
+	if (materialsEnabled == 1 && lightingEnabled == 1)
 	{
 		// MaterialFragmentShader.shader should be linked in so we can use the functions it provides.
 
@@ -366,8 +367,11 @@ void main()
 
 	vec4 Ads1 = vec4(ads(), 1.0);
 
-
-	col_accum = col_accum + Ads1 / 2;
+	if (lightingEnabled == 1) 
+	{
+		col_accum = col_accum + Ads1 / 2;
+	}
+	
 
 
 
