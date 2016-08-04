@@ -57,7 +57,7 @@ vec3 ads(){
 	vec3 Ks = vec3(0.9, 0.9, 0.9);
 
 	vec3 v = normalize(-vPosition);
-	vec3 lightIntensity = vec3(0.1, 0.1, 0.1);
+	vec3 lightIntensity = vec3(0.9, 0.9, 0.9);
 	vec3 lightPosition = vec3(100, 100, 100);
 	vec3 n = normalize(N);
 	vec3 s = normalize(lightPosition - vPosition);
@@ -146,7 +146,7 @@ vec4 applyMaterials()
 	{
 		material = materials[i];
 
-		ambiance = vec4(ambientColor * material.ambientIntensity, 1.0);
+		ambiance = vec4(ambientColor * material.ambientIntensity, 1.0) * Light_Intensity;
 		
 		E = normalize(-vPosition); // we are in Eye Coordinates, so EyePos is (0,0,0) 
 								   //Light0 = normalize(gl_LightSource[i].position.xyz - vPosition);
@@ -157,12 +157,12 @@ vec4 applyMaterials()
 
 		Iamb = ambiance;
 
-		Idiff = material.diffuseColor * max(dot(N, Light0), 0.0);
-		//Idiff = material.diffuseColor;
+		//Idiff = material.diffuseColor * max(dot(N, Light0), 0.0);
+		Idiff = material.diffuseColor;
 		Idiff = clamp(Idiff, 0.0, 1.0);
 
-		Ispec = material.specularColor * pow(max(dot(R, E), 0.0), 0.3 * material.shininess);
-		//Ispec = material.specularColor;
+		//Ispec = material.specularColor * pow(max(dot(R, E), 0.0), 0.3 * material.shininess);
+		Ispec = material.specularColor;
 		Ispec = clamp(Ispec, 0.0, 1.0);
 
 
@@ -190,13 +190,13 @@ vec4 applyMaterials()
 		//attenuation *= clamp((LdotS - Light_Cone_Max) / CosI, 0.0, 1.0);
 
 
-		blended += (Iamb + Idiff + Ispec) * Light_Intensity;
-
+		//blended += (Iamb + Idiff + Ispec) * Light_Intensity;
+		//blended += (Iamb + Idiff + Ispec);
 
 
 		//blended += (Iamb + Idiff + Ispec) * depth;
 		//blended += (Iamb + Idiff + Ispec) * Light_Intensity * attenuation;
-		//blended = Idiff;
+		blended += Idiff;
 		//blended.w += material.transparency;
 
 		blended.w = material.transparency;
@@ -366,7 +366,7 @@ void main()
 
 	if (lightingEnabled == 1) 
 	{
-		col_accum = col_accum + Ads1 / 2;
+		//col_accum = col_accum + Ads1 / 2;
 	}
 	
 
