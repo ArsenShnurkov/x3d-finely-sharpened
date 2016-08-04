@@ -476,19 +476,16 @@ namespace X3D.Core.Shading
 
             if (calcBounds)
             {
+                Vector3 x3dScale = new Vector3(0.06f, 0.06f, 0.06f);
+
                 _bbox = new BoundingBox()
                 {
-                    Width = maximum.X - minimum.X,
-                    Height = maximum.Y - minimum.Y,
-                    Depth = maximum.Z - minimum.Z,
+                    Width = (maximum.X - minimum.X),
+                    Height = (maximum.Y - minimum.Y),
+                    Depth = (maximum.Z - minimum.Z),
 
                     Maximum = maximum,
-                    Minimum = minimum,
-
-                    TopLeft = new Vector3(0, 0, minimum.Z),
-                    BottomLeft = new Vector3(0, 0, minimum.Z),
-                    TopRight = new Vector3(0,0, maximum.Z),
-                    BottomRight = new Vector3(0, 0, maximum.Z)
+                    Minimum = minimum
                 };
 
                 // corners

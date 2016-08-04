@@ -382,7 +382,7 @@ namespace X3D
 
                 loadedGeometry = _handle.HasGeometry;
 
-                bbox.EnableRendering();
+                bbox.EnableRendering(GetPosition(rc));
             }
         }
 
