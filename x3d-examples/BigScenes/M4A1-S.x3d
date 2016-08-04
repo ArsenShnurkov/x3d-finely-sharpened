@@ -41,7 +41,7 @@
           </IndexedFaceSet>
       </Shape>
   </Transform>
-  <Transform  DEF="silencer001" >
+  <Transform  DEF="silencer001" translation="0 0 0" >
       <Shape >
           <Appearance >
 			  <ImageTexture url='"noodas.png"' />
