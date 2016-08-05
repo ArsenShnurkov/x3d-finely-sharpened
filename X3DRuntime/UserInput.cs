@@ -83,7 +83,11 @@ namespace x3druntime.ui.opentk
                     ToggleCursor();
 
                     break;
+                case Key.O:
 
+                    NavigationInfo.HeadlightEnabled = !NavigationInfo.HeadlightEnabled;
+
+                    break;
                 case Key.V:
                     // View all viewpoints
                     string text = "";
