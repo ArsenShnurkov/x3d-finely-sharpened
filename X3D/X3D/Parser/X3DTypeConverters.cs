@@ -455,7 +455,10 @@ namespace X3D.Parser
             //int i = 0;
             foreach (Match m in mc)
             {
-                vec3 = m.Value.Replace(",", "").Split(' ').Select(s => float.Parse(s)).ToArray();
+                vec3 = m.Value.Replace(",", "")
+                    .Split(' ')
+                    .Where(s => !string.IsNullOrEmpty(s))
+                    .Select(s => float.Parse(s)).ToArray();
 
                 //vec3 = Floats(m.Value.Replace(",", "")); // still not parsing exponents correctly
 
