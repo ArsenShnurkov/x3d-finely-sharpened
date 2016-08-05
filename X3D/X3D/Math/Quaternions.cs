@@ -3,6 +3,27 @@ using OpenTK;
 
 public static class QuaternionExtensions
 {
+    public static Vector3 ExtractPitchYawRoll(Quaternion q)
+    {
+        Vector3 v;
+        double pitch;
+        double yaw;
+        double roll;
+
+        roll = Math.Atan2(2 * q.Y * q.W - 2 * q.X * q.Z, 1 - 2 * q.Y * q.Y - 2 * q.Z * q.Z);
+        pitch = Math.Atan2(2 * q.X * q.W - 2 * q.Y * q.Z, 1 - 2 * q.X * q.X - 2 * q.Z * q.Z);
+        yaw = Math.Asin(2 * q.X * q.Y + 2 * q.Z * q.W);
+
+        v = new Vector3()
+        {
+            X = (float)pitch,
+            Y = (float)yaw,
+            Z = (float)roll
+        };
+        
+        return v;
+    }
+
 	public static Vector3 Rotate(Quaternion q, Vector3 v) 
 	{
         // conjugate(this) * [v,0] * this

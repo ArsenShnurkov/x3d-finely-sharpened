@@ -11,6 +11,7 @@ using X3D.Parser;
 
 namespace X3D
 {
+    using Engine;
     using static Box;
 
     //TODO: bounding volume hierarchy https://en.wikipedia.org/wiki/Bounding_volume_hierarchy
@@ -22,10 +23,26 @@ namespace X3D
         public Vector3 Maximum;
         public Vector3 Minimum;
 
+        public Vector3 bboxSize
+        {
+            get
+            {
+                return new Vector3(Width, Height, Depth);
+            }
+            set
+            {
+                Width = value.X;
+                Height = value.Y;
+                Depth = value.Z;
+            }
+        }
+
+        public Vector3 bboxCenter { get; set; }
 
         public Vector3 Position = Vector3.Zero;
         public Vector3 Center = Vector3.Zero;
         public Vector3 LineColor = yellow;
+
         private static Vector3 red = new Vector3(1, 0, 0);
         private static Vector3 green = new Vector3(0, 1, 0);
         private static Vector3 yellow = new Vector3(1, 1, 0);
@@ -91,7 +108,12 @@ namespace X3D
             MVP = Matrix4.Identity;
 
 
-            List<Transform> transformationHierarchy = transform_context.AscendantByType<Transform>().Select(t => (Transform)t).ToList();
+            List<Transform> transformationHierarchy = transform_context
+                .AscendantByType<Transform>()
+                .Select(t => (Transform)t)
+                .Where(t => t.Hidden == false)
+                .ToList();
+
             Matrix4 modelview = Matrix4.Identity * rc.matricies.worldview;
             Vector3 x3dScale = new Vector3(0.06f, 0.06f, 0.06f); 
             
@@ -105,7 +127,7 @@ namespace X3D
                 transAccum += transform.Translation;
 
                 //localTranslations *= Matrix4.CreateTranslation(transform.Translation * x3dScale);
-                localTranslations = ApplyX3DTransform(Vector3.Zero, 
+                localTranslations = SceneEntity.ApplyX3DTransform(Vector3.Zero, 
                                                       Vector3.Zero, 
                                                       Vector3.One, 
                                                       Vector3.Zero, 
@@ -114,39 +136,57 @@ namespace X3D
                 modelview *= localTranslations;
             }
 
-            Vector3 p = Vector3.Zero;
+            //Vector3 p = Vector3.Zero;
             //Vector3 p = transform_context.GetPosition(rc);
             //Vector3 p2 = localTranslations.ExtractTranslation();
             //Vector3 origin = Vector3.Zero;
             //float dist = Vector3.Dot(origin, p2);
             //var p = p2 - new Vector3(dist);
 
-            Center = (new Vector3(((Width - p.X) / 2f), ( (Height-p.Y) / 2f), ((Depth - p.Z) / 2f) ) * x3dScale);
-            var Center2 = (new Vector3(((Width) / 2f), ((Height) / 2f), ((Depth) / 2f)) * x3dScale);
-            var top = (new Vector3((Width - p.X), (Height - p.Y) , (Depth - p.Z))) * x3dScale;
-            var left = Center + ((new Vector3(0, 0, Depth) * x3dScale));
+            //Center = (new Vector3(((Width - p.X) / 2f), ( (Height-p.Y) / 2f), ((Depth - p.Z) / 2f) ) * x3dScale);
+            //var Center2 = (new Vector3(((Width) / 2f), ((Height) / 2f), ((Depth) / 2f)) * x3dScale);
+            //var top = (new Vector3((Width - p.X), (Height - p.Y) , (Depth - p.Z))) * x3dScale;
+            //var left = Center + ((new Vector3(0, 0, Depth) * x3dScale));
             //var top = (new Vector3(Width - (Width / 2), Height, Depth)) * x3dScale;
 
             //localTranslations = Matrix4.Identity;
 
-            Position = (localTranslations.ExtractTranslation());
+            //Position = (localTranslations.ExtractTranslation());
 
             //Quaternion qlocal = QuaternionExtensions.EulerToQuat(0, MathHelpers.PI, 0);
             //modelLocalRotation = Matrix4.CreateFromQuaternion(qlocal);
 
             //modelview = Matrix4.CreateTranslation(Position);
 
-            float distZ = Math.Abs(Maximum.Z) - Math.Abs(Minimum.Z);
+            //float distZ = Math.Abs(Maximum.Z) - Math.Abs(Minimum.Z);
 
-            modelview = ApplyX3DTransform(
+            Vector3 center = new Vector3(Width / 2.0f, Height / 2.0f, Depth / 2.0f);
+
+
+            Vector3 translation = new Vector3(
+                //(((Minimum.X + (Maximum.X / 2.0f)) / 2.0f) ),
+                //(((Minimum.Y + (Maximum.Y / 2.0f)) / 2.0f)),
+                //(((Minimum.Z + (Maximum.Z / 2.0f)) / 2.0f))
+                //((((Maximum.X) - (((Width) / 2.0f)) + (Maximum.X )) / 2.0f)),
+                //((((Maximum.Y) - (((Height ) / 2.0f)) + (Maximum.Y )) / 2.0f) ),
+                //((((Maximum.Z) - (((Depth) / 2.0f)) + (Maximum.Z)) / 2.0f) )
+
+                //(Minimum.X) + (Width / 2.0f),
+                //(Minimum.Y) + (Height / 2.0f),
+                //(Minimum.Z) +  (Depth / 2.0f)
+                (Maximum.X) + (Width / 2.0f),
+                (Maximum.Y) + (Height / 2.0f),
+                (Maximum.Z) + (Depth / 2.0f)
+            );
+
+
+
+            modelview = SceneEntity.ApplyX3DTransform(
                 Vector3.Zero,
-                rc.cam.calibOrient,
+                Vector3.Zero,
                 Vector3.One,
-                Vector3.Zero,
-                new Vector3((((Minimum.X + (Maximum.X/2.0f)) / 2.0f) * x3dScale.X) ,
-                ((((Maximum.Y) - (((Maximum.Y - Minimum.Y)/ 2.0f)) + (Maximum.Y / 2.0f)) / 2.0f) * x3dScale.Y) , // y-axis buggy
-                ((((Maximum.Z) - (((Maximum.Z - Minimum.Z) / 2.0f)) + (Maximum.Z / 2.0f)) / 2.0f) * x3dScale.Z)), // z-axis buggy
-                //(((    (((  ((((Maximum.Z)  )  ) )) / 2.0f  )  ) + Math.Abs(Depth - Maximum.Z)) * x3dScale.Z))), // z-axis buggy
+                Vector3.Zero, 
+                (translation) * x3dScale,
                 Matrix4.Identity);
 
             model = modelview;
@@ -172,46 +212,6 @@ namespace X3D
             return MVP;
         }
 
-        public static Matrix4 ApplyX3DTransform(
-            Vector3 centerOffset, 
-            Vector3 rotation, 
-            Vector3 scale, 
-            Vector3 scaleOrientation, 
-            Vector3 translation,
-            Matrix4? ParentTransform = null
-        )
-        {
-            Matrix4 PDerived;
-            Matrix4 R;
-            Matrix4 SR;
-            Quaternion qR;
-            Quaternion qSR;
-            Matrix4 S;
-            Matrix4 C;
-            Matrix4 T;
-
-            if (ParentTransform.HasValue == false) ParentTransform = Matrix4.Identity;
-
-            qR = QuaternionExtensions.QuaternionFromEulerAnglesRad(rotation);
-            qSR = QuaternionExtensions.QuaternionFromEulerAnglesRad(scaleOrientation);
-            T = Matrix4.CreateTranslation(translation);
-            C = Matrix4.CreateTranslation(centerOffset);
-            R = Matrix4.CreateFromQuaternion(qR);
-            SR = Matrix4.CreateFromQuaternion(qSR);
-            S = Matrix4.CreateScale(scale);
-
-            PDerived = T 
-                * C 
-                * R 
-                //* SR 
-                * S 
-                //* SR.Inverted() 
-                * C.Inverted() 
-                * ParentTransform.Value.Inverted();
-
-            return PDerived;
-        }
-
         public void Render(Shape transform_context, RenderingContext rc)
         {
             if (!renderingEnabled) return;
@@ -223,11 +223,12 @@ namespace X3D
 
             modelview = calculateModelview(transform_context, rc);
 
-            const float bbscale = 0.0329999961f; // (rc.cam.calibTrans.X* 0.1f)
+            //const float bbscale = 0.0329999961f; // (rc.cam.calibTrans.X* 0.1f)
+            //float bbscale = (rc.cam.calibTrans.X * 0.1f);
 
             GL.UseProgram(shader.ShaderHandle);
             //rc.matricies.Scale = new Vector3(this.Width, this.Height, this.Depth);
-            shader.SetFieldValue("size", new Vector3(this.Width , this.Height, this.Depth) * bbscale);
+            shader.SetFieldValue("size", new Vector3(this.Width , this.Height, this.Depth) * (x3dScale / 2.0f));
             shader.SetFieldValue("scale", Vector3.One);
             shader.SetFieldValue("modelview", ref modelview); 
             shader.SetFieldValue("projection", ref rc.matricies.projection);
@@ -236,6 +237,7 @@ namespace X3D
             shader.SetFieldValue("coloringEnabled", 1);
             shader.SetFieldValue("texturingEnabled", 0);
             shader.SetFieldValue("lightingEnabled", 0);
+
 
             // BOUNDARY LINES
             GL.BindBuffer(BufferTarget.ArrayBuffer, _handle.vbo3);
