@@ -112,9 +112,20 @@ namespace X3D.Engine
             {
                 if (!handle.IsError)
                 {
-                    v8.Execute(handle, false);
+                    try
+                    {
+                        Handle result = v8.Execute(handle, true);
+                        //handle.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        ConsoleColor tmp = Console.ForegroundColor;
+                        Console.ForegroundColor = ConsoleColor.Red;
 
-                    //handle.Dispose();
+                        Console.WriteLine("(SCRIPT) {0}", ex.Message);
+
+                        Console.ForegroundColor = tmp;
+                    }
                 }
             }
         }
@@ -241,7 +252,7 @@ namespace X3D.Engine
         {
             v8 = new V8Engine();
             v8.RegisterType(typeof(X3DConsole), null, true, ScriptMemberSecurity.Locked);
-
+            
             // Scene Access Interface
             // See: http://www.web3d.org/documents/specifications/19775-2/V3.3/Part02/servRef.html
 
@@ -252,6 +263,8 @@ namespace X3D.Engine
 
             v8.DynamicGlobalObject.window = v8.CreateFunctionTemplate("window").GetFunctionObject<WindowFunction>();
             v8.DynamicGlobalObject.browser = v8.CreateFunctionTemplate("browser").GetFunctionObject<BrowserFunction>();
+
+            
 
             MapKeyValues();
 
