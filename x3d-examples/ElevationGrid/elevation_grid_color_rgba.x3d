@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <X3D>
 	<Scene>
+		<NavigationInfo headlight='false' type="WALK" />
 		<Shape>		
 			<ElevationGrid  
 			creaseAngle="4.0" 
