@@ -18,10 +18,23 @@ in vec4 worldPos;
 in vec4 camera;
 out vec4 FragColor;
 
+
+uniform mat4 model;
 uniform sampler2D _MainTex;
 uniform int coloringEnabled;
 uniform int texturingEnabled;
 uniform int lightingEnabled;
+uniform int headlightEnabled;
+
+uniform vec3 sceneCameraPosition;
+uniform vec3 forward;
+uniform vec3 lookat;
+uniform vec3 up;
+uniform vec3 left;
+uniform vec2 orientation;
+
+uniform vec3 calib1; // for calibration
+uniform vec3 calib2;
 
 uniform int materialsEnabled;
 uniform int materialsCount;
@@ -37,11 +50,22 @@ struct X3DMaterial
 };
 
 const int MATERIALS_LIMIT = 10; // finely-sharpened imposes a limit of 10 materials per object
+const vec3 black = vec3(1, 1, 1);
+const vec3 yellow = vec3(1, 1, 1);
+const vec3 white = vec3(.9, .9, 1);
 
 layout(std140, binding = 0) uniform X3DMaterialBlock
 {
 	X3DMaterial materials[MATERIALS_LIMIT];
 };
+
+float toDegrees(float radians) {
+	return (radians / (2 * 3.1428)) * 360.0;
+}
+
+float toRadians(float degrees) {
+	return (degrees / 360.0) * (2 * 3.1428);
+}
 
 vec3 ads(){
 	vec3 Ka = vec3(0.0, 0.0, 0.0);
@@ -64,39 +88,67 @@ vec3 ads(){
 }
 
 vec3 spotlight() {
-	vec3 Ka = vec3(0.0, 0.0, 0.0);
-	vec3 Kd = vec3(0.0, 0.8, 0.0);
-	vec3 Ks = vec3(0.9, 0.9, 0.9);
+	vec3 Ka = black;
+	vec3 Kd = white;
+	vec3 Ks = white;
+	vec3 normal;
+
+	vec3 fragPosition = vec3(model * vec4(vPosition, 1));
 
 	vec3 spot_intensity = vec3(0.9, 0.9, 0.9);
-	vec3 spot_direction = vec3(0,1,0);
-	vec3 spot_position = vec3(10, 10, 10);
-	float spot_cutoff = 89;
-	float Shininess = 0.01001;
-	float spot_exponent = 2.9001;
+	vec3 spot_direction = lookat;
+	vec3 spot_position = sceneCameraPosition;
 
-	vec3 s = normalize(spot_position - vPosition);
-	float angle = acos( dot(-s, spot_direction) );
-	float cutoff = radians( clamp (spot_cutoff, 0.0, 90.0) );
+	vec3 surfaceToLight = spot_position - fragPosition;
+
+	if (length(N) > 0) {
+		normal = N;
+	}
+
+	if (length(normalVec) > 0) {
+		normal = normalVec;
+	}
+
+	//calculate the cosine of the angle of incidence
+	float maxBrightness = length(surfaceToLight) * length(normal);
+	float brightness = (dot(normal, surfaceToLight) / maxBrightness);
+	brightness = 1.0 - clamp(brightness, 0, 1);
+
+
+	float spot_cutoff = 90;
+	float Shininess = 0.7;
+	float spot_exponent = 0.9001;
+
+	vec3 s = normalize(spot_position - fragPosition);
+
+	float angleX = acos( dot(-s, spot_direction) );
+	float angleY = asin( dot(-s, spot_direction));
+
+	float cutoffX = radians( clamp (spot_cutoff, 0.0, 90.0) );
+	float cutoffY = radians( clamp (spot_cutoff, 0.0, 90.0) );
+
 	vec3 ambient = spot_intensity * Ka;
 
-	if (angle < cutoff) {
-		float spotFactor = pow(dot(-s, spot_direction),
-			spot_exponent);
+	return brightness * Kd;
 
-		vec3 v = normalize(vec3(-vPosition));
+	//if (angleX < cutoffX && angleY < cutoffY) 
+	{
+		float spotFactor = pow(dot(-s, spot_direction), spot_exponent);
+
+		vec3 v = normalize(vec3(-fragPosition));
 		vec3 h = normalize(v + s);
 
 		return ambient +
 			spotFactor * spot_intensity * (
 
-				Kd * max(dot(s, N), 0.0) +
-				Ks * pow(max(dot(h, N), 0.0), Shininess)
-				);
+				Kd * max(dot(s, normal), 0.0) +
+				Ks * pow(max(dot(h, normal), 0.0), Shininess)
+			);
 	}
-	else {
-		return ambient;
-	}
+	//else 
+	//{
+		//return ambient;
+	//}
 }
 
 vec4 applyMaterials()
@@ -120,7 +172,7 @@ vec4 applyMaterials()
 	float LdotS;
 	float CosI;
 	vec4 Light_Intensity;
-
+	vec3 normal;
 	//float depth = (length(camera.xyz - vPosition) - 1.0) / 10.0;
 
 	d = 0.;
@@ -130,7 +182,15 @@ vec4 applyMaterials()
 	lightAttenuationMin = 0.0;
 	Light_Intensity = vec4(0.1, 0.1, 0.1, 1.0);
 	blended = vec4(0, 0, 0, 0);
+	normal = normalVec; // N
 
+	if (length(N) > 0) {
+		normal = N;
+	}
+
+	if (length(normalVec) > 0) {
+		normal = normalVec;
+	}
 
 	for (int i = 0; i < materialsCount; i++)
 	{
@@ -143,17 +203,11 @@ vec4 applyMaterials()
 		
 		Light0 = normalize(-eyeVec.xyz);
 
-		R = normalize(-reflect(Light0, N));
+		R = normalize(-reflect(Light0, normal));
 
 		Iamb = ambientColor;
 
-		Idiff = material.diffuseColor * max(dot(N, Light0), 0.0);
-		//Idiff = material.diffuseColor;
-		Idiff = clamp(Idiff, 0.0, 1.0);
 
-		Ispec = material.specularColor * pow(max(dot(R, E), 0.0), 0.3 * material.shininess);
-		//Ispec = material.specularColor;
-		Ispec = clamp(Ispec, 0.0, 1.0);
 
 
 
@@ -179,20 +233,66 @@ vec4 applyMaterials()
 
 		//attenuation *= clamp((LdotS - Light_Cone_Max) / CosI, 0.0, 1.0);
 
+		if (lightingEnabled == 1) 
+		{
+			// APPLY LIGHTING 
+			// Apply the ambient, diffuse, specular, and emissive colors
 
-		//blended += (Iamb + Idiff + Ispec) * Light_Intensity;
-		blended += (Iamb + Idiff + Ispec) * material.emissiveColor;
+			//Idiff = material.diffuseColor * max(dot(normal, Light0), 0.0);
+			Idiff = material.diffuseColor;
+			Idiff = clamp(Idiff, 0.0, 1.0);
+
+			//Ispec = material.specularColor * pow(max(dot(R, E), 0.0), 0.3 * material.shininess);
+			Ispec = material.specularColor;
+			Ispec = clamp(Ispec, 0.0, 1.0);
+
+			//blended += (Iamb + Idiff + Ispec) * depth;
+			//blended += (Iamb + Idiff + Ispec) * Light_Intensity * attenuation;
+			//blended += (Iamb + Idiff + Ispec) * Light_Intensity;
+
+			//blended += normalize((Iamb + Idiff + Ispec) * material.emissiveColor);
+			//blended += normalize((Iamb + Idiff + Ispec));
+
+			//blended += normalize((Iamb + Idiff + Ispec) * material.emissiveColor);
+
+			vec3 s = normalize(vec3(500,500,500) - vPosition);
+			vec3 v = normalize(vec3(-vPosition));
+			vec3 h = normalize(v + s);
+			float Shininess = .4;
+
+			//blended += Iamb +  Light_Intensity
+			//	* (
+			//		Idiff * max(dot(s, normal), 0.0) +
+			//		Ispec * pow(max(dot(h, normal), 0.0), Shininess)
+			//		);
+
+			blended += (Iamb + Light_Intensity * (Ispec * Idiff)) * material.emissiveColor;
+
+			/*blended += Iamb + vec4(.3,.3,.3, 1.0) * Light_Intensity 
+				* (
+					Idiff * max(dot(s, normal), 0.0) +
+					Ispec * pow(max(dot(h, normal), 0.0), Shininess)
+				);*/
+
+			//blended += max(Ispec * Idiff, Iamb) * material.emissiveColor;
+
+			//blended = vec4(1, 0, 0, 1);
+		}
+		else 
+		{
+			Idiff = material.diffuseColor;
+			Idiff = clamp(Idiff, 0.0, 1.0);
+
+			// Since lighting is disabled
+			// Apply the diffuse color component only.
+			blended += Idiff;
+		}
 
 
-		//blended += (Iamb + Idiff + Ispec) * depth;
-		//blended += (Iamb + Idiff + Ispec) * Light_Intensity * attenuation;
-		//blended += Idiff;
 		//blended.w += material.transparency;
-
-		blended.w = material.transparency;
 		//blended.w = 1.0;
-
-
+		blended.w = material.transparency;
+		
 		//float depth = (length(camera.xyz - vPosition) - 1.0) / 49.0;
 		//blended = vec4(depth, depth, depth, 1.0);
 
@@ -211,7 +311,92 @@ vec4 applyMaterials()
 	//return vec4(materials[0].diffuseColor, 1.0);
 	//return vec4(1, 0, 0, 1.0);
 
+	
+
 	return blended;
+}
+
+vec4 headlight(vec4 col_accum)
+{
+	vec4 out_color;
+	vec3  lightPosition;
+	vec3  lightDirection;
+	float lightRange;
+	float lightCosInnerAngle;
+	float lightCosOuterAngle;
+	vec3  lightDiffuseColor;
+	float lightDiffuseIntensity;
+	vec3  lightSpecularColor;
+	float lightSpecularIntensity;
+	float matSpecularPower = 1.0;
+	vec3 cameraPosition;
+	vec3 headlight_color;
+	vec3 fragPosition;
+	vec3 normal;
+	float distanceAttenuation;
+	float spotEffect;
+	float beamDistance;
+	float distToLight;
+	float diffuseLight;
+	vec3 diffuse;
+	float specularLight;
+
+	if (length(N) > 0) {
+		normal = N;
+	}
+
+	if (length(normalVec) > 0) {
+		normal = normalVec;
+	}
+
+	fragPosition = vec3(model * vec4(vPosition, 1));
+
+	cameraPosition = sceneCameraPosition;
+	lightPosition = eyeVec;//normalize(-sceneCameraPosition);
+	lightDirection = lookat;
+
+	lightRange = 900.0;
+	lightCosInnerAngle = orientation.x + toRadians(56.464);
+	lightCosOuterAngle = orientation.y - toRadians(56.06);
+
+	lightDiffuseColor = white;
+	lightDiffuseIntensity = 0.9;
+	lightSpecularColor = white;
+	lightSpecularIntensity = 0.9;
+	headlight_color = white;
+
+	vec3 L = lightPosition - fragPosition;
+	
+	distToLight = length(L);
+	L = normalize(L);
+
+	beamDistance = dot(L, -lightDirection);
+	spotEffect = smoothstep(lightCosOuterAngle, lightCosInnerAngle, -beamDistance);
+
+	distanceAttenuation = smoothstep(lightRange, 0.0f, distToLight);
+
+	//vec3 N = normalize(normalVec);
+
+	diffuseLight = max(dot(normalVec, L), 0.0f); // normalVec
+	diffuse = (diffuseLight * lightDiffuseColor) * lightDiffuseIntensity;
+
+	specularLight = 0.0f;
+
+	if (matSpecularPower > 0.0f) 
+	{
+		vec3 V = normalize(cameraPosition - fragPosition);
+		vec3 H = normalize(L + V);
+		vec3 R = reflect(-L, normal);
+
+		specularLight = pow(clamp(dot(R, H), 0.0f, 1.0f), matSpecularPower);
+	}
+	vec3 specular = (specularLight * lightSpecularColor) * lightSpecularIntensity;
+
+	vec3 finalColor = (headlight_color) * spotEffect * distanceAttenuation;
+
+	out_color = vec4(finalColor, 1.0f);
+
+	return out_color;
 }
 
 float amplify(float d, float scale, float offset)
@@ -231,7 +416,7 @@ void main()
 	vec4 finalColor;
 
 	texture_color = vec4(0, 0, 0, 1);
-	finalColor = vec4(0.0, 0.0, 0.0, 1.0);
+	finalColor = vec4(0, 0, 0, 1);
 
 	// TEXTURING
 	if (texturingEnabled == 1)
@@ -273,9 +458,11 @@ void main()
 
 		material_color = applyMaterials();
 
-		col_accum = col_accum + material_color / 2;
-
 		//col_accum = material_color;
+
+		//col_accum = vec4(1, 0, 0, 1);
+
+		col_accum = col_accum + material_color / 2.0;
 	}
 	else {
 		//col_accum = vec4(1, 0, 0, 1);
@@ -288,10 +475,14 @@ void main()
 		//col_accum = col_accum + Ads1 / 2;
 	}
 	
+	if (headlightEnabled == 1)
+	{
+		col_accum = col_accum + headlight(col_accum) / 2.0;
+		col_accum = col_accum + vec4(spotlight(), 1.0) / 2.0;
+	}
+	
 
-
-
-	//col_accum = col_accum + vec4(spotlight(), 1.0) / 2;
+	//
 
 	//col_accum = Ads1;
 
