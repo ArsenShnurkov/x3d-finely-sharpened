@@ -15,7 +15,7 @@
 				var choice = 0;
 				var maxChoice = 8;
 				var interval;
-				
+				var showSilencer = true;
 				
 				function incrementChoice()
 				{
@@ -46,6 +46,18 @@
 						incrementChoice();
 						
 						console.log('right');
+					}
+									
+					if (event.keyCode == '66') // 'b'
+					{
+						var silencer = document.getElementById('silencerShape');
+						
+						console.log('silencer: #' + silencer.DEF);
+						showSilencer = !showSilencer;
+						
+						silencer.setAttribute('Hidden', !showSilencer);
+						
+						console.log('Visible ' + showSilencer);
 					}
 				}
 				
@@ -147,8 +159,8 @@
 				  </IndexedFaceSet>
 			  </Shape>
 		  </Transform>
-		  <Transform  DEF="silencer001" >
-			  <Shape depthMask="false">
+		  <Transform id="silencer" DEF="silencer001" translation="0 0 0" >
+			  <Shape depthMask="false" id="silencerShape">
 				  <Appearance >
 					  <ImageTexture url='"M4A1.png"' />
 					  <Material  USE="default"/>
