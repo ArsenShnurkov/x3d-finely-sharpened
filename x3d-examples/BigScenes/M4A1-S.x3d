@@ -25,6 +25,30 @@
    <meta name='generator' content='Vrml97ToX3dNist, http://ovrt.nist.gov/v2_x3d.html'/>
    <meta name='generator' content='X3D-Edit, https://savage.nps.edu/X3D-Edit'/>
    <meta name='license' content='../../license.html'/>
+	<Script>
+		<![CDATA[
+			
+			document.onkeydown = checkKey;
+
+			function checkKey(e) {
+				var event = window.event ? window.event : e;
+				console.log(event.keyCode);
+				
+				if (event.keyCode == '78') // 'n'
+				{
+					var silencer = document.getElementById('silencerShape');
+					
+					console.log('silencer: #' + silencer.DEF);
+					showSilencer = !showSilencer;
+					
+					silencer.setAttribute('Hidden', !showSilencer);
+					
+					console.log('Visible ' + showSilencer);
+				}
+			}
+			
+		]]>
+	</Script>
  </head>
  <Scene>
 	<NavigationInfo type="WALK" />
@@ -41,8 +65,8 @@
           </IndexedFaceSet>
       </Shape>
   </Transform>
-  <Transform  DEF="silencer001" translation="0 0 0" >
-      <Shape >
+  <Transform id="silencer" DEF="silencer001" translation="0 0 0" >
+      <Shape id="silencerShape">
           <Appearance >
 			  <ImageTexture url='"M4A1.png"' />
               <Material  USE="default"/>
@@ -54,5 +78,23 @@
           </IndexedFaceSet>
       </Shape>
   </Transform>
+  
+  <Script>
+		<![CDATA[
+
+			var showSilencer = true;
+
+			function onRenderFrame(e) 
+			{
+				// This script is executed every frame
+				
+				if(Keyboard[Key.H])
+				{
+					//console.log('h');
+				}
+			}
+			
+		]]>
+		</Script>
   </Scene>
 </X3D>
