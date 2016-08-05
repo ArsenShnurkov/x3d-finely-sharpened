@@ -223,7 +223,7 @@ namespace X3D
 
             modelview = calculateModelview(transform_context, rc);
 
-            var bbscale = 0.0329999961f; // (rc.cam.calibTrans.X* 0.1f)
+            const float bbscale = 0.0329999961f; // (rc.cam.calibTrans.X* 0.1f)
 
             GL.UseProgram(shader.ShaderHandle);
             //rc.matricies.Scale = new Vector3(this.Width, this.Height, this.Depth);
@@ -242,7 +242,13 @@ namespace X3D
             Buffering.ApplyBufferPointers(bboxShader);
             GL.DrawArrays(PrimitiveType.LineLoop, 0, _handle.NumVerticies3);
 
+
             // BOUNDARY POINTS
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _handle.vbo3);
+            Buffering.ApplyBufferPointers(bboxShader);
+            GL.DrawArrays(PrimitiveType.Points, 0, _handle.NumVerticies3);
+
+            // MAX-MIN POINTS
             //GL.PointSize(8.0f);
             //GL.BindBuffer(BufferTarget.ArrayBuffer, _handlepb.vbo3);
             //Buffering.ApplyBufferPointers(bboxShader);
