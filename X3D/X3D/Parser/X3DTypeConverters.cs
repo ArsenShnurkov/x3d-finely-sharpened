@@ -268,7 +268,7 @@ namespace X3D.Parser
 
             foreach (Match m in mc)
             {
-                v = int.Parse(m.Value);
+                v = int.Parse(m.Value.Replace(",",""));
                 //if (v != -1)
                 //{
                     indicies.Add(v);

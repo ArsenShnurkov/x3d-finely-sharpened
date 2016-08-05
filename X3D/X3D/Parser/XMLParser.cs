@@ -44,7 +44,8 @@ namespace X3D.Parser
             }
             else
             {
-                throw new Exception(string.Format("Type {0} not found in X3D.Core", typeName));
+                Console.WriteLine(string.Format("Type {0} not found in X3D.Core", typeName));
+                return null;
             }
         }
 
