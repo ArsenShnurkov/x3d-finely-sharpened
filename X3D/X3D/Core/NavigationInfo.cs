@@ -10,13 +10,14 @@ namespace X3D
 {
     public partial class NavigationInfo
     {
+        public static bool HeadlightEnabled  = true;
         public static NavigationType NavigationType = NavigationType.Examine;
         public static Vector3 AvatarSize = Vector3.Zero;
 
         public override void Load()
         {
             base.Load();
-
+            
             string navType = this.type.ToUpper();
              
             if (navType.Contains("ANY"))
@@ -37,6 +38,8 @@ namespace X3D
             }
 
             AvatarSize = X3DTypeConverters.SFVec3f(avatarSize);
+
+            HeadlightEnabled = this.headlight;
         }
     }
 }
