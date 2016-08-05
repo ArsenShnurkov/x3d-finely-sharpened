@@ -178,7 +178,10 @@ namespace X3D.Engine
             Console.WriteLine("".PadLeft(node.Depth,'\t')+"</"+node.GetNodeName()+">");
 #endif
 #endif
-            node.PostRender(rc);
+            if (!node.Hidden)
+            {
+                node.PostRender(rc);
+            }
         }
 
         private static bool HasBackEdge(SceneGraphNode node, Stack<SceneGraphNode> work_items)

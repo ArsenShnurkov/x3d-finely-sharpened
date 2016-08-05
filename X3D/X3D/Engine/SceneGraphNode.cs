@@ -491,6 +491,32 @@ namespace X3D
             return lst;
         }
 
+        public List<SceneGraphNode> Decendants()
+        {
+            // Breadth first search for decendant node by type
+            Queue<SceneGraphNode> work_items;
+            SceneGraphNode node;
+            List<SceneGraphNode> lst = new List<SceneGraphNode>();
+
+            work_items = new Queue<SceneGraphNode>();
+            work_items.Enqueue(this);
+
+            do
+            {
+                node = work_items.Dequeue();
+
+                lst.Add(node);
+
+                foreach (SceneGraphNode child in node.Children)
+                {
+                    work_items.Enqueue(child);
+                }
+            }
+            while (work_items.Count > 0);
+
+            return lst;
+        }
+
         public List<SceneGraphNode> Ascendants()
         {
             SceneGraphNode ascendant;
