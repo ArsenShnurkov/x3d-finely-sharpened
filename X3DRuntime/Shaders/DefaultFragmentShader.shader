@@ -1,7 +1,5 @@
 #version 420
 
-#define MAX_LIGHTS 3
-
 varying vec3 lightVec;
 varying vec3 eyeVec;
 varying vec3 normalVec;
@@ -21,12 +19,6 @@ in vec4 camera;
 out vec4 FragColor;
 
 uniform sampler2D _MainTex;
-uniform vec3 specular = vec3(.7, .7, .7);
-uniform float ambient = 0.2;
-
-uniform vec3 LightPosition;
-uniform vec3 DiffuseMaterial;
-uniform vec3 AmbientMaterial;
 uniform int coloringEnabled;
 uniform int texturingEnabled;
 uniform int lightingEnabled;
@@ -37,9 +29,9 @@ uniform int materialsCount;
 struct X3DMaterial
 {
 	vec4 diffuseColor;
-	vec4 emissiveColor;
+	vec4 emissiveColor; // emissive colors are visible even if no light sources are directed at the surface
 	vec4 specularColor;
-	float ambientIntensity;
+	float ambientIntensity; // specifies how much ambient light this surface shall reflect
 	float shininess;
 	float transparency;
 };
@@ -111,14 +103,13 @@ vec4 applyMaterials()
 {
 	X3DMaterial material;
 	vec4 blended;
-	vec4 ambiance;
 	vec3 Light0;
 	vec3 R;
 	vec4 Iamb;
 	vec4 Idiff;
 	vec4 Ispec;
 	vec3 E;
-	vec3 ambientColor;
+	vec4 ambientColor;
 
 	float lightAttenuationMax;
 	float lightAttenuationMin;
@@ -139,14 +130,13 @@ vec4 applyMaterials()
 	lightAttenuationMin = 0.0;
 	Light_Intensity = vec4(0.1, 0.1, 0.1, 1.0);
 	blended = vec4(0, 0, 0, 0);
-	ambientColor = vec3(0.1, 0.1, 0.1);
 
 
 	for (int i = 0; i < materialsCount; i++)
 	{
 		material = materials[i];
 
-		ambiance = vec4(ambientColor * material.ambientIntensity, 1.0) * Light_Intensity;
+		ambientColor = material.diffuseColor * material.ambientIntensity;
 		
 		E = normalize(-vPosition); // we are in Eye Coordinates, so EyePos is (0,0,0) 
 								   //Light0 = normalize(gl_LightSource[i].position.xyz - vPosition);
@@ -155,14 +145,14 @@ vec4 applyMaterials()
 
 		R = normalize(-reflect(Light0, N));
 
-		Iamb = ambiance;
+		Iamb = ambientColor;
 
-		//Idiff = material.diffuseColor * max(dot(N, Light0), 0.0);
-		Idiff = material.diffuseColor;
+		Idiff = material.diffuseColor * max(dot(N, Light0), 0.0);
+		//Idiff = material.diffuseColor;
 		Idiff = clamp(Idiff, 0.0, 1.0);
 
-		//Ispec = material.specularColor * pow(max(dot(R, E), 0.0), 0.3 * material.shininess);
-		Ispec = material.specularColor;
+		Ispec = material.specularColor * pow(max(dot(R, E), 0.0), 0.3 * material.shininess);
+		//Ispec = material.specularColor;
 		Ispec = clamp(Ispec, 0.0, 1.0);
 
 
@@ -191,12 +181,12 @@ vec4 applyMaterials()
 
 
 		//blended += (Iamb + Idiff + Ispec) * Light_Intensity;
-		//blended += (Iamb + Idiff + Ispec);
+		blended += (Iamb + Idiff + Ispec) * material.emissiveColor;
 
 
 		//blended += (Iamb + Idiff + Ispec) * depth;
 		//blended += (Iamb + Idiff + Ispec) * Light_Intensity * attenuation;
-		blended += Idiff;
+		//blended += Idiff;
 		//blended.w += material.transparency;
 
 		blended.w = material.transparency;
@@ -237,10 +227,16 @@ void main()
 
 	vec4 texture_color;
 	vec4 material_color;
+	vec4 col_accum;
+	vec4 finalColor;
 
+	texture_color = vec4(0, 0, 0, 1);
+	finalColor = vec4(0.0, 0.0, 0.0, 1.0);
+
+	// TEXTURING
 	if (texturingEnabled == 1)
 	{
-		if (length(uv) == 0)
+		if (length(gFacetTexCoord) != 0)
 		{
 			texture_color = texture2D(_MainTex, gFacetTexCoord);
 		}
@@ -250,101 +246,24 @@ void main()
 		}
 	}
 
-	// PHONG SHADING TEST
-	//vec3 texCol = vec3(0.1, 0.1, 0.1); 
-	//vec3 halfVec = normalize( eyeVec + lightVec );
-	//float ndotl = max( dot( lightVec, normalVec ), 0.0 ); 
-	//float ndoth = (ndotl > 0.0) ? pow(max( dot( halfVec, normalVec ), 0.0 ), 128.) : 0.0;  
-	//vec3 color = 0.2 * ambient + ndotl * texCol + ndoth * specular;
+	col_accum = texture_color;
 
-	//FragColor = vec4(color, 1.0);	
-	//FragColor = vec4(color, 1.0) +  vColor / 2;
-	//FragColor = vec4(0.5, 0.8, 1.0, 1.0);
-	//FragColor = vColor;
+	// TESSELLATION edge collorings
+	vec3 Nf = normalize(gFacetNormal);
+	vec3 L = vec3(0.25, 0.25, 1.00);
+	float df = abs(dot(Nf, L));
+	vec3 color = (df * col_accum.xyz);
 
-	//vec4 op = texture_color + vColor / 2;
-	//op = op + vec4(color, 1.0) / 2;
+	float d1 = min(min(gTriDistance.x, gTriDistance.y), gTriDistance.z);
+	float d2 = min(min(gPatchDistance.x, gPatchDistance.y), gPatchDistance.z);
+	color = amplify(d1, 40, -0.5) * amplify(d2, 60, -0.5) * color;
+	col_accum = col_accum + vec4(color, 1.0) / 2;
 
-	//FragColor = op;
-
-
-	vec4 col_accum;
-	col_accum = vec4(0, 0, 0, 1);
-
-	// TESSELLATION
-	//vec3 Nf = normalize(gFacetNormal);
-	//vec3 L = LightPosition;
-	//float df = abs(dot(Nf, L));
-	//vec3 color = AmbientMaterial + df * DiffuseMaterial;
-
-	//float d1 = min(min(gTriDistance.x, gTriDistance.y), gTriDistance.z);
-	//float d2 = min(min(gPatchDistance.x, gPatchDistance.y), gPatchDistance.z);
-	//color = amplify(d1, 40, -0.5) * amplify(d2, 60, -0.5) * color;
-	//col_accum = vec4(color, 1.0) / 2;
-
-	// TEXTURING
-
-
-	if (texturingEnabled == 1 && coloringEnabled == 0)
+	// COLORING
+	if (coloringEnabled == 1)
 	{
-		col_accum = texture_color;
+		col_accum = vColor + col_accum / 2;
 	}
-	else if (texturingEnabled == 0 && coloringEnabled == 1)
-	{
-		col_accum = vColor;
-	}
-	else if (texturingEnabled == 1 && coloringEnabled == 1)
-	{
-		col_accum = vColor + texture_color / 2;
-	}
-	else
-	{
-		col_accum = vec4(0.0, 0, 0, 1.0);
-	}
-
-
-
-
-	// PHONG SHADING
-	//vec3 Light0 = normalize(gl_LightSource[0].position.xyz - vPosition);   
-	//vec3 E = normalize(-vPosition); // we are in Eye Coordinates, so EyePos is (0,0,0)  
-	//vec3 R = normalize(-reflect(Light0,N));  
-
-	//vec4 Iamb = gl_FrontLightProduct[0].ambient;     
-	//vec4 Idiff = gl_FrontLightProduct[0].diffuse * max(dot(N,Light0), 0.0);
-	//Idiff = clamp(Idiff, 0.0, 1.0);     
-
-	//vec4 Ispec = gl_FrontLightProduct[0].specular * pow(max(dot(R,E),0.0),0.3 * gl_FrontMaterial.shininess);
-	//Ispec = clamp(Ispec, 0.0, 1.0); 
-	//col_accum = col_accum + ( gl_FrontLightModelProduct.sceneColor + Iamb + Idiff + Ispec) / 2;
-
-
-
-
-
-
-	vec4 finalColor = vec4(0.0, 0.0, 0.0, 0.0);
-
-	// LIGHTING
-	//for (int i = 0; i < MAX_LIGHTS; i++)
-	//{
-	//	vec3 Light0 = normalize(gl_LightSource[i].position.xyz - vPosition);
-	//	vec3 E = normalize(-vPosition); // we are in Eye Coordinates, so EyePos is (0,0,0) 
-	//	vec3 R = normalize(-reflect(Light0, N));
-
-	//	vec4 Iamb = gl_FrontLightProduct[i].ambient;
-	//	vec4 Idiff = gl_FrontLightProduct[i].diffuse * max(dot(N, Light0), 0.0);
-	//	Idiff = clamp(Idiff, 0.0, 1.0);
-
-	//	vec4 Ispec = gl_FrontLightProduct[i].specular * pow(max(dot(R, E), 0.0), 0.3*gl_FrontMaterial.shininess);
-	//	Ispec = clamp(Ispec, 0.0, 1.0);
-
-	//	finalColor += Iamb + Idiff + Ispec;
-	//}
-
-	//col_accum = col_accum + (gl_FrontLightModelProduct.sceneColor + finalColor) / 2;
-
-
 
 	// MATERIALS
 	if (materialsEnabled == 1)
