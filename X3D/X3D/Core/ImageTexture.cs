@@ -166,9 +166,19 @@ namespace X3D
                         Stream s;
 
                         s = (Stream)resource;
-                        image = new Bitmap(s);
-                        s.Close();
-                        actually_loaded_something = true;
+
+                        try
+                        {
+                            image = new Bitmap(s);
+                            s.Close();
+                            actually_loaded_something = true;
+                        }
+                        catch
+                        {
+
+                            continue;
+                        }
+                        
                     }
                     else
                     {

@@ -52,6 +52,13 @@ namespace X3D
 
         #region Rendering Methods
 
+        public override void Render(RenderingContext rc)
+        {
+            //var scale = new Vector3(0.04f, 0.04f, 0.04f);
+
+            //rc.cam.Scale = scale;
+        }
+        
         //public override void Load()
         //{
         //    base.Load();
@@ -68,7 +75,7 @@ namespace X3D
         //                                              TriangleTessShader.geometryShaderSource);
         //    }
 
-            
+
 
         //    Buffering.Interleave(null, out vbo, out NumVerticies,
         //        out vbo4, out NumVerticies4,

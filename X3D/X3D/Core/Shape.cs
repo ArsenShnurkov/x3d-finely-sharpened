@@ -9,6 +9,7 @@ using System.Xml.Serialization;
 using X3D.Core;
 using X3D.Core.Shading;
 using X3D.Core.Shading.DefaultUniforms;
+using X3D.Engine;
 using X3D.Parser;
 
 namespace X3D
@@ -39,7 +40,7 @@ namespace X3D
 
         private Vector3 size = new Vector3(1, 1, 1);
         private Vector3 scale = new Vector3(0.05f, 0.05f, 0.05f);
-
+        //var scale = new Vector3(0.04f, 0.04f, 0.04f); //Sphere
         private ComposedShader quadShader = null;
         private bool coloring = false;
         private bool texturing = false;
@@ -137,7 +138,7 @@ namespace X3D
         }
 
 
-        public void ApplyGeometricTransformations(RenderingContext rc, ComposedShader shader, SceneGraphNode context)
+        public Matrix4 ApplyGeometricTransformations(RenderingContext rc, ComposedShader shader, SceneGraphNode context)
         {
 
             RefreshDefaultUniforms(shader);
@@ -156,7 +157,12 @@ namespace X3D
 
             SceneGraphNode transform_context = context == null ? this : context;
 
-            List<Transform> transformationHierarchy = transform_context.AscendantByType<Transform>().Select(t => (Transform)t).ToList();
+            List<Transform> transformationHierarchy = transform_context
+                .AscendantByType<Transform>()
+                .Select(t => (Transform)t)
+                .Where(t => t.Hidden == false)
+                .ToList();
+
             Matrix4 modelview = Matrix4.Identity;// * rc.matricies.worldview;
 
             // using Def_Use/Figure02.1Hut.x3d Cone and Cylinder 
@@ -180,9 +186,13 @@ namespace X3D
             //    modelLocalRotation = mat4CenterOfRotation * Matrix4.CreateFromQuaternion(qLocal) * Matrix4.CreateFromQuaternion(qAdjust);
             //}
 
+            //const float bbscale = 0.0329999961f;
+
+            Vector3 centerOffset = Vector3.Zero;
+
             foreach (Transform transform in transformationHierarchy)
             {
-                modelview = BoundingBox.ApplyX3DTransform(Vector3.Zero,
+                modelview = SceneEntity.ApplyX3DTransform(centerOffset,
                                                      Vector3.Zero,
                                                      Vector3.One,
                                                      Vector3.Zero,
@@ -196,6 +206,10 @@ namespace X3D
 
                 //modelrotations *= MathHelpers.CreateRotation(ref modelrotation);
             }
+
+            //Vector3 center = modelview.ExtractTranslation();
+            //Vector3 centerOffsetVector = center + (bbox.Maximum - bbox.Minimum);
+            //Matrix4 centerOffset = Matrix4.CreateTranslation(centerOffsetVector);
 
 
 
@@ -214,18 +228,21 @@ namespace X3D
 
                 ; // this is the MVP matrix
 
-
+            //shader.SetFieldValue("size", new Vector3(bbox.Width, bbox.Height, bbox.Depth) * bbscale);
             shader.SetFieldValue("modelview", ref MVP); //GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);
             shader.SetFieldValue("projection", ref rc.matricies.projection);
             shader.SetFieldValue("camscale", rc.cam.Scale.X); //GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
             shader.SetFieldValue("X3DScale", rc.matricies.Scale); //GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
             shader.SetFieldValue("coloringEnabled", this.coloring ? 1 : 0); //GL.Uniform1(uniforms.a_coloringEnabled, 0);
             shader.SetFieldValue("texturingEnabled", this.texturingEnabled ? 1 : 0); //GL.Uniform1(uniforms.a_texturingEnabled, this.texturingEnabled ? 1 : 0);
+            shader.SetFieldValue("lightingEnabled", 1);
 
             if (shader.IsBuiltIn == false)
             {
                 shader.ApplyFieldsAsUniforms(rc);
             }
+
+            return MVP;
         }
 
         //TODO: refactor Shader code 
@@ -302,19 +319,25 @@ namespace X3D
         public Vector3 GetPosition(RenderingContext rc)
         {
             Vector3 pos = Vector3.Zero;
+            Vector3 center = Vector3.Zero;
             Matrix4 model; // applied transformation hierarchy
             Matrix4 modelview;
             List<Transform> transformationHierarchy;
             Vector3 x3dScale;
 
-            transformationHierarchy = this.AscendantByType<Transform>().Select(t => (Transform)t).ToList();
+            transformationHierarchy = 
+                AscendantByType<Transform>()
+                .Select(t => (Transform)t)
+                .Where(t => t.Hidden == false)
+                .ToList();
+
             modelview = Matrix4.Identity;
 
             x3dScale = new Vector3(0.06f, 0.06f, 0.06f); // scaling down to conform with X3D standard (note this was done manually and might need tweaking)
 
             foreach (Transform transform in transformationHierarchy)
             {
-                modelview = BoundingBox.ApplyX3DTransform(Vector3.Zero,
+                modelview = SceneEntity.ApplyX3DTransform(Vector3.Zero,
                                                      Vector3.Zero,
                                                      Vector3.One,
                                                      Vector3.Zero,
@@ -332,8 +355,10 @@ namespace X3D
             Matrix4 MVP = ((model));
 
 
-            pos = modelview.ExtractTranslation();
-            //pos = MVP.ExtractTranslation() ;
+            center = modelview.ExtractTranslation(); // position is from the center of the geometry
+
+
+            pos = center;
 
             return pos;
         }
@@ -364,8 +389,6 @@ namespace X3D
                 //TODO: should then be able to calculate bounding boxes of arbitrary geometry here
                 
                 geometry.CollectGeometry(rc, out _handle, out bbox, out coloring, out texturing);
-
-                
 
 
                 // BUFFER GEOMETRY
@@ -493,10 +516,33 @@ namespace X3D
                 }
 
                 shader.SetFieldValue("lightingEnabled", 1);
+                shader.SetFieldValue("headlightEnabled", 0);
+                shader.SetFieldValue("calib1", rc.cam.calibTrans);
+                shader.SetFieldValue("calib2", rc.cam.calibOrient);
 
                 if (depthMask)
                 {
-                    ApplyGeometricTransformations(rc, shader, this);
+                    Matrix4 MVP = ApplyGeometricTransformations(rc, shader, this);
+                    Vector3 lookat = QuaternionExtensions.Rotate(rc.cam.Orientation, Vector3.UnitZ);
+                    Vector3 forward = new Vector3(lookat.X, 0, lookat.Z).Normalized();
+                    Vector3 up = Vector3.UnitY;
+                    Vector3 left = up.Cross(forward);
+
+                    Vector2 orient;
+                    Vector3 position;
+
+                    orient = QuaternionExtensions.ExtractPitchYawRoll(rc.cam.Orientation.Inverted()).Xy; // pitch and yaw only
+                    position = rc.cam.Position;
+
+                    shader.SetFieldValue("headlightEnabled", NavigationInfo.HeadlightEnabled ? 1 : 0);
+                    shader.SetFieldValue("sceneCameraPosition", position);
+                    shader.SetFieldValue("model", ref MVP);
+                    shader.SetFieldValue("orientation", orient);
+                    shader.SetFieldValue("lookat", rc.cam.Direction);
+                    shader.SetFieldValue("forward", forward);
+                    shader.SetFieldValue("up", up);
+                    shader.SetFieldValue("left", left);
+
                 }
                 else
                 {

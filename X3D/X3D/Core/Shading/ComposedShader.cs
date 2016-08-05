@@ -269,6 +269,14 @@ namespace X3D
 
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
+        public void SetFieldValue(string name, Vector2 value)
+        {
+            if (HasErrors) return;
+
+            GL.Uniform2(GL.GetUniformLocation(this.ShaderHandle, name), ref value);
+
+            //UpdateField(name, X3DTypeConverters.ToString(value));
+        }
 
         public void SetFieldValue(string name, Vector3 value)
         {
