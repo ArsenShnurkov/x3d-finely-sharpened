@@ -140,6 +140,144 @@ namespace X3D.Engine
             return graph;
         }
 
+        /// <summary>
+        /// Finds a scene graph node by _id using a depth first graph traversal approach.
+        /// </summary>
+        /// <param name="id">
+        /// The id attribute coresponding to the _id attribute of the node to locate.
+        /// </param>
+        /// <returns>
+        /// A node within the scene graph bearing the same id field.
+        /// </returns>
+        public SceneGraphNode QueryDFS(int id)
+        {
+            SceneGraphNode result;
+
+            result = Query((SceneGraphNode n) =>
+            {
+                return n._id == id;
+
+            }, GraphQueryTraversalType.DepthFirst, findAllMatches: false).FirstOrDefault();
+
+            return result;
+        }
+
+        /// <summary>
+        /// Finds a scene graph node by _id using a bredth first graph traversal approach.
+        /// </summary>
+        /// <param name="id">
+        /// The id attribute coresponding to the _id attribute of the node to locate.
+        /// </param>
+        /// <returns>
+        /// A node within the scene graph bearing the same id field.
+        /// </returns>
+        public SceneGraphNode QueryBFS(int id)
+        {
+            SceneGraphNode result;
+
+            result = Query((SceneGraphNode n) =>
+            {
+                return n._id == id;
+
+            }, GraphQueryTraversalType.BredthFirst, findAllMatches: false).FirstOrDefault();
+
+            return result;
+        }
+
+        /// <summary>
+        /// A simple graph search using a custom comparision predicate. 
+        /// The predicate is used to find nodes based on the evaluation of the predicate at each graph vertex.
+        /// </summary>
+        /// <param name="compareFunct">
+        /// Node comparision predicate method used to compare nodes in the scene graph.
+        /// </param>
+        /// <param name="traversalType">
+        /// The traversal method used to perform the search.
+        /// </param>
+        /// <param name="findAllMatches">
+        /// Enabled by default, returning the set of all matches the predicate satisfies.
+        /// If false, quits the search upon finding the first node that matches the predicate requirements.
+        /// </param>
+        /// <returns>
+        /// A node within the scene graph that coresponds to the predicate search criteria external to the query implementation.
+        /// </returns>
+        public List<SceneGraphNode> Query
+        (
+            Predicate<SceneGraphNode> compareFunct,                         
+            GraphQueryTraversalType traversalType = GraphQueryTraversalType.DepthFirst,
+            bool findAllMatches = true)
+        {
+            List <SceneGraphNode> result;
+            SceneGraphNode node;
+            Stack<SceneGraphNode> work_items_s;
+            Queue<SceneGraphNode> work_items_q;
+            SceneGraphNode root;
+            bool traversing;
+            int i;
+            SceneGraphNode child;
+
+            result = new List<SceneGraphNode>();
+            root = this.GetRoot();
+            traversing = true;
+
+            if (traversalType == GraphQueryTraversalType.DepthFirst)
+            {
+                // INTERATIVE DEPTH FIRST SEARCH
+                work_items_s = new Stack<SceneGraphNode>();
+                work_items_s.Push(root);
+
+                while (work_items_s.Count > 0 && traversing)
+                {
+                    node = work_items_s.Pop();
+
+                    if (compareFunct(node))
+                    {
+                        result.Add(node);
+
+                        traversing = findAllMatches;
+                    }
+
+                    for(i = 0; i < node.Children.Count; i++)
+                    {
+                        child = node.Children[i];
+
+                        work_items_s.Push(child);
+                    }
+                }
+            }
+            else if (traversalType == GraphQueryTraversalType.BredthFirst)
+            {
+                // ITERATIVE BREDTH FIRST SEARCH
+                work_items_q = new Queue<SceneGraphNode>();
+                work_items_q.Enqueue(root);
+
+                while (work_items_q.Count > 0 && traversing)
+                {
+                    node = work_items_q.Dequeue();
+
+                    if (compareFunct(node))
+                    {
+                        result.Add(node);
+
+                        traversing = findAllMatches;
+                    }
+
+                    for (i = 0; i < node.Children.Count; i++)
+                    {
+                        child = node.Children[i];
+
+                        work_items_q.Enqueue(child);
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception("Unsupported graph traversal type");
+            }
+
+            return result;
+        }
+
         #endregion
 
         #region Private Methods
@@ -288,29 +426,30 @@ namespace X3D.Engine
                         {
                             ProtoInstance protoInstance = (ProtoInstance)child;
                             
-                            object _value = this.nameScope.FirstOrDefault(n => n.Key == child.name); // slow
+                            KeyValuePair<string,SceneGraphNode> _value = this.nameScope.FirstOrDefault(n => n.Key == child.name); // slow
 
-                            if (_value != null)
+                            if (_value.Value != null)
                             {
-                                protoInstance.Prototype = (ProtoDeclare)_value;
+                                protoInstance.Prototype = (ProtoDeclare)_value.Value;
                             }
                             else
                             {
                                 Console.WriteLine("[Warning] Could not immediatly find ProtoDeclare \"{0}\". Placing ProtoDeclare above ProtoInstance usually fixes this warning.", child.name);
                             }
                         }
-                        else if (child.GetType() == typeof(ProtoDeclare))
-                        {
-                            child.Hidden = true; // Not renderable.
-                            child.PassthroughAllowed = false; // not considered part of the Runtime SceneGraph or EventGraph, 
-                                                              // ProtoDeclare is only a SceneGraphStructureStatement.
+                    }
 
-                            // Only ProtoInstance can access its ProtoDeclare
-                            // Events are not passed in to where the prototype is declared,
-                            // instead, ProtoInstance creates a new shadow-instance of the ProtoDeclare. 
-                            // All the nodes under the proto declare are shadow-copied under the ProtoInstance
-                            // becoming part of the Scene Graph again as a new instance but managed explicitly by ProtoInstance.
-                        }
+                    if (child.GetType() == typeof(ProtoDeclare))
+                    {
+                        child.Hidden = true; // Not renderable.
+                        child.PassthroughAllowed = false; // not considered part of the Runtime SceneGraph or EventGraph, 
+                                                          // ProtoDeclare is only a SceneGraphStructureStatement.
+
+                        // Only ProtoInstance can access its ProtoDeclare
+                        // Events are not passed in to where the prototype is declared,
+                        // instead, ProtoInstance creates a new shadow-instance of the ProtoDeclare. 
+                        // All the nodes under the proto declare are shadow-copied under the ProtoInstance
+                        // becoming part of the Scene Graph again as a new instance but managed explicitly by ProtoInstance.
                     }
 
                     #endregion
@@ -363,64 +502,6 @@ namespace X3D.Engine
                 }
             }
             while (nav.NodeType != XPathNodeType.Root && !nav.IsSamePosition(startPosition));
-        }
-
-        private SceneGraphNode depth_first_search_iterative(int id)
-        {
-            Stack<SceneGraphNode> work_items;
-            SceneGraphNode node;
-            SceneGraphNode root;
-
-            root = this.GetRoot();
-            work_items = new Stack<SceneGraphNode>();
-            work_items.Push(root);
-
-            do
-            {
-                node = work_items.Pop();
-
-                if (node._id == id)
-                {
-                    return node;
-                }
-
-                foreach (X3DNode child in node.Children)
-                {
-                    work_items.Push(child);
-                }
-            }
-            while (work_items.Count > 0);
-
-            return null;
-        }
-
-        private SceneGraphNode breadth_first_search_iterative(int id)
-        {
-            Queue<SceneGraphNode> work_items;
-            SceneGraphNode node;
-            SceneGraphNode root;
-
-            root = this.GetRoot();
-            work_items = new Queue<SceneGraphNode>();
-            work_items.Enqueue(root);
-
-            do
-            {
-                node = work_items.Dequeue();
-
-                if (node._id == id)
-                {
-                    return node;
-                }
-
-                foreach (X3DNode child in node.Children)
-                {
-                    work_items.Enqueue(child);
-                }
-            }
-            while (work_items.Count > 0);
-
-            return null;
         }
 
         #endregion
