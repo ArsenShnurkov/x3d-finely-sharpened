@@ -60,7 +60,8 @@ namespace X3D.Parser
 
             if (typeof(X3DAppearanceNode).IsInstanceOfType(parent))
             {
-                if (!parent.Children.Any(n => (typeof(X3DAppearanceChildNode).IsInstanceOfType(n))))
+                if (!parent.Children.Any(n => (typeof(X3DAppearanceChildNode).IsInstanceOfType(n)) 
+                                              || (typeof(X3DPrototypeInstance).IsInstanceOfType(n))))
                 {
                     warned = true;
 
@@ -69,7 +70,8 @@ namespace X3D.Parser
                     if (!parent.alreadyWarned && debug) Console.WriteLine(parent.ErrorStringWithLineNumbers());
                 }
 
-                invalid = parent.Children.Where(n => !typeof(X3DAppearanceChildNode).IsInstanceOfType(n)).ToList();
+                invalid = parent.Children.Where(n => !((typeof(X3DAppearanceChildNode).IsInstanceOfType(n))
+                                                      || (typeof(X3DPrototypeInstance).IsInstanceOfType(n)))).ToList();
 
                 processInvalidNodes(parent, invalid, parent.ToString(), out passed);
             }
@@ -87,7 +89,8 @@ namespace X3D.Parser
             {
                 // Only allowed to have ShaderPart, and field children
 
-                if (!parent.Children.Any(n => (typeof(field).IsInstanceOfType(n))))
+                if (!parent.Children.Any(n => (typeof(field).IsInstanceOfType(n))
+                                        || (typeof(X3DPrototypeInstance).IsInstanceOfType(n))))
                 {
                     warned = true;
 

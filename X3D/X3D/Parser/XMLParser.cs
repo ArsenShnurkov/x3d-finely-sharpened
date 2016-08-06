@@ -21,6 +21,34 @@ namespace X3D.Parser
 
         private static Dictionary<string, Type> _x3dTypeMap;
 
+        public static SceneGraphNode ParseXMLElement(XElement element)
+        {
+            Assembly x3dCoreAssembly = Assembly.GetExecutingAssembly();
+
+            if (!(_x3dTypeMap != null && _x3dTypeMap.Count > 0))
+            {
+                _x3dTypeMap = x3dCoreAssembly.GetTypes()
+                    .ToDictionary(t => t.FullName, t => t, StringComparer.OrdinalIgnoreCase);
+            }
+
+            if (string.IsNullOrEmpty(element.Name.LocalName))
+            {
+                return null;
+            }
+
+            Type type;
+            string typeName = string.Format("X3D.{0}", element.Name.LocalName);
+            if (_x3dTypeMap.TryGetValue(typeName, out type))
+            {
+                return DeserialiseSGN(element, type);
+            }
+            else
+            {
+                Console.WriteLine(string.Format("Type {0} not found in X3D.Core", typeName));
+                return null;
+            }
+        }
+
         public static SceneGraphNode ParseXMLElement(XPathNavigator element)
         {
             Assembly x3dCoreAssembly = Assembly.GetExecutingAssembly();
