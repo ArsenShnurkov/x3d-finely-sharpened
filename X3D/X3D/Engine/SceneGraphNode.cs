@@ -8,11 +8,10 @@ using System.Xml;
 using System.Xml.Serialization;
 using X3D.Parser;
 using System.Xml.Schema;
+using X3D.Engine;
 
 namespace X3D
 {
-    public delegate bool nodeComparePredicateDelegate(SceneGraphNode node);
-
     public abstract partial class SceneGraphNode
     {
 
@@ -349,68 +348,6 @@ namespace X3D
             return (SGn)AscendantByType<SGn>().FirstOrDefault();
         }
 
-        public SceneGraphNode SearchBFS(string id)
-        {
-            // Breadth first search for decendant node by type
-            Queue<SceneGraphNode> work_items;
-            SceneGraphNode node;
-            SceneGraphNode result = null;
-
-            work_items = new Queue<SceneGraphNode>();
-            work_items.Enqueue(this);
-
-            do
-            {
-                node = work_items.Dequeue();
-
-                if (node.id == id)
-                {
-                    result = node;
-
-                    break;
-                }
-
-                foreach (SceneGraphNode child in node.Children)
-                {
-                    work_items.Enqueue(child);
-                }
-            }
-            while (work_items.Count > 0);
-
-            return result;
-        }
-
-        public SceneGraphNode SearchDFS(nodeComparePredicateDelegate compare)
-        {
-            // Breadth first search for decendant node by type
-            Queue<SceneGraphNode> work_items;
-            SceneGraphNode node;
-            SceneGraphNode result = null;
-
-            work_items = new Queue<SceneGraphNode>();
-            work_items.Enqueue(this);
-
-            do
-            {
-                node = work_items.Dequeue();
-
-                if (compare(node))
-                {
-                    result = node;
-
-                    break;
-                }
-
-                foreach (SceneGraphNode child in node.Children)
-                {
-                    work_items.Enqueue(child);
-                }
-            }
-            while (work_items.Count > 0);
-
-            return result;
-        }
-
         public List<SceneGraphNode> DecendantsByType(Type t)
         {
             // Breadth first search for decendant node by type
@@ -569,7 +506,12 @@ namespace X3D
         public SceneGraphNode getElementById(string id)
         {
             //TODO: cache nodes and IDs
-            return SearchBFS(id);
+
+            return SceneGraph.QueryBFS(this,(SceneGraphNode n) =>
+            {
+                return n.id == id;
+
+            }).FirstOrDefault();
         }
 
         /// <summary>

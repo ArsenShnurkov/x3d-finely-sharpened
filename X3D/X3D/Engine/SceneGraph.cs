@@ -2,6 +2,7 @@
 
 //TODO: implement containerField
 
+using OpenTK;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -13,6 +14,7 @@ using X3D.Parser;
 
 namespace X3D.Engine
 {
+
     /// <summary>
     /// http://en.wikipedia.org/wiki/Scene_graph
     /// http://www.drdobbs.com/jvm/understanding-scene-graphs/184405094
@@ -53,6 +55,12 @@ namespace X3D.Engine
         private SceneGraphNode _root;
         private int __lastid = 0;
 
+        private class _graph_node
+        {
+            public XElement node;
+            public SceneGraphNode parent;
+        }
+
         #endregion
 
         #region Constructors
@@ -68,7 +76,8 @@ namespace X3D.Engine
             nav.MoveToRoot();
 
             // PASS 1
-            build_scene_iterativily(nav);
+            //build_scene_iterativily(nav);
+            build_scene_iterativily_xdoc(xml);
 
             // PASS 2
             Optimise();
@@ -280,6 +289,34 @@ namespace X3D.Engine
 
         #endregion
 
+        #region Public Static Method
+
+        public static List<SceneGraphNode> QueryDFS(SceneGraphNode root, Predicate<SceneGraphNode> compareFunct)
+        {
+            List<SceneGraphNode> result;
+            SceneGraph sg;
+
+            sg = new SceneGraph(root);
+
+            result = sg.Query(compareFunct, GraphQueryTraversalType.DepthFirst);
+
+            return result;
+        }
+
+        public static List<SceneGraphNode> QueryBFS(SceneGraphNode root, Predicate<SceneGraphNode> compareFunct)
+        {
+            List<SceneGraphNode> result;
+            SceneGraph sg;
+
+            sg = new SceneGraph(root);
+
+            result = sg.Query(compareFunct, GraphQueryTraversalType.BredthFirst);
+
+            return result;
+        }
+
+        #endregion
+
         #region Private Methods
 
         private int make_id()
@@ -288,6 +325,240 @@ namespace X3D.Engine
             return __lastid;
         }
 
+        /// <summary>
+        /// Build X3D Scene Graph using XDocument
+        /// </summary>
+        private void build_scene_iterativily_xdoc(XDocument doc)
+        {
+            SceneGraphNode parent;
+            SceneGraphNode child;
+            SceneGraphNode def;
+            Queue<_graph_node> work_items;
+            _graph_node xmlElem;
+            bool hasChildren;
+            int current_depth;
+            int i;
+            IEnumerable<XElement> children;
+            IXmlLineInfo lineInfo;
+
+            current_depth = 0;
+            parent = null;
+            work_items = new Queue<_graph_node>();
+            work_items.Enqueue(new _graph_node() { node = doc.Root });
+
+            while (work_items.Count > 0)
+            {
+                xmlElem = work_items.Dequeue();
+
+                child = XMLParser.ParseXMLElement(xmlElem.node);
+
+                parent = xmlElem.parent;
+                hasChildren = xmlElem.node.Elements().Count() > 0;
+
+                #region Process Node
+
+                if (child != null)
+                {
+                    lineInfo = (IXmlLineInfo)xmlElem.node;
+
+                    child.XMLDocumentLocation = new Vector2(lineInfo.LinePosition, lineInfo.LineNumber);
+                    child._id = make_id();
+                    current_depth = (parent == null) ? 0 : parent.Depth + 1;
+                    child.Depth = current_depth;
+
+#if DEBUG_SCENE_GRAPH
+                    Console.ForegroundColor=ConsoleColor.White;
+                    Console.WriteLine("".PadLeft(current_depth,'»')+xmlElem.node.Name.LocalName +" "+child.DEF+" "+current_depth.ToString()+"/"+ child._id.ToString());
+#endif
+
+
+                    if (parent != null)
+                    {
+                        child.Parent = parent;
+                        child.Parents.Add(parent);
+
+                        //TODO: implement containerField
+                        parent.Children.Add(child);
+
+                        // Apply Container Field
+                        if (!string.IsNullOrEmpty(child.containerField) && child.containerField != "children")
+                        {
+                            if (parent.HasAttribute(child.containerField))
+                            {
+                                parent.setAttribute(child.containerField, child);
+                            }
+                            else
+                            {
+                                Console.WriteLine("[warning] could not apply containerField reference \"{0}\" to parent \"{1}\"", child.containerField, parent);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        _root = child;
+                    }
+
+                    if (hasChildren)
+                    {
+                        child.IsLeaf = false;
+                    }
+                    else
+                    {
+                        child.IsLeaf = true;
+                    }
+
+                    //child.ContinueDeserialization();
+                    // ... DEF_use
+
+                    #region DEF/USE 
+
+                    if (!string.IsNullOrEmpty(child.DEF))
+                    {
+                        child.USE = string.Empty;
+
+                        if (defUseScope.ContainsKey(child.DEF))
+                        {
+                            defUseScope[child.DEF] = child; // override existing
+                        }
+                        else
+                        {
+                            defUseScope.Add(child.DEF, child);
+                        }
+
+                    }
+                    else if (!string.IsNullOrEmpty(child.USE))
+                    {
+                        child.DEF = string.Empty;
+
+                        var asc = child.Ascendants();
+
+                        if (asc.Any(ascendant => ascendant.DEF == child.USE))
+                        {
+                            Console.WriteLine("Cyclic reference ignored DEF_USE ", child.USE);
+
+                            continue;
+                        }
+
+
+                        // if DEF is not an ancestor (self referential) then there are no cyclic references, so we are good to go.
+                        // insert the DEF node a 2nd time as a child of the USE node parent
+                        // resulting in the DEF node having multiple parents. See DEF/USE semantics.
+                        def = QueryDFS(_root, (SceneGraphNode n) => n.DEF == child.USE).FirstOrDefault();
+
+                        if (def != null && child.Parent != null)
+                        {
+                            def.Parents.Add(child.Parent);
+
+                            child.Parent.Children.Add(def);
+
+
+                        }
+                    }
+
+                    #endregion
+
+                    #region Event Model
+
+                    if (child.GetType() == typeof(ROUTE))
+                    {
+                        // Quick way to get all ROUTE nodes
+                        Routes.Add((ROUTE)child);
+                    }
+
+                    #endregion
+
+                    #region Prototyping
+
+                    if (!string.IsNullOrEmpty(child.name))
+                    {
+                        this.nameScope.Add(new KeyValuePair<string, SceneGraphNode>(child.name, child));
+
+                        if (child.GetType() == typeof(ProtoInstance))
+                        {
+                            ProtoInstance protoInstance = (ProtoInstance)child;
+
+                            KeyValuePair<string, SceneGraphNode> _value = this.nameScope.FirstOrDefault(n => n.Key == child.name); // slow
+
+                            if (_value.Value != null)
+                            {
+                                protoInstance.Prototype = (ProtoDeclare)_value.Value;
+                            }
+                            else
+                            {
+                                Console.WriteLine("[Warning] Could not immediatly find ProtoDeclare \"{0}\". Placing ProtoDeclare above ProtoInstance usually fixes this warning.", child.name);
+                            }
+                        }
+                    }
+
+                    if (child.GetType() == typeof(ProtoDeclare))
+                    {
+                        child.Hidden = true; // Not renderable.
+                        child.PassthroughAllowed = false; // not considered part of the Runtime SceneGraph or EventGraph, 
+                                                          // ProtoDeclare is only a SceneGraphStructureStatement.
+
+                        // Only ProtoInstance can access its ProtoDeclare
+                        // Events are not passed in to where the prototype is declared,
+                        // instead, ProtoInstance creates a new shadow-instance of the ProtoDeclare. 
+                        // All the nodes under the proto declare are shadow-copied under the ProtoInstance
+                        // becoming part of the Scene Graph again as a new instance but managed explicitly by ProtoInstance.
+                    }
+
+                    #endregion
+
+                    child.PostDeserialization();
+
+                    if (child.IsLeaf)
+                    {
+                        // BACKTRACK
+                        if (parent != null && parent.Children.Count - 1 == parent.Children.IndexOf(child))
+                        {
+                            parent.PostDescendantDeserialization();
+                        }
+                    }
+                }
+
+                #endregion
+
+                #region Process Children
+
+                if (hasChildren)
+                {
+                    parent = child;
+                    children = xmlElem.node.Elements();
+
+                    if (parent.IsLeaf == false && parent.Children.Count > 0)
+                    {
+                        foreach (SceneGraphNode ch in parent.Children)
+                        {
+                            foreach (SceneGraphNode sibling in parent.Children)
+                            {
+                                if (ch != sibling && ch.Siblings.Contains(sibling) == false)
+                                {
+                                    ch.Siblings.Add(sibling);
+                                    sibling.Siblings.Add(ch);
+                                }
+                            }
+                        }
+                    }
+
+                    for (i = 0; i < children.Count(); i++)
+                    {
+                        work_items.Enqueue(new _graph_node()
+                        {
+                            node = children.ElementAt(i),
+                            parent = parent
+                        });
+                    }
+                }
+
+                #endregion
+            }
+        }
+
+
+        /// <summary>
+        /// Build X3D Scene Graph using XPathNavigator
+        /// </summary>
         private void build_scene_iterativily(XPathNavigator nav)
         {
             XPathNavigator startPosition;
@@ -302,7 +573,9 @@ namespace X3D.Engine
             current_depth = 0;
             parent = null;
 
-            do
+            nav.MoveToFirstChild();
+
+            while (nav.NodeType != XPathNodeType.Root && !nav.IsSamePosition(startPosition))
             {
                 child = XMLParser.ParseXMLElement(nav);
 
@@ -312,13 +585,14 @@ namespace X3D.Engine
                     lineInfo = (IXmlLineInfo)nav;
 
                     child.XMLDocumentLocation = new OpenTK.Vector2(lineInfo.LinePosition, lineInfo.LineNumber);
+                    child._id = make_id();
+                    child.Depth = current_depth;
 
 #if DEBUG_SCENE_GRAPH
                     Console.ForegroundColor=ConsoleColor.White;
-                    Console.WriteLine("".PadLeft(current_depth,'»')+nav.Name+" "+child.DEF+" "+current_depth.ToString()+"/"+node_id.ToString());
+                    Console.WriteLine("".PadLeft(current_depth,'»')+nav.Name+" "+child.DEF+" "+current_depth.ToString()+"/"+ child._id.ToString());
 #endif
-                    child._id = make_id();
-                    child.Depth = current_depth;
+
 
                     if (parent != null)
                     {
@@ -391,8 +665,7 @@ namespace X3D.Engine
                         // if DEF is not an ancestor (self referential) then there are no cyclic references, so we are good to go.
                         // insert the DEF node a 2nd time as a child of the USE node parent
                         // resulting in the DEF node having multiple parents. See DEF/USE semantics.
-
-                        def = _root.SearchDFS((SceneGraphNode n) => n.DEF == child.USE);
+                        def = QueryDFS(_root, (SceneGraphNode n) => n.DEF == child.USE).FirstOrDefault();
 
                         if (def != null && child.Parent != null)
                         {
@@ -501,7 +774,6 @@ namespace X3D.Engine
                     }
                 }
             }
-            while (nav.NodeType != XPathNodeType.Root && !nav.IsSamePosition(startPosition));
         }
 
         #endregion
