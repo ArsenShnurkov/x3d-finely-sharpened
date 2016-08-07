@@ -21,6 +21,7 @@ namespace X3D
         //private bool executed = false;
         private int headScriptIndex = -1;
         private int numHeadScripts = 0;
+        private List<field> _fields;
 
         private static bool documentEventsBound = false;
 
@@ -58,6 +59,11 @@ namespace X3D
         public override void PreRenderOnce(RenderingContext rc)
         {
             base.PreRenderOnce(rc);
+
+            _fields = ChildrenWithAppliedReferences
+                .Where(n => (typeof(field).IsInstanceOfType(n)))
+                .Select(n => (field)n)
+                .ToList();
 
             if (!string.IsNullOrEmpty(this.ScriptSource))
             {

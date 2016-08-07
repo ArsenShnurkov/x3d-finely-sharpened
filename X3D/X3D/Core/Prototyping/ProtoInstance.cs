@@ -59,18 +59,31 @@ namespace X3D
         {
             base.Load();
 
+            underlyingInstance = CreateInstance();
+
+
+
+            //this.underlyingInstance = 
+        }
+
+        public override void PreRenderOnce(RenderingContext rc)
+        {
+            base.PreRenderOnce(rc);
+
             fieldValues = ItemsByType<fieldValue>();
             fieldValue value;
 
             // Assign default values to imported ProtoDeclare:
             foreach (field f in Prototype.Fields)
             {
-                value = fieldValues.First(fv => fv.name == f.name);
+                value = fieldValues.FirstOrDefault(fv => fv.name == f.name);
 
-                f.value = value.value;
+                if (value != null)
+                {
+                    f.value = value.value;
+                }
+
             }
-
-            //this.underlyingInstance = 
         }
 
         public override void Render(RenderingContext rc)
@@ -84,14 +97,14 @@ namespace X3D
 
             // ... Or use access and update the Children like this:
 
-            SceneGraphNode @base;
+            //SceneGraphNode @base;
 
             
             //bool found = false;
             //int i;
             //SceneGraphNode c;
             //SceneGraphNode updatee;
-            SceneGraphNode newBase;
+            //SceneGraphNode newBase;
 
             if (!hasPrototyped)
             {
@@ -100,14 +113,16 @@ namespace X3D
                 // Put a new instance of BaseDefinition as a child of parent,
                 // then overwrite BaseDefinition instance in ProtoBody with same one that is under target parent.
 
-                @base = Prototype.BaseDefinition;
-                @base.IsPrototypeBase = true;
 
-                newBase = (SceneGraphNode)Activator.CreateInstance(@base.GetType());
 
-                Parent.Children.Add(newBase);
+                //@base = Prototype.BaseDefinition;
+                //@base.IsPrototypeBase = true;
 
-                Prototype.BaseDefinition = newBase;
+                //newBase = (SceneGraphNode)Activator.CreateInstance(@base.GetType());
+
+                //Parent.Children.Add(newBase);
+
+                //Prototype.BaseDefinition = newBase;
 
 
                 //for (i = 0; i < Parent.Children.Count && !found; i++)
