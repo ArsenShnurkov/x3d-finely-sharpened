@@ -477,7 +477,7 @@ void main()
 	
 	if (headlightEnabled == 1)
 	{
-		col_accum = col_accum + headlight(col_accum) / 2.0;
+		//col_accum = col_accum + headlight(col_accum) / 2.0;
 		col_accum = col_accum + vec4(spotlight(), 1.0) / 2.0;
 	}
 	
