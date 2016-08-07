@@ -83,6 +83,7 @@
     <Compile Include="X3D\Core\Appearance.cs" />
     <Compile Include="X3D\Core\Background.cs" />
     <Compile Include="X3D\Core\Box.cs" />
+    <Compile Include="X3D\Core\Group.cs" />
     <Compile Include="X3D\Core\IntegerSequencer.cs" />
     <Compile Include="X3D\Core\Prototyping\fieldValue.cs" />
     <Compile Include="X3D\Core\Prototyping\IS.cs" />
@@ -108,6 +109,8 @@
     <Compile Include="X3D\Engine\ConstructionSet\IElevationBuilder.cs" />
     <Compile Include="X3D\Engine\ConstructionSet\IHeightMapGenerator.cs" />
     <Compile Include="X3D\Engine\ConstructionSet\IPerlinNoiseTexture.cs" />
+    <Compile Include="X3D\Engine\Delegates.cs" />
+    <Compile Include="X3D\Engine\Enums.cs" />
     <Compile Include="X3D\Engine\EventGraph.cs" />
     <Compile Include="X3D\Engine\EventRoute.cs" />
     <Compile Include="X3D\Engine\SceneCamera.cs" />
@@ -199,30 +202,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\ErrorTexture.png" />
-    <None Include="X3D\Shaders\BackgroundFragmentShader.shader">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="X3D\Shaders\BackgroundVertexShader.shader">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="X3D\Shaders\DefaultFragmentShader.shader">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="X3D\Shaders\DefaultVertexShader.shader">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="X3D\Shaders\MaterialFragmentShader.shader">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="X3D\Shaders\MaterialVertexShader.shader">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="X3D\Shaders\PerlinNoiseFragmentShader.shader">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="X3D\Shaders\PerlinNoiseVertexShader.shader">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="X3D\x3d-3.3.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -242,7 +221,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_IncrementBeforeBuild="True" BuildVersion_UseGlobalSettings="False" BuildVersion_AssemblyInfoFilename="" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_AssemblyInfoFilename="" BuildVersion_UseGlobalSettings="False" BuildVersion_IncrementBeforeBuild="True" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
