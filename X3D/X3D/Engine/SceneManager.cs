@@ -47,6 +47,21 @@ namespace X3D.Engine
 
         #region Scene Loader Methods
 
+        public static SceneManager fromSceneGraph(SceneGraph graph)
+        {
+            SceneManager scene;
+
+            scene = new SceneManager();
+            scene.SceneGraph = graph;
+
+            if (Script.ScriptingEnabled)
+            {
+                scene.ScriptingEngine = ScriptingEngine.CreateFromManager(scene);
+            }
+
+            return scene;
+        }
+
         public static SceneManager fromURL(string url, X3DMIMEType mime_type)
         {
             object document;

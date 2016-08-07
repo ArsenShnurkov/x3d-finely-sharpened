@@ -9,6 +9,7 @@ using System.Xml.Serialization;
 using X3D.Parser;
 using System.Xml.Schema;
 using X3D.Engine;
+using System.Collections.Specialized;
 
 namespace X3D
 {
@@ -186,6 +187,19 @@ namespace X3D
         [XmlIgnore]
         public Vector2 XMLDocumentLocation = new Vector2(-1, -1);
 
+        [XmlIgnore]
+        public int _ID
+        {
+            get
+            {
+                return this._id;
+            }
+            set
+            {
+                this._id = value;
+            }
+        }
+
         [XmlAttributeAttribute()]
         public string id
         {
@@ -269,6 +283,60 @@ namespace X3D
         #endregion
 
         #region Public Methods
+
+        public NameValueCollection GetAttributes()
+        {
+            NameValueCollection attributes;
+            Type type;
+            PropertyInfo[] properties;
+            FieldInfo[] fields;
+            string value;
+            object v;
+
+            type = this.GetType();
+            attributes = new NameValueCollection();
+
+            properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(prop => !prop.IsDefined(typeof(XmlIgnoreAttribute), false)).ToArray();
+
+            fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance)
+                .Where(field => !field.IsDefined(typeof(XmlIgnoreAttribute), false)).ToArray();
+
+            foreach (PropertyInfo pi in properties)
+            {
+                v = pi.GetValue(this, null);
+
+                if(v != null)
+                {
+                    value = v.ToString();
+                }
+                else
+                {
+                    value = "";
+                }
+                
+
+                attributes.Add(pi.Name, value);
+            }
+            
+            foreach (FieldInfo fi in fields)
+            {
+                v = fi.GetValue(this);
+
+                if (v != null)
+                {
+                    value = v.ToString();
+                }
+                else
+                {
+                    value = "";
+                }
+
+                attributes.Add(fi.Name, value);
+            }
+
+            return attributes;
+        }
 
         public string ErrorStringWithLineNumbers()
         {

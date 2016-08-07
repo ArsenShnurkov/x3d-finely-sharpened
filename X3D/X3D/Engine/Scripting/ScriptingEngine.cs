@@ -60,7 +60,8 @@ namespace X3D.Engine
             {
                 document = manager.SceneGraph.GetRoot();
 
-                engine.StartV8(document);
+                if(Script.EngineEnabled)
+                    engine.StartV8(document);
             }
             
             CurrentContext = engine;
