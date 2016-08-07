@@ -90,7 +90,7 @@ archived on Google Code from 3 years ago which was written using the classic Ope
 All that was done in the original prototype has been replaced with a lighter more customisable OpenGL 4.0 compatible engine and GLSL shader code. 
 This is why the project here on github serves as the current most up to date version, 
 and will likely be better than other X3D browsers available today noted that I take my hat off to X3DOM.
-There's experimental code released of which I try and keep as stable as I can for each commit. 
+There's experimental code released of which I try and keep as stable as I can for each commit, however no guarantees that the project is bug free. I am playing with lighting and prototyping - an area in the engine which is unstable at the moment. 
 The latest source code may be checked out using " git clone https://github.com/RealityDaemon/x3d-finely-sharpened "
 Use Visual Studio 2015 for development and compilation.
 
