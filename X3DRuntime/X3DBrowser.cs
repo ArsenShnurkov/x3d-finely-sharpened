@@ -2,6 +2,7 @@
 
 using OpenTK;
 using OpenTK.Graphics;
+using X3D.Engine;
 
 namespace x3druntime.ui.opentk
 {
@@ -16,9 +17,20 @@ namespace x3druntime.ui.opentk
             app = new X3DApplication(this);
         }
 
+        public X3DBrowser(VSyncMode VSync, SceneGraph graph, Resolution res, GraphicsMode mode) : base(res.Width, res.Height, mode)
+        {
+            this.VSync = VSync;
+            this.URL = string.Empty;
+            this.Graph = graph;
+
+            app = new X3DApplication(this, graph);
+        }
+
         private X3DApplication app;
 
         public string URL { get; set; }
+
+        public SceneGraph Graph { get; set; }
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {

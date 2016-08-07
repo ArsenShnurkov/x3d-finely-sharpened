@@ -56,12 +56,15 @@ namespace x3druntime.ui.opentk
         private bool isFullscreen = false;
         private bool showGraphDebugger = false;
 
+        private SceneGraph _cachedGraph;
+
         /// <param name="window">
         /// A window or display which is used to render the X3D application
         /// </param>
-        public X3DApplication(INativeWindow window)
+        public X3DApplication(INativeWindow window, SceneGraph cachedGraph = null)
         {
             this.window = window;
+            this._cachedGraph = cachedGraph;
 
             // Set up a Construction Set for the current instance
             SceneManager.ConstructionSet = X3DConsructionSet.GetConstructionSetProvider();
@@ -201,7 +204,14 @@ namespace x3druntime.ui.opentk
                 SceneManager.BaseURL = BaseURL;
                 SceneManager.BaseMIME = SceneManager.GetMIMEType(BaseMIME);
 
-                scene = SceneManager.fromURL(url, mime_type);
+                if(_cachedGraph != null)
+                {
+                    scene = SceneManager.fromSceneGraph(_cachedGraph);
+                }
+                else
+                {
+                    scene = SceneManager.fromURL(url, mime_type);
+                }
 
                 X3DGraphDebugger.UpdateSceneGraph(scene.SceneGraph);
 
