@@ -106,6 +106,7 @@ MOSTLY: Viewpoint and ViewpointGroup implementation and decent-scalable Camera m
 MOSTLY: Scripting using JavaScript (JIT compiled using the V8 Engine)
 MOSTLY: DEF and USE
 PARTLY: Write support for X3D-B Binary Compression/Decompression
+PARTLY: Scene Graph Debugger; we want to add console UI for script engine here, as well as make node & attribute editing widgets 
 TODO: Implement float[], double[], int[], compressors for X3DB support
 TODO: Write simple UI frontend for import/export X3D-B Binary in ConstructionSet in WPF
 PARTLY: Background, MultiTexturing, CubeMapping, ..
