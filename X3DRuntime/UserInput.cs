@@ -21,6 +21,19 @@ namespace x3druntime.ui.opentk
         {
             switch (e.Key)
             {
+                case Key.F12:
+                    showGraphDebugger = !showGraphDebugger;
+
+                    if (showGraphDebugger)
+                    {
+                        X3DGraphDebugger.Display(scene.SceneGraph);
+                    }
+                    else
+                    {
+                        X3DGraphDebugger.Hide();
+                    }
+
+                    break;
                 case Key.F4: // halt rotate
                     rotate_enable = !rotate_enable;
                     break;
