@@ -54,6 +54,7 @@ namespace x3druntime.ui.opentk
         private bool fastFlySpeed = false;
         private bool slowFlySpeed = false;
         private bool isFullscreen = false;
+        private bool showGraphDebugger = false;
 
         /// <param name="window">
         /// A window or display which is used to render the X3D application
@@ -70,6 +71,18 @@ namespace x3druntime.ui.opentk
             //this.Keyboard.KeyDown+=new EventHandler<OpenTK.Input.KeyboardKeyEventArgs>(Keyboard_KeyDown);
             this.Keyboard.KeyUp += new EventHandler<OpenTK.Input.KeyboardKeyEventArgs>(Keyboard_KeyUp);
 
+            this.window.FocusedChanged += (object sender, EventArgs e) =>
+            {
+                if(this.window.WindowState == WindowState.Fullscreen)
+                {
+                    window.WindowState = WindowState.Normal;
+                    lockMouseCursor = false;
+
+                    isFullscreen = !isFullscreen;
+
+                    ToggleCursor();
+                }
+            };
 
             //ActiveCamera = new Camera(this.window.Width, this.window.Height);
             ActiveCamera = new SceneCamera(this.window.Width, this.window.Height);
@@ -190,6 +203,8 @@ namespace x3druntime.ui.opentk
 
                 scene = SceneManager.fromURL(url, mime_type);
 
+                X3DGraphDebugger.UpdateSceneGraph(scene.SceneGraph);
+
                 Viewpoint.Initilize(ActiveCamera, view);
 
                 if (showCrosshair)
@@ -230,7 +245,8 @@ namespace x3druntime.ui.opentk
             GL.DepthMask(true);
             GL.DepthFunc(DepthFunction.Lequal);
             GL.PointSize(6.0f);
-
+            //GL.Enable(EnableCap.Blend);
+            
             //TODO: improve current Camera implementation
             
             ActiveCamera.ApplyTransformations(); // TEST new camera implementation

@@ -147,6 +147,10 @@
       <Project>{d80863f8-38c5-4273-9d0a-ca34ad44fa77}</Project>
       <Name>ConstructionSet</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GraphDebugger\GraphDebugger.csproj">
+      <Project>{ddfdc864-f902-4027-b7f2-9f2f5a000e76}</Project>
+      <Name>GraphDebugger</Name>
+    </ProjectReference>
     <ProjectReference Include="..\X3D\X3D.csproj">
       <Project>{0742E4E9-D1BA-41F1-B161-33CD3A3D4D33}</Project>
       <Name>X3D</Name>
@@ -157,6 +161,12 @@
     <None Include="Shaders\BackgroundFragmentShader.shader" />
     <None Include="Shaders\DefaultFragmentShader.shader" />
     <None Include="Shaders\DefaultVertexShader.shader" />
+    <None Include="Shaders\SceneGraphFragment.shader">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Shaders\SceneGraphVertex.shader">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Shaders\MaterialFragmentShader.shader" />
     <None Include="Shaders\MaterialVertexShader.shader" />
     <None Include="Shaders\PerlinNoiseFragmentShader.shader" />
