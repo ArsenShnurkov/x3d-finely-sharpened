@@ -70,6 +70,9 @@ Example 6 - Minimal X3D Construction Set Implementation, demonstrating simple te
 ![alt text](screenshots/ConstructionSet.png "X3D Runtime Viewer Example 6")
 
 
+Test scene demonstrating Scene Graph Debugger (F12 key for developer tools). 
+![alt text](screenshots/scenegraph-vis.png "Test scene demonstrating Scene Graph Debugger (F12 key for developer tools)")
+
 
 
 
