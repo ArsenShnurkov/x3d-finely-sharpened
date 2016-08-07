@@ -49,7 +49,7 @@ Material : X3DMaterialNode {
             base.Render(rc);
         }
 
-        public override string ToString()
+        public string ToFriendlyString()
         {
             return string.Format(
                 "Material <ambientIntensity=\"{0}\", diffuse=\"{1}\", emissive=\"{2}\", shininess=\"{3}\", specular=\"{4}\", transparency=\"{5}\">",

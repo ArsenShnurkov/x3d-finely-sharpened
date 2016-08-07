@@ -14,6 +14,7 @@ namespace X3D
     public partial class Script
     {
         public static bool ScriptingEnabled = false;
+        public static bool EngineEnabled = true;
 
         private head parentHead = null;
         private bool isHeadScript = false;
