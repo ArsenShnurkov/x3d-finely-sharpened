@@ -10259,10 +10259,10 @@ namespace X3D
     public partial class IS : SceneGraphNode, SceneGraphStructureStatement
     {
 
-        private List<connect> _items = new List<connect>();
+        private List<object> _items = new List<object>();
 
         [XmlElementAttribute("connect")]
-        public List<connect> Items
+        public List<object> Items
         {
             get
             {
