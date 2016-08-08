@@ -83,7 +83,8 @@
     <Compile Include="X3D\Core\Appearance.cs" />
     <Compile Include="X3D\Core\Background.cs" />
     <Compile Include="X3D\Core\Box.cs" />
-    <Compile Include="X3D\Core\ColorInterpolator.cs" />
+    <Compile Include="X3D\Core\Interpolation\X3DInterpolatorNode.cs" />
+    <Compile Include="X3D\Core\Interpolation\ColorInterpolator.cs" />
     <Compile Include="X3D\Core\Group.cs" />
     <Compile Include="X3D\Core\IntegerSequencer.cs" />
     <Compile Include="X3D\Core\Prototyping\fieldValue.cs" />
@@ -144,6 +145,7 @@
     <Compile Include="X3D\Engine\Scripting\X3DConsole.cs" />
     <Compile Include="X3D\Core\Extrusion.cs" />
     <Compile Include="X3D\Math\BoundingBox.cs" />
+    <Compile Include="X3D\Math\Imaging.cs" />
     <Compile Include="X3D\Math\Matrix.cs" />
     <Compile Include="X3D\Math\Quaternions.cs" />
     <Compile Include="X3D\Math\Vectors.cs" />
@@ -222,7 +224,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_IncrementBeforeBuild="True" BuildVersion_UseGlobalSettings="False" BuildVersion_AssemblyInfoFilename="" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_AssemblyInfoFilename="" BuildVersion_UseGlobalSettings="False" BuildVersion_IncrementBeforeBuild="True" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
