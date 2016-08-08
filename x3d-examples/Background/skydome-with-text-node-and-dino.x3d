@@ -2,8 +2,11 @@
 <!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN" "http://www.web3d.org/specifications/x3d-3.3.dtd">
 <X3D profile='Immersive' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
   <Scene>
+	<NavigationInfo type="WALK" />
 	<Viewpoint description='Main View' orientation='-0.747 -0.624 -0.231 1.05' position='0 0 -2.899999'/>
+	
 	<Background groundAngle='1.309 1.570796' groundColor='0.1 0.1 0.0 0.4 0.25 0.2 0.6 0.6 0.6' skyAngle='1.309 1.571' skyColor='0.0 0.2 0.7 0.0 0.5 1.0 1.0 1.0 1.0'/>
+	
 	<Transform translation="0.0 0.1 0.2">
 		<Shape>
 		  <Text string='"Skydome background " "with Dinosaur model " "and text node!"'>

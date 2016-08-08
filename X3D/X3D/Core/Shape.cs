@@ -477,7 +477,6 @@ namespace X3D
             {
                 Text txt = (Text)geometry;
                 txt.BindTextures(rc);
-
                 //CurrentShader.SetFieldValue("threshold", new Vector4(0.1f, 0.1f, 0.1f, 1.0f));
             }
         }
@@ -611,6 +610,13 @@ namespace X3D
                     shader.SetFieldValue("texturingEnabled", 1);
                 }
 
+                Vector3 tmp = rc.matricies.Scale;
+                if (typeof(Text).IsInstanceOfType(geometry))
+                {
+                    rc.PushMatricies();
+                    rc.matricies.Scale *= 200f;
+                }
+
                 if (depthMask == false)
                 {
                     //REFACTOR!!
@@ -648,7 +654,13 @@ namespace X3D
                 {
                     //GL.DepthMask(true);
                 }
-                
+
+                if (typeof(Text).IsInstanceOfType(geometry))
+                {
+                    rc.PopMatricies();
+                    rc.matricies.Scale = tmp;
+                }
+
             }
         }
 

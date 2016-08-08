@@ -145,6 +145,9 @@ namespace X3D
             line = string.Format("Application = new SceneGraph({1}{0});", root._ID, NODE_IDENTIFIER);
             lines.Add(line);
 
+            line = "RunApplication();";
+            lines.Add(line);
+
             for (i=0; i < lines.Count; i++)
             {
                 line = lines[i];
@@ -306,6 +309,7 @@ namespace X3D
             if (CompileCode(codeProvider, code, tmpExeFile))
             {
                 Console.WriteLine("X3D Application [Compiled]");
+
 
                 return true;
             }

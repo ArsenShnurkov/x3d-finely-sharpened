@@ -102,6 +102,7 @@ namespace X3D
                         Position = new Vector3(0f, h + newLinePositionY, z) * 0.5f,
                         TexCoord = new Vector2(0f, 0f)
                     };
+
                     geometry.Add(v);
                 }
 

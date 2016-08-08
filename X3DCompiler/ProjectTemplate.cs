@@ -44,7 +44,6 @@ namespace X3D
             
             "+ "\n" + initilizers + "\n" + @"
 
-            RunApplication();
         }
 
         public static void RunApplication()

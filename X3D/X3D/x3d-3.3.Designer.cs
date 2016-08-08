@@ -1558,13 +1558,6 @@ namespace X3D
 
         private string _keyValue;
 
-        // private string _containerField;
-
-        public ColorInterpolator()
-        {
-            // this.containerField = "children";
-        }
-
         [XmlAttributeAttribute()]
         public string keyValue
         {
@@ -1577,20 +1570,6 @@ namespace X3D
                 this._keyValue = value;
             }
         }
-
-        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
-        //[System.ComponentModel.DefaultValueAttribute("children")]
-        //public string containerField
-        //{
-        //    get
-        //    {
-        //        return this._containerField;
-        //    }
-        //    set
-        //    {
-        //        this.containerField = value;
-        //    }
-        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]

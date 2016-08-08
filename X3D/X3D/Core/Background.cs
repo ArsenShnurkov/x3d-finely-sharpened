@@ -3,17 +3,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using win = System.Drawing;
-using System.IO;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
-using System.Xml.Serialization;
 using X3D.Parser;
-using X3D.Engine;
 using X3D.Core;
 using X3D.Core.Shading;
-using X3D.Core.Shading.DefaultUniforms;
 
 namespace X3D
 {
@@ -22,6 +17,8 @@ namespace X3D
     /// </summary>
     public partial class Background
     {
+        #region Private Fields
+
         private int tex_cube;
         //private int NumVerticiesCube, NumVerticiesOuter, NumVerticiesInner;
         //private int _vbo_interleaved_cube, _vbo_interleaved_inner, _vbo_interleaved_outer;
@@ -50,6 +47,8 @@ namespace X3D
         bool texture2d;
         Vector3 size = new Vector3(1, 1, 1);
         Vector3 scale = new Vector3(2, 2, 2);
+
+        #endregion
 
         #region Private Methods
 
@@ -125,6 +124,8 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
         }
 
         #endregion
+
+        #region Public Methods
 
         public override void Load()
         {
@@ -260,6 +261,10 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             }
         }
 
+        #endregion
+
+        #region Private Methods
+
         private void RenderSkydome(RenderingContext rc)
         {
             rc.PushMatricies();
@@ -393,7 +398,7 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             rc.PopMatricies();
         }
 
-        public Vector4 GetLatitudeFillColorSky(float latitudeRatio, int segments)
+        private Vector4 GetLatitudeFillColorSky(float latitudeRatio, int segments)
         {
             //NOT COMPLETED
             //http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/enveffects.html#Concepts
@@ -436,7 +441,7 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             return new Vector4(colorPalette[colorIndex], 1.0f);
         }
 
-        public Vector4 GetLatitudeFillColorGround(float latitudeRatio, int segments)
+        private Vector4 GetLatitudeFillColorGround(float latitudeRatio, int segments)
         {
             //NOT COMPLETED
             //http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/enveffects.html#Concepts
@@ -489,7 +494,7 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
         }
 
 
-        public List<Vertex> BuildHemisphereGeometryQuads(int n, Vector3 center, float radius, bool up = false)
+        private List<Vertex> BuildHemisphereGeometryQuads(int n, Vector3 center, float radius, bool up = false)
         {
             List<Vertex> geometry = new List<Vertex>();
 
@@ -603,7 +608,7 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             return geometry;
         }
 
-        public List<Vertex> BuildSphereGeometryQuads(int n, Vector3 center, float radius)
+        private List<Vertex> BuildSphereGeometryQuads(int n, Vector3 center, float radius)
         {
             List<Vertex> geometry = new List<Vertex>();
 
@@ -709,6 +714,8 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
             return geometry;
         }
+
+        #endregion
 
         public sealed class CubeGeometry : ShapeGeometry
         {

@@ -18,6 +18,7 @@ COPYRIGHT AND DISCLAIMER: (c)2000 Jeff Molofee
         or mention our web sites somewhere in your program or it's docs.
 -->
 	<Scene>
+		<NavigationInfo type="WALK" />
 		<Viewpoint description='SPAWNPOINT' position='0.0364735 0 -0.09592189'/>
 		<Viewpoint description='SPAWNPOINT 2' position='0.1364735 0 -0.09592189'/>
 		<Viewpoint description='SPAWNPOINT 3' position='-0.1364735 0 -0.09592189'/>

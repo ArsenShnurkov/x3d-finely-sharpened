@@ -39,7 +39,7 @@ vec3 slerp(vec3 from, vec3 to, float ratio)
 
 	slerpRange = dot(normalize(from), normalize(to));
 
-	slerpRangePhi = acos(slerpRange * 3.14159 / 180.0);
+	slerpRangePhi = acos(slerpRange * 3.1415926535897931 / 180.0);
 
 	average = (from * sin((1 - ratio) * slerpRangePhi)
 		+ (to   * sin(ratio * slerpRangePhi)) / sin(slerpRangePhi));
@@ -99,7 +99,7 @@ void main()
 
 	sky = slerp(seg_from, seg_to, pitch_ratio);
 
-	//sky = selectSkyColor(5);
+	sky = selectSkyColor(2);
 
 	FragColor = vec4(sky, 1.0);
 }

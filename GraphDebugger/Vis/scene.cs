@@ -159,7 +159,7 @@ namespace GraphDebugger.OpenGL
 
                 SceneGraphNode sgn = (SceneGraphNode)node.Data;
 
-                float ratio = (float)sgn.Children.Count / (float)t.Count;
+                float ratio = 1.0f - ((float)sgn.Children.Count / (float)t.Count);
 
                 string @string;
                 Font font;
@@ -174,7 +174,7 @@ namespace GraphDebugger.OpenGL
                 }
                 else
                 {
-                    int font_size = 20 + (int)(30f * ratio);
+                    int font_size = 20 + (int)(22f * ratio);
                     font = new Font("Times New Roman", font_size);
                     forecolor = _graph.NodeForeColor;
                 }
