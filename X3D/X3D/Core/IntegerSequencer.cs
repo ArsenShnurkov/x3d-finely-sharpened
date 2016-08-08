@@ -16,7 +16,6 @@ namespace X3D
 
         private float _set_fraction;
         private int _value_changed;
-        private float[] _keys;
         private int[] _keyValues;
         private Dictionary<float, int> map = new Dictionary<float, int>();
 
@@ -67,19 +66,18 @@ namespace X3D
 
             int i;
 
-            _keys = X3DTypeConverters.Floats(this.key);
             _keyValues = X3DTypeConverters.Integers(this.keyValue);
 
             // OPTIMISE
-            for(i = 0; i < _keys.Length; i++)
+            for(i = 0; i < Keys.Length; i++)
             {
                 if(i >= _keyValues.Length)
                 {
-                    map[_keys[i]] = 0;
+                    map[Keys[i]] = 0;
                 }
                 else
                 {
-                    map[_keys[i]] = _keyValues[i];
+                    map[Keys[i]] = _keyValues[i];
                 }
             }
         }
