@@ -1036,6 +1036,9 @@ namespace X3D
     {
 
         private string _key;
+        
+        [XmlIgnore]
+        public float[] Keys { get; set; }
 
         [XmlAttributeAttribute()]
         public string key
@@ -1048,6 +1051,13 @@ namespace X3D
             {
                 this._key = value;
             }
+        }
+
+        public override void Load()
+        {
+            base.Load();
+
+            Keys = X3DTypeConverters.Floats(this.key);
         }
     }
 
@@ -1581,6 +1591,10 @@ namespace X3D
 
         private string _key;
 
+        /// <summary>
+        /// The key field contains the list of key times, which could appear as:
+        /// key[0 0.25 0.65 0.75 1]
+        /// </summary>
         [XmlAttributeAttribute()]
         public string key
         {
@@ -5027,13 +5041,6 @@ namespace X3D
     {
 
         private string _keyValue;
-
-        // private string _containerField;
-
-        public IntegerSequencer()
-        {
-            // this.containerField = "children";
-        }
 
         [XmlAttributeAttribute()]
         public string keyValue
