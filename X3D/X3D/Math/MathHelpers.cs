@@ -18,6 +18,7 @@ namespace X3D
         public const float PI2 = 2.0f * (float)Math.PI;
         public const float PiOver180 = PI_OVER_180;
         public const float TwoPi = PI2;
+        public const float EPS = 0.000001f;
 
         public static double FractionalPart(double n)
         {
@@ -80,227 +81,26 @@ namespace X3D
             return n;
         }
 
-        //public static BoundingBox CalcBoundingBox(IndexedTriangleSet its, int? restartIndex)
-        //{
-        //    BoundingBox box;
-        //    int i;
-        //    int facesetPointer;
-        //    float maxwidth;
-        //    float minwidth;
-        //    float maxdepth;
-        //    float mindepth;
-        //    float maxheight;
-        //    float minheight;
-        //    Vector3 v;
+        /// <summary>
+        /// Return next highest power of two.
+        /// Useful for computing valid OpenGL texture sizes.
+        /// </summary>
+        public static int ComputeNextHighestPowerOfTwo(int n)
+        {
+            int result;
+            int i;
 
-        //    int FACE_RESTART_INDEX = 2; // 0 - 2
+            --n;
 
-        //    box = new BoundingBox();
+            for (i = 1; i < 32; i <<= 1)
+            {
+                n = n | n >> i;
+            }
 
-        //    maxwidth = float.MinValue;
-        //    maxdepth = float.MinValue;
-        //    maxheight = float.MinValue;
-        //    minwidth = float.MaxValue;
-        //    mindepth = float.MaxValue;
-        //    minheight = float.MaxValue;
+            result = n + 1;
 
-        //    if (its.coordinate != null && its.coordinate.point != null)
-        //    {
-        //        for (i = 0; i < its._indicies.Length; i++)
-        //        {
-        //            facesetPointer = its._indicies[i];
-
-        //            if (restartIndex.HasValue)
-        //            {
-        //                if (facesetPointer != restartIndex.Value)
-        //                {
-        //                    if (!((facesetPointer * 3 < its.coordinate.point.Length) &&
-        //                        (facesetPointer * 3 + 1 < its.coordinate.point.Length) &&
-        //                        (facesetPointer * 3 + 2 < its.coordinate.point.Length)) || facesetPointer < 0)
-        //                    {
-        //                        /* If an index specified in coordIndex is invalid or not related to coordinate.point, we need to skip it */
-        //                        /* At this point we could display a warning message for each one of these errors 
-        //                            * indicating the particular cordIndex and the maximum range exceeded */
-        //                        continue;
-        //                    }
-
-        //                    v = its._coords[facesetPointer];
-
-        //                    maxwidth = Math.Max(v.X, maxwidth);
-        //                    minwidth = Math.Min(v.X, minwidth);
-
-        //                    maxdepth = Math.Max(v.Z, maxdepth);
-        //                    mindepth = Math.Min(v.Z, mindepth);
-
-        //                    minheight = Math.Max(v.Y, minheight);
-        //                    minheight = Math.Min(v.Y, minheight);
-        //                }
-        //            }
-        //            else
-        //            {
-        //                // NO RESTART INDEX, assume new face is at every 3rd value / i = 2
-
-        //                if (facesetPointer > 0 && facesetPointer % FACE_RESTART_INDEX == 0)
-        //                {
-        //                    if (!((facesetPointer * 3 < its.coordinate.point.Length) &&
-        //                        (facesetPointer * 3 + 1 < its.coordinate.point.Length) &&
-        //                        (facesetPointer * 3 + 2 < its.coordinate.point.Length)) || facesetPointer < 0)
-        //                    {
-        //                        /* If an index specified in coordIndex is invalid or not related to coordinate.point, we need to skip it */
-        //                        /* At this point we could display a warning message for each one of these errors 
-        //                            * indicating the particular cordIndex and the maximum range exceeded */
-        //                        continue;
-        //                    }
-
-        //                    v = its._coords[facesetPointer];
-
-        //                    maxwidth = Math.Max(v.X, maxwidth);
-        //                    minwidth = Math.Min(v.X, minwidth);
-
-        //                    maxdepth = Math.Max(v.Z, maxdepth);
-        //                    mindepth = Math.Min(v.Z, mindepth);
-
-        //                    maxheight = Math.Max(v.Y, maxheight);
-        //                    minheight = Math.Min(v.Y, minheight);
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    box.Width = Math.Abs(maxwidth) + Math.Abs(minwidth);
-        //    box.Height = Math.Abs(maxheight) + Math.Abs(minheight);
-        //    box.Depth = Math.Abs(maxdepth) + Math.Abs(mindepth);
-
-        //    if (box.Height == 0) box.Height = 1.0f;
-
-        //    return box;
-        //}
-
-        //public static BoundingBox CalcBoundingBox(IndexedFaceSet ifs, int? restartIndex)
-        //{
-        //    BoundingBox box;
-        //    int i;
-        //    int facesetPointer;
-        //    float maxwidth;
-        //    float minwidth;
-        //    float maxdepth;
-        //    float mindepth;
-        //    float maxheight;
-        //    float minheight;
-        //    Vector3 v;
-
-        //    int FACE_RESTART_INDEX = 2;
-
-        //    box = new BoundingBox();
-
-        //    maxwidth = float.MinValue;
-        //    maxdepth = float.MinValue;
-        //    maxheight = float.MinValue;
-        //    minwidth = float.MaxValue;
-        //    mindepth = float.MaxValue;
-        //    minheight = float.MaxValue;
-
-        //    if (ifs.coordinate != null && ifs.coordinate.point != null)
-        //    {
-        //        for (i = 0; i < ifs._pack._indices.Length; i++)
-        //        {
-        //            facesetPointer = ifs._pack._indices[i];
-
-        //            if (restartIndex.HasValue)
-        //            {
-        //                if (facesetPointer != restartIndex.Value)
-        //                {
-        //                    if (!((facesetPointer * 3 < ifs.coordinate.point.Length) &&
-        //                        (facesetPointer * 3 + 1 < ifs.coordinate.point.Length) &&
-        //                        (facesetPointer * 3 + 2 < ifs.coordinate.point.Length)) || facesetPointer < 0)
-        //                    {
-        //                        /* If an index specified in coordIndex is invalid or not related to coordinate.point, we need to skip it */
-        //                        /* At this point we could display a warning message for each one of these errors 
-        //                            * indicating the particular cordIndex and the maximum range exceeded */
-        //                        continue;
-        //                    }
-                            
-        //                    v = ifs._pack._coords[facesetPointer];
-
-        //                    maxwidth = Math.Max(v.X, maxwidth);
-        //                    minwidth = Math.Min(v.X, minwidth);
-
-        //                    maxdepth = Math.Max(v.Z, maxdepth);
-        //                    mindepth = Math.Min(v.Z, mindepth);
-
-        //                    minheight = Math.Max(v.Y, minheight);
-        //                    minheight = Math.Min(v.Y, minheight);
-        //                }
-        //            }
-        //            else
-        //            {
-        //                // NO RESTART INDEX, assume new face is at every 3rd value / i = 2
-
-        //                if (ifs._pack._indices.Length == 4)
-        //                {
-        //                    FACE_RESTART_INDEX = 3; // 0-3 Quad
-        //                }
-        //                else if (ifs._pack._indices.Length == 3)
-        //                {
-        //                    FACE_RESTART_INDEX = 2; // 0-3 Triangle
-        //                }
-        //                else
-        //                {
-        //                    FACE_RESTART_INDEX = 2;
-        //                }
-
-        //                if (facesetPointer > 0 && facesetPointer % FACE_RESTART_INDEX == 0)
-        //                {
-        //                    if (!((facesetPointer * 3 < ifs.coordinate.point.Length) &&
-        //                        (facesetPointer * 3 + 1 < ifs.coordinate.point.Length) &&
-        //                        (facesetPointer * 3 + 2 < ifs.coordinate.point.Length)) || facesetPointer < 0)
-        //                    {
-        //                        /* If an index specified in coordIndex is invalid or not related to coordinate.point, we need to skip it */
-        //                        /* At this point we could display a warning message for each one of these errors 
-        //                            * indicating the particular cordIndex and the maximum range exceeded */
-        //                        continue;
-        //                    }
-
-        //                    v = ifs._pack._coords[facesetPointer];
-
-        //                    maxwidth = Math.Max(v.X, maxwidth);
-        //                    minwidth = Math.Min(v.X, minwidth);
-
-        //                    maxdepth = Math.Max(v.Z, maxdepth);
-        //                    mindepth = Math.Min(v.Z, mindepth);
-
-        //                    maxheight = Math.Max(v.Y, maxheight);
-        //                    minheight = Math.Min(v.Y, minheight);
-        //                }
-        //            }
-        //        }
-        //    }
-
-        //    box.Width = Math.Abs(maxwidth) + Math.Abs(minwidth);
-        //    box.Height = Math.Abs(maxheight) + Math.Abs(minheight);
-        //    box.Depth = Math.Abs(maxdepth) + Math.Abs(mindepth);
-
-        //    if (box.Height == 0) box.Height = 1.0f;
-
-        //    return box;
-        //}
-
-        //public static BoundingBox CalcBoundingBox(ElevationGrid elevationGrid)
-        //{
-        //    BoundingBox bbox;
-        //    int xDim, zDim;
-
-        //    xDim = elevationGrid._xDimension - 1;
-        //    zDim = elevationGrid._zDimension - 1;
-
-        //    bbox = new BoundingBox();
-
-        //    bbox.Width = xDim * elevationGrid._xSpacing;
-        //    bbox.Depth = zDim * elevationGrid._zSpacing;
-        //    bbox.Height = elevationGrid.MaxHeight - elevationGrid.MinHeight;
-
-        //    return bbox;
-        //}
+            return result;
+        }
 
         /// <summary>
         /// Calculate all the Texture Coordinates given input verticies and a bounding box
@@ -332,6 +132,30 @@ namespace X3D
             }
 
             return verticies;
+        }
+
+        /// <summary>
+        /// Calculates the Maximum component within the vector.
+        /// </summary>
+        public static float Max(Vector3 vector)
+        {
+            float result;
+
+            result = Math.Max(vector.X, Math.Max(vector.Y, vector.Z));
+
+            return result;
+        }
+
+        /// <summary>
+        /// Calculates the Minimum component within the vector.
+        /// </summary>
+        public static float Min(Vector3 vector)
+        {
+            float result;
+
+            result = Math.Min(vector.X, Math.Min(vector.Y, vector.Z));
+
+            return result;
         }
 
         /// <summary>
@@ -423,8 +247,146 @@ namespace X3D
             return new Vector2((float)(Math.Asin(facetNormal.X) / Math.PI + 0.5),
                 (float)(Math.Asin(facetNormal.Y) / Math.PI + 0.5));
         }
+
+        public static Vector3 ToHSV(Vector3 color)
+        {
+            Vector3 result; // the resultant color converted to HSV space
+            float hue;              // degrees [0, 360]
+            float saturation;       // [0, 1]
+            float value;            // [0, 1]
+            float min,
+                  max,
+                  delta;
+            Vector3 c;
+
+            c = color * 255;
+
+            System.Drawing.Color _color = System.Drawing.Color.FromArgb(255, (int)c.X, (int)c.Y, (int)c.Z);
+            hue = _color.GetHue();
+            saturation = _color.GetSaturation();
+            value = _color.GetBrightness() * 255;
+            return new Vector3(hue, saturation, value);
+
+
+
+            //if (c.X == 255 && c.Y == 255 && c.Z == 255)
+            //{
+            //    hue = 0;
+            //    saturation = 0;
+            //    value = 100;
+
+            //    return new Vector3(hue, saturation, value);
+            //}
+
+            min = Min(c);
+            max = Max(c);
+
+            value = max;
+            delta = max - min;
+
+            if (max != 0)
+            {
+                if(delta == 0)
+                {
+                    if(min == 255)
+                    {
+                        saturation = 0;
+                    }
+                    else
+                    {
+                        saturation = min / 255;
+                    }
+                }
+                else
+                {
+                    saturation = delta / max;
+                }
+            }
+            else
+            {
+                saturation = 0;
+                hue = 0;
+                value = 0;
+
+                return new Vector3(hue, saturation, value);
+            }
+
+            if (c.X == max) // red is dominant
+                hue = (c.Y - c.Z) / delta;       // between yellow & magenta
+            else if (c.Y == max) // green is dominant
+                hue = 2 + (c.Z - c.X) / delta;   // between cyan & yellow
+            else // blue is dominant
+                hue = 4 + (c.X - c.Y) / delta;   // between magenta & cyan
+
+            hue *= 60;
+
+            if (hue < 0)
+                hue += 360;
+
+            if (float.IsNaN(hue))
+            {
+                hue = 0;
+            }
+
+            result = new Vector3(hue, saturation, value);
+
+            return result;
+        }
+
+        public static Vector3 FromHSV(Vector3 hsv)
+        {
+            Vector3 result; // the resultant HSV value converted to RGB space
+            float hue;
+            float saturation;
+            float value;
+            int i;
+            float f;
+            float v;
+            float p;
+            float q;
+            float t;
+
+            hue = hsv.X;
+            saturation = hsv.Y;
+            value = hsv.Z;
+
+            i = Convert.ToInt32(Math.Floor(hue / 60)) % 6;
+            f = hue / 60f - (float)Math.Floor(hue / 60f);
+
+            v = value;
+            p = (value * (1 - saturation));
+            q = (value * (1 - f * saturation));
+            t = (value * (1 - (1 - f) * saturation));
+
+            switch (i)
+            {
+                default:
+                    result = new Vector3(v, p, q);
+                    break;
+                case 0:
+                    result = new Vector3(v, t, p);
+                    break;
+                case 1:
+                    result = new Vector3(q, v, p);
+                    break;
+                case 2:
+                    result = new Vector3(p, v, t);
+                    break;
+                case 3:
+                    result = new Vector3(p, q, v);
+                    break;
+                case 4:
+                    result = new Vector3(t, p, v);
+                    break;
+            }
+
+            result /= 255.0f;
+
+            return result;
+        }
+
         /// <summary>
-        /// Computes spherical linear interpolaton between two points p0 p1
+        /// Computes spherical linear interpolaton between two points 'from' 'to'
         /// </summary>
         public static Vector3 Slerp(Vector3 from, Vector3 to, float ratio)
         {
@@ -444,11 +406,13 @@ namespace X3D
         }
 
         /// <summary>
-        /// Computes linear interpolation between two points p0 p1
+        /// Computes linear interpolation between two points 'from' 'to'
+        /// and returns the resultant interpolated value that lies within the specified range.
         /// </summary>
-        public static Vector3 Lerp(Vector3 from, Vector3 p1, float ratio)
+        public static Vector3 Lerp(Vector3 from, Vector3 to, float ratio)
         {
-            return new Vector3(from + (p1 - from) * ratio);
+            //return (from * (1.0f - ratio)) + (to * ratio);
+            return (from + (to - from) * ratio);
         }
 
         public static Vector3 Perp(Vector3 v)
