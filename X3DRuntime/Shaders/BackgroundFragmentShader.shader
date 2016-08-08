@@ -29,7 +29,7 @@ vec3 selectSkyColor(int index)
 // INTERPOLATION functions
 
 /// <summary>
-/// Computes spherical linear interpolaton between two points p0 p1
+/// Computes spherical linear interpolaton between two points 'from' 'to'
 /// </summary>
 vec3 slerp(vec3 from, vec3 to, float ratio) 
 {
@@ -48,11 +48,11 @@ vec3 slerp(vec3 from, vec3 to, float ratio)
 }
 
 /// <summary>
-/// Computes linear interpolation between two points p0 p1
+/// Computes linear interpolation between two points 'from' 'to'
 /// </summary>
-vec3 lerp(vec3 from, vec3 p1, float ratio)
+vec3 lerp(vec3 from, vec3 to, float ratio)
 {
-	return vec3(from + (p1 - from) * ratio);
+	return vec3(from + (to - from) * ratio);
 }
 
 /// <summary>
