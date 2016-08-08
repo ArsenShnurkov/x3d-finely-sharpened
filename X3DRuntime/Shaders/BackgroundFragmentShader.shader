@@ -5,14 +5,21 @@
 // Fragment Shader
 //      by Gerallt Franke Copyright 2013 - 2016
 
+varying vec3 normalVec;
+
 in vec3 vPosition;
+in vec3 N;
 out vec4 FragColor;
+
+uniform sampler2D _MainTex;
 
 uniform int skyColors;
 uniform float skyColor[255 * 3];
 uniform float skyAngle[255];
 uniform int isGround;
 uniform vec3 bbox;
+uniform vec3 max;
+uniform vec3 min;
 
 /// <summary>
 /// Chooses between sky colors given an index.
@@ -76,30 +83,23 @@ void main()
 	float skyPitchRatio;
 	float PI = 3.14159;
 	float PI2 = 2 * PI;
+	vec4 texture_color;
 
-	pitch_ratio = (vPosition.y / bbox.y); // ratio where the vertex is around the sphere
+	pitch_ratio = (max.y - vPosition.y) / bbox.y; // ratio where the vertex is around the sphere
 
-
-	i = int(mod(pitch_ratio, skyColors)); // index into the sky colors
 	//i = int(pitch_ratio * skyColors);
-	j = i > skyColors ? i : i + 1;
 
-	angle = skyAngle[i];
-	next_angle = skyAngle[j];
+	//sky = selectSkyColor(i);
 
-	seg_from = selectSkyColor(i);
-	seg_to = selectSkyColor(j);
+	//FragColor = vec4(sky, 1.0);
+
+
+	vec2 uv_sphere = vec2(0, 0);
+	uv_sphere.y = pitch_ratio;
+
+	texture_color = texture2D(_MainTex, uv_sphere);
 	
-	//BUG: this isnt quite how the Background node is meant to be implemented. 
-	// Need to take into account the skyAngles so color ranges are placed where they are meant to be.
+	FragColor = texture_color;
 
-	//i = int(mod(angle / PI2, skyColors));
-
-	//float angSegment = lerpf();
-
-	sky = slerp(seg_from, seg_to, pitch_ratio);
-
-	sky = selectSkyColor(2);
-
-	FragColor = vec4(sky, 1.0);
+	
 }

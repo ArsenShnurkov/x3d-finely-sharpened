@@ -11,7 +11,10 @@ uniform vec3 size;
 uniform vec3 scale;
 uniform vec3 X3DScale;
 
+varying vec3 normalVec;
+
 out vec3 vPosition;
+out vec3 N;
 
 void main()
 {
@@ -20,4 +23,7 @@ void main()
 	vPosition = X3DScale * camscale * scale * size * position;
 
 	gl_Position = model * vec4(vPosition, 1.0);
+
+	N = normalize(gl_NormalMatrix * gl_Normal);
+	normalVec = normalize(normal);
 }
