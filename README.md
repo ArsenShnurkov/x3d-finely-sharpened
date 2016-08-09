@@ -18,7 +18,7 @@ Intro
 With software like Blender as well as products like InstantReality, 
 X3D as a markup for 3D scenes makes for a viable alternative 
 to the COLLADA XML dialect and other 3D formats and engines. 
-In addition to the realtime rendeirng capabilities of a typical X3D engine, 
+In addition to the realtime rendering capabilities of a typical X3D engine, 
 X3D serves as a good abstraction, an interchange, 
 bundling all the concepts of a modern realtime engine 
 into one package that is very programmer friendly. 
