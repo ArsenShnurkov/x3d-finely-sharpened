@@ -22,10 +22,13 @@ In addition to the realtime rendering capabilities of a typical X3D engine,
 X3D serves as a good abstraction, an interchange, 
 bundling all the concepts of a modern realtime engine 
 into one package that is very programmer friendly. 
+
 There is a future where all Mixed Reality applications 
 will be based on a converged 3D standard. 
-We believe this standard will be X3D Extensible 3D graphics. 
-Mixed Reality for the web, mobile, and desktop platforms.  
+We believe this standard is X3D Extensible 3D Graphics 
+furthering development of standardised Mixed Reality interfaces 
+for the web, mobile, and desktop platforms. 
+This engine is focusing on this space and will be multiplatform.
 
 "X3D is used for building 3-dimensional models, both simple and sophisticated, 
 X3D can show animated objects from different viewpoint perspectives, 
