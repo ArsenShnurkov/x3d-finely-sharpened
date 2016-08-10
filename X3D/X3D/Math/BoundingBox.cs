@@ -79,6 +79,18 @@ namespace X3D
 
         #region Public Methods
 
+        public Vector3 ToVector3()
+        {
+            return new Vector3(this.Width, this.Height, this.Depth);
+        }
+
+        public void FromVector3(Vector3 bbox)
+        {
+            this.Width = bbox.X;
+            this.Height = bbox.Y;
+            this.Depth = bbox.Z;
+        }
+
         /// <summary>
         /// Computes the bounding volume surrounding the specified Group, 
         /// that is the bounding volume of all decendants within the Group.
@@ -433,9 +445,9 @@ namespace X3D
             bbox = new BoundingBox();
 
             bbox.Width = xDim * elevationGrid._xSpacing;
-            bbox.Depth = zDim * elevationGrid._zSpacing;
             bbox.Height = elevationGrid.MaxHeight - elevationGrid.MinHeight;
-
+            bbox.Depth = zDim * elevationGrid._zSpacing;
+            
             return bbox;
         }
 
