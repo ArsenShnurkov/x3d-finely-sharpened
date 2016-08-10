@@ -68,16 +68,25 @@ float toRadians(float degrees) {
 }
 
 vec3 ads(vec4 col_accum){
+	vec3 result;
 	vec3 Ka = vec3(0.5, 0.5, 0.5);
 	vec3 Kd = col_accum.xyz; //vec3(0.0, 0.0, 0.0);
 	vec3 Ks = vec3(0.9, 0.9, 0.0);
+	vec3 normal;
+
+	if (length(N) > 0) {
+		normal = N;
+	}
+	if (length(normalVec) > 0) {
+		normal = normalVec;
+	}
 
 	vec3 fragPosition = vec3(model * vec4(vPosition, 1));
 	
 	vec3 v = normalize(-fragPosition);
 	vec3 lightIntensity = vec3(0.8, 0.8, 0.8);
 	vec3 lightPosition = fragPosition;
-	vec3 n = normalize(N);
+	vec3 n = normalize(normal);
 	vec3 s = normalize(lightPosition - fragPosition);
 	
 	vec3 h = normalize(v + s);
@@ -88,10 +97,17 @@ vec3 ads(vec4 col_accum){
 			Kd * max(dot(s, n), 0.0) +
 			Ks * pow(max(dot(h, n), 0.0), Shininess));*/
 
-	return lightIntensity *
+	if (texturingEnabled == 1)
+	{
+		lightIntensity = vec3(1, 1, 1);
+	}
+
+	result = lightIntensity *
 		(col_accum.xyz * max(dot(s, n), 0.0)
 			+ (Ks * pow(max(dot(h, n), 0.0), Shininess))
 			);
+
+	return result;
 }
 
 vec3 spotlight() {

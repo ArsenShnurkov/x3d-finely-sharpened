@@ -35,7 +35,7 @@ void main()
 	N = normalize(gl_NormalMatrix * gl_Normal);
 
 	vec4 eyePos = gl_ModelViewMatrixInverse * vec4(0., 0., 0., 1.);
-	eyeVec = normalize(eyePos.xyz - position.xyz);
+	eyeVec = normalize(position.xyz - eyePos.xyz); 	//eyeVec = normalize(eyePos.xyz - position.xyz);
 
 	vec4 lightPos = modelview * vec4(1.0, 0.0, 0.0, 1.0); // gl_ModelViewMatrixInverse  gl_LightSource[0].position.xyz
 	lightVec = normalize(lightPos.xyz - position.xyz);
