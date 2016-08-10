@@ -15,11 +15,31 @@ Quick run through
 Intro
 ```
 
-With software like Blender as well as libraries like OpenTK, X3D as a markup for 3D scenes makes for a viable alternative to the COLLADA XML dialect and other 3D formats.
+With software like Blender as well as products like InstantReality, 
+X3D as a markup for 3D scenes makes for a viable alternative 
+to the COLLADA XML dialect and other 3D formats and engines. 
+In addition to the realtime rendering capabilities of a typical X3D engine, 
+X3D serves as a good abstraction, an interchange, 
+bundling all the concepts of a modern realtime engine 
+into one package that is very programmer friendly. 
 
-"X3D is used for building 3-dimensional models, both simple and sophisticated, X3D can show animated objects from different viewpoint perspectives, allowing user insight and interaction. X3D models can be further combined and connected to build sophisticated 3D virtual environments running across the Internet." (Brutzman and Daly, 2007)
+There is a future where all Mixed Reality applications 
+will be based on a converged 3D standard. 
+We believe this standard is X3D Extensible 3D Graphics 
+furthering development of standardised Mixed Reality interfaces 
+for the web, mobile, and desktop platforms. 
+This engine is focusing on this space and will be multiplatform.
 
-A copy of the OpenTK library ships along as the engine uses it at the moment as a point of reference to OpenGL. Currently we're a bit low on documentation but I have included a few X3D examples pulled from random sources on the www.
+"X3D is used for building 3-dimensional models, both simple and sophisticated, 
+X3D can show animated objects from different viewpoint perspectives, 
+allowing user insight and interaction. 
+X3D models can be further combined and connected to build sophisticated 3D virtual environments 
+running across the Internet." (Brutzman and Daly, 2007)
+
+A copy of the OpenTK library ships along as the engine uses it at the moment as a wrapper to OpenGL. 
+Currently we're a bit low on documentation 
+there are included a few X3D examples 
+pulled from a few X3D content developers across the world wide web.
 ```
 
 This engine has had a massive overhaul, now we support shader and script programming - we are working on implementing both the Interchange and Interactive profiles... Some important components such as Prototyping and Sensors are absent, right now there are a small number of issues on the backlog currently being investigated so stay tuned!
