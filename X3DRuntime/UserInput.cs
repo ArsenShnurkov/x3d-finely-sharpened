@@ -21,7 +21,7 @@ namespace x3druntime.ui.opentk
         {
             switch (e.Key)
             {
-                case Key.F12:
+                case Key.F12: // toggle graph debugger
                     showGraphDebugger = !showGraphDebugger;
 
                     if (showGraphDebugger)
@@ -32,16 +32,9 @@ namespace x3druntime.ui.opentk
                     {
                         X3DGraphDebugger.Hide();
                     }
-
-                    break;
-                case Key.F4: // halt rotate
-                    rotate_enable = !rotate_enable;
-                    break;
-                case Key.F3: // halt special effects
-                    fx_enable = !fx_enable;
                     break;
 
-                case Key.F1:
+                case Key.F1: // toggle wireframe
                     wireframe = !wireframe;
                     if (wireframe)
                     {
@@ -60,7 +53,7 @@ namespace x3druntime.ui.opentk
                     }
                     break;
 
-                case Key.F2:
+                case Key.F2: // toggle points
                     points_only = !points_only;
                     if (points_only)
                     {
@@ -77,6 +70,18 @@ namespace x3druntime.ui.opentk
                             GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Fill);
                         }
                     }
+                    break;
+
+                case Key.F3: // halt special effects
+                    fx_enable = !fx_enable;
+                    break;
+
+                case Key.F4: // halt rotate
+                    rotate_enable = !rotate_enable;
+                    break;
+
+                case Key.F5: // reload current scene
+                    Reload();
                     break;
 
                 case Key.F:

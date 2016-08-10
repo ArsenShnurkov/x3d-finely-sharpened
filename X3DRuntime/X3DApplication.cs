@@ -55,6 +55,7 @@ namespace x3druntime.ui.opentk
         private bool slowFlySpeed = false;
         private bool isFullscreen = false;
         private bool showGraphDebugger = false;
+        private bool reloading = false;
 
         private SceneGraph _cachedGraph;
 
@@ -160,6 +161,22 @@ namespace x3druntime.ui.opentk
             }
         }
 
+        public void Reload()
+        {
+            reloading = true;
+
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            GL.ClearColor(ClearColor.X, ClearColor.Y, ClearColor.Z, ClearColor.W);
+
+            scene.Dispose();
+
+            Init(this.BaseURL, this.BaseMIME);
+
+            ActiveCamera.Reset();
+
+            reloading = false;
+        }
+
         public void Init(string url, string mime_type)
         {
             Console.WriteLine("LOAD <" + BaseMIME + "> " + BaseURL);
@@ -247,6 +264,8 @@ namespace x3druntime.ui.opentk
 
         public void Render(FrameEventArgs e)
         {
+            if (reloading) return;
+
             _prev = DateTime.Now;
             GL.Disable(EnableCap.Lighting);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
@@ -326,6 +345,8 @@ namespace x3druntime.ui.opentk
 
         public void FrameUpdated(FrameEventArgs e)
         {
+            //if (reloading) return;
+
             ApplyKeyBindings(e);
 
             Rectangle screen = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
