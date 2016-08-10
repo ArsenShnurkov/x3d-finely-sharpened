@@ -218,7 +218,7 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 //bboxInner = max - min;
 
                 
-                skydomeTexture = MakeSkydomeTexture(out skydomeColors);
+                skydomeTexture = MakeSkydomeTexture();
             }
 
             if (generateCube)
@@ -271,7 +271,7 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
         #region Private Methods
 
-        private int MakeSkydomeTexture(out Vector3[] skydomeColors)
+        private int MakeSkydomeTexture()
         {
             int i;
             int texture;
@@ -290,19 +290,19 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
             if (skyColors.Length > 0 || groundColors.Length > 0)
             {
-                //colors.Push(skyColors[skyColors.Length - 1]);
+                //colors.Push(skyColors.Last());
                 for (i = 0; i < skyColors.Length; i++)
                 {
                     colors.Push(skyColors[i]);
                 }
                 
+
                 angles.Push(0);
                 for (i = 0; i < skyAngles.Length; i++)
                 {
                     angles.Push(skyAngles[i]);
                 }
-               
-
+                
 
                 if (groundAngles.Length >= 0 || groundColors.Length == 1)
                 {
@@ -350,7 +350,6 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                     lst[i] /= MathHelpers.PI; 
                 }
                 angles = new Stack<float>(lst);
-                
 
                 // INTERPOLATE
                 interpolator = new ColorInterpolator();
