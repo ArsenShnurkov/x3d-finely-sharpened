@@ -227,10 +227,37 @@ namespace X3D.Core.Shading
             Console.WriteLine("[done]");
 
 
-            // STRIDE each float is 4 bytes
-            // TC    C          P         N
-            // [1 1] [1 1 1 1]  [1 1 1]   [1 1 1]
-            //     8        24  28    36  40   48
+            // Each vertex in the interleaved structure is defined as follows..
+            //
+            // In x3d-finely-sharpened, each field 'f' is a floating point value. 
+            // The size of a float is 4 bytes, the size of a vertex structure is calculated as follows:
+            //
+            // 'p' position field is 12 bytes (3 fields * 4 bytes = 12 bytes) 
+            // 'n' normal field is 12 bytes (3 fields * 4 bytes = 12 bytes) 
+            // 'c' color field is 16 bytes (4 fields * 4 bytes = 16 bytes) 
+            // 'tc' texture coordinate field is 8 bytes (2 fields * 4 bytes = 8 bytes) 
+
+            // The STRIDE is the number of bytes between each interleaved structure
+            //  stride = Pf + Nf + Cf + TCf
+            //  stride = 12 + 12 + 16 + 8
+            //  stride = 48 bytes
+            //
+            //  Luckily this new implementation doesnt require calculation of stride
+            //  however it is important to keep to this structure. 
+            //  Floating point values must used uniformally for each field. 
+            //  'c' color field must be composed of 4 floating point values 
+            //  otherwise if there is no alpha channel OpenGL pads the color to 16 bytes 
+            //  automatically. This creates uneven structures and results in undesired operation.
+            //
+            //  If any new fields need to be added to the Vertex structure,
+            //  this model needs updating to reflect the changes 
+            //  new fields must be floating point values, 
+            //  finally Vertex.SizeInBytes should be checked to see 
+            //  if it returns the same value as the calculation above. 
+            //
+            // P        N        C          TC
+            // [f f f]  [f f f]  [f f f f]  [f f]
+            //      12  13   24  25     40  41 50
 
             NumVerticies = _interleaved.Length;
 
