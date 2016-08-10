@@ -16,6 +16,7 @@
     <meta content='../../license.html' name='license'/>
   </head>
   <Scene>
+	<NavigationInfo type="WALK" />
     <Viewpoint description='Per-vertex colored mountain' orientation='1 0 0 -0.4' position='4 8 16'/>
     <Shape>
       <ElevationGrid creaseAngle='0.785' height='0.0 0.0 0.5 1.0 0.5 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 2.5 0.5 0.0 0.0 0.0 0.0 0.0 0.5 0.5 3.0 1.0 0.5 0.0 1.0 0.0 0.0 0.5 2.0 4.5 2.5 1.0 1.5 0.5 1.0 2.5 3.0 4.5 5.5 3.5 3.0 1.0 0.0 0.5 2.0 2.0 2.5 3.5 4.0 2.0 0.5 0.0 0.0 0.0 0.5 1.5 1.0 2.0 3.0 1.5 0.0 0.0 0.0 0.0 0.0 0.0 0.0 2.0 1.5 0.5 0.0 0.0 0.0 0.0 0.0 0.0 0.5 0.0 0.0' solid='false' xDimension='9' zDimension='9'>
