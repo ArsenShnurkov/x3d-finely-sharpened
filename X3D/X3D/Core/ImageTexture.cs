@@ -465,7 +465,65 @@ namespace X3D
 
         #region Private Methods
 
+        public static Size GetTextureGLMaxSize(Bitmap image)
+        {
+            Size result;
+            int[] textureMaxSize;
+            int glTexWidth,
+                glTexHeight;
 
+            /*	Get the maximum texture size supported by OpenGL: */
+            textureMaxSize = new int[] { 0 };
+            GL.GetInteger(GetPName.MaxTextureSize, textureMaxSize);
+            //gl.GetInteger(OpenGL.GL_MAX_TEXTURE_SIZE,textureMaxSize);
+
+            /*	Find the target width and height sizes, which is just the highest
+             *	posible power of two that'll fit into the image. */
+            glTexWidth = textureMaxSize[0];
+            glTexHeight = textureMaxSize[0];
+            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+            {
+                if (image.Width < size)
+                {
+                    glTexWidth = size / 2;
+                    break;
+                }
+                if (image.Width == size)
+                    glTexWidth = size;
+
+            }
+
+            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+            {
+                if (image.Height < size)
+                {
+                    glTexHeight = size / 2;
+                    break;
+                }
+                if (image.Height == size)
+                    glTexHeight = size;
+            }
+
+            result = new Size()
+            {
+                Width = glTexWidth,
+                Height = glTexHeight
+            };
+
+            return result;
+        }
+
+        public static void Rescale(ref Bitmap image, Size newSize)
+        {
+            if (image.Width != newSize.Width || image.Height != newSize.Height)
+            {
+                /* Scale the image according to OpenGL requirements */
+                Image newImage = image.GetThumbnailImage(newSize.Width, newSize.Height, null, IntPtr.Zero);
+
+                image.Dispose();
+                image = (Bitmap)newImage;
+            }
+        }
 
         #endregion
 
@@ -536,46 +594,9 @@ namespace X3D
                 return false;
             }
 
-            /*	Get the maximum texture size supported by OpenGL: */
-            textureMaxSize = new int[] { 0 };
-            GL.GetInteger(GetPName.MaxTextureSize, textureMaxSize);
-            //gl.GetInteger(OpenGL.GL_MAX_TEXTURE_SIZE,textureMaxSize);
+            var newSize = GetTextureGLMaxSize(image);
 
-            /*	Find the target width and height sizes, which is just the highest
-             *	posible power of two that'll fit into the image. */
-            glTexWidth = textureMaxSize[0];
-            glTexHeight = textureMaxSize[0];
-            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
-            {
-                if (image.Width < size)
-                {
-                    glTexWidth = size / 2;
-                    break;
-                }
-                if (image.Width == size)
-                    glTexWidth = size;
-
-            }
-
-            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
-            {
-                if (image.Height < size)
-                {
-                    glTexHeight = size / 2;
-                    break;
-                }
-                if (image.Height == size)
-                    glTexHeight = size;
-            }
-
-            if (image.Width != glTexWidth || image.Height != glTexHeight)
-            {
-                /* Scale the image according to OpenGL requirements */
-                Image newImage = image.GetThumbnailImage(glTexWidth, glTexHeight, null, IntPtr.Zero);
-
-                image.Dispose();
-                image = (Bitmap)newImage;
-            }
+            Rescale(ref image, newSize);
 
             //if(file.ToLower().EndsWith(".bmp")) {
             image.RotateFlip(RotateFlipType.RotateNoneFlipY); //TODO: figure out more efficient code
