@@ -131,10 +131,24 @@ namespace X3D
 
             if (materials.Any())
             {
-                shader.SetFieldValue("materialsCount", shaderMaterials.Count);
 
-                Buffering.BufferMaterials(shader, shaderMaterials, "materials");
             }
+            else
+            {
+                //shaderMaterials.Add(new ShaderMaterial()
+                //{
+                //     ambientIntensity = 0.1f,
+                //     diffuseColor = new Vector4(0,0,0,0),
+                //     emissiveColor = new Vector4(0,0,0,0),
+                //    specularColor = new Vector4(1, 1, 1, 1),
+                //    transparency = 1.0f,
+                //    shininess = 0.2f
+                //});
+            }
+
+            shader.SetFieldValue("materialsCount", shaderMaterials.Count);
+
+            Buffering.BufferMaterials(shader, shaderMaterials, "materials");
         }
 
 
@@ -224,9 +238,9 @@ namespace X3D
             cameraRot = Matrix4.CreateFromQuaternion(q); // cameraRot = MathHelpers.CreateRotation(ref q);
 
 
-            Matrix4 MVP = ((modelLocalRotation * model) * cameraTransl) * cameraRot // position and orient the Shape relative to the world and camera
+            Matrix4 MVP = ((modelLocalRotation * model) * cameraTransl) * cameraRot; // position and orient the Shape relative to the world and camera
 
-                ; // this is the MVP matrix
+                
 
             //shader.SetFieldValue("size", new Vector3(bbox.Width, bbox.Height, bbox.Depth) * bbscale);
             shader.SetFieldValue("modelview", ref MVP); //GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);

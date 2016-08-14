@@ -49,7 +49,7 @@ struct X3DMaterial
 	float transparency;
 };
 
-const int MATERIALS_LIMIT = 10; // finely-sharpened imposes a limit of 10 materials per object
+const int MATERIALS_LIMIT = 16; // finely-sharpened imposes a limit of 16 materials per object
 const vec3 black = vec3(1, 1, 1);
 const vec3 yellow = vec3(1, 1, 1);
 const vec3 white = vec3(.9, .9, 1);

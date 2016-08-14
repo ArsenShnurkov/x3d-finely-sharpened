@@ -5,6 +5,8 @@ using System.Text;
 
 namespace X3D.Core.Shading.DefaultUniforms
 {
+    //TODO: depricate and refactor
+
     public class ShaderUniformsPNCT
     {
         public int a_position;

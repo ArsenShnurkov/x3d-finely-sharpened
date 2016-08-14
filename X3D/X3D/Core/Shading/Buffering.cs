@@ -29,11 +29,11 @@ namespace X3D.Core.Shading
             int uboMaterial;
             int uboIndex; // Index to use for the buffer binding. All binding indicies start from 0
             ShaderMaterial[] _materials; 
-            ShaderMaterial[] tmp;
+            ShaderMaterial[] src;
 
-            _materials = new ShaderMaterial[10]; // finely-sharpened imposes a limit of 10 of materials per object
-            tmp = materials.ToArray();
-            Array.Copy(tmp, _materials, tmp.Length);
+            _materials = new ShaderMaterial[16]; // finely-sharpened imposes a limit of 16 of materials per object
+            src = materials.ToArray();
+            Array.Copy(src, 0, _materials, 0, src.Length);
 
             uboIndex = 0;
             uboMaterial = GL.GenBuffer();
