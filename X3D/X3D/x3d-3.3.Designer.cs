@@ -942,12 +942,19 @@ namespace X3D
         //}
     }
 
-    public abstract partial class X3DGroupingNode : X3DChildNode
+    public interface X3DBoundedObject
     {
+        Vector3 bboxCenter { get; set; }
+        Vector3 bboxSize { get; set; }
+    }
 
-        public X3DGroupingNode()
-        {
-        }
+    public abstract partial class X3DGroupingNode : X3DChildNode, X3DBoundedObject
+    {
+        [XmlAttributeAttribute]
+        public Vector3 bboxCenter { get; set; }
+
+        [XmlAttributeAttribute]
+        public Vector3 bboxSize { get; set; }
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -22341,12 +22348,14 @@ namespace X3D
         //}
     }
 
-    public partial class StaticGroup : X3DChildNode
+    public partial class StaticGroup : X3DChildNode, X3DBoundedObject
     {
 
-        public StaticGroup()
-        {
-        }
+        [XmlAttributeAttribute]
+        public Vector3 bboxCenter { get; set; }
+
+        [XmlAttributeAttribute]
+        public Vector3 bboxSize { get; set; }
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
