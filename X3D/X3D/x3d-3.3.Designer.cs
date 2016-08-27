@@ -574,7 +574,7 @@ namespace X3D
 
     }
 
-    public abstract partial class X3DShapeNode : X3DChildNode
+    public abstract partial class X3DShapeNode : X3DChildNode, X3DBoundedObject
     {
         /*
           SFNode  [in,out] appearance NULL     [X3DAppearanceNode]
@@ -586,7 +586,37 @@ namespace X3D
         public X3DGeometryNode geometry { get; set; }
         public X3DAppearanceNode appearance { get; set; }
 
-        //TODO: Shape's bounding box
+        [XmlIgnore]
+        public Vector3 BboxCenter { get; set; }
+
+        [XmlIgnore]
+        public Vector3 BboxSize { get; set; }
+
+        [XmlAttributeAttribute]
+        public string bboxCenter
+        {
+            get
+            {
+                return X3DTypeConverters.ToString(BboxCenter);
+            }
+            set
+            {
+                BboxCenter = X3DTypeConverters.SFVec3f(value);
+            }
+        }
+
+        [XmlAttributeAttribute]
+        public string bboxSize
+        {
+            get
+            {
+                return X3DTypeConverters.ToString(BboxSize);
+            }
+            set
+            {
+                BboxSize = X3DTypeConverters.SFVec3f(value);
+            }
+        }
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -940,21 +970,6 @@ namespace X3D
         //        this.containerField = value;
         //    }
         //}
-    }
-
-    public interface X3DBoundedObject
-    {
-        Vector3 bboxCenter { get; set; }
-        Vector3 bboxSize { get; set; }
-    }
-
-    public abstract partial class X3DGroupingNode : X3DChildNode, X3DBoundedObject
-    {
-        [XmlAttributeAttribute]
-        public Vector3 bboxCenter { get; set; }
-
-        [XmlAttributeAttribute]
-        public Vector3 bboxSize { get; set; }
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
@@ -3772,6 +3787,92 @@ namespace X3D
     {
     }
 
+    public interface X3DBoundedObject
+    {
+        Vector3 BboxCenter { get; set; }
+        Vector3 BboxSize { get; set; }
+
+        string bboxCenter { get; set; }
+        string bboxSize { get; set; }
+    }
+
+    public abstract partial class X3DGroupingNode : X3DChildNode, X3DBoundedObject
+    {
+        [XmlIgnore]
+        public Vector3 BboxCenter { get; set; }
+
+        [XmlIgnore]
+        public Vector3 BboxSize { get; set; }
+
+        [XmlAttributeAttribute]
+        public string bboxCenter
+        {
+            get
+            {
+                return X3DTypeConverters.ToString(BboxCenter);
+            }
+            set
+            {
+                BboxCenter = X3DTypeConverters.SFVec3f(value);
+            }
+        }
+
+        [XmlAttributeAttribute]
+        public string bboxSize
+        {
+            get
+            {
+                return X3DTypeConverters.ToString(BboxSize);
+            }
+            set
+            {
+                BboxSize = X3DTypeConverters.SFVec3f(value);
+            }
+        }
+    }
+
+    [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [SerializableAttribute()]
+    //[System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [XmlTypeAttribute(AnonymousType = true)]
+    [XmlRootAttribute(Namespace = "", IsNullable = false)]
+    public partial class StaticGroup : X3DChildNode, X3DBoundedObject
+    {
+
+        [XmlIgnore]
+        public Vector3 BboxCenter { get; set; }
+
+        [XmlIgnore]
+        public Vector3 BboxSize { get; set; }
+
+        [XmlAttributeAttribute]
+        public string bboxCenter
+        {
+            get
+            {
+                return X3DTypeConverters.ToString(BboxCenter);
+            }
+            set
+            {
+                BboxCenter = X3DTypeConverters.SFVec3f(value);
+            }
+        }
+
+        [XmlAttributeAttribute]
+        public string bboxSize
+        {
+            get
+            {
+                return X3DTypeConverters.ToString(BboxSize);
+            }
+            set
+            {
+                BboxSize = X3DTypeConverters.SFVec3f(value);
+            }
+        }
+    }
+
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
     [SerializableAttribute()]
     //[System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -3782,11 +3883,6 @@ namespace X3D
     {
 
         // private string _containerField;
-
-        public Group()
-        {
-            // this.containerField = "children";
-        }
 
         //[XmlAttributeAttribute(DataType = "NMTOKEN")]
         //[System.ComponentModel.DefaultValueAttribute("children")]
@@ -22346,16 +22442,6 @@ namespace X3D
         //        this.containerField = value;
         //    }
         //}
-    }
-
-    public partial class StaticGroup : X3DChildNode, X3DBoundedObject
-    {
-
-        [XmlAttributeAttribute]
-        public Vector3 bboxCenter { get; set; }
-
-        [XmlAttributeAttribute]
-        public Vector3 bboxSize { get; set; }
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
