@@ -144,7 +144,7 @@ TODO: animations & interpolators and VW timing
 PARTLY: X3D Materials interpolated with textures optionally with lighting
 TODO: lighting; phong shading, lit and unlit models
 TODO: Navigation component; LOD, Billboard, Collision, ..
-TODO: Binary space partition, quadtree, or octtree optimisations
+TODO: Binary space partition, BVH, or Octtree optimisations
 TODO: Raycasting engine component
 PARTLY: geometry nodes
 PARTLY: shaders
