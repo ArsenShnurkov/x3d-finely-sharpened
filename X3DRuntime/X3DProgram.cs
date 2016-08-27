@@ -28,15 +28,20 @@ namespace X3D.Runtime
 
         #endregion
 
+        #region Public Static Fields
+
+        public static string url;
+
+        #endregion
+
         #region Private Static Fields
 
         private const int EXIT_SUCCESS = 0;
         private static VSyncMode VSync;
-        private static AutoResetEvent closureEvent;
         private static bool restartRequired = false;
         private static bool quitRequired = false;
         private static X3DBrowser browser;
-        public static string url;
+        private static AutoResetEvent closureEvent;
 
         #endregion
 
@@ -58,7 +63,7 @@ namespace X3D.Runtime
             quitRequired = true;
             restartRequired = false;
             browser.Close();
-            closureEvent.Set();
+            if(closureEvent!=null) closureEvent.Set();
         }
 
         public static void Restart()
@@ -67,7 +72,7 @@ namespace X3D.Runtime
 
             restartRequired = true;
             browser.Close();
-            closureEvent.Set();
+            if (closureEvent != null) closureEvent.Set();
         }
 
         public static SceneGraph LoadX3D(string x3dFile, bool scriptingEnabled = true)
