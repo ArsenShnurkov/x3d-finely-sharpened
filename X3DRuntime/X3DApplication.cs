@@ -27,7 +27,7 @@ using X3D.ConstructionSet;
  * The code that toggles the display of the console may need to be made platform independent. 
  */
 
-namespace x3druntime.ui.opentk
+namespace X3D.Runtime
 {
     public partial class X3DApplication : IDisposable
     {
@@ -46,7 +46,7 @@ namespace x3druntime.ui.opentk
         private bool ispanning, iszooming;
         private float mouseScale = 0.01f;
         private bool mouseDragging = false;
-        private bool? lockMouseCursor = null;
+        private bool? lockMouseCursor = true;
         //private float dx = 0, dy = 0;
         private Vector2 mouseDelta = Vector2.Zero;
         private Crosshair _crosshair;
@@ -300,7 +300,7 @@ namespace x3druntime.ui.opentk
 
 
 
-                Runtime.Draw(scene.SceneGraph, rc);
+                Engine.Runtime.Draw(scene.SceneGraph, rc);
 
                 if (showCrosshair && NavigationInfo.NavigationType != NavigationType.Examine)
                 {
@@ -478,8 +478,8 @@ namespace x3druntime.ui.opentk
             }
         }
 
-        [DllImport("user32.dll")]
-        static extern bool SetCursorPos(int X, int Y);
+        //[DllImport("user32.dll")]
+        //static extern bool SetCursorPos(int X, int Y);
 
         #region test orbital control
 

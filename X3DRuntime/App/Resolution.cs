@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace x3druntime.ui.opentk
+namespace X3D.Runtime
 {
     public sealed class Resolution
     {

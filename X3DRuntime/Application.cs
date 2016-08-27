@@ -11,7 +11,7 @@ using System.Linq;
 using X3D.Engine;
 using System.Runtime.InteropServices;
 
-namespace x3druntime.ui.opentk
+namespace X3D.Runtime
 {
     public partial class X3DApplication
     {
@@ -35,7 +35,7 @@ namespace x3druntime.ui.opentk
 
         public void ShowSupportMatrix()
         {
-            Assembly asm = Assembly.GetAssembly(typeof(X3D.Parser.XMLParser));
+            Assembly asm = Assembly.GetAssembly(typeof(Parser.XMLParser));
 
             Type[] types = (new List<Type>(asm.GetTypes()))
                 .Where(t => t.IsSubclassOf(typeof(SceneGraphNode)))
@@ -119,7 +119,7 @@ namespace x3druntime.ui.opentk
                 //AssemblyVersionAttribute ver;
                 AssemblyDescriptionAttribute desc;
 
-                asm = Assembly.GetAssembly(typeof(X3D.Parser.XMLParser));
+                asm = Assembly.GetAssembly(typeof(Parser.XMLParser));
                 productName = (AssemblyProductAttribute)Attribute.GetCustomAttribute(asm, typeof(AssemblyProductAttribute));
                 //ver=(AssemblyVersionAttribute)Attribute.GetCustomAttribute(asm,typeof(AssemblyVersionAttribute));
                 desc = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(asm, typeof(AssemblyDescriptionAttribute));

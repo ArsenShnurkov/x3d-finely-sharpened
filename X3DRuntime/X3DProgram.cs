@@ -1,34 +1,18 @@
 ﻿//#define VSYNC_OFF
 
 using System;
-using System.Collections.Generic;
-
-using System.ComponentModel;
 using System.Threading;
-
-using System.IO;
-
 using System.Windows.Forms;
 using OpenTK;
-using System.Text;
 using OpenTK.Graphics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using X3D.Engine;
 
-namespace x3druntime.ui.opentk
+namespace X3D.Runtime
 {
-
     public class X3DProgram : IWin32Window
     {
-        private const int EXIT_SUCCESS = 0;
-        private static VSyncMode VSync;
-        //private static BackgroundWorker bw;
-        private static Thread th;
-        private static AutoResetEvent closureEvent;
-        private static bool restartRequired = false;
-        private static bool quitRequired = false;
-        private static X3DBrowser browser;
-        private static string url;
 
         #region WINDOWS PLATFORM
 
@@ -44,17 +28,25 @@ namespace x3druntime.ui.opentk
 
         #endregion
 
+        #region Private Static Fields
+
+        private const int EXIT_SUCCESS = 0;
+        private static VSyncMode VSync;
+        private static AutoResetEvent closureEvent;
+        private static bool restartRequired = false;
+        private static bool quitRequired = false;
+        private static X3DBrowser browser;
+        public static string url;
+
+        #endregion
+
+        #region Public Static Methods
+
         [STAThread]
         public static int Main(string[] args)
         {
 
-#if VSYNC_OFF
-            VSync = VSyncMode.Off;
-#else
-            VSync = VSyncMode.On;
-#endif
-            
-            LoadBrowser();
+            LoadBrowserWithURL();
 
             return EXIT_SUCCESS;
         }
@@ -78,14 +70,50 @@ namespace x3druntime.ui.opentk
             closureEvent.Set();
         }
 
-        private static void LoadBrowser()
+        public static SceneGraph LoadX3D(string x3dFile, bool scriptingEnabled = true)
         {
-            url = App.SelectFile();
+            SceneManager scene;
+            X3DMIMEType mime;
 
-            closureEvent = new AutoResetEvent(false);
-            //bw = new BackgroundWorker();
+            // precondition: needs a graphics context
 
-            ThreadStart ts = new ThreadStart(() =>
+            mime = SceneManager.GetMIMETypeByURL(x3dFile);
+
+            SceneManager.BaseURL = x3dFile;
+            SceneManager.BaseMIME = mime;
+            Script.EngineEnabled = scriptingEnabled;
+
+            scene = SceneManager.fromURL(x3dFile, mime);
+
+            return scene.SceneGraph;
+        }
+
+        public static async Task LoadBrowserWithGraphAsync(SceneGraph graph)
+        {
+            await Task.Run(() =>
+            {
+                browser = new X3DBrowser(
+                    OpenTK.VSyncMode.On,
+                    graph,
+                    Resolution.Size800x600,
+                    new GraphicsMode(32, 16, 0, 4)
+                );
+
+                browser.Title = "Initilising";
+
+                browser.Run(60);
+            });
+        }
+
+        public static async Task LoadBrowserWithURLAsync()
+        {
+#if VSYNC_OFF
+            VSync = VSyncMode.Off;
+#else
+            VSync = VSyncMode.On;
+#endif
+
+            await Task.Run(() =>
             {
                 browser = new X3DBrowser(VSync, url, Resolution.Size800x600, new GraphicsMode(32, 16, 0, 4));
                 browser.Title = "Initilising..";
@@ -95,39 +123,32 @@ namespace x3druntime.ui.opentk
                 browser.Run(60);
 #endif
             });
-            th = new Thread(ts);
+        }
 
-            //            bw.WorkerReportsProgress = true;
-            //            bw.WorkerSupportsCancellation = true;
-            //            bw.DoWork += new DoWorkEventHandler((object sender, DoWorkEventArgs e) =>
-            //            {
-            //                browser = new X3DBrowser(VSync, url, Resolution.Size800x600, new GraphicsMode(32, 16, 0, 4));
-            //                browser.Title = "Initilising..";
-            //#if VSYNC_OFF
-            //                browser.Run();
-            //#else
-            //                browser.Run(60);
-            //#endif
-            //            });
+        #endregion
 
-            //            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
-            //            {
-            //                closureEvent.Set();
-            //            });
+        #region Private Static Methods
 
-            th.Start();
-            //bw.RunWorkerAsync();
+        private static void LoadBrowserWithURL()
+        {
+            url = App.SelectFile();
+
+            closureEvent = new AutoResetEvent(false);
+
+            var task = Task.Run(LoadBrowserWithURLAsync);
+            
             closureEvent.WaitOne();
 
             if (!quitRequired && restartRequired)
             {
                 restartRequired = false;
-                LoadBrowser();
+                LoadBrowserWithURL();
             }
 
             if (quitRequired)
             {
-                th.Abort();
+                task.ConfigureAwait(false);
+                //th.Abort();
                 //bw.CancelAsync();
                 //System.Windows.Forms.Application.Exit();
                 //System.Threading.Thread.CurrentThread.Abort();
@@ -136,6 +157,7 @@ namespace x3druntime.ui.opentk
                 System.Diagnostics.Process.GetCurrentProcess().Kill(); // Fast !
             }
         }
-    }
 
+        #endregion
+    }
 }

@@ -4,7 +4,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using X3D.Engine;
 
-namespace x3druntime.ui.opentk
+namespace X3D.Runtime
 {
     public class X3DBrowser : GameWindow, IDisposable
     {

@@ -7,7 +7,7 @@ using OpenTK;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 
-namespace x3druntime.ui.opentk
+namespace X3D.Runtime
 {
     public class App
     {

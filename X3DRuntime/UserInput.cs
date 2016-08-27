@@ -9,7 +9,7 @@ using OpenTK.Graphics.OpenGL;
 using X3D;
 using X3D.Engine;
 
-namespace x3druntime.ui.opentk
+namespace X3D.Runtime
 {
 
     public partial class X3DApplication
