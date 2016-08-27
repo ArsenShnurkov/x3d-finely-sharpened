@@ -11,7 +11,7 @@ namespace X3D
     public partial class NavigationInfo
     {
         public static bool HeadlightEnabled  = true;
-        public static NavigationType NavigationType = NavigationType.Examine;
+        public static NavigationType NavigationType = NavigationType.Walk; // should be Examine but it buggy
         public static Vector3 AvatarSize = Vector3.Zero;
 
         public override void Load()
