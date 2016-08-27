@@ -23,8 +23,11 @@ namespace X3D
         public static double FractionalPart(double n)
         {
             double fraction;
+            int integer;
 
-            fraction = n - Math.Floor(n);
+            //fraction = n - Math.Floor(n);
+            integer = (int)Math.Truncate(n);
+            fraction = n - integer;
 
             return fraction;
         }

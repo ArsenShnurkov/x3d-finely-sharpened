@@ -121,6 +121,8 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 GL.TexImage2D(side_target, 0, PixelInternalFormat.Rgba, width, height, 0,
                     PixelFormat.Bgra, PixelType.UnsignedByte, pTexImage);
 
+                image.UnlockBits(pixelData);
+
                 return true;
             }
 
