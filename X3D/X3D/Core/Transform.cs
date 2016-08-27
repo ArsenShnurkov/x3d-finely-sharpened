@@ -12,6 +12,17 @@ namespace X3D
     {
         private bool _isHidden;
 
+        public void ApplyTranslation(Vector3 translation)
+        {
+            this.Translation += translation;
+
+        }
+
+        public void ApplyRotation(Quaternion rotation)
+        {
+            //this.rotra
+        }
+
         /// <summary>
         /// If true, disabled the node from any Render() calls. KeepAlive() is then called instead.
         /// </summary>

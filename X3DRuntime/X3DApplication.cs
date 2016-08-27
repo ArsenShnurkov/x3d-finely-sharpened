@@ -35,6 +35,14 @@ namespace X3D.Runtime
         public string BaseURL { get; set; }
         public string BaseMIME { get; set; }
 
+        public static SceneGraph SceneGraph
+        {
+            get
+            {
+                return scene != null ? scene.SceneGraph : null;
+            }
+        }
+
         private static SceneManager scene;
 
         private static Vector4 black = new Vector4(0.0f, 0.0f, 0.0f, 1.0f); // Black

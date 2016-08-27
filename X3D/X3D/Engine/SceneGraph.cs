@@ -38,7 +38,7 @@ namespace X3D.Engine
         /// </summary>
         public List<KeyValuePair<string, SceneGraphNode>> nameScope = new List<KeyValuePair<string, SceneGraphNode>>(); // slow
 
-
+        public Dictionary<string, List<SceneGraphNode>> classScope = new Dictionary<string, List<SceneGraphNode>>();
 
         /// <summary>
         /// List of event ROUTE nodes in runtime state.
@@ -453,6 +453,28 @@ namespace X3D.Engine
 
 
                         }
+                    }
+
+                    #endregion
+
+                    #region Class
+
+                    if (!string.IsNullOrEmpty(child.@class))
+                    {
+                        List<SceneGraphNode> lstClasses;
+
+                        if (classScope.ContainsKey(child.@class))
+                        {
+                            lstClasses = classScope[child.@class];
+                        }
+                        else
+                        {
+                            lstClasses = new List<SceneGraphNode>();
+                        }
+
+                        lstClasses.Add(child);
+
+                        classScope[child.@class] = lstClasses;
                     }
 
                     #endregion
