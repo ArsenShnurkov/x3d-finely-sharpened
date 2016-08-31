@@ -1,11 +1,4 @@
-﻿//#define FULLSCREEN
-//#define NAVIGATION_MOUSE
-#define NAVIGATION_KEYBOARD
-//#define ROTATE_SCENE_ANNOYINGLY
-//#define GAME_INIT_MODE
-//#define VSYNC_ACTIVE
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 using OpenTK;
@@ -31,9 +24,7 @@ namespace X3D.Runtime
 {
     public partial class X3DApplication : IDisposable
     {
-
-        public string BaseURL { get; set; }
-        public string BaseMIME { get; set; }
+        #region Public Static Properties
 
         public static SceneGraph SceneGraph
         {
@@ -43,12 +34,16 @@ namespace X3D.Runtime
             }
         }
 
-        private static SceneManager scene;
+        #endregion
 
-        private static Vector4 black = new Vector4(0.0f, 0.0f, 0.0f, 1.0f); // Black
-        private static Vector4 white = new Vector4(1.0f, 1.0f, 1.0f, 1.0f); // White
-        public static Vector4 ClearColor = black; 
+        #region Public Properties
 
+        public string BaseURL { get; set; }
+        public string BaseMIME { get; set; }
+
+        #endregion
+
+        #region Private Fields
 
         private SceneCamera ActiveCamera; //private Camera ActiveCamera;
         private bool ispanning, iszooming;
@@ -66,6 +61,19 @@ namespace X3D.Runtime
         private bool reloading = false;
 
         private SceneGraph _cachedGraph;
+
+        #endregion
+
+        #region Private Static Fields
+
+        private static SceneManager scene;
+        private static Vector4 black = new Vector4(0.0f, 0.0f, 0.0f, 1.0f); // Black
+        private static Vector4 white = new Vector4(1.0f, 1.0f, 1.0f, 1.0f); // White
+        private static Vector4 ClearColor = black;
+
+        #endregion
+
+        #region Public Constructors
 
         /// <param name="window">
         /// A window or display which is used to render the X3D application
@@ -124,50 +132,9 @@ namespace X3D.Runtime
             }
         }
 
-        private void updateCamera()
-        {
+        #endregion
 
-            if (NavigationInfo.NavigationType == NavigationType.Examine)
-            {
-                // MOUSE ORBIT/PAN NAVIGATION
-                if (mouseDragging)
-                {
-
-                    if (ispanning)
-                    {
-                        ActiveCamera.PanXY(mouseDelta.X * mouseScale, mouseDelta.Y * mouseScale);
-
-                        //ActiveCamera.ScaleXY(mouseDelta.X, mouseDelta.Y);
-                    }
-                    else if (iszooming)
-                    {
-                        // orbits using shape's centerOfRotation
-                        ActiveCamera.OrbitObjectsXY(mouseDelta.X / 0.5f, -1 * mouseDelta.Y / 0.5f);
-                    }
-                }
-            }
-            
-            if (NavigationInfo.NavigationType == NavigationType.Fly || NavigationInfo.NavigationType == NavigationType.Walk)
-            {
-                // TEST new camera walk/fly implementation:
-
-                Vector3 direction = Vector3.Zero;
-
-                //if (Math.Abs(mouseDelta.X) > Math.Abs(mouseDelta.Y))
-                //    direction.X = (dx > 0) ? 0.1f : -0.1f;
-                //else
-                //    direction.Y = (dy > 0) ? 0.1f : -0.1f;
-
-                direction = new Vector3(mouseDelta);
-
-                float xAngle = (direction.X);
-                float yAngle = (direction.Y);
-
-                ActiveCamera.ApplyYaw(xAngle);
-                ActiveCamera.ApplyPitch(yAngle);
-                ActiveCamera.ApplyRotation();
-            }
-        }
+        #region Rendering Methods
 
         public void Reload()
         {
@@ -418,6 +385,10 @@ namespace X3D.Runtime
 
         }
 
+        #endregion
+
+        #region Public Methods
+
         public void Dispose()
         {
             // Perform a shutdown of the scene and its resources
@@ -430,6 +401,55 @@ namespace X3D.Runtime
                 }
 
                 scene.Dispose();
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void updateCamera()
+        {
+
+            if (NavigationInfo.NavigationType == NavigationType.Examine)
+            {
+                // MOUSE ORBIT/PAN NAVIGATION
+                if (mouseDragging)
+                {
+
+                    if (ispanning)
+                    {
+                        ActiveCamera.PanXY(mouseDelta.X * mouseScale, mouseDelta.Y * mouseScale);
+
+                        //ActiveCamera.ScaleXY(mouseDelta.X, mouseDelta.Y);
+                    }
+                    else if (iszooming)
+                    {
+                        // orbits using shape's centerOfRotation
+                        ActiveCamera.OrbitObjectsXY(mouseDelta.X / 0.5f, -1 * mouseDelta.Y / 0.5f);
+                    }
+                }
+            }
+
+            if (NavigationInfo.NavigationType == NavigationType.Fly || NavigationInfo.NavigationType == NavigationType.Walk)
+            {
+                // TEST new camera walk/fly implementation:
+
+                Vector3 direction = Vector3.Zero;
+
+                //if (Math.Abs(mouseDelta.X) > Math.Abs(mouseDelta.Y))
+                //    direction.X = (dx > 0) ? 0.1f : -0.1f;
+                //else
+                //    direction.Y = (dy > 0) ? 0.1f : -0.1f;
+
+                direction = new Vector3(mouseDelta);
+
+                float xAngle = (direction.X);
+                float yAngle = (direction.Y);
+
+                ActiveCamera.ApplyYaw(xAngle);
+                ActiveCamera.ApplyPitch(yAngle);
+                ActiveCamera.ApplyRotation();
             }
         }
 
@@ -485,11 +505,6 @@ namespace X3D.Runtime
                 //}
             }
         }
-
-        //[DllImport("user32.dll")]
-        //static extern bool SetCursorPos(int X, int Y);
-
-        #region test orbital control
 
         private void Mouse_WheelChanged(object sender, MouseWheelEventArgs e)
         {
