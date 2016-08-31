@@ -8,6 +8,20 @@ namespace X3D.Runtime
 {
     public class X3DBrowser : GameWindow, IDisposable
     {
+        #region Public Properties
+
+        public SceneGraph Graph { get; set; }
+        public string URL { get; set; }
+
+        #endregion
+
+        #region Private Fields
+
+        private X3DApplication app;
+
+        #endregion
+
+        #region Constructors
 
         public X3DBrowser(VSyncMode VSync, string url, Resolution res, GraphicsMode mode) : base(res.Width, res.Height, mode)
         {
@@ -26,11 +40,9 @@ namespace X3D.Runtime
             app = new X3DApplication(this, graph);
         }
 
-        private X3DApplication app;
+        #endregion
 
-        public string URL { get; set; }
-
-        public SceneGraph Graph { get; set; }
+        #region Rendering Methods
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
@@ -57,10 +69,16 @@ namespace X3D.Runtime
             app.Init(URL, app.BaseMIME);
         }
 
+        #endregion
+
+        #region Destructors
+
         public new void Dispose()
         {
             //base.Dispose();
             this.app.Dispose();
         }
+
+        #endregion
     }
 }
