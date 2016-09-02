@@ -212,9 +212,9 @@ namespace X3D
             {
                 modelview = SceneEntity.ApplyX3DTransform(centerOffset,
                                                      Vector3.Zero,
-                                                     Vector3.One,
+                                                     transform.Scale,
                                                      Vector3.Zero,
-                                                     transform.Translation * transform.Scale * x3dScale,
+                                                     transform.Translation * x3dScale,
                                                      modelview);
 
                 //modelview *= Matrix4.CreateTranslation(transform.Translation * x3dScale);
@@ -423,8 +423,10 @@ namespace X3D
 
                 loadedGeometry = _handle.HasGeometry;
 
-                if(drawBoundingBox)
+                if (drawBoundingBox)
+                {
                     bbox.EnableRendering(GetPosition(rc));
+                }
             }
         }
 
@@ -584,7 +586,7 @@ namespace X3D
                     shader.SetFieldValue("normalmatrix", ref NormalMatrix);
 
                 }
-
+                
                 ApplyAppearance(rc);
 
                 // RENDER shape
@@ -664,8 +666,15 @@ namespace X3D
                     }
                     else
                     {
-                        RenderTriangles(rc);
-                        RenderQuads(rc);
+                        if (typeof(IndexedLineSet).IsInstanceOfType(geometry))
+                        {
+                            RenderLines(rc);
+                        }
+                        else
+                        {
+                            RenderTriangles(rc);
+                            RenderQuads(rc);
+                        }
                     }
                 }
 
@@ -737,6 +746,24 @@ namespace X3D
             }
         }
 
+
+        private void RenderLines(RenderingContext rc)
+        {
+            if (_handle.NumVerticies3 > 0)
+            {
+                GL.UseProgram(CurrentShader.ShaderHandle);
+
+                CurrentShader.SetFieldValue("size", size);
+                CurrentShader.SetFieldValue("scale", scale);
+
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _handle.vbo3);
+                Buffering.ApplyBufferPointers(CurrentShader);
+                GL.DrawArrays(PrimitiveType.LineLoop, 0, _handle.NumVerticies3);
+                GL.LineWidth(2.0f); // todo: LineProperties
+
+                GL.UseProgram(0);
+            }
+        }
 
         private void RenderTriangles(RenderingContext rc)
         {
