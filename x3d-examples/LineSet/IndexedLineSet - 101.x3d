@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.3//EN" "http://www.web3d.org/specifications/x3d-3.3.dtd">
+<X3D profile='Immersive' version='3.3' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.3.xsd'>
+  <Scene>
+    <Background skyColor='1 1 1'/>
+	
+    <Viewpoint description='Book View' orientation='0.939 0.335 0.075 -0.57' position='-0.89 1.91 9.26'/>
+	
+    <Transform>
+      <Shape>
+        <Appearance>
+          <Material emissiveColor='1 0 0'/>
+        </Appearance>
+        <IndexedLineSet coordIndex='0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 0 -1'>
+          <Coordinate point='0.0 -7.0 -1.0 -1.75 -7.0 -0.5 -4.0 -7.0 0.5 -5.0 -6.5 1.5 -5.5 -6.25 0.75 -5.25 -5.5 -2.25 -4.25 -5.0 -3.25 -2.75 -4.5 -3.75 -1.5 -4.5 -4.0 -0.5 -4.25 -4.5 1.5 -3.75 -4.75 3.0 -3.75 -4.5 5.75 -4.5 -4.5 8.75 -4.5 -4.0 9.25 -4.5 -2.25 7.5 -5.5 0.0 4.0 -6.5 -0.25 2.25 -7.0 -0.25'/>
+        </IndexedLineSet>
+      </Shape>
+    </Transform>
+	
+	<Transform scale="1 1 -1">
+      <Shape>
+        <Appearance>
+          <Material emissiveColor='0 1 0'/>
+        </Appearance>
+        <IndexedLineSet coordIndex='0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 0 -1'>
+          <Coordinate point='0.0 -7.0 -1.0 -1.75 -7.0 -0.5 -4.0 -7.0 0.5 -5.0 -6.5 1.5 -5.5 -6.25 0.75 -5.25 -5.5 -2.25 -4.25 -5.0 -3.25 -2.75 -4.5 -3.75 -1.5 -4.5 -4.0 -0.5 -4.25 -4.5 1.5 -3.75 -4.75 3.0 -3.75 -4.5 5.75 -4.5 -4.5 8.75 -4.5 -4.0 9.25 -4.5 -2.25 7.5 -5.5 0.0 4.0 -6.5 -0.25 2.25 -7.0 -0.25'/>
+        </IndexedLineSet>
+      </Shape>
+    </Transform>
+	
+	<Transform scale="1 -1 1">
+      <Shape>
+        <Appearance>
+          <Material emissiveColor='0 0 1'/>
+        </Appearance>
+        <IndexedLineSet coordIndex='0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 0 -1'>
+          <Coordinate point='0.0 -7.0 -1.0 -1.75 -7.0 -0.5 -4.0 -7.0 0.5 -5.0 -6.5 1.5 -5.5 -6.25 0.75 -5.25 -5.5 -2.25 -4.25 -5.0 -3.25 -2.75 -4.5 -3.75 -1.5 -4.5 -4.0 -0.5 -4.25 -4.5 1.5 -3.75 -4.75 3.0 -3.75 -4.5 5.75 -4.5 -4.5 8.75 -4.5 -4.0 9.25 -4.5 -2.25 7.5 -5.5 0.0 4.0 -6.5 -0.25 2.25 -7.0 -0.25'/>
+        </IndexedLineSet>
+      </Shape>
+    </Transform>
+  </Scene>
+</X3D>
