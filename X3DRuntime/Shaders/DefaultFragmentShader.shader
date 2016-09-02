@@ -322,8 +322,9 @@ vec4 applyMaterials(vec4 col_accum)
 
 			// Since lighting is disabled
 			// Apply the diffuse color component only.
-			blended += Idiff;
-
+			//blended += Idiff + material.emissiveColor;
+			blended += material.emissiveColor * Idiff;
+			
 			//blended = vec4(1, 0, 0, 1.0);
 		}
 
