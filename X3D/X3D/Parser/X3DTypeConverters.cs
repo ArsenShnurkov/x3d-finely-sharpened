@@ -338,6 +338,21 @@ namespace X3D.Parser
             return result;
         }
 
+        public static string ToString(int[] mfInt)
+        {
+            string result;
+            int i;
+
+            result = "";
+
+            for (i = 0; i < mfInt.Length; i++)
+            {
+                result += string.Format("{0} ", mfInt[i]);
+            }
+
+            return result;
+        }
+
         public static Vector3 SFVec3(string value)
         {
             float[] values = value.Split(' ').Select(s => float.Parse(s)).ToArray();
