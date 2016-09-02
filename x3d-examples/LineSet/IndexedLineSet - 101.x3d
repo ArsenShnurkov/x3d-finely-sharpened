@@ -7,7 +7,7 @@
     <Viewpoint description='Book View' orientation='0.939 0.335 0.075 -0.57' position='-0.89 1.91 9.26'/>
 	
     <Transform>
-      <Shape>
+      <Shape DEF="X Plane">
         <Appearance>
           <Material emissiveColor='1 0 0'/>
         </Appearance>
@@ -18,7 +18,7 @@
     </Transform>
 	
 	<Transform scale="1 1 -1">
-      <Shape>
+      <Shape DEF="Z Plane">
         <Appearance>
           <Material emissiveColor='0 1 0'/>
         </Appearance>
@@ -29,7 +29,7 @@
     </Transform>
 	
 	<Transform scale="1 -1 1">
-      <Shape>
+      <Shape DEF="Y Plane">
         <Appearance>
           <Material emissiveColor='0 0 1'/>
         </Appearance>
