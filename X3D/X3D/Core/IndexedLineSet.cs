@@ -7,6 +7,7 @@ using OpenTK;
 using X3D.Core;
 using X3D.Parser;
 using X3D.Core.Shading;
+using OpenTK.Graphics.OpenGL4;
 
 namespace X3D
 {
@@ -18,6 +19,8 @@ namespace X3D
         #region Fields
 
         internal PackedGeometry _pack;
+
+        public PrimitiveType PrimativeType = PrimitiveType.LineLoop;
 
         #endregion
 
@@ -43,6 +46,7 @@ namespace X3D
 
             ils.coordIndex = X3DTypeConverters.ToString(indicies);
             ils.Children.Add(coord);
+            ils.PrimativeType = PrimitiveType.Lines;
 
             return ils;
         }
