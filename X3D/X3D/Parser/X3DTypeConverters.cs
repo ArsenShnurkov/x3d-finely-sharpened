@@ -320,7 +320,7 @@ namespace X3D.Parser
                 result += string.Format("{0} {1} {2} ", mfVec3f[i].X, mfVec3f[i].Y, mfVec3f[i].Z);
             }
 
-            return result;
+            return result.TrimEnd();
         }
 
         public static string ToString(Vector4[] mfVec4f)
@@ -335,7 +335,7 @@ namespace X3D.Parser
                 result += string.Format("{0} {1} {2} ", mfVec4f[i].X, mfVec4f[i].Y, mfVec4f[i].Z, mfVec4f[i].W);
             }
 
-            return result;
+            return result.TrimEnd();
         }
 
         public static string ToString(int[] mfInt)
@@ -350,7 +350,7 @@ namespace X3D.Parser
                 result += string.Format("{0} ", mfInt[i]);
             }
 
-            return result;
+            return result.TrimEnd();
         }
 
         public static Vector3 SFVec3(string value)
