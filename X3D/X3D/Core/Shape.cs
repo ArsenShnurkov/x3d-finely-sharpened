@@ -753,15 +753,23 @@ namespace X3D
             {
                 GL.UseProgram(CurrentShader.ShaderHandle);
 
+                CurrentShader.SetFieldValue("lightingEnabled", 0);
+                CurrentShader.SetFieldValue("headlightEnabled", 0);
+
                 CurrentShader.SetFieldValue("size", size);
                 CurrentShader.SetFieldValue("scale", scale);
 
+                GL.LineWidth(8.0f); // todo: LineProperties
+
+                IndexedLineSet ils = (IndexedLineSet)geometry;
+
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _handle.vbo3);
                 Buffering.ApplyBufferPointers(CurrentShader);
-                GL.DrawArrays(PrimitiveType.LineLoop, 0, _handle.NumVerticies3);
-                GL.LineWidth(2.0f); // todo: LineProperties
+                GL.DrawArrays(ils.PrimativeType, 0, _handle.NumVerticies3);
+                
 
                 GL.UseProgram(0);
+                GL.LineWidth(1.0f);
             }
         }
 
