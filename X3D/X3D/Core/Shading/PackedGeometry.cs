@@ -158,6 +158,49 @@ namespace X3D.Core.Shading
             return packed;
         }
 
+        public static PackedGeometry Pack(IndexedLineSet ils)
+        {
+            PackedGeometry packed;
+            Coordinate coordinate;
+
+            packed = new PackedGeometry();
+            //packed.Texturing = ifs.texCoordinate != null;// || parentShape.texturingEnabled;
+
+            coordinate = (Coordinate)ils.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
+
+            packed.RGBA = false;
+            packed.RGB = false;
+            packed.Coloring = false;
+            packed.generateColorMap = false;
+
+            if (coordinate != null && !string.IsNullOrEmpty(ils.coordIndex))
+            {
+                packed._indices = X3DTypeConverters.ParseIndicies(ils.coordIndex);
+                packed._coords = X3DTypeConverters.MFVec3f(coordinate.point);
+
+                packed.restartIndex = null;
+
+                Buffering.Interleave(out packed.bbox,
+                                     out packed.interleaved3,
+                                     out packed.interleaved4,
+                                     packed._indices,
+                                     packed._texIndices,
+                                     packed._coords,
+                                     packed._texCoords,
+                                     null,
+                                     packed._colorIndicies,
+                                     packed.color,
+                                     packed.restartIndex,
+                                     false,
+                                     true,
+                                     packed.Coloring,
+                                     packed.Texturing
+                                     );
+            }
+
+            return packed;
+        }
+
         public static PackedGeometry Pack(IndexedFaceSet ifs)
         {
             PackedGeometry packed;
