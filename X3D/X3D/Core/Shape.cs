@@ -60,6 +60,10 @@ namespace X3D
 
         #region Public Fields
 
+
+        [XmlIgnore]
+        public bool drawBoundingBox = true;
+
         [XmlAttribute("depthMask")]
         public bool depthMask = true;
 
@@ -210,7 +214,7 @@ namespace X3D
                                                      Vector3.Zero,
                                                      Vector3.One,
                                                      Vector3.Zero,
-                                                     transform.Translation * x3dScale,
+                                                     transform.Translation * transform.Scale * x3dScale,
                                                      modelview);
 
                 //modelview *= Matrix4.CreateTranslation(transform.Translation * x3dScale);
@@ -351,9 +355,9 @@ namespace X3D
 
             foreach (Transform transform in transformationHierarchy)
             {
-                modelview = SceneEntity.ApplyX3DTransform(Vector3.Zero,
+                modelview *= SceneEntity.ApplyX3DTransform(Vector3.Zero,
                                                      Vector3.Zero,
-                                                     Vector3.One,
+                                                     transform.Scale,
                                                      Vector3.Zero,
                                                      transform.Translation * x3dScale,
                                                      modelview);
@@ -419,7 +423,8 @@ namespace X3D
 
                 loadedGeometry = _handle.HasGeometry;
 
-                bbox.EnableRendering(GetPosition(rc));
+                if(drawBoundingBox)
+                    bbox.EnableRendering(GetPosition(rc));
             }
         }
 
@@ -587,7 +592,8 @@ namespace X3D
 
             }
 
-            RenderBoundingBox(rc);
+            if(drawBoundingBox)
+                RenderBoundingBox(rc);
         }
 
         private void RenderBoundingBox(RenderingContext rc)
