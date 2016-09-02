@@ -308,6 +308,36 @@ namespace X3D.Parser
             throw new NotImplementedException();
         }
 
+        public static string ToString(Vector3[] mfVec3f)
+        {
+            string result;
+            int i;
+
+            result = "";
+
+            for (i=0; i < mfVec3f.Length; i++)
+            {
+                result += string.Format("{0} {1} {2} ", mfVec3f[i].X, mfVec3f[i].Y, mfVec3f[i].Z);
+            }
+
+            return result;
+        }
+
+        public static string ToString(Vector4[] mfVec4f)
+        {
+            string result;
+            int i;
+
+            result = "";
+
+            for (i = 0; i < mfVec4f.Length; i++)
+            {
+                result += string.Format("{0} {1} {2} ", mfVec4f[i].X, mfVec4f[i].Y, mfVec4f[i].Z, mfVec4f[i].W);
+            }
+
+            return result;
+        }
+
         public static Vector3 SFVec3(string value)
         {
             float[] values = value.Split(' ').Select(s => float.Parse(s)).ToArray();
