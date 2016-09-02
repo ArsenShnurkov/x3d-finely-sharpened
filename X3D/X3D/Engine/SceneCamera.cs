@@ -4,6 +4,9 @@
  * Licence: BSD
  * */
 
+
+// TODO: steroscopic mode
+
 using System;
 using System.Collections.Generic;
 using System.Text;
