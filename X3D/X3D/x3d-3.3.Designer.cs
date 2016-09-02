@@ -3615,6 +3615,19 @@ namespace X3D
             this.containerField = "fontStyle";
         }
 
+        public FontStyle(string family)
+        {
+            this.family = string.Format("\"{0}\"", family);
+            this._horizontal = true;
+            this.justify = "\"BEGIN\"";
+            this._leftToRight = true;
+            this._size = ((float)(1F));
+            this._spacing = ((float)(1F));
+            this._style = fontStyleValues.PLAIN;
+            this._topToBottom = true;
+            this.containerField = "fontStyle";
+        }
+
         [XmlIgnore]
         public List<string> Justify;
         [XmlIgnore]
