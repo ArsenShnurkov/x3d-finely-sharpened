@@ -26,6 +26,20 @@ namespace X3D
         private System.Drawing.Color ForeColor { get; set; }
         private System.Drawing.Color BackColor { get; set; }
 
+        public Text(Vector3 position, string text)
+        {
+            this.@string = text;
+
+            this._strings = new List<string>();
+            this._strings.Add(text);
+            this._protoInstance = new ProtoInstance();
+            this._screenFontStyle = new ScreenFontStyle();
+            this._fontStyle = new FontStyle();
+            this._maxExtent = ((float)(0F));
+            this._solid = false;
+            this.containerField = "geometry";
+        }
+
         public override void CollectGeometry(
                             RenderingContext rc,
                             out GeometryHandle handle,
