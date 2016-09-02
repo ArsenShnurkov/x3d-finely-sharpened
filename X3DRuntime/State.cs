@@ -31,7 +31,6 @@ namespace X3D.Runtime
             set;
         }
 
-        const float piover180 = 0.0174532925f;
 
 
         int fps;

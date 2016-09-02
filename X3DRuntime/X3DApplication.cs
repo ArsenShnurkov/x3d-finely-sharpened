@@ -45,7 +45,7 @@ namespace X3D.Runtime
 
         #region Private Fields
 
-        private SceneCamera ActiveCamera; //private Camera ActiveCamera;
+        private SceneCamera ActiveCamera;
         private bool ispanning, iszooming;
         private float mouseScale = 0.01f;
         private bool mouseDragging = false;
@@ -104,7 +104,6 @@ namespace X3D.Runtime
                 }
             };
 
-            //ActiveCamera = new Camera(this.window.Width, this.window.Height);
             ActiveCamera = new SceneCamera(this.window.Width, this.window.Height);
 
             if(NavigationInfo.NavigationType == NavigationType.Examine)
@@ -173,14 +172,9 @@ namespace X3D.Runtime
             // INITILISE SCENE
 
             GL.Disable(EnableCap.Normalize);
-            // shade model upgraded from fixed function to shader side
-            //GL.ShadeModel(ShadingModel.Flat);
-            //GL.ShadeModel(ShadingModel.Smooth);                // Enable Smooth Shading
-
             GL.ClearColor(ClearColor.X, ClearColor.Y, ClearColor.Z, ClearColor.W);           
             GL.ClearDepth(1.0f);                 // Depth Buffer Setup
             GL.Enable(EnableCap.DepthTest);                // Enables Depth Testing
-            //GL.DepthMask(false);
             GL.DepthFunc(DepthFunction.Lequal);                 // The Type Of Depth Testing To Do
             //GL.Enable(EnableCap.CullFace); // causes bugs if enabled i.e. nehe10 wont render properly
             GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);  // Really Nice Perspective Calculations
@@ -216,10 +210,6 @@ namespace X3D.Runtime
                     _crosshair.Load();
                 }
             }
-            else
-            {
-                //Console.WriteLine("null init");
-            }
 
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("loading time: " + DateTime.Now.Subtract(time_before).TotalMilliseconds.ToString() + "ms");
@@ -251,11 +241,9 @@ namespace X3D.Runtime
             GL.PointSize(6.0f);
             //GL.Enable(EnableCap.Blend);
             
-            //TODO: improve current Camera implementation
-            
-            ActiveCamera.ApplyTransformations(); // TEST new camera implementation
+            ActiveCamera.ApplyTransformations();
 
-            // TODO: steroscopic mode
+            
 
             if (scene != null && scene.SceneGraph.Loaded)
             {
