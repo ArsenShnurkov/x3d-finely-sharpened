@@ -304,11 +304,22 @@ namespace X3D.Core.Shading
                     return;
                 }
 
+                if(pack._colorIndicies == null && pack.Coloring)
+                {
+                    i = -1;
+                    if (pack.RGB)
+                    {
+                        pack._colorIndicies = pack.color.Take(pack.color.Length / 3).Select(c => ++i ).ToArray();
+                    }
+                    else if (pack.RGBA)
+                    {
+                        pack._colorIndicies = pack.color.Take(pack.color.Length / 4).Select(c => ++i).ToArray();
+                    }
+                }
+
                 for (coordIndex = 0; coordIndex < pack._coords.Length; coordIndex++)
                 {
                     faceSetValue = pack._indices[coordIndex];
-
-                    Vector3 coord = pack._coords[coordIndex];
 
                     if (pack._texIndices != null && pack._texIndices.Length > 0)
                         texSetValue = pack._texIndices[coordIndex];
@@ -316,8 +327,20 @@ namespace X3D.Core.Shading
                     if (pack._colorIndicies != null && pack._colorIndicies.Length > 0)
                         colSetValue = pack._colorIndicies[coordIndex];
 
-                    if (coordIndex % pack.vertexStride.Value == 1)
+                    if (pack.vertexStride.Value == 1 || coordIndex % pack.vertexStride.Value == 1)
                     {
+                        if (pack.vertexStride.Value == 1)
+                        {
+                            faceType = 1;
+                            pack.faceset.Add(faceSetValue);
+
+                            if (pack._texIndices != null && pack._texIndices.Length > 0)
+                                pack.texset.Add(texSetValue);
+
+                            if (pack._colorIndicies != null && pack._colorIndicies.Length > 0)
+                                pack.colset.Add(colSetValue);
+                        }
+
                         for (int k = 0; k < faceType; k++)
                         {
                             interleaveVertex(out v, ref pack, faceType, k);
@@ -506,6 +529,15 @@ namespace X3D.Core.Shading
                                 pack.color[pack.colset[k] + 3]
                             );
                         }
+                        else if (pack.colset.Count == 1)
+                        {
+                            v.Color = new Vector4(
+                                pack.color[pack.colset[k]],
+                                pack.color[pack.colset[k] + 1],
+                                pack.color[pack.colset[k] + 2],
+                                1.0f
+                            );
+                        }
 
                     }
                 }
@@ -526,7 +558,7 @@ namespace X3D.Core.Shading
 
             if (pack.vertexStride.HasValue)
             {
-                if(pack.vertexStride == 2 || pack.vertexStride == 3)
+                if(pack.vertexStride == 1 || pack.vertexStride == 2 || pack.vertexStride == 3)
                 {
                     pack.interleaved3.Add(v);
                 }

@@ -167,8 +167,7 @@ namespace X3D.Core.Shading
             Coordinate coordinate;
 
             packed = new PackedGeometry();
-            //packed.Texturing = ifs.texCoordinate != null;// || parentShape.texturingEnabled;
-
+            
             coordinate = (Coordinate)lineSet.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
 
             packed.RGBA = false;
@@ -184,6 +183,46 @@ namespace X3D.Core.Shading
                 packed.vertexStride = 2;
                 packed.vertexCount = lineSet.vertexCount;
 
+                packed.Interleave();
+            }
+
+            return packed;
+        }
+
+        public static PackedGeometry Pack(PointSet pointSet)
+        {
+            PackedGeometry packed;
+            Coordinate coordinate;
+            Color colorNode;
+            ColorRGBA colorRGBANode;
+
+            packed = new PackedGeometry();
+
+            coordinate = (Coordinate)pointSet.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
+            colorNode = (Color)pointSet.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Color));
+            colorRGBANode = (ColorRGBA)pointSet.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(ColorRGBA));
+
+            packed.RGBA = colorRGBANode != null;
+            packed.RGB = colorNode != null;
+            packed.Coloring = packed.RGBA || packed.RGB;
+            packed.generateColorMap = packed.Coloring;
+
+            if (packed.RGB && !packed.RGBA)
+            {
+                packed.color = X3DTypeConverters.Floats(colorNode.color);
+            }
+            else if (packed.RGBA && !packed.RGB)
+            {
+                packed.color = X3DTypeConverters.Floats(colorRGBANode.color);
+            }
+
+            if (coordinate != null)
+            {
+                packed._coords = X3DTypeConverters.MFVec3f(coordinate.point);
+                
+                packed.restartIndex = null;
+                packed.vertexStride = 1;
+                
                 packed.Interleave();
             }
 
