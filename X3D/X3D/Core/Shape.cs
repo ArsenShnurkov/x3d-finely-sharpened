@@ -683,7 +683,11 @@ namespace X3D
                     }
                     else
                     {
-                        if (typeof(IndexedLineSet).IsInstanceOfType(geometry) || typeof(LineSet).IsInstanceOfType(geometry))
+                        if (typeof(PointSet).IsInstanceOfType(geometry))
+                        {
+                            RenderPoints(rc);
+                        }
+                        else if (typeof(IndexedLineSet).IsInstanceOfType(geometry) || typeof(LineSet).IsInstanceOfType(geometry))
                         {
                             RenderLines(rc);
                         }
@@ -763,6 +767,30 @@ namespace X3D
             }
         }
 
+
+        private void RenderPoints(RenderingContext rc)
+        {
+            if (_handle.NumVerticies3 > 0)
+            { 
+                GL.UseProgram(CurrentShader.ShaderHandle);
+
+                CurrentShader.SetFieldValue("lightingEnabled", 0);
+                CurrentShader.SetFieldValue("headlightEnabled", 0);
+
+                CurrentShader.SetFieldValue("size", size);
+                CurrentShader.SetFieldValue("scale", scale);
+
+                GL.PointSize(8.0f); // todo:  point properties
+
+                GL.BindBuffer(BufferTarget.ArrayBuffer, _handle.vbo3);
+                Buffering.ApplyBufferPointers(CurrentShader);
+                GL.DrawArrays(PrimitiveType.Points, 0, _handle.NumVerticies3);
+
+
+                GL.UseProgram(0);
+                GL.PointSize(1.0f);
+            }
+        }
 
         private void RenderLines(RenderingContext rc)
         {
