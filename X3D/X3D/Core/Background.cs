@@ -43,6 +43,7 @@ namespace X3D
         Vector3 min, max;
 
         private Vector3[] colors;
+
         private float[] angles;
         private bool skydomeComputed = false;
         private int skydomeTexture = -1;
@@ -213,6 +214,15 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
         #endregion
 
         #region Public Methods
+
+        public void Unload()
+        {
+            if(tex_cube > -1)
+            {
+                GL.DeleteTexture(tex_cube);
+            }
+            
+        }
 
         public void LoadFromBitmapSides(win.Bitmap left, win.Bitmap right, win.Bitmap front, win.Bitmap back, win.Bitmap top, win.Bitmap bottom)
         {
