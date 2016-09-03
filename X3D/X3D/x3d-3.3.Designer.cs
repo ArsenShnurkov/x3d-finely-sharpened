@@ -5675,9 +5675,7 @@ namespace X3D
 
         private List<object> _items;
 
-        private string _vertexCount;
-
-        // private string _containerField;
+        private int _vertexCount;
 
         public LineSet()
         {
@@ -5704,7 +5702,7 @@ namespace X3D
         }
 
         [XmlAttributeAttribute()]
-        public string vertexCount
+        public int vertexCount
         {
             get
             {
@@ -5715,20 +5713,6 @@ namespace X3D
                 this._vertexCount = value;
             }
         }
-
-        //[XmlAttributeAttribute(DataType = "NMTOKEN")]
-        //[System.ComponentModel.DefaultValueAttribute("geometry")]
-        //public string containerField
-        //{
-        //    get
-        //    {
-        //        return this._containerField;
-        //    }
-        //    set
-        //    {
-        //        this.containerField = value;
-        //    }
-        //}
     }
 
     [GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
