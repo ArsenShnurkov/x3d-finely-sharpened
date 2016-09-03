@@ -24,14 +24,17 @@ namespace X3D.Core.Shading
         public bool generateColorMap;
         public bool colorPerVertex;
         public BoundingBox bbox;
+
         public int? restartIndex;
+        public int? vertexStride;
+        public int? vertexCount;
+
 
         public int[] _indices;
         public int[] _texIndices;
         public int[] _colorIndicies;
         public Vector2[] _texCoords;
         public Vector3[] _coords;
-        public Vector2[] _coords2f;
         public float[] color;
         public float[] normals;
 
@@ -40,13 +43,17 @@ namespace X3D.Core.Shading
 
         private const int RESTART_INDEX = -1;
 
+        internal Vector3 maximum;
+        internal Vector3 minimum;
+        internal List<int> faceset;
+        internal List<int> texset;
+        internal List<int> colset;
+
         public void Interleave(bool calcBounds = true)
         {
-            if (this._indices == null) return;
-
             PackedGeometry pack = this;
-
-            Buffering.Interleave(ref pack, genTexCoordPerVertex: false, colorPerVertex: true, calcBounds: calcBounds);
+            
+            Buffering.Interleave(ref pack, genTexCoordPerVertex: false, calcBounds: calcBounds);
         }
 
         public GeometryHandle CreateHandle()
@@ -146,6 +153,8 @@ namespace X3D.Core.Shading
                     packed.restartIndex = RESTART_INDEX;
                 }
 
+                packed.vertexStride = 2;
+
                 packed.Interleave();
             }
 
@@ -169,11 +178,11 @@ namespace X3D.Core.Shading
 
             if (coordinate != null)
             {
-                if(lineSet.vertexCount == 2)
-                    packed._coords2f = X3DTypeConverters.MFVec2f(coordinate.point);
-                else packed._coords = X3DTypeConverters.MFVec3f(coordinate.point);
+                packed._coords = X3DTypeConverters.MFVec3f(coordinate.point);
 
                 packed.restartIndex = null;
+                packed.vertexStride = 2;
+                packed.vertexCount = lineSet.vertexCount;
 
                 packed.Interleave();
             }

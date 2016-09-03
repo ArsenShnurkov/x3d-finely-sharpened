@@ -265,43 +265,50 @@ namespace X3D.Core.Shading
             return vbo_interleaved;
         }
 
-        public static void Interleave(
-            ref PackedGeometry pack,
-            bool genTexCoordPerVertex = true,
-            bool colorPerVertex = true,
-            bool calcBounds = true)
+        public static void Interleave(ref PackedGeometry pack, bool genTexCoordPerVertex = true, bool calcBounds = true)
         {
             int FACE_RESTART_INDEX = 2;
 
-            // INTERLEAVE FACE SET
-            Console.WriteLine("Interleaving {0} indicies", pack._indices.Length);
+            pack.colorPerVertex = true;
 
+            int coordIndex = 0;
             int faceSetIndex = 0;
             int faceSetValue, texSetValue = -1, colSetValue = -1;
             int faceType = 0;
-            List<int> faceset = new List<int>();
-            List<int> texset = new List<int>();
-            List<int> colset = new List<int>();
+            int i;
+            pack.faceset = new List<int>();
+            pack.texset = new List<int>();
+            pack.colset = new List<int>();
             List<Vertex> verticies2 = new List<Vertex>();
             pack.interleaved3 = new List<Vertex>(); // buffer verticies of different face types separatly
             pack.interleaved4 = new List<Vertex>();
             Vertex v;
             //Vector4 c;
-            float tmp;
-            Vector3 maximum;
-            Vector3 minimum;
+            //float tmp;
 
-            maximum = new Vector3(float.MinValue, float.MinValue, float.MinValue);
-            minimum = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+            pack.maximum = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+            pack.minimum = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
 
-            //REFACTOR
-
-            if (pack.restartIndex.HasValue)
+            // MESH INTERLEAVING ALGORITHM
+            if(pack._indices == null && pack.vertexStride.HasValue)
             {
-                // and put verticies of type 4 in another buffer
-                for (int coordIndex = 0; coordIndex < pack._indices.Length; coordIndex++)
+                i = -1;
+                pack._indices = pack._coords.Select(c => ++i).ToArray();
+
+                Console.WriteLine("Interleaving {0} verticies", pack._coords.Length / pack.vertexStride.Value);
+
+                if (pack.vertexStride > 4)
+                {
+                    Console.WriteLine("vertexStride must be <= 4");
+
+                    return;
+                }
+
+                for (coordIndex = 0; coordIndex < pack._coords.Length; coordIndex++)
                 {
                     faceSetValue = pack._indices[coordIndex];
+
+                    Vector3 coord = pack._coords[coordIndex];
 
                     if (pack._texIndices != null && pack._texIndices.Length > 0)
                         texSetValue = pack._texIndices[coordIndex];
@@ -309,185 +316,115 @@ namespace X3D.Core.Shading
                     if (pack._colorIndicies != null && pack._colorIndicies.Length > 0)
                         colSetValue = pack._colorIndicies[coordIndex];
 
-                    if (faceSetValue == pack.restartIndex.Value)
+                    if (coordIndex % pack.vertexStride.Value == 1)
                     {
                         for (int k = 0; k < faceType; k++)
                         {
-                            v = Vertex.Zero;
-                            v.Position = pack._coords[faceset[k]];
-
-                            maximum = MathHelpers.Max(v.Position, maximum);
-                            minimum = MathHelpers.Min(v.Position, minimum);
-
-                            // Flip Z and Y
-                            //tmp = v.Position.Z;
-                            //v.Position.Z = -v.Position.Y;
-                            //v.Position.Y = tmp;
-
-                            if (texset != null && texset.Count > 0 && pack._texCoords != null && pack._texCoords.Length > 0)
-                            {
-                                v.TexCoord = pack._texCoords[texset[k]];
-                            }
-                            //else if (genTexCoordPerVertex && texturing && _bbox != null)
-                            //{
-                            //    //v.TexCoord = MathHelpers.uv(v.Position.x);
-                            //    v = MathHelpers.uv(_bbox, new Vertex[] { v }, at_origin: false)[0];
-                            //}
-
-                            if (pack.Coloring)
-                            {
-                                if (colorPerVertex)
-                                {
-                                    if (colset != null && colset.Count > 0 && pack.color != null && pack.color.Length > 0)
-                                    {
-                                        if (colset.Count == 3)
-                                        {
-                                            v.Color = new Vector4(
-                                                pack.color[colset[k]],
-                                                pack.color[colset[k] + 1],
-                                                pack.color[colset[k] + 2],
-                                                1.0f
-                                            );
-                                        }
-                                        else if (colset.Count == 4)
-                                        {
-                                            v.Color = new Vector4(
-                                                pack.color[colset[k]],
-                                                pack.color[colset[k] + 1],
-                                                pack.color[colset[k] + 2],
-                                                pack.color[colset[k] + 3]
-                                            );
-                                        }
-
-                                    }
-                                }
-                                else
-                                {
-                                    // color per face
-
-
-                                }
-                            }
-
-                            if (pack.normals != null && pack.normals.Length > 0)
-                            {
-                                //TODO: interleave normals
-
-                                //v.Normal = pack.normals[faceset[k]];
-                            }
-
-                            switch (faceType)
-                            {
-                                case 3:
-                                    pack.interleaved3.Add(v);
-                                    break;
-                                case 4:
-                                    pack.interleaved4.Add(v);
-                                    break;
-                                case 2:
-                                    verticies2.Add(v);
-                                    break;
-                            }
+                            interleaveVertex(out v, ref pack, faceType, k);
                         }
 
                         faceSetIndex++;
                         faceType = 0;
-                        faceset.Clear();
-                        texset.Clear();
-                        colset.Clear();
+                        pack.faceset.Clear();
+                        pack.texset.Clear();
+                        pack.colset.Clear();
                     }
                     else
                     {
                         faceType++;
-                        faceset.Add(faceSetValue);
+                        pack.faceset.Add(faceSetValue);
 
                         if (pack._texIndices != null && pack._texIndices.Length > 0)
-                            texset.Add(texSetValue);
+                            pack.texset.Add(texSetValue);
 
                         if (pack._colorIndicies != null && pack._colorIndicies.Length > 0)
-                            colset.Add(colSetValue);
+                            pack.colset.Add(colSetValue);
                     }
                 }
             }
             else
             {
-                // NO RESTART INDEX, assume new face is at every 3rd value / i = 2
+                Console.WriteLine("Interleaving {0} indicies", pack._indices.Length);
 
-                if (pack._indices.Length == 4)
+                if (pack.restartIndex.HasValue)
                 {
-                    FACE_RESTART_INDEX = 4; // 0-3 Quad
-                }
-                else if (pack._indices.Length == 3)
-                {
-                    FACE_RESTART_INDEX = 3; // 0-3 Triangle
+                    for (coordIndex = 0; coordIndex < pack._indices.Length; coordIndex++)
+                    {
+                        faceSetValue = pack._indices[coordIndex];
+
+                        if (pack._texIndices != null && pack._texIndices.Length > 0)
+                            texSetValue = pack._texIndices[coordIndex];
+
+                        if (pack._colorIndicies != null && pack._colorIndicies.Length > 0)
+                            colSetValue = pack._colorIndicies[coordIndex];
+
+                        if (faceSetValue == pack.restartIndex.Value)
+                        {
+                            for (int k = 0; k < faceType; k++)
+                            {
+                                interleaveVertex(out v, ref pack, faceType, k);
+                            }
+
+                            faceSetIndex++;
+                            faceType = 0;
+                            pack.faceset.Clear();
+                            pack.texset.Clear();
+                            pack.colset.Clear();
+                        }
+                        else
+                        {
+                            faceType++;
+                            pack.faceset.Add(faceSetValue);
+
+                            if (pack._texIndices != null && pack._texIndices.Length > 0)
+                                pack.texset.Add(texSetValue);
+
+                            if (pack._colorIndicies != null && pack._colorIndicies.Length > 0)
+                                pack.colset.Add(colSetValue);
+                        }
+                    }
                 }
                 else
                 {
-                    FACE_RESTART_INDEX = 3;
-                }
+                    // NO RESTART INDEX, assume new face is at every 3rd value / i = 2
 
-                for (int coordIndex = 0; coordIndex < pack._indices.Length; coordIndex++)
-                {
-                    faceSetValue = pack._indices[coordIndex];
-                    faceset.Add(faceSetValue);
-                    faceType++;
-
-                    if (pack._texIndices != null)
+                    if (pack._indices.Length == 4)
                     {
-                        texSetValue = pack._texIndices[coordIndex];
-                        texset.Add(texSetValue);
+                        FACE_RESTART_INDEX = 4; // 0-3 Quad
+                    }
+                    else if (pack._indices.Length == 3)
+                    {
+                        FACE_RESTART_INDEX = 3; // 0-3 Triangle
+                    }
+                    else
+                    {
+                        FACE_RESTART_INDEX = 3;
                     }
 
-                    if (coordIndex > 0 && (coordIndex + 1) % FACE_RESTART_INDEX == 0)
+                    for (coordIndex = 0; coordIndex < pack._indices.Length; coordIndex++)
                     {
-                        for (int k = 0; k < faceType; k++)
+                        faceSetValue = pack._indices[coordIndex];
+                        pack.faceset.Add(faceSetValue);
+                        faceType++;
+
+                        if (pack._texIndices != null)
                         {
-                            v = Vertex.Zero;
-                            v.Position = pack._coords[faceset[k]];
-
-                            maximum = MathHelpers.Max(v.Position, maximum);
-                            minimum = MathHelpers.Min(v.Position, minimum);
-
-                            // Flip Z and Y
-                            //tmp = v.Position.Z;
-                            //v.Position.Z = -v.Position.Y;
-                            //v.Position.Y = tmp;
-
-                            if (texset != null && texset.Count > 0 && pack._texCoords != null && pack._texCoords.Length > 0)
-                            {
-                                v.TexCoord = pack._texCoords[texset[k]];
-                            }
-                            //else if (genTexCoordPerVertex && texturing && _bbox != null)
-                            //{
-                            //    //v.TexCoord = MathHelpers.uv(v.Position.x);
-                            //    v = MathHelpers.uv(_bbox, new Vertex[] { v }, at_origin: false)[0];
-                            //}
-
-                            if (pack.normals != null && pack.normals.Length > 0)
-                            {
-                                //TODO: interleave normals
-
-                                //v.Normal = pack.normals[faceset[k]];
-                            }
-
-                            switch (faceType)
-                            {
-                                case 3:
-                                    pack.interleaved3.Add(v);
-                                    break;
-                                case 4:
-                                    pack.interleaved4.Add(v);
-                                    break;
-                                case 2:
-                                    verticies2.Add(v);
-                                    break;
-                            }
+                            texSetValue = pack._texIndices[coordIndex];
+                            pack.texset.Add(texSetValue);
                         }
 
-                        faceSetIndex++;
-                        faceType = 0;
-                        faceset.Clear();
-                        texset.Clear();
+                        if (coordIndex > 0 && (coordIndex + 1) % FACE_RESTART_INDEX == 0)
+                        {
+                            for (int k = 0; k < faceType; k++)
+                            {
+                                interleaveVertex(out v, ref pack, faceType, k);
+                            }
+
+                            faceSetIndex++;
+                            faceType = 0;
+                            pack.faceset.Clear();
+                            pack.texset.Clear();
+                        }
                     }
                 }
             }
@@ -498,12 +435,12 @@ namespace X3D.Core.Shading
 
                 pack.bbox = new BoundingBox()
                 {
-                    Width = (maximum.X - minimum.X),
-                    Height = (maximum.Y - minimum.Y),
-                    Depth = (maximum.Z - minimum.Z),
+                    Width = (pack.maximum.X - pack.minimum.X),
+                    Height = (pack.maximum.Y - pack.minimum.Y),
+                    Depth = (pack.maximum.Z - pack.minimum.Z),
 
-                    Maximum = maximum,
-                    Minimum = minimum
+                    Maximum = pack.maximum,
+                    Minimum = pack.minimum
                 };
 
                 // corners
@@ -514,9 +451,107 @@ namespace X3D.Core.Shading
                 pack.bbox = null;
             }
 
+            pack.faceset = null;
+            pack.texset = null;
+            pack.colset = null;
+
             //Dont buffer geometry here, just interleave
         }
 
+        private static void interleaveVertex(out Vertex v, ref PackedGeometry pack, int faceType, int k)
+        {
+            v = Vertex.Zero;
 
+            if (pack._coords != null) v.Position = pack._coords[pack.faceset[k]];
+
+            pack.maximum = MathHelpers.Max(v.Position, pack.maximum);
+            pack.minimum = MathHelpers.Min(v.Position, pack.minimum);
+
+            // Flip Z and Y
+            //tmp = v.Position.Z;
+            //v.Position.Z = -v.Position.Y;
+            //v.Position.Y = tmp;
+
+            if (pack.texset != null && pack.texset.Count > 0 && pack._texCoords != null && pack._texCoords.Length > 0)
+            {
+                v.TexCoord = pack._texCoords[pack.texset[k]];
+            }
+            //else if (genTexCoordPerVertex && texturing && _bbox != null)
+            //{
+            //    //v.TexCoord = MathHelpers.uv(v.Position.x);
+            //    v = MathHelpers.uv(_bbox, new Vertex[] { v }, at_origin: false)[0];
+            //}
+
+            if (pack.Coloring)
+            {
+                if (pack.colorPerVertex)
+                {
+                    if (pack.colset != null && pack.colset.Count > 0 && pack.color != null && pack.color.Length > 0)
+                    {
+                        if (pack.colset.Count == 3)
+                        {
+                            v.Color = new Vector4(
+                                pack.color[pack.colset[k]],
+                                pack.color[pack.colset[k] + 1],
+                                pack.color[pack.colset[k] + 2],
+                                1.0f
+                            );
+                        }
+                        else if (pack.colset.Count == 4)
+                        {
+                            v.Color = new Vector4(
+                                pack.color[pack.colset[k]],
+                                pack.color[pack.colset[k] + 1],
+                                pack.color[pack.colset[k] + 2],
+                                pack.color[pack.colset[k] + 3]
+                            );
+                        }
+
+                    }
+                }
+                else
+                {
+                    // color per face
+
+
+                }
+            }
+
+            if (pack.normals != null && pack.normals.Length > 0)
+            {
+                //TODO: interleave normals
+
+                //v.Normal = pack.normals[faceset[k]];
+            }
+
+            if (pack.vertexStride.HasValue)
+            {
+                if(pack.vertexStride == 2 || pack.vertexStride == 3)
+                {
+                    pack.interleaved3.Add(v);
+                }
+
+                if (pack.vertexStride == 4)
+                {
+                    pack.interleaved4.Add(v);
+                }
+            }
+            else
+            {
+                switch (faceType)
+                {
+                    case 3:
+                        pack.interleaved3.Add(v);
+                        break;
+                    case 4:
+                        pack.interleaved4.Add(v);
+                        break;
+                    case 2:
+                        break;
+                }
+            }
+
+            
+        }
     }
 }
