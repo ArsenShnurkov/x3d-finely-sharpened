@@ -86,6 +86,7 @@
     <Compile Include="X3D\Core\Appearance.cs" />
     <Compile Include="X3D\Core\Background.cs" />
     <Compile Include="X3D\Core\Box.cs" />
+    <Compile Include="X3D\Core\LineSet.cs" />
     <Compile Include="X3D\Core\IndexedLineSet.cs" />
     <Compile Include="X3D\Core\Interpolation\X3DInterpolatorNode.cs" />
     <Compile Include="X3D\Core\Interpolation\ColorInterpolator.cs" />
@@ -229,7 +230,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_IncrementBeforeBuild="True" BuildVersion_UseGlobalSettings="False" BuildVersion_AssemblyInfoFilename="" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
+      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_AssemblyInfoFilename="" BuildVersion_UseGlobalSettings="False" BuildVersion_IncrementBeforeBuild="True" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
