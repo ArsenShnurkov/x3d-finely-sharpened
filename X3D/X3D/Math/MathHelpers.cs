@@ -84,6 +84,57 @@ namespace X3D
             return n;
         }
 
+        public static float ClampCircularShift(float n, float min, float max)
+        {
+            while (n >= max)
+            {
+                n -= max;
+            }
+
+            while (n < min)
+            {
+                n += max;
+            }
+
+            return n;
+        }
+
+        public static float ClampDegrees(float n)
+        {
+            float min = 0;
+            float max = 360.0f;
+
+            while (n >= max)
+            {
+                n -= max;
+            }
+
+            while (n < min)
+            {
+                n += max;
+            }
+
+            return n;
+        }
+
+        public static float ClampRadians(float n)
+        {
+            float min = 0;
+            float max = PI2;
+
+            while(n >= max)
+            {
+                n -= max;
+            }
+
+            while (n < min)
+            {
+                n += max;
+            }
+
+            return n;
+        }
+
         /// <summary>
         /// Return next highest power of two.
         /// Useful for computing valid OpenGL texture sizes.

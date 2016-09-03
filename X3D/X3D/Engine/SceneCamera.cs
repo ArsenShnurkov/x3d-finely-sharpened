@@ -1,6 +1,5 @@
 ﻿/* Description: Scene Camera Library
- * ~~ From Aletha alpha source ~~
- * Author and Copyright © 2013 - 2016 Gerallt G. Franke
+ * Author Copyright © 2013 - 2016 Gerallt G. Franke
  * Licence: BSD
  * */
 

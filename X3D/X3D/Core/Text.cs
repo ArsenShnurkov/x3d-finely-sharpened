@@ -87,33 +87,34 @@ namespace X3D
 
                 newLinePositionY = (line * 0.5f);
 
+                float scale = 0.01f;
 
                 if (line == 0)
                 {
                     v = new Vertex()
                     {
-                        Position = new Vector3(0f, 0f + newLinePositionY, z) * 0.5f,
+                        Position = new Vector3(0f, 0f + newLinePositionY, z) * scale,
                         TexCoord = new Vector2(0f, 1f)
                     };
                     geometry.Add(v);
 
                     v = new Vertex()
                     {
-                        Position = new Vector3(1.0f, 0f + newLinePositionY, z) * 0.5f,
+                        Position = new Vector3(1.0f, 0f + newLinePositionY, z) * scale,
                         TexCoord = new Vector2(1f, 1f)
                     };
                     geometry.Add(v);
 
                     v = new Vertex()
                     {
-                        Position = new Vector3(1.0f, h + newLinePositionY, z) * 0.5f,
+                        Position = new Vector3(1.0f, h + newLinePositionY, z) * scale,
                         TexCoord = new Vector2(1f, 0f)
                     };
                     geometry.Add(v);
 
                     v = new Vertex()
                     {
-                        Position = new Vector3(0f, h + newLinePositionY, z) * 0.5f,
+                        Position = new Vector3(0f, h + newLinePositionY, z) * scale,
                         TexCoord = new Vector2(0f, 0f)
                     };
 

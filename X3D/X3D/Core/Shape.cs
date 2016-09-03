@@ -102,7 +102,15 @@ namespace X3D
 
         public Shape(X3DGeometryNode geometry)
         {
+            this.geometry = geometry;
 
+            geometry.Parent = this;
+
+            this.Items.Add(geometry);
+            this.Children.Add(geometry);
+
+            Load();
+            
         }
 
         #endregion

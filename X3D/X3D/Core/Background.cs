@@ -50,6 +50,7 @@ namespace X3D
 
         bool texture2d;
         Vector3 size = new Vector3(1, 1, 1);
+
         Vector3 scale = new Vector3(2, 2, 2);
 
         #endregion
@@ -129,9 +130,130 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             return false;
         }
 
+        private int createCubeMapFromBitmapSides(win.Bitmap left, win.Bitmap right, win.Bitmap front, win.Bitmap back, win.Bitmap top, win.Bitmap bottom)
+        {
+            int tex_cube;
+
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.GenTextures(1, out tex_cube);
+            GL.BindTexture(TextureTarget.TextureCubeMap, tex_cube);
+
+            List<win.Bitmap> textureBitmaps = new List<win.Bitmap> { right, left, top, bottom, back, front };
+
+            for (int i = 0; i < 6; i++)
+            {
+                loadCubeMapSide(tex_cube, TextureTarget.TextureCubeMapPositiveX + i, textureBitmaps[i]);
+                /* 
+                GL_TEXTURE_CUBE_MAP_POSITIVE_X	Right
+                GL_TEXTURE_CUBE_MAP_NEGATIVE_X	Left
+                GL_TEXTURE_CUBE_MAP_POSITIVE_Y	Top
+                GL_TEXTURE_CUBE_MAP_NEGATIVE_Y	Bottom
+                GL_TEXTURE_CUBE_MAP_POSITIVE_Z	Back
+                GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
+            }
+
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+
+            GL.BindTexture(TextureTarget.TextureCubeMap, 0);
+
+            return tex_cube;
+        }
+
+        private bool loadCubeMapSide(int texture, TextureTarget side_target, win.Bitmap image)
+        {
+            GL.BindTexture(TextureTarget.TextureCubeMap, texture);
+
+            win.Imaging.BitmapData pixelData;
+            win.Rectangle imgRect;
+            IntPtr pTexImage;
+
+            bool? rotCW = null;
+
+            if (side_target == TextureTarget.TextureCubeMapPositiveY) // Top
+            {
+                rotCW = false; // CCW
+            }
+            else if (side_target == TextureTarget.TextureCubeMapNegativeY) // Bottom
+            {
+                rotCW = true; // CW
+            }
+
+            if (rotCW.HasValue)
+            {
+                if (rotCW.Value)
+                {
+                    // Clockwise by 90 degrees
+                    image.RotateFlip(win.RotateFlipType.Rotate90FlipNone);
+                }
+                else
+                {
+                    // Counterclockwise by -90 degrees
+                    image.RotateFlip(win.RotateFlipType.Rotate270FlipNone);
+                }
+            }
+
+            imgRect = new win.Rectangle(0, 0, image.Width, image.Height);
+            pixelData = image.LockBits(imgRect, win.Imaging.ImageLockMode.ReadOnly,
+                                       System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            pTexImage = pixelData.Scan0;
+
+            // copy image data into 'target' side of cube map
+            GL.TexImage2D(side_target, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0,
+                PixelFormat.Bgra, PixelType.UnsignedByte, pTexImage);
+
+            image.UnlockBits(pixelData);
+
+            return true;
+        }
+
         #endregion
 
         #region Public Methods
+
+        public void LoadFromBitmapSides(win.Bitmap left, win.Bitmap right, win.Bitmap front, win.Bitmap back, win.Bitmap top, win.Bitmap bottom)
+        {
+            int i;
+            int a, b;
+            PackedGeometry _pack;
+
+            cubeHandle = GeometryHandle.Zero;
+            innerHandle = GeometryHandle.Zero;
+            outerHandle = GeometryHandle.Zero;
+
+            generateCube = true;
+
+            //TODO: replace cube sides that arent available with transparent sides 
+
+            generateSkyAndGround = false;
+
+            tex_cube = createCubeMapFromBitmapSides(left, right, front, back, top, bottom);
+
+            // SKYBOX
+            // innermost skybox
+
+            scaleCube = Vector3.One * 3.1f;
+
+            _shaderInnerCube = ShaderCompiler.ApplyShader(CubeMapBackgroundShader.vertexShaderSource,
+                                                          CubeMapBackgroundShader.fragmentShaderSource);
+            _shaderInnerCube.Link();
+
+            _pack = new PackedGeometry();
+            _pack._indices = _cube.Indices;
+            _pack._coords = _cube.Vertices;
+            _pack.Texturing = true;
+            //_pack._colorIndicies = _boxGeometry.Colors;
+            _pack._texCoords = _cube.Texcoords;
+            _pack.restartIndex = -1;
+
+            _pack.Interleave();
+
+            // BUFFER GEOMETRY
+            cubeHandle = _pack.CreateHandle();
+        }
 
         public override void Load()
         {
