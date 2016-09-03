@@ -11,6 +11,10 @@ namespace X3D.Core.Shading
     using DefaultUniforms;
     using Parser;
 
+    /// <summary>
+    /// A Mesh of primatives, hence "Packed Geometry", 
+    /// of which primativies are usually interleavable using coresponding coordinate indicies.
+    /// </summary>
     public class PackedGeometry
     {
         public bool Texturing;

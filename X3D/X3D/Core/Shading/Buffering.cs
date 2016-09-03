@@ -209,8 +209,7 @@ namespace X3D.Core.Shading
             return buffers;
         }
 
-        public static int BufferShaderGeometry(Verticies geometry,
-                                               out int vbo_interleaved, out int NumVerticies)
+        public static int BufferShaderGeometry(Verticies geometry, out int vbo_interleaved, out int NumVerticies)
         {
             Vertex[] _interleaved = geometry.ToArray();
 
@@ -265,26 +264,6 @@ namespace X3D.Core.Shading
 
             return vbo_interleaved;
         }
-
-        /* 
-            Buffering.Interleave(out this.bbox,
-                 out this.interleaved3,
-                 out this.interleaved4,
-                 this._indices,
-                 this._texIndices,
-                 this._coords,
-                 this._texCoords,
-                 null,
-                 this._colorIndicies,
-                 this.color,
-                 this.restartIndex,
-                 false,
-                 true,
-                 this.Coloring,
-                 this.Texturing, 
-                 calcBounds
-                 );
-        */
 
         public static void Interleave(
             ref PackedGeometry pack,
