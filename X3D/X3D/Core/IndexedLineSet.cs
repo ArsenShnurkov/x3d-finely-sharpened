@@ -11,9 +11,6 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace X3D
 {
-    /// <summary>
-    /// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/rendering.html#LineSet
-    /// </summary>
     public partial class IndexedLineSet
     {
         #region Fields

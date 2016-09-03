@@ -14,6 +14,8 @@ using X3D.Parser;
 
 namespace X3D
 {
+    //TODO: Current implementation of Sphere node is an Iso-Sphere, must also implement UV-Sphere for simplicity.
+
     public partial class Sphere
     {
         //private int vbo, NumVerticies;
