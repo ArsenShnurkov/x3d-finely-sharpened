@@ -23,7 +23,7 @@
     <meta content='../../license.html' name='license'/>
   </head>
   <Scene>
-    <NavigationInfo type='"EXAMINE" "WALK" "FLY" "ANY"'/>
+    <NavigationInfo type="WALK" />
     <Shape>
       <Appearance>
         <Material/>
