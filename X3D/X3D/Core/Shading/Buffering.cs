@@ -266,28 +266,36 @@ namespace X3D.Core.Shading
             return vbo_interleaved;
         }
 
+        /* 
+            Buffering.Interleave(out this.bbox,
+                 out this.interleaved3,
+                 out this.interleaved4,
+                 this._indices,
+                 this._texIndices,
+                 this._coords,
+                 this._texCoords,
+                 null,
+                 this._colorIndicies,
+                 this.color,
+                 this.restartIndex,
+                 false,
+                 true,
+                 this.Coloring,
+                 this.Texturing, 
+                 calcBounds
+                 );
+        */
+
         public static void Interleave(
-            out BoundingBox _bbox,
-            out List<Vertex> verticies3,
-            out List<Vertex> verticies4,
-            int[] _indices, 
-            int[] _texIndices,
-            Vector3[] _coords, 
-            Vector2[] _texCoords, 
-            Vector3[] _normals,
-            int[] _colorIndicies, 
-            float[] colors,
-            int? restartIndex = -1, 
-            bool genTexCoordPerVertex = true, 
+            ref PackedGeometry pack,
+            bool genTexCoordPerVertex = true,
             bool colorPerVertex = true,
-            bool coloring = false, 
-            bool texturing = false, 
             bool calcBounds = true)
         {
             int FACE_RESTART_INDEX = 2;
 
             // INTERLEAVE FACE SET
-            Console.WriteLine("Interleaving {0} indicies", _indices.Length);
+            Console.WriteLine("Interleaving {0} indicies", pack._indices.Length);
 
             int faceSetIndex = 0;
             int faceSetValue, texSetValue = -1, colSetValue = -1;
@@ -296,8 +304,8 @@ namespace X3D.Core.Shading
             List<int> texset = new List<int>();
             List<int> colset = new List<int>();
             List<Vertex> verticies2 = new List<Vertex>();
-            verticies3 = new List<Vertex>(); // buffer verticies of different face types separatly
-            verticies4 = new List<Vertex>();
+            pack.interleaved3 = new List<Vertex>(); // buffer verticies of different face types separatly
+            pack.interleaved4 = new List<Vertex>();
             Vertex v;
             //Vector4 c;
             float tmp;
@@ -309,25 +317,25 @@ namespace X3D.Core.Shading
 
             //REFACTOR
 
-            if (restartIndex.HasValue)
+            if (pack.restartIndex.HasValue)
             {
                 // and put verticies of type 4 in another buffer
-                for (int coordIndex = 0; coordIndex < _indices.Length; coordIndex++)
+                for (int coordIndex = 0; coordIndex < pack._indices.Length; coordIndex++)
                 {
-                    faceSetValue = _indices[coordIndex];
+                    faceSetValue = pack._indices[coordIndex];
 
-                    if (_texIndices != null && _texIndices.Length > 0)
-                        texSetValue = _texIndices[coordIndex];
+                    if (pack._texIndices != null && pack._texIndices.Length > 0)
+                        texSetValue = pack._texIndices[coordIndex];
 
-                    if (_colorIndicies != null && _colorIndicies.Length > 0)
-                        colSetValue = _colorIndicies[coordIndex];
+                    if (pack._colorIndicies != null && pack._colorIndicies.Length > 0)
+                        colSetValue = pack._colorIndicies[coordIndex];
 
-                    if (faceSetValue == restartIndex.Value)
+                    if (faceSetValue == pack.restartIndex.Value)
                     {
                         for (int k = 0; k < faceType; k++)
                         {
                             v = Vertex.Zero;
-                            v.Position = _coords[faceset[k]];
+                            v.Position = pack._coords[faceset[k]];
 
                             maximum = MathHelpers.Max(v.Position, maximum);
                             minimum = MathHelpers.Min(v.Position, minimum);
@@ -337,9 +345,9 @@ namespace X3D.Core.Shading
                             //v.Position.Z = -v.Position.Y;
                             //v.Position.Y = tmp;
 
-                            if (texset != null && texset.Count > 0 && _texCoords != null && _texCoords.Length > 0)
+                            if (texset != null && texset.Count > 0 && pack._texCoords != null && pack._texCoords.Length > 0)
                             {
-                                v.TexCoord = _texCoords[texset[k]];
+                                v.TexCoord = pack._texCoords[texset[k]];
                             }
                             //else if (genTexCoordPerVertex && texturing && _bbox != null)
                             //{
@@ -347,31 +355,31 @@ namespace X3D.Core.Shading
                             //    v = MathHelpers.uv(_bbox, new Vertex[] { v }, at_origin: false)[0];
                             //}
 
-                            if (coloring)
+                            if (pack.Coloring)
                             {
                                 if (colorPerVertex)
                                 {
-                                    if (colset != null && colset.Count > 0 && colors != null && colors.Length > 0)
+                                    if (colset != null && colset.Count > 0 && pack.color != null && pack.color.Length > 0)
                                     {
-                                        if(colset.Count == 3)
+                                        if (colset.Count == 3)
                                         {
                                             v.Color = new Vector4(
-                                                colors[colset[k]],
-                                                colors[colset[k] + 1],
-                                                colors[colset[k] + 2],
+                                                pack.color[colset[k]],
+                                                pack.color[colset[k] + 1],
+                                                pack.color[colset[k] + 2],
                                                 1.0f
                                             );
                                         }
                                         else if (colset.Count == 4)
                                         {
                                             v.Color = new Vector4(
-                                                colors[colset[k]],
-                                                colors[colset[k] + 1],
-                                                colors[colset[k] + 2],
-                                                colors[colset[k] + 3]
+                                                pack.color[colset[k]],
+                                                pack.color[colset[k] + 1],
+                                                pack.color[colset[k] + 2],
+                                                pack.color[colset[k] + 3]
                                             );
                                         }
-                                        
+
                                     }
                                 }
                                 else
@@ -382,18 +390,20 @@ namespace X3D.Core.Shading
                                 }
                             }
 
-                            if (_normals != null && _normals.Length > 0)
+                            if (pack.normals != null && pack.normals.Length > 0)
                             {
-                                v.Normal = _normals[faceset[k]];
+                                //TODO: interleave normals
+
+                                //v.Normal = pack.normals[faceset[k]];
                             }
 
                             switch (faceType)
                             {
                                 case 3:
-                                    verticies3.Add(v);
+                                    pack.interleaved3.Add(v);
                                     break;
                                 case 4:
-                                    verticies4.Add(v);
+                                    pack.interleaved4.Add(v);
                                     break;
                                 case 2:
                                     verticies2.Add(v);
@@ -412,10 +422,10 @@ namespace X3D.Core.Shading
                         faceType++;
                         faceset.Add(faceSetValue);
 
-                        if (_texIndices != null && _texIndices.Length > 0)
+                        if (pack._texIndices != null && pack._texIndices.Length > 0)
                             texset.Add(texSetValue);
 
-                        if (_colorIndicies != null && _colorIndicies.Length > 0)
+                        if (pack._colorIndicies != null && pack._colorIndicies.Length > 0)
                             colset.Add(colSetValue);
                     }
                 }
@@ -424,11 +434,11 @@ namespace X3D.Core.Shading
             {
                 // NO RESTART INDEX, assume new face is at every 3rd value / i = 2
 
-                if (_indices.Length == 4)
+                if (pack._indices.Length == 4)
                 {
                     FACE_RESTART_INDEX = 4; // 0-3 Quad
                 }
-                else if (_indices.Length == 3)
+                else if (pack._indices.Length == 3)
                 {
                     FACE_RESTART_INDEX = 3; // 0-3 Triangle
                 }
@@ -437,15 +447,15 @@ namespace X3D.Core.Shading
                     FACE_RESTART_INDEX = 3;
                 }
 
-                for (int coordIndex = 0; coordIndex < _indices.Length; coordIndex++)
+                for (int coordIndex = 0; coordIndex < pack._indices.Length; coordIndex++)
                 {
-                    faceSetValue = _indices[coordIndex];
+                    faceSetValue = pack._indices[coordIndex];
                     faceset.Add(faceSetValue);
                     faceType++;
 
-                    if (_texIndices != null)
+                    if (pack._texIndices != null)
                     {
-                        texSetValue = _texIndices[coordIndex];
+                        texSetValue = pack._texIndices[coordIndex];
                         texset.Add(texSetValue);
                     }
 
@@ -454,7 +464,7 @@ namespace X3D.Core.Shading
                         for (int k = 0; k < faceType; k++)
                         {
                             v = Vertex.Zero;
-                            v.Position = _coords[faceset[k]];
+                            v.Position = pack._coords[faceset[k]];
 
                             maximum = MathHelpers.Max(v.Position, maximum);
                             minimum = MathHelpers.Min(v.Position, minimum);
@@ -464,9 +474,9 @@ namespace X3D.Core.Shading
                             //v.Position.Z = -v.Position.Y;
                             //v.Position.Y = tmp;
 
-                            if (texset != null && texset.Count > 0 && _texCoords != null && _texCoords.Length > 0)
+                            if (texset != null && texset.Count > 0 && pack._texCoords != null && pack._texCoords.Length > 0)
                             {
-                                v.TexCoord = _texCoords[texset[k]];
+                                v.TexCoord = pack._texCoords[texset[k]];
                             }
                             //else if (genTexCoordPerVertex && texturing && _bbox != null)
                             //{
@@ -474,18 +484,20 @@ namespace X3D.Core.Shading
                             //    v = MathHelpers.uv(_bbox, new Vertex[] { v }, at_origin: false)[0];
                             //}
 
-                            if (_normals != null && _normals.Length > 0)
+                            if (pack.normals != null && pack.normals.Length > 0)
                             {
-                                v.Normal = _normals[faceset[k]];
+                                //TODO: interleave normals
+
+                                //v.Normal = pack.normals[faceset[k]];
                             }
 
                             switch (faceType)
                             {
-                                case 3: 
-                                    verticies3.Add(v);
+                                case 3:
+                                    pack.interleaved3.Add(v);
                                     break;
                                 case 4:
-                                    verticies4.Add(v);
+                                    pack.interleaved4.Add(v);
                                     break;
                                 case 2:
                                     verticies2.Add(v);
@@ -505,7 +517,7 @@ namespace X3D.Core.Shading
             {
                 Vector3 x3dScale = new Vector3(0.06f, 0.06f, 0.06f);
 
-                _bbox = new BoundingBox()
+                pack.bbox = new BoundingBox()
                 {
                     Width = (maximum.X - minimum.X),
                     Height = (maximum.Y - minimum.Y),
@@ -520,7 +532,7 @@ namespace X3D.Core.Shading
             }
             else
             {
-                _bbox = null;
+                pack.bbox = null;
             }
 
             //Dont buffer geometry here, just interleave

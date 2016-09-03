@@ -20,8 +20,6 @@ namespace X3D.Core.Shading
         public bool generateColorMap;
         public bool colorPerVertex;
         public BoundingBox bbox;
-        //public BoundingBox bbox3;
-        //public BoundingBox bbox4;
         public int? restartIndex;
 
         public int[] _indices;
@@ -29,7 +27,9 @@ namespace X3D.Core.Shading
         public int[] _colorIndicies;
         public Vector2[] _texCoords;
         public Vector3[] _coords;
+        public Vector2[] _coords2f;
         public float[] color;
+        public float[] normals;
 
         public Verticies interleaved3 = new Verticies();
         public Verticies interleaved4 = new Verticies();
@@ -38,23 +38,11 @@ namespace X3D.Core.Shading
 
         public void Interleave(bool calcBounds = true)
         {
-            Buffering.Interleave(out this.bbox,
-                 out this.interleaved3,
-                 out this.interleaved4,
-                 this._indices,
-                 this._texIndices,
-                 this._coords,
-                 this._texCoords,
-                 null,
-                 this._colorIndicies,
-                 this.color,
-                 this.restartIndex,
-                 false,
-                 true,
-                 this.Coloring,
-                 this.Texturing, 
-                 calcBounds
-                 );
+            if (this._indices == null) return;
+
+            PackedGeometry pack = this;
+
+            Buffering.Interleave(ref pack, genTexCoordPerVertex: false, colorPerVertex: true, calcBounds: calcBounds);
         }
 
         public GeometryHandle CreateHandle()
@@ -123,36 +111,7 @@ namespace X3D.Core.Shading
 
                 packed.restartIndex = null;
 
-                Buffering.Interleave(out packed.bbox,
-                                     out packed.interleaved3,
-                                     out packed.interleaved4,
-                                     packed._indices,
-                                     packed._texIndices,
-                                     packed._coords,
-                                     packed._texCoords,
-                                     null,
-                                     packed._colorIndicies,
-                                     packed.color,
-                                     packed.restartIndex,
-                                     false,
-                                     true,
-                                     packed.Coloring,
-                                     packed.Texturing
-                                     );
-
-                //packed.bbox = MathHelpers.CalcBoundingBox(ifs, packed.restartIndex);
-                //packed.bbox3 = BoundingBox.CalculateBoundingBox(packed.interleaved3);
-                //packed.bbox4 = BoundingBox.CalculateBoundingBox(packed.interleaved4);
-                //packed.bbox = BoundingBox.Max(packed.bbox3, packed.bbox4);
-
-                //Buffering.Interleave(out packed.bbox,
-                //    out packed.interleaved3,
-                //    out packed.interleaved4,
-                //    packed._indices, packed._texIndices, packed._coords,
-                //    packed._texCoords, null, packed._colorIndicies, packed.color,
-                //    packed.restartIndex, true,
-                //    packed.colorPerVertex, packed.Coloring, packed.Texturing);
-
+                packed.Interleave();
             }
 
             return packed;
@@ -178,24 +137,41 @@ namespace X3D.Core.Shading
                 packed._indices = X3DTypeConverters.ParseIndicies(ils.coordIndex);
                 packed._coords = X3DTypeConverters.MFVec3f(coordinate.point);
 
+                if (ils.coordIndex.Contains(RESTART_INDEX.ToString()))
+                {
+                    packed.restartIndex = RESTART_INDEX;
+                }
+
+                packed.Interleave();
+            }
+
+            return packed;
+        }
+
+        public static PackedGeometry Pack(LineSet lineSet)
+        {
+            PackedGeometry packed;
+            Coordinate coordinate;
+
+            packed = new PackedGeometry();
+            //packed.Texturing = ifs.texCoordinate != null;// || parentShape.texturingEnabled;
+
+            coordinate = (Coordinate)lineSet.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
+
+            packed.RGBA = false;
+            packed.RGB = false;
+            packed.Coloring = false;
+            packed.generateColorMap = false;
+
+            if (coordinate != null)
+            {
+                if(lineSet.vertexCount == 2)
+                    packed._coords2f = X3DTypeConverters.MFVec2f(coordinate.point);
+                else packed._coords = X3DTypeConverters.MFVec3f(coordinate.point);
+
                 packed.restartIndex = null;
 
-                Buffering.Interleave(out packed.bbox,
-                                     out packed.interleaved3,
-                                     out packed.interleaved4,
-                                     packed._indices,
-                                     packed._texIndices,
-                                     packed._coords,
-                                     packed._texCoords,
-                                     null,
-                                     packed._colorIndicies,
-                                     packed.color,
-                                     packed.restartIndex,
-                                     false,
-                                     true,
-                                     packed.Coloring,
-                                     packed.Texturing
-                                     );
+                packed.Interleave();
             }
 
             return packed;
@@ -254,37 +230,6 @@ namespace X3D.Core.Shading
                 }
 
                 packed.Interleave();
-
-                //Buffering.Interleave(out packed.bbox,
-                //                     out packed.interleaved3,
-                //                     out packed.interleaved4,
-                //                     packed._indices,
-                //                     packed._texIndices,
-                //                     packed._coords,
-                //                     packed._texCoords,
-                //                     null,
-                //                     packed._colorIndicies,
-                //                     packed.color,
-                //                     packed.restartIndex,
-                //                     false,
-                //                     true,
-                //                     packed.Coloring,
-                //                     packed.Texturing
-                //                     );
-
-                //packed.bbox = MathHelpers.CalcBoundingBox(ifs, packed.restartIndex);
-                //packed.bbox3 = BoundingBox.CalculateBoundingBox(packed.interleaved3);
-                //packed.bbox4 = BoundingBox.CalculateBoundingBox(packed.interleaved4);
-                //packed.bbox = BoundingBox.Max(packed.bbox3, packed.bbox4);
-
-                //Buffering.Interleave(packed.bbox,
-                //    out packed.interleaved3,
-                //    out packed.interleaved4,
-                //    packed._indices, packed._texIndices, packed._coords,
-                //    packed._texCoords, null, packed._colorIndicies, packed.color,
-                //    packed.restartIndex, true,
-                //    packed.colorPerVertex, packed.Coloring, packed.Texturing);
-
             }
 
             return packed;
