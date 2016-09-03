@@ -138,7 +138,7 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             GL.GenTextures(1, out tex_cube);
             GL.BindTexture(TextureTarget.TextureCubeMap, tex_cube);
 
-            List<win.Bitmap> textureBitmaps = new List<win.Bitmap> { right, left, top, bottom, back, front };
+            List<win.Bitmap> textureBitmaps = new List<win.Bitmap> { front, back, top, bottom, left, right };
 
             for (int i = 0; i < 6; i++)
             {
@@ -228,7 +228,77 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
             //TODO: replace cube sides that arent available with transparent sides 
 
-            generateSkyAndGround = false;
+            generateSkyAndGround = !(string.IsNullOrEmpty(groundColor) || string.IsNullOrEmpty(skyColor)
+                || string.IsNullOrEmpty(groundAngle) || string.IsNullOrEmpty(skyAngle));
+
+
+            // TODO: later render both skydome and skybox together
+            // Alpha values in skybox should provide a way to see through to skydome.
+            // Skycolor sphere should be slightly larger than groundcolor hemisphere
+            // and finally skybox should fit and be smaller than groundcolor hemisphere.
+
+            if (generateSkyAndGround)
+            {
+                // Sphere
+                // interpolate colors from groundColor and skyColor over hemispheres using specified sky and ground angles
+                this.groundColors = X3DTypeConverters.MFVec3f(groundColor);
+                this.groundAngles = X3DTypeConverters.Floats(groundAngle);
+                this.skyColors = X3DTypeConverters.MFVec3f(skyColor);
+                this.skyAngles = X3DTypeConverters.Floats(skyAngle);
+
+                // Assign colors with matching angles
+                colors = new Vector3[groundColors.Length + skyColors.Length];
+                for (i = 0; i < skyColors.Length; i++)
+                    colors[i] = skyColors[i];
+                for (i = skyColors.Length; i < skyColors.Length + groundColors.Length; i++)
+                    colors[i] = groundColors[i - skyColors.Length];
+                angles = new float[groundAngles.Length + skyAngles.Length + 2];
+                angles[0] = 0;
+                for (i = 0; i < skyAngles.Length; i++)
+                    angles[i + 1] = skyAngles[i];
+                angles[skyAngles.Length + 1] = 0;
+                for (i = 0; i < groundAngles.Length; i++)
+                    angles[i + skyAngles.Length + 2] = 1.5f + groundAngles[i];
+
+
+
+                groundDivisor = (1.0f / groundColors.Length) * (float)Math.PI; // how many colors divided over 90 degrees (lower hemisphere)
+                skyDivisor = (1.0f / groundColors.Length) * (float)Math.PI; // how many colors divided over 90 degrees (upper hemisphere)
+
+                // SKYDOME
+                // outer sphere (sky)
+
+                scaleSky = Vector3.One * 6.0f; // slightly bigger than ground hemisphere
+                _shaderOuter = ShaderCompiler.ApplyShader(BackgroundShader.vertexShaderSource, // Make use of the BackgroundShader for Skydome Linear Interpolation
+                                                 BackgroundShader.fragmentShaderSource);
+                _shaderOuter.Link();
+
+                List<Vertex> geometryOuterSphere = BuildSphereGeometryQuads(60, Vector3.Zero, 1.0f);
+                Buffering.BufferShaderGeometry(geometryOuterSphere, out outerHandle.vbo4, out outerHandle.NumVerticies4);
+
+                min = Vector3.Zero;
+                max = Vector3.Zero;
+                BoundingBox.CalculateBoundingBox(geometryOuterSphere, out max, out min);
+                bboxOuter = max - min;
+
+                // inner hemisphere (ground)
+
+                //scaleGround = Vector3.One * 5.6f;
+                //_shaderInner = ShaderCompiler.ApplyShader(BackgroundShader.vertexShaderSource,
+                //                                 BackgroundShader.fragmentShaderSource);
+                //_shaderInner.Link();
+
+                //List<Vertex> geometryInnerHemisphere = BuildHemisphereGeometryQuads(60, new Vector3(0, 0.0f,0), 1.0f, false);
+                //Buffering.BufferShaderGeometry(geometryInnerHemisphere, out innerHandle.vbo4, out innerHandle.NumVerticies4);
+
+                //min = Vector3.Zero;
+                //max = Vector3.Zero;
+                //BoundingBox.CalculateBoundingBox(geometryInnerHemisphere, out max, out min);
+                //bboxInner = max - min;
+
+
+                skydomeTexture = MakeSkydomeTexture();
+            }
 
             tex_cube = createCubeMapFromBitmapSides(left, right, front, back, top, bottom);
 
