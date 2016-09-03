@@ -96,6 +96,17 @@ namespace X3D
 
         #endregion
 
+        #region Constructors
+
+        public Shape() {}
+
+        public Shape(X3DGeometryNode geometry)
+        {
+
+        }
+
+        #endregion
+
         #region Public Methods
 
         public void CollectMaterials()
@@ -423,7 +434,7 @@ namespace X3D
 
                 loadedGeometry = _handle.HasGeometry;
 
-                if (drawBoundingBox)
+                if (drawBoundingBox && bbox != null)
                 {
                     bbox.EnableRendering(GetPosition(rc));
                 }
@@ -594,8 +605,10 @@ namespace X3D
 
             }
 
-            if(drawBoundingBox)
+            if(drawBoundingBox && bbox != null)
+            {
                 RenderBoundingBox(rc);
+            }
         }
 
         private void RenderBoundingBox(RenderingContext rc)
@@ -617,13 +630,17 @@ namespace X3D
 
                 shader.Use();
 
-                shader.SetFieldValue("bboxMaxWidth", bbox.Width);
-                shader.SetFieldValue("bboxMaxHeight", bbox.Height);
-                shader.SetFieldValue("bboxMaxDepth", bbox.Depth);
+                if(bbox != null)
+                {
+                    shader.SetFieldValue("bboxMaxWidth", bbox.Width);
+                    shader.SetFieldValue("bboxMaxHeight", bbox.Height);
+                    shader.SetFieldValue("bboxMaxDepth", bbox.Depth);
 
-                shader.SetFieldValue("bbox_x", bbox.Width);
-                shader.SetFieldValue("bbox_y", bbox.Height);
-                shader.SetFieldValue("bbox_z", bbox.Depth);
+                    shader.SetFieldValue("bbox_x", bbox.Width);
+                    shader.SetFieldValue("bbox_y", bbox.Height);
+                    shader.SetFieldValue("bbox_z", bbox.Depth);
+                }
+
                 shader.SetFieldValue("coloringEnabled", coloring ? 1 : 0);
 
                 if (typeof(ElevationGrid).IsInstanceOfType(geometry))
