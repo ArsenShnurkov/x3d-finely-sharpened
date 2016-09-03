@@ -62,7 +62,7 @@ namespace X3D
 
 
         [XmlIgnore]
-        public bool drawBoundingBox = true;
+        public bool drawBoundingBox = false;
 
         [XmlAttribute("depthMask")]
         public bool depthMask = true;
@@ -683,7 +683,7 @@ namespace X3D
                     }
                     else
                     {
-                        if (typeof(IndexedLineSet).IsInstanceOfType(geometry))
+                        if (typeof(IndexedLineSet).IsInstanceOfType(geometry) || typeof(LineSet).IsInstanceOfType(geometry))
                         {
                             RenderLines(rc);
                         }
@@ -768,6 +768,8 @@ namespace X3D
         {
             if (_handle.NumVerticies3 > 0)
             {
+                PrimitiveType prim;
+
                 GL.UseProgram(CurrentShader.ShaderHandle);
 
                 CurrentShader.SetFieldValue("lightingEnabled", 0);
@@ -778,11 +780,22 @@ namespace X3D
 
                 GL.LineWidth(8.0f); // todo: LineProperties
 
-                IndexedLineSet ils = (IndexedLineSet)geometry;
+                prim = PrimitiveType.Lines;
+
+                if (typeof(IndexedLineSet).IsInstanceOfType(geometry))
+                {
+                    IndexedLineSet ils = (IndexedLineSet)geometry;
+                    prim = ils.PrimativeType;
+                }
+                if (typeof(LineSet).IsInstanceOfType(geometry))
+                {
+                    LineSet ls = (LineSet)geometry;
+                    prim = ls.PrimativeType;
+                }
 
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _handle.vbo3);
                 Buffering.ApplyBufferPointers(CurrentShader);
-                GL.DrawArrays(ils.PrimativeType, 0, _handle.NumVerticies3);
+                GL.DrawArrays(prim, 0, _handle.NumVerticies3);
                 
 
                 GL.UseProgram(0);
