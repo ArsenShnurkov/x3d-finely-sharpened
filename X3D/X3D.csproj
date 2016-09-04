@@ -84,6 +84,7 @@
     </Compile>
     <Compile Include="X3D\Core\Appearance.cs" />
     <Compile Include="X3D\Core\Background.cs" />
+    <Compile Include="X3D\Core\Rectangle2D.cs" />
     <Compile Include="X3D\Core\Box.cs" />
     <Compile Include="X3D\Core\PointSet.cs" />
     <Compile Include="X3D\Core\LineSet.cs" />
