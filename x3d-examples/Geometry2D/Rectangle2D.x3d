@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE X3D PUBLIC "ISO//Web3D//DTD X3D 3.0//EN" "http://www.web3d.org/specifications/x3d-3.0.dtd">
+<X3D profile='Immersive' version='3.0' xmlns:xsd='http://www.w3.org/2001/XMLSchema-instance' xsd:noNamespaceSchemaLocation='http://www.web3d.org/specifications/x3d-3.0.xsd'>
+  <head>
+    <component level='2' name='Geometry2D'/>
+  </head>
+  <Scene>
+		<Background groundColor='0.3 0.3 0.3' skyColor='0.3 0.3 0.3'/>
+		<Viewpoint description='Geometry2D Component Examples' position='0 0 12'/>
+
+		<Transform translation='0 0 -0.5'>
+			<Shape>
+				<Rectangle2D />
+				
+				<Appearance>
+					<Material diffuseColor='1 0 0' transparency='1' />
+				</Appearance>
+			</Shape>
+		</Transform>
+  </Scene>
+</X3D>
