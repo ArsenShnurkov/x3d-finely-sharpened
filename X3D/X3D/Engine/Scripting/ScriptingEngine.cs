@@ -252,15 +252,6 @@ namespace X3D.Engine
 
         #region Private Methods
 
-        [DllImport("kernel32", CharSet = CharSet.Unicode, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool DeleteFile(string name);
-
-        private void unblockDll(string file)
-        {
-            DeleteFile(file + ":Zone.Identifier");
-        }
-
         /// <summary>
         /// Check v8 engine dependencies and fix any problems at runtime.
         /// </summary>
@@ -290,6 +281,9 @@ namespace X3D.Engine
                 unblockDll("x64\\V8.Net.Proxy.Interface.x64.dll");
                 unblockDll("x64\\V8_Net_Proxy_x64.dll");
                 unblockDll("x64\\icudt.dll");
+                unblockDll("x86\\V8.Net.Proxy.Interface.x86.dll");
+                unblockDll("x86\\V8_Net_Proxy_x86.dll");
+                unblockDll("x86\\icudt.dll");
             }
 
 
@@ -357,6 +351,19 @@ namespace X3D.Engine
 
             //TODO: hook X3D simple types such as SFVec3, MFString, etc. 
             // Note that for some types there is a translation SFVec3 is interchanged to OpenTK.Vector3 internally
+        }
+
+        #endregion
+
+        #region WINDOWS PLATFORM
+
+        [DllImport("kernel32", CharSet = CharSet.Unicode, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool DeleteFile(string name);
+
+        private void unblockDll(string file)
+        {
+            DeleteFile(file + ":Zone.Identifier");
         }
 
         #endregion
