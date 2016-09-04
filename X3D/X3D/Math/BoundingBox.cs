@@ -8,11 +8,11 @@ using OpenTK.Graphics.OpenGL4;
 using X3D.Core;
 using X3D.Core.Shading;
 using X3D.Parser;
+using X3D.Engine;
 
 namespace X3D
 {
-    using Engine;
-    using static Box;
+    
 
     //TODO: bounding volume hierarchy https://en.wikipedia.org/wiki/Bounding_volume_hierarchy
 
@@ -50,7 +50,7 @@ namespace X3D
         private static Vector3 cyan = new Vector3(0, 1, 1);
         private static Vector3 orange = new Vector3(1, 0.5f, 0);
 
-        internal static BoxGeometry _geo;
+        internal static Box.BoxGeometry _geo;
         private ComposedShader bboxShader;
         private GeometryHandle _handle;
         private PackedGeometry _pack;
@@ -313,7 +313,7 @@ namespace X3D
 
             lines(LineColor, 12, out lineColors, out lineIndicies);
 
-            _geo = new BoxGeometry();
+            _geo = new Box.BoxGeometry();
             _pack = new PackedGeometry();
             _pack.Coloring = true;
             _pack._indices = _geo.Indices;
