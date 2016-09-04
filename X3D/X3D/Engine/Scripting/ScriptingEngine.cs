@@ -11,11 +11,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
 // Google V8 Engine via V8.Net wrapper
 using V8.Net;
+
+using X3D.Platform;
 
 namespace X3D.Engine
 {
@@ -249,8 +252,58 @@ namespace X3D.Engine
 
         #region Private Methods
 
+        [DllImport("kernel32", CharSet = CharSet.Unicode, SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool DeleteFile(string name);
+
+        private void unblockDll(string file)
+        {
+            DeleteFile(file + ":Zone.Identifier");
+        }
+
+        /// <summary>
+        /// Check v8 engine dependencies and fix any problems at runtime.
+        /// </summary>
+        private void deps()
+        {
+            //TODO: wait for v8.net.mono to mature
+
+            // ensure v8.net dependencies are in bin folder
+            string v8_net_proxy_interface64 = string.Format(@"x64{0}V8.Net.Proxy.Interface.x64.dll", System.IO.Path.DirectorySeparatorChar);
+            string v8_net_proxy64 = string.Format(@"x64{0}V8_Net_Proxy_x64.dll", System.IO.Path.DirectorySeparatorChar);
+            string v8_net_proxy_interface32 = string.Format(@"x86{0}V8.Net.Proxy.Interface.x86.dll", System.IO.Path.DirectorySeparatorChar);
+            string v8_net_proxy32 = string.Format(@"x86{0}V8_Net_Proxy_x86.dll", System.IO.Path.DirectorySeparatorChar);
+
+            bool is64Bit = Environment.Is64BitProcess;
+
+            string lib_proxy_interface = is64Bit ? v8_net_proxy_interface64 : v8_net_proxy_interface32;
+            string lib_proxy = is64Bit ? v8_net_proxy64 : v8_net_proxy32;
+
+            
+            bool hasInterface = System.IO.File.Exists(lib_proxy_interface);
+            bool hasProxy = System.IO.File.Exists(lib_proxy);
+
+            if (X3DPlatform.IsWindows)
+            {
+                unblockDll("V8.Net.dll");
+                unblockDll("V8.Net.SharedTypes.dll");
+                unblockDll("x64\\V8.Net.Proxy.Interface.x64.dll");
+                unblockDll("x64\\V8_Net_Proxy_x64.dll");
+                unblockDll("x64\\icudt.dll");
+            }
+
+
+            if (hasInterface && hasProxy)
+            {
+                Console.WriteLine("V8 engine dependencies seem fine, they are {0}", is64Bit ? "x64" : "x86");
+            }
+        }
+
         private void StartV8(SceneGraphNode root)
         {
+            // ensure v8.net dependencies are fine for instantiation of V8Engine
+            deps();
+
             v8 = new V8Engine();
             v8.RegisterType(typeof(X3DConsole), null, true, ScriptMemberSecurity.Locked);
             
@@ -264,7 +317,6 @@ namespace X3D.Engine
 
             v8.DynamicGlobalObject.window = v8.CreateFunctionTemplate("window").GetFunctionObject<WindowFunction>();
             v8.DynamicGlobalObject.browser = v8.CreateFunctionTemplate("browser").GetFunctionObject<BrowserFunction>();
-
             
 
             MapKeyValues();
