@@ -17,7 +17,8 @@
   </head>
   <Scene>
     <Background skyColor='1 1 1'/>
-    
+    <NavigationInfo type="WALK" />
+	
     <Shape>
       <Box size='1 2 3'/>
       <Appearance>

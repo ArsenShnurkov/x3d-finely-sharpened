@@ -67,14 +67,17 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xml" />
-    <Reference Include="V8.Net">
-      <HintPath>..\Tests\bin\Debug\V8.Net.dll</HintPath>
+    <Reference Include="V8.Net, Version=1.5.2015.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\V8.Net.Mono.1.5.0.4\lib\net45\V8.Net.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="V8.Net.Proxy.Interface.x64">
-      <HintPath>..\Tests\bin\Debug\V8.Net.Proxy.Interface.x64.dll</HintPath>
+    <Reference Include="V8.Net.Proxy.Interface, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\V8.Net.Mono.1.5.0.4\lib\net45\V8.Net.Proxy.Interface.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="V8.Net.SharedTypes">
-      <HintPath>..\Tests\bin\Debug\V8.Net.SharedTypes.dll</HintPath>
+    <Reference Include="V8.Net.SharedTypes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\V8.Net.Mono.1.5.0.4\lib\net45\V8.Net.SharedTypes.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -211,7 +214,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="liblinux\x64\libV8_Net_Proxy.so" />
+    <None Include="liblinux\x86\libV8_Net_Proxy.so" />
+    <None Include="libosx\x86\libV8_Net_Proxy.dylib" />
+    <None Include="packages.config" />
     <None Include="Resources\ErrorTexture.png" />
+    <None Include="V8.Net.Proxy.Interface.dll.config" />
+    <None Include="V8_Net_Proxy.dll_" />
     <None Include="X3D\x3d-3.3.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -231,7 +240,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_BuildVersioningStyle="None.None.None.Increment" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" BuildVersion_AssemblyInfoFilename="" BuildVersion_UseGlobalSettings="False" BuildVersion_IncrementBeforeBuild="True" />
+      <UserProperties BuildVersion_IncrementBeforeBuild="True" BuildVersion_UseGlobalSettings="False" BuildVersion_AssemblyInfoFilename="" BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.None.None.Increment" />
     </VisualStudio>
   </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
