@@ -284,6 +284,20 @@ namespace X3D
 
         #region Public Methods
 
+        public void Draw(RenderingContext rc)
+        {
+            if (!HasRendered)
+            {
+                this.PreRenderOnce(rc);
+
+                HasRendered = true;
+            }
+
+            this.PreRender();
+            this.Render(rc);
+            this.PostRender(rc);
+        }
+
         public NameValueCollection GetAttributes()
         {
             NameValueCollection attributes;
