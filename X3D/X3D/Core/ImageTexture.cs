@@ -513,6 +513,14 @@ namespace X3D
             return result;
         }
 
+        /// <summary>
+        /// Rescale image to default OpenGL size
+        /// </summary>
+        public static void Rescale(ref Bitmap image)
+        {
+            Rescale(ref image, GetTextureGLMaxSize(image));
+        }
+
         public static void Rescale(ref Bitmap image, Size newSize)
         {
             if (image.Width != newSize.Width || image.Height != newSize.Height)
