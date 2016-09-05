@@ -166,6 +166,13 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
         private bool loadCubeMapSide(int texture, TextureTarget side_target, win.Bitmap image)
         {
+            if (image == null)
+            {
+                image = Properties.Resources.ErrorTexture;
+
+                ImageTexture.Rescale(ref image);
+            }
+
             GL.BindTexture(TextureTarget.TextureCubeMap, texture);
 
             win.Imaging.BitmapData pixelData;
