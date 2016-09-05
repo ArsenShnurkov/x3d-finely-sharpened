@@ -312,11 +312,20 @@ namespace X3D.Runtime
 
             ApplyKeyBindings(e);
 
+            TrackMouseCursor(ref mouseDelta, this.window, this.updateCamera, this.LockMouseCursor);
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        public static void TrackMouseCursor(ref Vector2 mouseDelta, INativeWindow window, Action updateCamera, Action lockMouseCursor)
+        {
             Rectangle screen = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
 
-            if(NavigationInfo.NavigationType != NavigationType.Examine)
+            if (NavigationInfo.NavigationType != NavigationType.Examine)
             {
-                if (this.window.WindowState == WindowState.Fullscreen)
+                if (window.WindowState == WindowState.Fullscreen)
                 {
                     mouseDelta = new Vector2
                     (
@@ -337,13 +346,13 @@ namespace X3D.Runtime
 
                 updateCamera();
 
-                LockMouseCursor();
+                lockMouseCursor();
             }
             else
             {
 
 
-                if (this.window.WindowState == WindowState.Fullscreen)
+                if (window.WindowState == WindowState.Fullscreen)
                 {
                     mouseDelta = new Vector2
                     (
@@ -355,7 +364,7 @@ namespace X3D.Runtime
 
                     updateCamera();
 
-                    LockMouseCursor();
+                    lockMouseCursor();
                 }
                 else
                 {
@@ -370,12 +379,7 @@ namespace X3D.Runtime
                     updateCamera();
                 }
             }
-
         }
-
-        #endregion
-
-        #region Public Methods
 
         public void Dispose()
         {

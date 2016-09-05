@@ -12,6 +12,44 @@ namespace X3D
     {
         private bool _isHidden;
 
+        #region Public Static Methods
+
+        public static Transform Create(Vector3 translation, Vector3 scale, Vector4 rotation)
+        {
+            return new Transform()
+            {
+                Translation = translation,
+                Scale = scale,
+                Rotation = rotation
+            };
+        }
+
+        public static Transform CreateTranslation(Vector3 translation)
+        {
+            return new Transform()
+            {
+                Translation = translation
+            };
+        }
+
+        public static Transform CreateScale(Vector3 scale)
+        {
+            return new Transform()
+            {
+                Scale = scale
+            };
+        }
+
+        public static Transform CreateRotation(Vector4 rotation)
+        {
+            return new Transform()
+            {
+                Rotation = rotation
+            };
+        }
+
+        #endregion
+
         public void ApplyTranslation(Vector3 translation)
         {
             this.Translation += translation;

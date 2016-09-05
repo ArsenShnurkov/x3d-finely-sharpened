@@ -113,6 +113,22 @@ namespace X3D
             
         }
 
+        public Shape(X3DGeometryNode geometry, Transform transform)
+        {
+            this.Parent = transform;
+            transform.Children.Add(this);
+
+            this.geometry = geometry;
+
+            geometry.Parent = this;
+
+            this.Items.Add(geometry);
+            this.Children.Add(geometry);
+
+            Load();
+
+        }
+
         #endregion
 
         #region Public Methods
@@ -233,7 +249,7 @@ namespace X3D
                                                      Vector3.Zero,
                                                      transform.Scale,
                                                      Vector3.Zero,
-                                                     transform.Translation * x3dScale,
+                                                     transform.Translation, // * x3dScale,
                                                      modelview);
 
                 //modelview *= Matrix4.CreateTranslation(transform.Translation * x3dScale);
