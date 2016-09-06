@@ -16,6 +16,7 @@ namespace X3D
 {
     /// <summary>
     /// A Sphere with underlying geometry implemented as an Iso-Sphere.
+    /// Uses an inbuilt tessellator to subdivide icosahedron into a sphere approximation.
     /// </summary>
     public partial class Sphere
     {
