@@ -46,7 +46,7 @@ namespace X3D
 
             translation = GetTranslation();
 
-            Physics.ApplyForce(translation, force);
+            Physics.ApplyForce(this._mass, translation, force);
         }
 
         public void ApplyForceImpulse(Vector3 force)
@@ -55,7 +55,7 @@ namespace X3D
 
             translation = GetTranslation();
 
-            Physics.ApplyForceImpulse(translation, force);
+            Physics.ApplyForceImpulse(this._mass, translation, force);
         }
 
         public void ApplyVelocity(Vector3 velocity)
@@ -64,7 +64,7 @@ namespace X3D
 
             translation = GetTranslation();
 
-            Physics.ApplyVelocity(translation, velocity);
+            Physics.ApplyVelocity(this._mass, translation, velocity);
         }
 
         public void ApplyAcceleration(Vector3 acceleration)
@@ -73,7 +73,7 @@ namespace X3D
 
             translation = GetTranslation();
 
-            Physics.ApplyAcceleration(translation, acceleration);
+            Physics.ApplyAcceleration(this._mass, translation, acceleration);
         }
 
         public void ApplyGravity()
@@ -82,7 +82,7 @@ namespace X3D
 
             translation = GetTranslation();
 
-            Physics.ApplyGravityAcceler(translation, Physics.Gravity);
+            Physics.ApplyGravityAcceler(this._mass, translation, Physics.Gravity);
         }
 
         public void ApplyGravity(Vector3 gravity)
@@ -91,7 +91,7 @@ namespace X3D
 
             translation = GetTranslation();
 
-            Physics.ApplyGravityAcceler(translation, gravity);
+            Physics.ApplyGravityAcceler(this._mass, translation, gravity);
         }
     }
 }

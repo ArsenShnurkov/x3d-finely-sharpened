@@ -20,29 +20,56 @@ namespace X3D.Core.RigidBodyPhysics
     /// </summary>
     public class Physics
     {
-        public static Vector3 Gravity; 
+        public static Vector3 Up = Vector3.UnitY;
+        public static Vector3 Gravity = Up * 0.5f; 
 
-        public static void ApplyForce(Vector3 translation, Vector3 force)
+        public static void ApplyForce(float mass, Vector3 translation, Vector3 force)
         {
             throw new NotImplementedException();
         }
 
-        public static void ApplyForceImpulse(Vector3 translation, Vector3 force)
+        public static void ApplyForceImpulse(float mass, Vector3 translation, Vector3 force)
         {
             throw new NotImplementedException();
         }
 
-        public static void ApplyVelocity(Vector3 translation, Vector3 velocity)
+        public static void ApplyVelocity(float mass, Vector3 translation, Vector3 velocity)
         {
             throw new NotImplementedException();
         }
 
-        public static void ApplyAcceleration(Vector3 translation, Vector3 acceleration)
+        public static void ApplyAcceleration(float mass, Vector3 translation, Vector3 acceleration)
         {
             throw new NotImplementedException();
         }
 
-        public static void ApplyGravityAcceler(Vector3 translation, Vector3 gravity)
+        public static void ApplyGravityAcceler(float mass, Vector3 translation, Vector3 gravity)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void AddExplosionForce(float explosionForce, Vector3 explosionPosition, float explosionRadius, float upwardsModifier, ForceType mode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddForceAtPosition(float mass, Vector3 force, Vector3 position)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddForceAtPosition(float mass, Vector3 force, Vector3 position, ForceType mode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddRelativeForce(float mass, Vector3 force, ForceType mode)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddTorque(float mass, Vector3 torque, ForceType mode)
         {
             throw new NotImplementedException();
         }
