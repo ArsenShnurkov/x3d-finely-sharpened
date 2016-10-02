@@ -8,6 +8,10 @@ using X3D.Core.RigidBodyPhysics;
 
 namespace X3D
 {
+    /// <summary>
+    /// Precondition: Evaluate the Physics Model after any keybindings, and scripts have executed, 
+    ///               right before the Scene Graph is rendered. 
+    /// </summary>
     public partial class RigidBody
     {
         public Vector3 GetTranslation()
