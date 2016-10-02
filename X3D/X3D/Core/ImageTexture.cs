@@ -533,6 +533,32 @@ namespace X3D
             }
         }
 
+        public static void Scale(ref Bitmap image, Size newSize)
+        {
+            Bitmap result;
+            double ratioX;
+            double ratioY;
+            double aspectRatio;
+            int newWidth;
+            int newHeight;
+
+            ratioX = (double)newSize.Width / (double)image.Width;
+            ratioY = (double)newSize.Height / (double)image.Height;
+            aspectRatio = Math.Min(ratioX, ratioY);
+
+            newWidth = (int)(image.Width * aspectRatio);
+            newHeight = (int)(image.Height * aspectRatio);
+
+            result = new Bitmap(newWidth, newHeight);
+
+            using (Graphics graphics = Graphics.FromImage(result))
+            {
+                graphics.DrawImage(image, 0, 0, newWidth, newHeight);
+            }
+
+            image = result;
+        }
+
         #endregion
 
         #region Windows Platform Specific
