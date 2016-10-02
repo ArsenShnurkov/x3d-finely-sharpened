@@ -136,6 +136,8 @@ PARTLY: grouping
 PARTLY: event propagation between X3D nodes and their fields, and any shader uniforms
 PARTLY: event graph and event thread processor setup for a given scene graph as well as events firing once per timestamp
 TODO: networking: inline, import, export, etc
+TODO: Rigid Body Physics component library: Apply forces of different types; accelerations, force impulses, velocity changes, classic forces of mass
+
 TODO: Collision on planes and solid geometry 
 PARTLY: scene graph and event graph models
 PARTLY: transformations, and better conformance with standard
