@@ -24,6 +24,14 @@ namespace X3D.Engine
         Examine
     }
 
+    public enum CameraPerspectiveType
+    {
+        Projection, // Standard 3D perspective frustum  projection.
+        Orthographic, // 'CAD editor' like perspective.
+        Isometric, // 'Diablo like' isometric perspective.
+        Stereographic // 'VR like' Stereo perspective with or without a distortion filter.
+    }
+    
 	public class SceneCamera
 	{
         //public Q3Movement playerMover;
