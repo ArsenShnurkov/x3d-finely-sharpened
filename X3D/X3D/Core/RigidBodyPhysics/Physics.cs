@@ -16,6 +16,10 @@ namespace X3D.Core.RigidBodyPhysics
     }
 
     /// <summary>
+    /// CLASSICAL MECHANICS
+    /// A model Abstracting Rigid Body Physics 
+    /// with API based somewhat on Unity3D's RigidBodyPhysics component model.
+    /// See spec:
     /// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/rigid_physics.html#ConceptsOverview
     /// </summary>
     public class Physics
