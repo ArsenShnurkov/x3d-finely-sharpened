@@ -16,7 +16,7 @@
     <meta content='../license.html' name='license'/>
   </head>
   <Scene>
-	<NavigationInfo type='"EXAMINE"'/>
+	<NavigationInfo type='"WALK"'/>
     <Background skyColor='1 1 1'/>
 
     <Shape>
