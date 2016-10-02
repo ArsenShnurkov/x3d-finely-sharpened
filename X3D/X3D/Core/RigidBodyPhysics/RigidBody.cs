@@ -9,11 +9,18 @@ using X3D.Core.RigidBodyPhysics;
 namespace X3D
 {
     /// <summary>
+    /// == Rigid Body Physics == for solid non-deformable objects in the Scene Graph. 
     /// Precondition: Evaluate the Physics Model after any keybindings, and scripts have executed, 
     ///               right before the Scene Graph is rendered. 
     /// </summary>
     public partial class RigidBody
     {
+        /// <summary>
+        /// Gets the translation component of the current non-deformable solid object from the current Transform Hierarchy context.
+        /// </summary>
+        /// <returns>
+        /// A Vector3 composing the translation component.
+        /// </returns>
         public Vector3 GetTranslation()
         {
             List<Transform> transformHierarchy;
