@@ -53,29 +53,34 @@ namespace X3D.Core.RigidBodyPhysics
         }
 
 
-        public void AddExplosionForce(RigidBody rb, float explosionForce, Vector3 explosionPosition, float explosionRadius, float upwardsModifier, ForceType mode)
+        public void ApplyExplosionForce(RigidBody rb, float explosionForce, Vector3 explosionPosition, float explosionRadius, float upwardsModifier, ForceType mode)
         {
             throw new NotImplementedException();
         }
 
-        public void AddForceAtPosition(RigidBody rb, Vector3 force, Vector3 position)
+        public void ApplyForceAtPosition(RigidBody rb, Vector3 force, Vector3 position)
         {
             throw new NotImplementedException();
         }
 
-        public void AddForceAtPosition(RigidBody rb, Vector3 force, Vector3 position, ForceType mode)
+        public void ApplyForceAtPosition(RigidBody rb, Vector3 force, Vector3 position, ForceType mode)
         {
             throw new NotImplementedException();
         }
 
-        public void AddRelativeForce(RigidBody rb, Vector3 force, ForceType mode)
+        public void ApplyRelativeForce(RigidBody rb, Vector3 force, ForceType mode)
         {
             throw new NotImplementedException();
         }
 
-        public void AddTorque(RigidBody rb, Vector3 torque, ForceType mode)
+        public void ApplyTorque(RigidBody rb, Vector3 torque, ForceType mode)
         {
             throw new NotImplementedException();
+        }
+
+        public void ApplyTwistForce(RigidBody rb, Vector3 twist, ForceType mode)
+        {
+
         }
     }
 }
