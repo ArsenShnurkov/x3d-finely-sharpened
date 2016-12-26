@@ -2,6 +2,9 @@
 # x3d-finely-sharpened
 X3D browser/engine written in C#
 
+[![gl4x](https://img.shields.io/badge/OpenGL-4.x-brightgreen.svg)]()
+[![buildpass](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
+
 Featuring the latest bleeding edge developmental work on the X3D C# language binding. 
 
 Quick run through
