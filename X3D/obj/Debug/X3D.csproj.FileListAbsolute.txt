@@ -73,3 +73,10 @@ C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\obj\Debug\X3D.csproj.CoreCo
 C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\obj\Debug\X3D.csproj.CopyComplete
 C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\obj\Debug\X3D.dll
 C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\obj\Debug\X3D.pdb
+C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\bin\Debug\X3D.dll.config
+C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\bin\Debug\System.ValueTuple.dll
+C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\bin\Debug\System.ValueTuple.xml

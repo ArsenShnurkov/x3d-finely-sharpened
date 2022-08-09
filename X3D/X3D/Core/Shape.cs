@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using OpenTK;
@@ -335,9 +336,34 @@ namespace X3D
             //uniforms.a_color = GL.GetAttribLocation(shader.ShaderHandle, "color");
             //uniforms.a_texcoord = GL.GetAttribLocation(shader.ShaderHandle, "texcoord");
 
-            uniforms.a_coloringEnabled = GL.GetUniformLocation(shader.ShaderHandle, "coloringEnabled");
-            uniforms.a_texturingEnabled = GL.GetUniformLocation(shader.ShaderHandle, "texturingEnabled");
-            uniforms.sampler = GL.GetUniformLocation(shader.ShaderHandle, "_MainTex");
+            try
+            {
+                uniforms.a_coloringEnabled = GL.GetUniformLocation(shader.ShaderHandle, "coloringEnabled");
+            } catch (Exception ex )
+
+            {
+                Console.WriteLine(ex.StackTrace);
+            }
+
+            try
+            {
+                uniforms.a_texturingEnabled = GL.GetUniformLocation(shader.ShaderHandle, "texturingEnabled");
+            }
+            catch (Exception ex)
+
+            {
+                Console.WriteLine(ex.StackTrace);
+            }
+
+            try
+            {
+                uniforms.sampler = GL.GetUniformLocation(shader.ShaderHandle, "_MainTex");
+            }
+            catch (Exception ex)
+
+            {
+                Console.WriteLine(ex.StackTrace);
+            }
         }
 
         public Vector3 GetPosition(RenderingContext rc)
@@ -804,9 +830,15 @@ namespace X3D
         {
             if (_handle.NumVerticies3 > 0)
             {
-                GL.UseProgram(CurrentShader.ShaderHandle);
+                try{
 
-                CurrentShader.SetFieldValue("size", size);
+                GL.UseProgram(CurrentShader.ShaderHandle);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+            }
+            CurrentShader.SetFieldValue("size", size);
                 CurrentShader.SetFieldValue("scale", scale);
 
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _handle.vbo3);
@@ -821,8 +853,14 @@ namespace X3D
         {
             if (_handle.NumVerticies4 > 0)
             {
-                GL.UseProgram(quadShader.ShaderHandle);
-
+                try
+                {
+                    GL.UseProgram(quadShader.ShaderHandle);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.StackTrace);
+                }
                 if (depthMask)
                 {
                     ApplyGeometricTransformations(rc, quadShader, this);

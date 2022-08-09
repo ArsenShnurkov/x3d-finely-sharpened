@@ -77,7 +77,18 @@ namespace X3D
 
         public ComposedShader Use()
         {
-            if (!HasErrors) GL.UseProgram(ShaderHandle);
+            if (!HasErrors) {
+                try
+                {
+
+                    GL.UseProgram(ShaderHandle);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.StackTrace); 
+
+                }
+            }
             return this;
         }
 
@@ -319,8 +330,17 @@ namespace X3D
         {
             if (HasErrors) return;
 
-            GL.Uniform1(GL.GetUniformLocation(ShaderHandle, name), value);
+            try
+            {
 
+
+
+                GL.Uniform1(GL.GetUniformLocation(ShaderHandle, name), value);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+            }
 
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
@@ -329,8 +349,16 @@ namespace X3D
         {
             if (HasErrors) return;
 
-            var loc = GL.GetUniformLocation(ShaderHandle, name);
-            GL.Uniform1(loc, value);
+            try
+            {
+                var loc = GL.GetUniformLocation(ShaderHandle, name);
+                GL.Uniform1(loc, value);
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.StackTrace);
+            }
+            
 
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
@@ -338,9 +366,14 @@ namespace X3D
         public void SetFieldValue(string name, Vector2 value)
         {
             if (HasErrors) return;
-
-            GL.Uniform2(GL.GetUniformLocation(ShaderHandle, name), ref value);
-
+            try
+            {
+                GL.Uniform2(GL.GetUniformLocation(ShaderHandle, name), ref value);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+            }
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
 
@@ -348,8 +381,14 @@ namespace X3D
         {
             if (HasErrors) return;
 
-            GL.Uniform3(GL.GetUniformLocation(ShaderHandle, name), ref value);
-
+            try
+            {
+                GL.Uniform3(GL.GetUniformLocation(ShaderHandle, name), ref value);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+            }
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
 
@@ -376,8 +415,14 @@ namespace X3D
         {
             if (HasErrors) return;
 
-            GL.UniformMatrix4(GL.GetUniformLocation(ShaderHandle, name), false, ref value);
-
+            try
+            {
+                GL.UniformMatrix4(GL.GetUniformLocation(ShaderHandle, name), false, ref value);
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.StackTrace);
+            }
             //TODO: convert matrix back to string and update field
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
