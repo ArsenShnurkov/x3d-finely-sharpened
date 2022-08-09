@@ -18,57 +18,56 @@
  *  For product and commercial licensing details please contact us:
  *  http://www.liquid-technologies.com
  */
-using System;
+
 using System.Collections.Generic;
-using System.Text;
 
 namespace LiquidTechnologies.FastInfoset
 {
-	/// <summary>
-	/// Manages external vocabulary objects
-	/// </summary>
-	public class FIVocabularyManager
-	{
-		/// <summary>
-		/// Create an instance of the VocabularyManager class.
-		/// </summary>
-		public FIVocabularyManager()
-		{
-			_uriToVocabularyMap = new Dictionary<string, FIExternalVocabulary>();
-		}
+    /// <summary>
+    ///     Manages external vocabulary objects
+    /// </summary>
+    public class FIVocabularyManager
+    {
+        private readonly Dictionary<string, FIExternalVocabulary> _uriToVocabularyMap;
 
-		/// <summary>
-		/// Adds a FIExternalVocabulary object to the manager.
-		/// </summary>
-		/// <param name="vocabulary">Object to add.</param>
-		/// <exception cref="LtFastInfosetException">A vocabulary already exists for URI.</exception>
-		public void AddVocabulary(FIExternalVocabulary vocabulary)
-		{
-			string uri = vocabulary.URI.ToString();
-			if (_uriToVocabularyMap.ContainsKey(uri))
-				throw new LtFastInfosetException("A vocabulary already exists for URI " + uri);
+        /// <summary>
+        ///     Create an instance of the VocabularyManager class.
+        /// </summary>
+        public FIVocabularyManager()
+        {
+            _uriToVocabularyMap = new Dictionary<string, FIExternalVocabulary>();
+        }
 
-			_uriToVocabularyMap.Add(uri, vocabulary);
-		}
+        /// <summary>
+        ///     Adds a FIExternalVocabulary object to the manager.
+        /// </summary>
+        /// <param name="vocabulary">Object to add.</param>
+        /// <exception cref="LtFastInfosetException">A vocabulary already exists for URI.</exception>
+        public void AddVocabulary(FIExternalVocabulary vocabulary)
+        {
+            var uri = vocabulary.URI.ToString();
+            if (_uriToVocabularyMap.ContainsKey(uri))
+                throw new LtFastInfosetException("A vocabulary already exists for URI " + uri);
 
-		internal FIReaderVocabulary ReaderVocabulary(string uri)
-		{
-			FIExternalVocabulary vocab = null;
-			if (_uriToVocabularyMap.TryGetValue(uri, out vocab))
-				return vocab.Reader;
+            _uriToVocabularyMap.Add(uri, vocabulary);
+        }
 
-			return null;
-		}
+        internal FIReaderVocabulary ReaderVocabulary(string uri)
+        {
+            FIExternalVocabulary vocab = null;
+            if (_uriToVocabularyMap.TryGetValue(uri, out vocab))
+                return vocab.Reader;
 
-		internal FIWriterVocabulary WriterVocabulary(string uri)
-		{
-			FIExternalVocabulary vocab = null;
-			if (_uriToVocabularyMap.TryGetValue(uri, out vocab))
-				return vocab.Writer;
+            return null;
+        }
 
-			return null;
-		}
+        internal FIWriterVocabulary WriterVocabulary(string uri)
+        {
+            FIExternalVocabulary vocab = null;
+            if (_uriToVocabularyMap.TryGetValue(uri, out vocab))
+                return vocab.Writer;
 
-		private Dictionary<string, FIExternalVocabulary> _uriToVocabularyMap;
-	}
+            return null;
+        }
+    }
 }

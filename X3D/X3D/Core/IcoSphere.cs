@@ -1,35 +1,26 @@
 ﻿// TODO: calculate texcoords using spherical equation in shader
 
 using OpenTK;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenTK.Graphics.OpenGL4;
-using X3D.Core;
-using OpenTK.Input;
-using X3D.Core.Shading.DefaultUniforms;
 using X3D.Core.Shading;
-using X3D.Parser;
 
 namespace X3D
 {
     /// <summary>
-    /// A Sphere with underlying geometry implemented as an Ico-Sphere.
-    /// No inbuilt tessellator.
+    ///     A Sphere with underlying geometry implemented as an Ico-Sphere.
+    ///     No inbuilt tessellator.
     /// </summary>
-    public partial class IcoSphere : X3DGeometryNode
+    public class IcoSphere : X3DGeometryNode
     {
         internal PackedGeometry _pack;
 
         private Shape parentShape;
 
         public override void CollectGeometry(
-                            RenderingContext rc,
-                            out GeometryHandle handle,
-                            out BoundingBox bbox,
-                            out bool coloring,
-                            out bool texturing)
+            RenderingContext rc,
+            out GeometryHandle handle,
+            out BoundingBox bbox,
+            out bool coloring,
+            out bool texturing)
         {
             handle = GeometryHandle.Zero;
             bbox = BoundingBox.Zero;
@@ -43,7 +34,7 @@ namespace X3D
             _pack._indices = Faces;
             _pack._coords = Verts;
             _pack.bbox = BoundingBox.CalculateBoundingBox(Verts);
-            
+
             _pack.Interleave();
 
             // BUFFER GEOMETRY
@@ -58,12 +49,12 @@ namespace X3D
 
             //rc.cam.Scale = scale;
         }
-        
+
         #endregion
 
         #region Icosahedron Geometry
 
-        int[] Faces = new int[] 
+        private readonly int[] Faces =
         {
             0, 12, 17, -1,
             0, 13, 12, -1,
@@ -146,9 +137,9 @@ namespace X3D
             35, 40, 41, -1,
             36, 41, 38, -1
         };
- 
+
         //TODO: scale values correctly
-        Vector3[] Verts = new Vector3[] 
+        private readonly Vector3[] Verts =
         {
             new Vector3(5.571941E-8f, -1.0f, 1.7614703E-8f),
             new Vector3(0.7236071f, -0.4472194f, 0.52572536f),
@@ -193,6 +184,7 @@ namespace X3D
             new Vector3(-0.42532247f, 0.8506541f, -0.30901143f),
             new Vector3(0.16245562f, 0.8506546f, -0.4999952f)
         };
+
         #endregion
     }
 }

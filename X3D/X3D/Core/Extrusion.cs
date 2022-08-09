@@ -1,14 +1,7 @@
-﻿using OpenTK;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using X3D.Parser;
-
-namespace X3D
+﻿namespace X3D
 {
     /// <summary>
-    /// http://www.web3d.org/documents/specifications/19775-1/V3.2/Part01/components/geometry3D.html#Extrusion
+    ///     http://www.web3d.org/documents/specifications/19775-1/V3.2/Part01/components/geometry3D.html#Extrusion
     /// </summary>
     public partial class Extrusion
     {
@@ -31,9 +24,6 @@ namespace X3D
             base.Render(rc);
 
             // render the computed SCP 
-
         }
-
-
     }
 }

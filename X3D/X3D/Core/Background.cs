@@ -2,24 +2,104 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.Linq;
-using win = System.Drawing;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
-using X3D.Parser;
 using X3D.Core;
 using X3D.Core.Shading;
+using X3D.Parser;
+using X3D.Properties;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
+using win = System.Drawing;
 
 namespace X3D
 {
     /// <summary>
-    /// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/enveffects.html#Background
+    ///     http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/enveffects.html#Background
     /// </summary>
     public partial class Background
     {
+        public sealed class CubeGeometry : ShapeGeometry
+        {
+            public CubeGeometry()
+            {
+                Vertices = new[]
+                {
+                    new Vector3(-1.0f, -1.0f, 1.0f),
+                    new Vector3(1.0f, -1.0f, 1.0f),
+                    new Vector3(1.0f, 1.0f, 1.0f),
+                    new Vector3(-1.0f, 1.0f, 1.0f),
+                    new Vector3(-1.0f, -1.0f, -1.0f),
+                    new Vector3(1.0f, -1.0f, -1.0f),
+                    new Vector3(1.0f, 1.0f, -1.0f),
+                    new Vector3(-1.0f, 1.0f, -1.0f)
+                };
+
+                Indices = new[]
+                {
+                    // front face
+                    0, 1, 2, -1,
+                    2, 3, 0, -1,
+                    // top face
+                    3, 2, 6, -1,
+                    6, 7, 3, -1,
+                    // back face
+                    7, 6, 5, -1,
+                    5, 4, 7, -1,
+                    // left face
+                    4, 0, 3, -1,
+                    3, 7, 4, -1,
+                    // bottom face
+                    0, 1, 5, -1,
+                    5, 4, 0, -1,
+                    // right face
+                    1, 5, 6, -1,
+                    6, 2, 1, -1
+                };
+
+                Normals = new[]
+                {
+                    new Vector3(-1.0f, -1.0f, 1.0f),
+                    new Vector3(1.0f, -1.0f, 1.0f),
+                    new Vector3(1.0f, 1.0f, 1.0f),
+                    new Vector3(-1.0f, 1.0f, 1.0f),
+                    new Vector3(-1.0f, -1.0f, -1.0f),
+                    new Vector3(1.0f, -1.0f, -1.0f),
+                    new Vector3(1.0f, 1.0f, -1.0f),
+                    new Vector3(-1.0f, 1.0f, -1.0f)
+                };
+
+                Colors = new[]
+                {
+                    ColorToRgba32(win.Color.DarkRed),
+                    ColorToRgba32(win.Color.DarkRed),
+                    ColorToRgba32(win.Color.Green),
+                    ColorToRgba32(win.Color.Green),
+                    ColorToRgba32(win.Color.DarkRed),
+                    ColorToRgba32(win.Color.DarkRed),
+                    ColorToRgba32(win.Color.Blue),
+                    ColorToRgba32(win.Color.Blue)
+                };
+
+                Texcoords = new[]
+                {
+                    new Vector2(0, 1),
+                    new Vector2(1, 1),
+                    new Vector2(1, 0),
+                    new Vector2(0, 0),
+                    new Vector2(0, 1),
+                    new Vector2(1, 1),
+                    new Vector2(1, 0),
+                    new Vector2(0, 0)
+                };
+            }
+        }
+
         #region Private Fields
 
         private int tex_cube;
+
         //private int NumVerticiesCube, NumVerticiesOuter, NumVerticiesInner;
         //private int _vbo_interleaved_cube, _vbo_interleaved_inner, _vbo_interleaved_outer;
         private GeometryHandle cubeHandle, innerHandle, outerHandle;
@@ -31,7 +111,7 @@ namespace X3D
         private Vector3 scaleGround;
         private Vector3 scaleCube;
         private bool generateSkyAndGround = true;
-        private bool generateCube = false;
+        private bool generateCube;
 
         private Vector3[] groundColors;
         private Vector3[] skyColors;
@@ -40,19 +120,19 @@ namespace X3D
         private float groundDivisor;
         private float skyDivisor;
         private Vector3 bboxOuter, bboxInner;
-        Vector3 min, max;
+        private Vector3 min, max;
 
         private Vector3[] colors;
 
         private float[] angles;
-        private bool skydomeComputed = false;
+        private bool skydomeComputed;
         private int skydomeTexture = -1;
         private Vector3[] skydomeColors;
 
-        bool texture2d;
-        Vector3 size = new Vector3(1, 1, 1);
+        private bool texture2d;
+        private Vector3 size = new Vector3(1, 1, 1);
 
-        Vector3 scale = new Vector3(2, 2, 2);
+        private Vector3 scale = new Vector3(2, 2, 2);
 
         #endregion
 
@@ -66,25 +146,27 @@ namespace X3D
             GL.GenTextures(1, out tex_cube);
             GL.BindTexture(TextureTarget.TextureCubeMap, tex_cube);
 
-            List<string> textureUrls = new List<string> { frontUrl, backUrl, topUrl, bottomUrl, leftUrl, rightUrl };
+            var textureUrls = new List<string> { frontUrl, backUrl, topUrl, bottomUrl, leftUrl, rightUrl };
 
-            for (int i = 0; i < 6; i++)
-            {
+            for (var i = 0; i < 6; i++)
                 loadCubeMapSide(tex_cube, TextureTarget.TextureCubeMapPositiveX + i, textureUrls[i]);
-/* 
+            /* 
 GL_TEXTURE_CUBE_MAP_POSITIVE_X	Right
 GL_TEXTURE_CUBE_MAP_NEGATIVE_X	Left
 GL_TEXTURE_CUBE_MAP_POSITIVE_Y	Top
 GL_TEXTURE_CUBE_MAP_NEGATIVE_Y	Bottom
 GL_TEXTURE_CUBE_MAP_POSITIVE_Z	Back
 GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
-            }
-
-            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
-            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter,
+                (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter,
+                (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR,
+                (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS,
+                (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT,
+                (int)TextureWrapMode.ClampToEdge);
 
             GL.BindTexture(TextureTarget.TextureCubeMap, 0);
 
@@ -97,31 +179,27 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
             int width, height;
             win.Bitmap image;
-            win.Imaging.BitmapData pixelData;
+            BitmapData pixelData;
             win.Rectangle imgRect;
             IntPtr pTexImage;
 
             bool? rotCW = null;
 
-            if(side_target == TextureTarget.TextureCubeMapPositiveY) // Top
-            {
+            if (side_target == TextureTarget.TextureCubeMapPositiveY) // Top
                 rotCW = false; // CCW
-            }
             else if (side_target == TextureTarget.TextureCubeMapNegativeY) // Bottom
-            {
                 rotCW = true; // CW
-            }
 
             if (ImageTexture.GetTextureImageFromMFString(url, out image, out width, out height, false, rotCW))
             {
                 imgRect = new win.Rectangle(0, 0, width, height);
-                pixelData = image.LockBits(imgRect, win.Imaging.ImageLockMode.ReadOnly,
-                                           System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                pixelData = image.LockBits(imgRect, ImageLockMode.ReadOnly,
+                    PixelFormat.Format32bppArgb);
                 pTexImage = pixelData.Scan0;
 
                 // copy image data into 'target' side of cube map
                 GL.TexImage2D(side_target, 0, PixelInternalFormat.Rgba, width, height, 0,
-                    PixelFormat.Bgra, PixelType.UnsignedByte, pTexImage);
+                    OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, pTexImage);
 
                 image.UnlockBits(pixelData);
 
@@ -131,7 +209,8 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             return false;
         }
 
-        private int createCubeMapFromBitmapSides(win.Bitmap left, win.Bitmap right, win.Bitmap front, win.Bitmap back, win.Bitmap top, win.Bitmap bottom)
+        private int createCubeMapFromBitmapSides(win.Bitmap left, win.Bitmap right, win.Bitmap front, win.Bitmap back,
+            win.Bitmap top, win.Bitmap bottom)
         {
             int tex_cube;
 
@@ -139,25 +218,27 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             GL.GenTextures(1, out tex_cube);
             GL.BindTexture(TextureTarget.TextureCubeMap, tex_cube);
 
-            List<win.Bitmap> textureBitmaps = new List<win.Bitmap> { front, back, top, bottom, left, right };
+            var textureBitmaps = new List<win.Bitmap> { front, back, top, bottom, left, right };
 
-            for (int i = 0; i < 6; i++)
-            {
+            for (var i = 0; i < 6; i++)
                 loadCubeMapSide(tex_cube, TextureTarget.TextureCubeMapPositiveX + i, textureBitmaps[i]);
-                /* 
+            /* 
                 GL_TEXTURE_CUBE_MAP_POSITIVE_X	Right
                 GL_TEXTURE_CUBE_MAP_NEGATIVE_X	Left
                 GL_TEXTURE_CUBE_MAP_POSITIVE_Y	Top
                 GL_TEXTURE_CUBE_MAP_NEGATIVE_Y	Bottom
                 GL_TEXTURE_CUBE_MAP_POSITIVE_Z	Back
                 GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
-            }
-
-            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR, (int)TextureWrapMode.ClampToEdge);
-            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMagFilter,
+                (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureMinFilter,
+                (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapR,
+                (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapS,
+                (int)TextureWrapMode.ClampToEdge);
+            GL.TexParameter(TextureTarget.TextureCubeMap, TextureParameterName.TextureWrapT,
+                (int)TextureWrapMode.ClampToEdge);
 
             GL.BindTexture(TextureTarget.TextureCubeMap, 0);
 
@@ -168,50 +249,42 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
         {
             if (image == null)
             {
-                image = Properties.Resources.ErrorTexture;
+                image = Resources.ErrorTexture;
 
                 ImageTexture.Rescale(ref image);
             }
 
             GL.BindTexture(TextureTarget.TextureCubeMap, texture);
 
-            win.Imaging.BitmapData pixelData;
+            BitmapData pixelData;
             win.Rectangle imgRect;
             IntPtr pTexImage;
 
             bool? rotCW = null;
 
             if (side_target == TextureTarget.TextureCubeMapPositiveY) // Top
-            {
                 rotCW = false; // CCW
-            }
             else if (side_target == TextureTarget.TextureCubeMapNegativeY) // Bottom
-            {
                 rotCW = true; // CW
-            }
 
             if (rotCW.HasValue)
             {
                 if (rotCW.Value)
-                {
                     // Clockwise by 90 degrees
                     image.RotateFlip(win.RotateFlipType.Rotate90FlipNone);
-                }
                 else
-                {
                     // Counterclockwise by -90 degrees
                     image.RotateFlip(win.RotateFlipType.Rotate270FlipNone);
-                }
             }
 
             imgRect = new win.Rectangle(0, 0, image.Width, image.Height);
-            pixelData = image.LockBits(imgRect, win.Imaging.ImageLockMode.ReadOnly,
-                                       System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            pixelData = image.LockBits(imgRect, ImageLockMode.ReadOnly,
+                PixelFormat.Format32bppArgb);
             pTexImage = pixelData.Scan0;
 
             // copy image data into 'target' side of cube map
             GL.TexImage2D(side_target, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0,
-                PixelFormat.Bgra, PixelType.UnsignedByte, pTexImage);
+                OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, pTexImage);
 
             image.UnlockBits(pixelData);
 
@@ -224,14 +297,11 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
         public void Unload()
         {
-            if(tex_cube > -1)
-            {
-                GL.DeleteTexture(tex_cube);
-            }
-            
+            if (tex_cube > -1) GL.DeleteTexture(tex_cube);
         }
 
-        public void LoadFromBitmapSides(win.Bitmap left, win.Bitmap right, win.Bitmap front, win.Bitmap back, win.Bitmap top, win.Bitmap bottom)
+        public void LoadFromBitmapSides(win.Bitmap left, win.Bitmap right, win.Bitmap front, win.Bitmap back,
+            win.Bitmap top, win.Bitmap bottom)
         {
             int i;
             int a, b;
@@ -246,7 +316,8 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             //TODO: replace cube sides that arent available with transparent sides 
 
             generateSkyAndGround = !(string.IsNullOrEmpty(groundColor) || string.IsNullOrEmpty(skyColor)
-                || string.IsNullOrEmpty(groundAngle) || string.IsNullOrEmpty(skyAngle));
+                                                                       || string.IsNullOrEmpty(groundAngle) ||
+                                                                       string.IsNullOrEmpty(skyAngle));
 
 
             // TODO: later render both skydome and skybox together
@@ -258,10 +329,10 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             {
                 // Sphere
                 // interpolate colors from groundColor and skyColor over hemispheres using specified sky and ground angles
-                this.groundColors = X3DTypeConverters.MFVec3f(groundColor);
-                this.groundAngles = X3DTypeConverters.Floats(groundAngle);
-                this.skyColors = X3DTypeConverters.MFVec3f(skyColor);
-                this.skyAngles = X3DTypeConverters.Floats(skyAngle);
+                groundColors = X3DTypeConverters.MFVec3f(groundColor);
+                groundAngles = X3DTypeConverters.Floats(groundAngle);
+                skyColors = X3DTypeConverters.MFVec3f(skyColor);
+                skyAngles = X3DTypeConverters.Floats(skyAngle);
 
                 // Assign colors with matching angles
                 colors = new Vector3[groundColors.Length + skyColors.Length];
@@ -278,20 +349,26 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                     angles[i + skyAngles.Length + 2] = 1.5f + groundAngles[i];
 
 
-
-                groundDivisor = (1.0f / groundColors.Length) * (float)Math.PI; // how many colors divided over 90 degrees (lower hemisphere)
-                skyDivisor = (1.0f / groundColors.Length) * (float)Math.PI; // how many colors divided over 90 degrees (upper hemisphere)
+                groundDivisor =
+                    1.0f / groundColors.Length *
+                    (float)Math.PI; // how many colors divided over 90 degrees (lower hemisphere)
+                skyDivisor =
+                    1.0f / groundColors.Length *
+                    (float)Math.PI; // how many colors divided over 90 degrees (upper hemisphere)
 
                 // SKYDOME
                 // outer sphere (sky)
 
                 scaleSky = Vector3.One * 6.0f; // slightly bigger than ground hemisphere
-                _shaderOuter = ShaderCompiler.ApplyShader(BackgroundShader.vertexShaderSource, // Make use of the BackgroundShader for Skydome Linear Interpolation
-                                                 BackgroundShader.fragmentShaderSource);
+                _shaderOuter = ShaderCompiler.ApplyShader(
+                    BackgroundShader
+                        .vertexShaderSource, // Make use of the BackgroundShader for Skydome Linear Interpolation
+                    BackgroundShader.fragmentShaderSource);
                 _shaderOuter.Link();
 
-                List<Vertex> geometryOuterSphere = BuildSphereGeometryQuads(60, Vector3.Zero, 1.0f);
-                Buffering.BufferShaderGeometry(geometryOuterSphere, out outerHandle.vbo4, out outerHandle.NumVerticies4);
+                var geometryOuterSphere = BuildSphereGeometryQuads(60, Vector3.Zero, 1.0f);
+                Buffering.BufferShaderGeometry(geometryOuterSphere, out outerHandle.vbo4,
+                    out outerHandle.NumVerticies4);
 
                 min = Vector3.Zero;
                 max = Vector3.Zero;
@@ -325,7 +402,7 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             scaleCube = Vector3.One * 3.1f;
 
             _shaderInnerCube = ShaderCompiler.ApplyShader(CubeMapBackgroundShader.vertexShaderSource,
-                                                          CubeMapBackgroundShader.fragmentShaderSource);
+                CubeMapBackgroundShader.fragmentShaderSource);
             _shaderInnerCube.Link();
 
             _pack = new PackedGeometry();
@@ -355,13 +432,16 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             outerHandle = GeometryHandle.Zero;
 
             generateCube = !(string.IsNullOrEmpty(frontUrl) || string.IsNullOrEmpty(backUrl)
-                || string.IsNullOrEmpty(topUrl) || string.IsNullOrEmpty(bottomUrl)
-                || string.IsNullOrEmpty(leftUrl) || string.IsNullOrEmpty(rightUrl));
+                                                            || string.IsNullOrEmpty(topUrl) ||
+                                                            string.IsNullOrEmpty(bottomUrl)
+                                                            || string.IsNullOrEmpty(leftUrl) ||
+                                                            string.IsNullOrEmpty(rightUrl));
 
             //TODO: replace cube sides that arent available with transparent sides 
 
             generateSkyAndGround = !(string.IsNullOrEmpty(groundColor) || string.IsNullOrEmpty(skyColor)
-                || string.IsNullOrEmpty(groundAngle) || string.IsNullOrEmpty(skyAngle));
+                                                                       || string.IsNullOrEmpty(groundAngle) ||
+                                                                       string.IsNullOrEmpty(skyAngle));
 
 
             // TODO: later render both skydome and skybox together
@@ -373,14 +453,14 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             {
                 // Sphere
                 // interpolate colors from groundColor and skyColor over hemispheres using specified sky and ground angles
-                this.groundColors = X3DTypeConverters.MFVec3f(groundColor);
-                this.groundAngles = X3DTypeConverters.Floats(groundAngle);
-                this.skyColors = X3DTypeConverters.MFVec3f(skyColor);
-                this.skyAngles = X3DTypeConverters.Floats(skyAngle);
+                groundColors = X3DTypeConverters.MFVec3f(groundColor);
+                groundAngles = X3DTypeConverters.Floats(groundAngle);
+                skyColors = X3DTypeConverters.MFVec3f(skyColor);
+                skyAngles = X3DTypeConverters.Floats(skyAngle);
 
                 // Assign colors with matching angles
                 colors = new Vector3[groundColors.Length + skyColors.Length];
-                for(i=0; i < skyColors.Length; i++)
+                for (i = 0; i < skyColors.Length; i++)
                     colors[i] = skyColors[i];
                 for (i = skyColors.Length; i < skyColors.Length + groundColors.Length; i++)
                     colors[i] = groundColors[i - skyColors.Length];
@@ -391,22 +471,28 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 angles[skyAngles.Length + 1] = 0;
                 for (i = 0; i < groundAngles.Length; i++)
                     angles[i + skyAngles.Length + 2] = 1.5f + groundAngles[i];
-                
 
 
-                groundDivisor = (1.0f / groundColors.Length) * (float)Math.PI; // how many colors divided over 90 degrees (lower hemisphere)
-                skyDivisor = (1.0f / groundColors.Length) * (float)Math.PI; // how many colors divided over 90 degrees (upper hemisphere)
+                groundDivisor =
+                    1.0f / groundColors.Length *
+                    (float)Math.PI; // how many colors divided over 90 degrees (lower hemisphere)
+                skyDivisor =
+                    1.0f / groundColors.Length *
+                    (float)Math.PI; // how many colors divided over 90 degrees (upper hemisphere)
 
                 // SKYDOME
                 // outer sphere (sky)
 
                 scaleSky = Vector3.One * 6.0f; // slightly bigger than ground hemisphere
-                _shaderOuter = ShaderCompiler.ApplyShader(BackgroundShader.vertexShaderSource, // Make use of the BackgroundShader for Skydome Linear Interpolation
-                                                 BackgroundShader.fragmentShaderSource);
+                _shaderOuter = ShaderCompiler.ApplyShader(
+                    BackgroundShader
+                        .vertexShaderSource, // Make use of the BackgroundShader for Skydome Linear Interpolation
+                    BackgroundShader.fragmentShaderSource);
                 _shaderOuter.Link();
 
-                List<Vertex> geometryOuterSphere = BuildSphereGeometryQuads(60, Vector3.Zero, 1.0f);
-                Buffering.BufferShaderGeometry(geometryOuterSphere, out outerHandle.vbo4, out outerHandle.NumVerticies4);
+                var geometryOuterSphere = BuildSphereGeometryQuads(60, Vector3.Zero, 1.0f);
+                Buffering.BufferShaderGeometry(geometryOuterSphere, out outerHandle.vbo4,
+                    out outerHandle.NumVerticies4);
 
                 min = Vector3.Zero;
                 max = Vector3.Zero;
@@ -428,7 +514,7 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 //BoundingBox.CalculateBoundingBox(geometryInnerHemisphere, out max, out min);
                 //bboxInner = max - min;
 
-                
+
                 skydomeTexture = MakeSkydomeTexture();
             }
 
@@ -442,7 +528,7 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 scaleCube = Vector3.One * 3.1f;
 
                 _shaderInnerCube = ShaderCompiler.ApplyShader(CubeMapBackgroundShader.vertexShaderSource,
-                                                 CubeMapBackgroundShader.fragmentShaderSource);
+                    CubeMapBackgroundShader.fragmentShaderSource);
                 _shaderInnerCube.Link();
 
                 _pack = new PackedGeometry();
@@ -458,7 +544,6 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 // BUFFER GEOMETRY
                 cubeHandle = _pack.CreateHandle();
             }
-
         }
 
         public override void Render(RenderingContext rc)
@@ -467,15 +552,9 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
             //GL.Disable(EnableCap.DepthTest);
 
-            if (generateSkyAndGround)
-            {
-                RenderSkydome(rc);
-            }
+            if (generateSkyAndGround) RenderSkydome(rc);
 
-            if (generateCube)
-            {
-                RenderSkybox(rc);
-            }
+            if (generateCube) RenderSkybox(rc);
         }
 
         #endregion
@@ -488,7 +567,7 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             int texture;
             ColorInterpolator interpolator;
             Stack<Vector3> colors;
-            Stack<float> angles;    
+            Stack<float> angles;
             List<Vector3> _sky;
             int numColors;
             float fraction;
@@ -502,18 +581,12 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             if (skyColors.Length > 0 || groundColors.Length > 0)
             {
                 //colors.Push(skyColors.Last());
-                for (i = 0; i < skyColors.Length; i++)
-                {
-                    colors.Push(skyColors[i]);
-                }
-                
+                for (i = 0; i < skyColors.Length; i++) colors.Push(skyColors[i]);
+
 
                 angles.Push(0);
-                for (i = 0; i < skyAngles.Length; i++)
-                {
-                    angles.Push(skyAngles[i]);
-                }
-                
+                for (i = 0; i < skyAngles.Length; i++) angles.Push(skyAngles[i]);
+
 
                 if (groundAngles.Length >= 0 || groundColors.Length == 1)
                 {
@@ -526,7 +599,7 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
                     for (i = groundAngles.Length - 1; i >= 0; i--)
                     {
-                        if ((i == groundAngles.Length - 1) && (Math.PI - groundAngles[i] <= MathHelpers.PIOver2))
+                        if (i == groundAngles.Length - 1 && Math.PI - groundAngles[i] <= MathHelpers.PIOver2)
                         {
                             angles.Push(MathHelpers.PIOver2);
                             colors.Push(groundColors[groundColors.Length - 1]);
@@ -556,10 +629,8 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
                 var lst = angles.ToList();
                 for (i = 0; i < angles.Count; i++)
-                {
                     // Normalise angles to [0, 1] to convert to fractions for interpolator
-                    lst[i] /= MathHelpers.PI; 
-                }
+                    lst[i] /= MathHelpers.PI;
                 angles = new Stack<float>(lst);
 
                 // INTERPOLATE
@@ -570,11 +641,11 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 _sky = new List<Vector3>();
 
                 numColors = MathHelpers.ComputeNextHighestPowerOfTwo(_sky.Count);
-                numColors = (numColors < 512) ? 512 : numColors;
+                numColors = numColors < 512 ? 512 : numColors;
 
                 for (i = 0; i < numColors; i++)
                 {
-                    fraction = ((float)i / (float)(numColors - 1));
+                    fraction = i / (float)(numColors - 1);
 
                     interpolator.set_fraction = fraction;
 
@@ -588,17 +659,22 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
                 // Build a texture since texturing supports more colors
                 byte[] pixels;
-                pixels = Imaging.CreateImageRGBA(_sky.ToArray(), this.transparency);
+                pixels = Imaging.CreateImageRGBA(_sky.ToArray(), transparency);
 
                 GL.CreateTextures(TextureTarget.Texture2D, 1, out texture);
                 GL.BindTexture(TextureTarget.Texture2D, texture);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMinFilter.Linear);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter,
+                    (int)TextureMinFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter,
+                    (int)TextureMinFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS,
+                    (int)TextureWrapMode.ClampToEdge);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT,
+                    (int)TextureWrapMode.ClampToEdge);
 
                 GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
-                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, 1, pixels.Length / 4, 0, PixelFormat.Rgba, PixelType.UnsignedByte, pixels);
+                GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, 1, pixels.Length / 4, 0,
+                    OpenTK.Graphics.OpenGL4.PixelFormat.Rgba, PixelType.UnsignedByte, pixels);
                 GL.BindTexture(TextureTarget.Texture2D, 0);
 
                 //byte[] pixelsTest;
@@ -629,7 +705,6 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             _shaderOuter.Use();
 
 
-
 #if APPLY_BACKDROP
             mat4 = rc.cam.GetWorldOrientation();
             _shaderOuter.SetFieldValue("modelview", ref mat4);
@@ -637,13 +712,16 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             //_shaderOuter.SetFieldValue("scale", scaleSky);
             _shaderOuter.SetFieldValue("scale", size);
             _shaderOuter.SetFieldValue("size", size);
-            if (skydomeColors != null && skydomeColors.Length > 0) { 
-                _shaderOuter.SetFieldValue("skyColors", this.skydomeColors.Length);//_shaderOuter.SetFieldValue("skyColors", this.colors.Length);
-                _shaderOuter.SetFieldValue("skyColor", this.skydomeColors, 255 * 3);
+            if (skydomeColors != null && skydomeColors.Length > 0)
+            {
+                _shaderOuter.SetFieldValue("skyColors",
+                    skydomeColors.Length); //_shaderOuter.SetFieldValue("skyColors", this.colors.Length);
+                _shaderOuter.SetFieldValue("skyColor", skydomeColors, 255 * 3);
             }
+
             //_shaderOuter.SetFieldValue("skyColor", this.colors, 255 * 3);
-            _shaderOuter.SetFieldValue("skyAngle", this.angles, 255);
-            
+            _shaderOuter.SetFieldValue("skyAngle", angles, 255);
+
             _shaderOuter.SetFieldValue("isGround", 0);
             _shaderOuter.SetFieldValue("bbox", bboxOuter);
             _shaderOuter.SetFieldValue("max", max);
@@ -656,19 +734,13 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 #if APPLY_BACKDROP
             GL.DepthMask(false);
 #endif
-            if (skydomeComputed)
-            {
-                GL.BindTexture(TextureTarget.Texture2D, skydomeTexture);
-            }
+            if (skydomeComputed) GL.BindTexture(TextureTarget.Texture2D, skydomeTexture);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, outerHandle.vbo4);
             Buffering.ApplyBufferPointers(_shaderOuter);
             GL.DrawArrays(PrimitiveType.Quads, 0, outerHandle.NumVerticies4);
 
-            if (skydomeComputed)
-            {
-                GL.BindTexture(TextureTarget.Texture2D, 0);
-            }
+            if (skydomeComputed) GL.BindTexture(TextureTarget.Texture2D, 0);
 
 #if APPLY_BACKDROP
             GL.DepthMask(true);
@@ -726,7 +798,7 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
             _shaderInnerCube.Use();
 #if APPLY_BACKDROP
-            Matrix4 mat4 = rc.cam.GetWorldOrientation();
+            var mat4 = rc.cam.GetWorldOrientation();
             _shaderInnerCube.SetFieldValue("modelview", ref mat4);
 #endif
             _shaderInnerCube.SetFieldValue("scale", scaleCube);
@@ -736,8 +808,8 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             _shaderInnerCube.SetFieldValue("lightingEnabled", 0);
 
             _shaderInnerCube.SetFieldValue("projection", ref rc.matricies.projection);
-            _shaderInnerCube.SetFieldValue("camscale", rc.cam.Scale.X); 
-            _shaderInnerCube.SetFieldValue("X3DScale", rc.matricies.Scale); 
+            _shaderInnerCube.SetFieldValue("camscale", rc.cam.Scale.X);
+            _shaderInnerCube.SetFieldValue("X3DScale", rc.matricies.Scale);
 
 
             texture2d = GL.IsEnabled(EnableCap.Texture2D);
@@ -771,13 +843,13 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             //http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/enveffects.html#Concepts
             Vector3[] colorPalette;
             float colorSelectionRatio;
-            int colorIndex = 0;
+            var colorIndex = 0;
 
             colorPalette = skyColors;
 
             //if (latitudeRatio < 0.5f)
             //{
-                
+
 
             //    foreach(float angle in skyAngles)
             //    {
@@ -794,16 +866,12 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             //    colorIndex = (int)Math.Round((colorPalette.Length - 1.0f) * colorSelectionRatio);
             //}
 
-            
 
             colorSelectionRatio = latitudeRatio;
             colorIndex = (int)Math.Round((colorPalette.Length - 1.0f) * colorSelectionRatio);
 
 
-            if (colorPalette == null || colorPalette.Length == 0)
-            {
-                return Vector4.One;
-            }
+            if (colorPalette == null || colorPalette.Length == 0) return Vector4.One;
 
             return new Vector4(colorPalette[colorIndex], 1.0f);
         }
@@ -814,21 +882,18 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             //http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/enveffects.html#Concepts
             Vector3[] colorPalette;
             float colorSelectionRatio;
-            int colorIndex = 0;
+            var colorIndex = 0;
             float angle;
             float sphereAngle;
-            float anglePrev = 0.0f;
+            var anglePrev = 0.0f;
             float angleNext;
 
             colorPalette = groundColors;
 
-            if (colorPalette == null || colorPalette.Length == 0)
-            {
-                return Vector4.One;
-            }
+            if (colorPalette == null || colorPalette.Length == 0) return Vector4.One;
 
             //latitudeRatio = 0.5f - latitudeRatio;
-            sphereAngle = (latitudeRatio) * MathHelpers.PI;
+            sphereAngle = latitudeRatio * MathHelpers.PI;
 
             angleNext = groundAngles.First();
 
@@ -839,11 +904,11 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
             else
             {
                 anglePrev = angleNext;
-                float[] gangles = groundAngles.Skip(1).ToArray();
+                var gangles = groundAngles.Skip(1).ToArray();
 
-                for (int i = 1; i < gangles.Length; i++)
+                for (var i = 1; i < gangles.Length; i++)
                 {
-                    angle = (i > 0 ? gangles[i] : 0.0f);
+                    angle = i > 0 ? gangles[i] : 0.0f;
 
 
                     if (sphereAngle >= anglePrev && sphereAngle <= angle)
@@ -863,48 +928,47 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
         private List<Vertex> BuildHemisphereGeometryQuads(int n, Vector3 center, float radius, bool up = false)
         {
-            List<Vertex> geometry = new List<Vertex>();
+            var geometry = new List<Vertex>();
 
-            float theta = 0.0f;
-            float theta2 = 0.0f;
-            float phi = 0.0f;
-            float phi2 = 0.0f;
+            var theta = 0.0f;
+            var theta2 = 0.0f;
+            var phi = 0.0f;
+            var phi2 = 0.0f;
             float segments = n;
 
-            float cosT = 0.0f;
-            float cosT2 = 0.0f;
-            float cosP = 0.0f;
-            float cosP2 = 0.0f;
+            var cosT = 0.0f;
+            var cosT2 = 0.0f;
+            var cosP = 0.0f;
+            var cosP2 = 0.0f;
 
-            float sinT = 0.0f;
-            float sinT2 = 0.0f;
-            float sinP = 0.0f;
-            float sinP2 = 0.0f;
-            int vertexIndex = 0;
-            int expectedNumVerticies = n * n * 4;
+            var sinT = 0.0f;
+            var sinT2 = 0.0f;
+            var sinP = 0.0f;
+            var sinP2 = 0.0f;
+            var vertexIndex = 0;
+            var expectedNumVerticies = n * n * 4;
             float latitudeRatio;
 
-           
 
             for (float lat = 0; lat < segments; lat++)
             {
-                latitudeRatio = (lat / segments);
+                latitudeRatio = lat / segments;
 
                 if (latitudeRatio >= 0.5) break;
 
                 phi = (float)Math.PI * latitudeRatio;
                 phi2 = (float)Math.PI * ((lat + 1.0f) / segments);
 
-                cosP = (float)Math.Cos(phi) * radius *  (up ? 1f : -1f);
+                cosP = (float)Math.Cos(phi) * radius * (up ? 1f : -1f);
                 cosP2 = (float)Math.Cos(phi2) * radius * (up ? 1f : -1f);
                 sinP = (float)Math.Sin(phi) * radius;
                 sinP2 = (float)Math.Sin(phi2) * radius;
 
                 //Vector3 a = new Vector3((float)Math.Cos(phi), 0, 0);
                 //Vector3 b = new Vector3(0, 0, (float)Math.Sin(phi));
-                Vector3 height = new Vector3(0, 0.0f, 0) + center;
+                var height = new Vector3(0, 0.0f, 0) + center;
 
-                Vector4 latitudeColor = GetLatitudeFillColorGround(latitudeRatio, n);
+                var latitudeColor = GetLatitudeFillColorGround(latitudeRatio, n);
 
                 for (float lon = 0; lon < segments; lon++)
                 {
@@ -918,58 +982,57 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
 
                     geometry.Add(
-                        new Vertex()
+                        new Vertex
                         {
-                            Position = (new Vector3(
+                            Position = new Vector3(
                                 cosT * sinP,
                                 cosP,
                                 sinT * sinP
-                            ))+ height,
+                            ) + height,
                             Color = latitudeColor
                         }
                     );
                     vertexIndex++;
 
                     geometry.Add(
-                        new Vertex()
+                        new Vertex
                         {
-                            Position = (new Vector3(
+                            Position = new Vector3(
                                 cosT * sinP2,
                                 cosP2,
                                 sinT * sinP2
-                            )) + height,
+                            ) + height,
                             Color = latitudeColor
                         }
                     );
                     vertexIndex++;
 
                     geometry.Add(
-                        new Vertex()
+                        new Vertex
                         {
-                            Position = (new Vector3(
-                                 cosT2 * sinP2,
-                                 cosP2,
-                                 sinT2 * sinP2
-                            )) + height,
+                            Position = new Vector3(
+                                cosT2 * sinP2,
+                                cosP2,
+                                sinT2 * sinP2
+                            ) + height,
                             Color = latitudeColor
                         }
                     );
                     vertexIndex++;
 
                     geometry.Add(
-                        new Vertex()
+                        new Vertex
                         {
-                            Position = (new Vector3(
-                                 cosT2 * sinP,
-                                 cosP,
-                                 sinT2 * sinP
-                            ))+height,
+                            Position = new Vector3(
+                                cosT2 * sinP,
+                                cosP,
+                                sinT2 * sinP
+                            ) + height,
                             Color = latitudeColor
                         }
                     );
                     vertexIndex++;
                 }
-
             }
 
             return geometry;
@@ -977,32 +1040,32 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
         private List<Vertex> BuildSphereGeometryQuads(int n, Vector3 center, float radius)
         {
-            List<Vertex> geometry = new List<Vertex>();
+            var geometry = new List<Vertex>();
 
-            float theta = 0.0f;
-            float theta2 = 0.0f;
-            float phi = 0.0f;
-            float phi2 = 0.0f;
+            var theta = 0.0f;
+            var theta2 = 0.0f;
+            var phi = 0.0f;
+            var phi2 = 0.0f;
             float segments = n;
 
-            float cosT = 0.0f;
-            float cosT2 = 0.0f;
-            float cosP = 0.0f;
-            float cosP2 = 0.0f;
+            var cosT = 0.0f;
+            var cosT2 = 0.0f;
+            var cosP = 0.0f;
+            var cosP2 = 0.0f;
 
-            float sinT = 0.0f;
-            float sinT2 = 0.0f;
-            float sinP = 0.0f;
-            float sinP2 = 0.0f;
-            int vertexIndex = 0;
-            int expectedNumVerticies = n * n * 4;
+            var sinT = 0.0f;
+            var sinT2 = 0.0f;
+            var sinP = 0.0f;
+            var sinP2 = 0.0f;
+            var vertexIndex = 0;
+            var expectedNumVerticies = n * n * 4;
             float latitudeRatio;
 
-            Vector3 height = new Vector3(0, 0.0f, 0) + center;
+            var height = new Vector3(0, 0.0f, 0) + center;
 
             for (float lat = 0; lat < segments; lat++)
             {
-                latitudeRatio = (lat / segments);
+                latitudeRatio = lat / segments;
                 phi = (float)Math.PI * latitudeRatio;
                 phi2 = (float)Math.PI * ((lat + 1.0f) / segments);
 
@@ -1011,7 +1074,7 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
                 sinP = (float)Math.Sin(phi) * radius;
                 sinP2 = (float)Math.Sin(phi2) * radius;
 
-                Vector4 latitudeColor = GetLatitudeFillColorSky(latitudeRatio, n);
+                var latitudeColor = GetLatitudeFillColorSky(latitudeRatio, n);
 
                 for (float lon = 0; lon < segments; lon++)
                 {
@@ -1025,142 +1088,62 @@ GL_TEXTURE_CUBE_MAP_NEGATIVE_Z	Front    */
 
 
                     geometry.Add(
-                        new Vertex()
+                        new Vertex
                         {
-                            Position = (new Vector3(
+                            Position = new Vector3(
                                 cosT * sinP,
                                 cosP,
                                 sinT * sinP
-                            )) + height,
+                            ) + height,
                             Color = latitudeColor
                         }
                     );
                     vertexIndex++;
 
                     geometry.Add(
-                        new Vertex()
+                        new Vertex
                         {
-                            Position = (new Vector3(
+                            Position = new Vector3(
                                 cosT * sinP2,
                                 cosP2,
                                 sinT * sinP2
-                            )) + height,
+                            ) + height,
                             Color = latitudeColor
                         }
                     );
                     vertexIndex++;
 
                     geometry.Add(
-                        new Vertex()
+                        new Vertex
                         {
-                            Position = (new Vector3(
-                                 cosT2 * sinP2,
-                                 cosP2,
-                                 sinT2 * sinP2
-                            )) + height,
+                            Position = new Vector3(
+                                cosT2 * sinP2,
+                                cosP2,
+                                sinT2 * sinP2
+                            ) + height,
                             Color = latitudeColor
                         }
                     );
                     vertexIndex++;
 
                     geometry.Add(
-                        new Vertex()
+                        new Vertex
                         {
-                            Position = (new Vector3(
-                                 cosT2 * sinP,
-                                 cosP,
-                                 sinT2 * sinP
-                            )) +height,
+                            Position = new Vector3(
+                                cosT2 * sinP,
+                                cosP,
+                                sinT2 * sinP
+                            ) + height,
                             Color = latitudeColor
                         }
                     );
                     vertexIndex++;
                 }
-
             }
 
             return geometry;
         }
 
         #endregion
-
-        public sealed class CubeGeometry : ShapeGeometry
-        {
-            public CubeGeometry()
-            {
-                Vertices = new Vector3[]
-                {
-                    new Vector3(-1.0f, -1.0f,  1.0f),
-                    new Vector3( 1.0f, -1.0f,  1.0f),
-                    new Vector3( 1.0f,  1.0f,  1.0f),
-                    new Vector3(-1.0f,  1.0f,  1.0f),
-                    new Vector3(-1.0f, -1.0f, -1.0f),
-                    new Vector3( 1.0f, -1.0f, -1.0f),
-                    new Vector3( 1.0f,  1.0f, -1.0f),
-                    new Vector3(-1.0f,  1.0f, -1.0f)
-                };
-
-                Indices = new int[]
-                {
-                    // front face
-                    0, 1, 2, -1,
-                    2, 3, 0, -1,
-                    // top face
-                    3, 2, 6, -1,
-                    6, 7, 3, -1,
-                    // back face
-                    7, 6, 5, -1,
-                    5, 4, 7, -1,
-                    // left face
-                    4, 0, 3, -1,
-                    3, 7, 4, -1,
-                    // bottom face
-                    0, 1, 5, -1,
-                    5, 4, 0, -1,
-                    // right face
-                    1, 5, 6, -1,
-                    6, 2, 1, -1,
-                };
-
-                Normals = new Vector3[]
-                {
-                    new Vector3(-1.0f, -1.0f,  1.0f),
-                    new Vector3( 1.0f, -1.0f,  1.0f),
-                    new Vector3( 1.0f,  1.0f,  1.0f),
-                    new Vector3(-1.0f,  1.0f,  1.0f),
-                    new Vector3(-1.0f, -1.0f, -1.0f),
-                    new Vector3( 1.0f, -1.0f, -1.0f),
-                    new Vector3( 1.0f,  1.0f, -1.0f),
-                    new Vector3(-1.0f,  1.0f, -1.0f),
-                };
-
-                Colors = new int[]
-                {
-                    ColorToRgba32(win.Color.DarkRed),
-                    ColorToRgba32(win.Color.DarkRed),
-                    ColorToRgba32(win.Color.Green),
-                    ColorToRgba32(win.Color.Green),
-                    ColorToRgba32(win.Color.DarkRed),
-                    ColorToRgba32(win.Color.DarkRed),
-                    ColorToRgba32(win.Color.Blue),
-                    ColorToRgba32(win.Color.Blue),
-                };
-
-                Texcoords = new Vector2[]
-                {
-                    new Vector2(0, 1),
-                    new Vector2(1, 1),
-                    new Vector2(1, 0),
-                    new Vector2(0, 0),
-                    new Vector2(0, 1),
-                    new Vector2(1, 1),
-                    new Vector2(1, 0),
-                    new Vector2(0, 0),
-                };
-
-            }
-        }
-
-
     }
 }

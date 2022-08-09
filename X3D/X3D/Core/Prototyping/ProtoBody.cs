@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using OpenTK;
-using X3D.Parser;
 
 namespace X3D
 {
@@ -26,35 +22,27 @@ namespace X3D
             //    || typeof(X3DComposedGeometryNode).IsInstanceOfType(c))).ToList();
 
             renderable = new List<SceneGraphNode>();
-            renderable.AddRange(this.DecendantsByType<X3DShapeNode>());
-            renderable.AddRange(this.DecendantsByType<X3DGeometryNode>());
-            renderable.AddRange(this.DecendantsByType<X3DComposedGeometryNode>());
+            renderable.AddRange(DecendantsByType<X3DShapeNode>());
+            renderable.AddRange(DecendantsByType<X3DGeometryNode>());
+            renderable.AddRange(DecendantsByType<X3DComposedGeometryNode>());
 
-            
+
             renderable.Remove(baseDefinition);
 
             // Hide Renderable Decendants that are not from baseDefinition
-            foreach (SceneGraphNode node in renderable)
-            {
-                node.Hidden = true;
-                //node.PassthroughAllowed = false;
-            }
-
+            foreach (var node in renderable) node.Hidden = true;
+            //node.PassthroughAllowed = false;
             // now only the baseDefinition is renderable
         }
 
         public override void PreRender()
         {
             base.PreRender();
-
-            
         }
 
         public override void Render(RenderingContext rc)
         {
             base.Render(rc);
-
-
         }
     }
 }

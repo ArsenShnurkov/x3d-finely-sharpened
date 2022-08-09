@@ -1,34 +1,47 @@
-﻿using OpenTK;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
+using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using X3D.Core;
 using X3D.Core.Shading;
-using X3D.Parser;
 using X3D.Engine;
+using X3D.Parser;
 
 namespace X3D
 {
-    
-
     //TODO: bounding volume hierarchy https://en.wikipedia.org/wiki/Bounding_volume_hierarchy
 
     public class BoundingBox
     {
-        public float Width, Height, Depth;
+        private static readonly Vector3 red = new Vector3(1, 0, 0);
+        private static readonly Vector3 green = new Vector3(0, 1, 0);
+        private static readonly Vector3 yellow = new Vector3(1, 1, 0);
+        private static readonly Vector3 blue = new Vector3(0, 0, 1);
+        private static readonly Vector3 cyan = new Vector3(0, 1, 1);
+        private static readonly Vector3 orange = new Vector3(1, 0.5f, 0);
+
+        internal static Box.BoxGeometry _geo;
+        private GeometryHandle _handle;
+
+        private GeometryHandle _handlepb; // for testing of boundaries
+        private PackedGeometry _pack;
+        private ComposedShader bboxShader;
+        public Vector3 Center = Vector3.Zero;
+        public Vector3 LineColor = yellow;
 
         public Vector3 Maximum;
         public Vector3 Minimum;
 
+        public Vector3 Position = Vector3.Zero;
+
+        private bool renderingEnabled;
+        public float Width, Height, Depth;
+
         public Vector3 bboxSize
         {
-            get
-            {
-                return new Vector3(Width, Height, Depth);
-            }
+            get => new Vector3(Width, Height, Depth);
             set
             {
                 Width = value.X;
@@ -39,40 +52,20 @@ namespace X3D
 
         public Vector3 bboxCenter { get; set; }
 
-        public Vector3 Position = Vector3.Zero;
-        public Vector3 Center = Vector3.Zero;
-        public Vector3 LineColor = yellow;
-
-        private static Vector3 red = new Vector3(1, 0, 0);
-        private static Vector3 green = new Vector3(0, 1, 0);
-        private static Vector3 yellow = new Vector3(1, 1, 0);
-        private static Vector3 blue = new Vector3(0, 0, 1);
-        private static Vector3 cyan = new Vector3(0, 1, 1);
-        private static Vector3 orange = new Vector3(1, 0.5f, 0);
-
-        internal static Box.BoxGeometry _geo;
-        private ComposedShader bboxShader;
-        private GeometryHandle _handle;
-        private PackedGeometry _pack;
-
-        private GeometryHandle _handlepb; // for testing of boundaries
-
-        private bool renderingEnabled = false;
-
         #region Constructors
 
         public BoundingBox()
         {
-            this.Width = 0f;
-            this.Height = 0f;
-            this.Depth = 0f;
+            Width = 0f;
+            Height = 0f;
+            Depth = 0f;
         }
 
         public BoundingBox(float w, float h, float d)
         {
-            this.Width = w;
-            this.Height = h;
-            this.Depth = d;
+            Width = w;
+            Height = h;
+            Depth = d;
         }
 
         #endregion
@@ -81,19 +74,19 @@ namespace X3D
 
         public Vector3 ToVector3()
         {
-            return new Vector3(this.Width, this.Height, this.Depth);
+            return new Vector3(Width, Height, Depth);
         }
 
         public void FromVector3(Vector3 bbox)
         {
-            this.Width = bbox.X;
-            this.Height = bbox.Y;
-            this.Depth = bbox.Z;
+            Width = bbox.X;
+            Height = bbox.Y;
+            Depth = bbox.Z;
         }
 
         /// <summary>
-        /// Computes the bounding volume surrounding the specified Group, 
-        /// that is the bounding volume of all decendants within the Group.
+        ///     Computes the bounding volume surrounding the specified Group,
+        ///     that is the bounding volume of all decendants within the Group.
         /// </summary>
         public static BoundingBox CalculateBoundingVolume(X3DGroupingNode group)
         {
@@ -101,7 +94,7 @@ namespace X3D
         }
 
         /// <summary>
-        /// Computes the bounding volume surrounding the specified two shapes
+        ///     Computes the bounding volume surrounding the specified two shapes
         /// </summary>
         public static BoundingBox CalculateBoundingVolume(BoundingBox left, BoundingBox right)
         {
@@ -109,7 +102,7 @@ namespace X3D
         }
 
         private Matrix4 calculateModelview(
-            Shape transform_context, 
+            Shape transform_context,
             RenderingContext rc
         )
         {
@@ -120,31 +113,31 @@ namespace X3D
             MVP = Matrix4.Identity;
 
 
-            List<Transform> transformationHierarchy = transform_context
+            var transformationHierarchy = transform_context
                 .AscendantByType<Transform>()
-                .Select(t => (Transform)t)
+                .Select(t => t)
                 .Where(t => t.Hidden == false)
                 .ToList();
 
-            Matrix4 modelview = Matrix4.Identity * rc.matricies.worldview;
-            Vector3 x3dScale = new Vector3(0.06f, 0.06f, 0.06f); 
-            
-            Quaternion modelrotation = Quaternion.Identity;
-            Matrix4 modelLocalRotation = Matrix4.Identity;
-            Matrix4 localTranslations = Matrix4.Identity;
-            Vector3 transAccum = Vector3.Zero;
+            var modelview = Matrix4.Identity * rc.matricies.worldview;
+            var x3dScale = new Vector3(0.06f, 0.06f, 0.06f);
 
-            foreach (Transform transform in transformationHierarchy)
+            var modelrotation = Quaternion.Identity;
+            var modelLocalRotation = Matrix4.Identity;
+            var localTranslations = Matrix4.Identity;
+            var transAccum = Vector3.Zero;
+
+            foreach (var transform in transformationHierarchy)
             {
                 transAccum += transform.Translation;
 
                 //localTranslations *= Matrix4.CreateTranslation(transform.Translation * x3dScale);
-                localTranslations = SceneEntity.ApplyX3DTransform(Vector3.Zero, 
-                                                      Vector3.Zero, 
-                                                      Vector3.One, 
-                                                      Vector3.Zero, 
-                                                      transform.Translation * x3dScale, 
-                                                      localTranslations);
+                localTranslations = SceneEntity.ApplyX3DTransform(Vector3.Zero,
+                    Vector3.Zero,
+                    Vector3.One,
+                    Vector3.Zero,
+                    transform.Translation * x3dScale,
+                    localTranslations);
                 modelview *= localTranslations;
             }
 
@@ -172,10 +165,10 @@ namespace X3D
 
             //float distZ = Math.Abs(Maximum.Z) - Math.Abs(Minimum.Z);
 
-            Vector3 center = new Vector3(Width / 2.0f, Height / 2.0f, Depth / 2.0f);
+            var center = new Vector3(Width / 2.0f, Height / 2.0f, Depth / 2.0f);
 
 
-            Vector3 translation = new Vector3(
+            var translation = new Vector3(
                 //(((Minimum.X + (Maximum.X / 2.0f)) / 2.0f) ),
                 //(((Minimum.Y + (Maximum.Y / 2.0f)) / 2.0f)),
                 //(((Minimum.Z + (Maximum.Z / 2.0f)) / 2.0f))
@@ -186,31 +179,30 @@ namespace X3D
                 //(Minimum.X) + (Width / 2.0f),
                 //(Minimum.Y) + (Height / 2.0f),
                 //(Minimum.Z) +  (Depth / 2.0f)
-                (Maximum.X) + (Width / 2.0f),
-                (Maximum.Y) + (Height / 2.0f),
-                (Maximum.Z) + (Depth / 2.0f)
+                Maximum.X + Width / 2.0f,
+                Maximum.Y + Height / 2.0f,
+                Maximum.Z + Depth / 2.0f
             );
-
 
 
             modelview = SceneEntity.ApplyX3DTransform(
                 Vector3.Zero,
                 Vector3.Zero,
                 Vector3.One,
-                Vector3.Zero, 
-                (translation) * x3dScale,
+                Vector3.Zero,
+                translation * x3dScale,
                 Matrix4.Identity);
 
             model = modelview;
 
-            Matrix4 cameraTransl = Matrix4.CreateTranslation(rc.cam.Position);
-
-            
-            cameraRot = Matrix4.CreateFromQuaternion(rc.cam.Orientation); // cameraRot = MathHelpers.CreateRotation(ref q);
+            var cameraTransl = Matrix4.CreateTranslation(rc.cam.Position);
 
 
-            MVP = ((model) * cameraTransl) * cameraRot ; 
+            cameraRot = Matrix4.CreateFromQuaternion(rc.cam
+                .Orientation); // cameraRot = MathHelpers.CreateRotation(ref q);
 
+
+            MVP = model * cameraTransl * cameraRot;
 
 
             //Matrix4 translation = Matrix4.CreateTranslation(left);
@@ -231,7 +223,7 @@ namespace X3D
             var shader = bboxShader;
 
             Matrix4 modelview;
-            Vector3 x3dScale = new Vector3(0.06f, 0.06f, 0.06f);
+            var x3dScale = new Vector3(0.06f, 0.06f, 0.06f);
 
             modelview = calculateModelview(transform_context, rc);
 
@@ -240,9 +232,9 @@ namespace X3D
 
             GL.UseProgram(shader.ShaderHandle);
             //rc.matricies.Scale = new Vector3(this.Width, this.Height, this.Depth);
-            shader.SetFieldValue("size", new Vector3(this.Width , this.Height, this.Depth) * (x3dScale / 2.0f));
+            shader.SetFieldValue("size", new Vector3(Width, Height, Depth) * (x3dScale / 2.0f));
             shader.SetFieldValue("scale", Vector3.One);
-            shader.SetFieldValue("modelview", ref modelview); 
+            shader.SetFieldValue("modelview", ref modelview);
             shader.SetFieldValue("projection", ref rc.matricies.projection);
             shader.SetFieldValue("camscale", 1.0f);
             shader.SetFieldValue("X3DScale", Vector3.One);
@@ -331,20 +323,19 @@ namespace X3D
 
         private void boundaries(
             Vector3 origin,
-            Vector3 color,  
-            out Vector3[] colors, 
-            out int[] colorIndicies, 
-            out int[] coordIndicies, 
+            Vector3 color,
+            out Vector3[] colors,
+            out int[] colorIndicies,
+            out int[] coordIndicies,
             out Vector3[] verticies)
         {
-            List<int> indicies = new List<int>();
-            List<int> colIndicies = new List<int>();
-            List<Vector3> vectors = new List<Vector3>();
-            List<Vector3> cols = new List<Vector3>();
+            var indicies = new List<int>();
+            var colIndicies = new List<int>();
+            var vectors = new List<Vector3>();
+            var cols = new List<Vector3>();
 
-            Vector3 x3dScale = new Vector3(0.06f, 0.06f, 0.06f);
+            var x3dScale = new Vector3(0.06f, 0.06f, 0.06f);
 
-            
 
             cols.Add(red);
             cols.Add(green);
@@ -376,14 +367,14 @@ namespace X3D
             colIndicies.Add(4);
             colIndicies.Add(5);
 
-            Vector3 left = new Vector3(0.0f, 0.0f, (Math.Abs(Minimum.Z) + Math.Abs(Depth))) + origin;
+            var left = new Vector3(0.0f, 0.0f, Math.Abs(Minimum.Z) + Math.Abs(Depth)) + origin;
 
-            vectors.Add((left) );
-            vectors.Add((left));
-            vectors.Add((left) );
-            vectors.Add((left) );
-            vectors.Add((left) );
-            vectors.Add((left));
+            vectors.Add(left);
+            vectors.Add(left);
+            vectors.Add(left);
+            vectors.Add(left);
+            vectors.Add(left);
+            vectors.Add(left);
 
             verticies = vectors.ToArray();
             colorIndicies = colIndicies.ToArray();
@@ -393,18 +384,15 @@ namespace X3D
 
         private void lines(Vector3 color, int lines, out Vector3[] colors, out int[] colorIndicies)
         {
-            List<int> indicies = new List<int>();
-            List<Vector3> cols = new List<Vector3>();
-            int numVerticies = lines * 3;
+            var indicies = new List<int>();
+            var cols = new List<Vector3>();
+            var numVerticies = lines * 3;
 
             cols.Add(color);
 
-            for (int i = 0; i < numVerticies * 2; i++)
+            for (var i = 0; i < numVerticies * 2; i++)
             {
-                if (i > 0 && i % 3 == 0)
-                {
-                    indicies.Add(-1);
-                }
+                if (i > 0 && i % 3 == 0) indicies.Add(-1);
 
                 indicies.Add(0);
             }
@@ -418,13 +406,13 @@ namespace X3D
         #region Public Static Methods
 
         /// <summary>
-        /// Calculates the Maximum bounding box size 
+        ///     Calculates the Maximum bounding box size
         /// </summary>
         public static BoundingBox Max(BoundingBox box1, BoundingBox box2)
         {
             BoundingBox result;
 
-            result = new BoundingBox()
+            result = new BoundingBox
             {
                 Width = Math.Max(box1.Width, box2.Width),
                 Height = Math.Max(box1.Height, box2.Height),
@@ -447,27 +435,27 @@ namespace X3D
             bbox.Width = xDim * elevationGrid._xSpacing;
             bbox.Height = elevationGrid.MaxHeight - elevationGrid.MinHeight;
             bbox.Depth = zDim * elevationGrid._zSpacing;
-            
+
             return bbox;
         }
 
         /// <summary>
-        /// Calculates a bounding box of a String given the specified Font type.
+        ///     Calculates a bounding box of a String given the specified Font type.
         /// </summary>
-        public static BoundingBox CalculateBoundingBox(String text, Font font)
+        public static BoundingBox CalculateBoundingBox(string text, Font font)
         {
-            Bitmap bmp = new Bitmap(1, 1);
+            var bmp = new Bitmap(1, 1);
             SizeF size;
 
-            using (Graphics g2D = Graphics.FromImage(bmp))
+            using (var g2D = Graphics.FromImage(bmp))
             {
                 size = g2D.MeasureString(text, font);
             }
 
-            return new BoundingBox()
+            return new BoundingBox
             {
-                Width = (int)(size.Width),
-                Height = (int)(size.Height),
+                Width = (int)size.Width,
+                Height = (int)size.Height,
                 Depth = 0
             };
         }
@@ -480,7 +468,7 @@ namespace X3D
             interleaved = new List<Vertex>();
             interleaved.AddRange(pack.interleaved3);
             interleaved.AddRange(pack.interleaved4);
-            
+
             result = CalculateBoundingBox(interleaved);
 
             return result;
@@ -494,7 +482,7 @@ namespace X3D
             max = Vector3.Zero;
             min = Vector3.Zero;
 
-            foreach (Vector3 vector in vectors)
+            foreach (var vector in vectors)
             {
                 if (vector.X > max.X) max.X = vector.X;
                 if (vector.Y > max.Y) max.Y = vector.Y;
@@ -505,7 +493,7 @@ namespace X3D
                 if (vector.Z < min.Z) min.Z = vector.Z;
             }
 
-            return new BoundingBox()
+            return new BoundingBox
             {
                 Width = max.X,
                 Height = max.Y,
@@ -518,7 +506,7 @@ namespace X3D
             max = Vector3.Zero;
             min = Vector3.Zero;
 
-            foreach (Vector3 vector in vectors)
+            foreach (var vector in vectors)
             {
                 if (vector.X > max.X) max.X = vector.X;
                 if (vector.Y > max.Y) max.Y = vector.Y;
@@ -539,7 +527,7 @@ namespace X3D
             max = Vector3.Zero;
             min = Vector3.Zero;
 
-            foreach (Vertex verticy in vectors)
+            foreach (var verticy in vectors)
             {
                 vector = verticy.Position;
 
@@ -552,7 +540,7 @@ namespace X3D
                 if (vector.Z < min.Z) min.Z = vector.Z;
             }
 
-            return new BoundingBox()
+            return new BoundingBox
             {
                 Width = max.X,
                 Height = max.Y,
@@ -566,8 +554,8 @@ namespace X3D
 
             max = Vector3.Zero;
             min = Vector3.Zero;
-           
-            foreach (Vertex verticy in vectors)
+
+            foreach (var verticy in vectors)
             {
                 vector = verticy.Position;
 
@@ -581,15 +569,8 @@ namespace X3D
             }
         }
 
-        public static BoundingBox Zero
-        {
-            get
-            {
-                return new BoundingBox(0, 0, 0);
-            }
-        }
+        public static BoundingBox Zero => new BoundingBox(0, 0, 0);
 
         #endregion
-
     }
 }

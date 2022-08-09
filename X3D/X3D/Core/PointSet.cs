@@ -1,29 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OpenTK;
-using X3D.Core;
-using X3D.Parser;
-using X3D.Core.Shading;
 using OpenTK.Graphics.OpenGL4;
+using X3D.Core;
+using X3D.Core.Shading;
+using X3D.Parser;
 
 namespace X3D
 {
     /// <summary>
-    /// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/rendering.html#PointSet
+    ///     http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/rendering.html#PointSet
     /// </summary>
     public partial class PointSet
     {
-        #region Fields
-
-        internal PackedGeometry _pack;
-
-        public PrimitiveType PrimativeType = PrimitiveType.LineLoop;
-
-        #endregion
-
         #region Public Static Methods
 
         public static PointSet CreateFromVertexSet(List<Vertex> verticies)
@@ -56,15 +45,14 @@ namespace X3D
         #region Public Methods
 
         public override void CollectGeometry(
-                        RenderingContext rc,
-                        out GeometryHandle handle,
-                        out BoundingBox bbox,
-                        out bool coloring,
-                        out bool texturing)
+            RenderingContext rc,
+            out GeometryHandle handle,
+            out BoundingBox bbox,
+            out bool coloring,
+            out bool texturing)
         {
             bbox = BoundingBox.Zero;
 
-            
 
             // INTERLEAVE
             _pack = PackedGeometry.Pack(this);
@@ -76,6 +64,14 @@ namespace X3D
             // BUFFER GEOMETRY
             handle = _pack.CreateHandle();
         }
+
+        #endregion
+
+        #region Fields
+
+        internal PackedGeometry _pack;
+
+        public PrimitiveType PrimativeType = PrimitiveType.LineLoop;
 
         #endregion
     }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenTK;
+﻿using OpenTK;
 
 namespace X3D.Engine
 {
@@ -14,39 +10,18 @@ namespace X3D.Engine
         public int Width { get; set; }
 
 
-        public int Left
-        {
-            get
-            {
-                return this.X;
-            }
-        }
-        public int Right
-        {
-            get
-            {
-                return this.X + this.Width;
-            }
-        }
-        public int Top
-        {
-            get
-            {
-                return this.Y;
-            }
-        }
-        public int Bottom
-        {
-            get
-            {
-                return this.Y + this.Height;
-            }
-        }
+        public int Left => X;
+
+        public int Right => X + Width;
+
+        public int Top => Y;
+
+        public int Bottom => Y + Height;
 
 
         public static View CreateViewFromWindow(INativeWindow window)
         {
-            View view = new View()
+            var view = new View
             {
                 X = window.Bounds.X,
                 Y = window.Bounds.Y,

@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using X3D.Core;
 using X3D.Engine;
 using X3D.Parser;
-using System.IO;
 
 namespace Tests
 {
     [TestClass]
     public class TestMFStringURIs
     {
-        public static string X3DExamplesDirectory = System.IO.Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "..\\..\\..\\..\\x3d-examples\\");
+        public static string X3DExamplesDirectory =
+            Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "..\\..\\..\\..\\x3d-examples\\");
 
         #region X3D Text
 
@@ -21,32 +18,32 @@ namespace Tests
         public void TestX3DTextMFString()
         {
             string text;
-            string[] @strings;
+            string[] strings;
 
             text = "\"Textnodeusing\" \"diffuseColorappearance\"";
-            @strings = X3DTypeConverters.GetMFString(text);
-            Assert.IsTrue(@strings.Length == 2);
+            strings = X3DTypeConverters.GetMFString(text);
+            Assert.IsTrue(strings.Length == 2);
 
             text = "\"SERIF\"";
-            @strings = X3DTypeConverters.GetMFString(text);
-            Assert.IsTrue(@strings.Length == 1);
+            strings = X3DTypeConverters.GetMFString(text);
+            Assert.IsTrue(strings.Length == 1);
 
             text = "\"Text node using\" \"diffuseColor appearance\"";
-            @strings = X3DTypeConverters.GetMFString(text);
-            Assert.IsTrue(@strings.Length == 2);
+            strings = X3DTypeConverters.GetMFString(text);
+            Assert.IsTrue(strings.Length == 2);
 
             text = "'Text node using' 'diffuseColor appearance'";
-            @strings = X3DTypeConverters.GetMFString(text);
-            Assert.IsTrue(@strings.Length == 2);
+            strings = X3DTypeConverters.GetMFString(text);
+            Assert.IsTrue(strings.Length == 2);
 
 
             text = "'Text node using' 'diffuseColor \nappearance'";
-            @strings = X3DTypeConverters.GetMFString(text);
-            Assert.IsTrue(@strings.Length == 2);
+            strings = X3DTypeConverters.GetMFString(text);
+            Assert.IsTrue(strings.Length == 2);
 
             text = "'Text node     \n  using' '     diffuseColor \nappearance'";
-            @strings = X3DTypeConverters.GetMFString(text);
-            Assert.IsTrue(@strings.Length == 2);
+            strings = X3DTypeConverters.GetMFString(text);
+            Assert.IsTrue(strings.Length == 2);
         }
 
         #endregion
@@ -60,11 +57,11 @@ namespace Tests
             string[] uris;
 
             url = "\"c.jpg\" 'a.jpg' 'b.jpg' \"d.jpg\" 'e.jpg' \"f.jpg\" 'test-helloworld' "
-    + "\"subfolder0\\file0.png\\\" "
-    +"\"Figure14.2ElevationGridMountain.x3d\" "
-    + "'http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/Chapter14-ElevationGrid/Figure14.2ElevationGridMountain.x3d' "
-    +"\"http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/Chapter14-ElevationGrid/Figure14.2ElevationGridMountain.x3d\" "
-    + "'subfolder1\\subfolder1-subfolder\\file1.ext'";
+                  + "\"subfolder0\\file0.png\\\" "
+                  + "\"Figure14.2ElevationGridMountain.x3d\" "
+                  + "'http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/Chapter14-ElevationGrid/Figure14.2ElevationGridMountain.x3d' "
+                  + "\"http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/Chapter14-ElevationGrid/Figure14.2ElevationGridMountain.x3d\" "
+                  + "'subfolder1\\subfolder1-subfolder\\file1.ext'";
 
             uris = X3DTypeConverters.GetMFString(url);
 
@@ -79,8 +76,10 @@ namespace Tests
             Assert.AreEqual(uris[6], "test-helloworld");
             Assert.AreEqual(uris[7], "subfolder0\\file0.png\\");
             Assert.AreEqual(uris[8], "Figure14.2ElevationGridMountain.x3d");
-            Assert.AreEqual(uris[9], "http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/Chapter14-ElevationGrid/Figure14.2ElevationGridMountain.x3d");
-            Assert.AreEqual(uris[10], "http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/Chapter14-ElevationGrid/Figure14.2ElevationGridMountain.x3d");
+            Assert.AreEqual(uris[9],
+                "http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/Chapter14-ElevationGrid/Figure14.2ElevationGridMountain.x3d");
+            Assert.AreEqual(uris[10],
+                "http://www.web3d.org/x3d/content/examples/Vrml2.0Sourcebook/Chapter14-ElevationGrid/Figure14.2ElevationGridMountain.x3d");
             Assert.AreEqual(uris[11], "subfolder1\\subfolder1-subfolder\\file1.ext");
         }
 
@@ -145,7 +144,8 @@ namespace Tests
             Assert.IsTrue(resource is Stream);
 
             SceneManager.CurrentLocation = X3DExamplesDirectory + "Background\\";
-            url = "'texture\\generic\\BK.png' 'texture\\generic\\DN.png' 'texture\\generic\\FR.png' 'texture\\generic\\LF.png' 'texture\\generic\\RT.png' 'texture\\generic\\UP.png'";
+            url =
+                "'texture\\generic\\BK.png' 'texture\\generic\\DN.png' 'texture\\generic\\FR.png' 'texture\\generic\\LF.png' 'texture\\generic\\RT.png' 'texture\\generic\\UP.png'";
             uris = X3DTypeConverters.GetMFString(url);
             success = SceneManager.FetchSingle(uris[0], out resource);
             Assert.IsTrue(success);
@@ -169,7 +169,37 @@ namespace Tests
 
         #endregion
 
+        #region data:uri content data URI tests
+
+        [TestMethod]
+        public void TestContentDataURIs()
+        {
+            string dataUri;
+            string[] uris;
+            object resource;
+            bool success;
+
+            dataUri = "'data:text/plain\n#version 420 core &#13;\nlayout(location = 0) in vec3 position; &#13;'";
+
+
+            uris = X3DTypeConverters.GetMFString(dataUri);
+            Assert.IsTrue(uris.Length == 1);
+            success = SceneManager.FetchSingle(uris[0], out resource);
+            Assert.IsTrue(success);
+            Assert.IsTrue(resource is Stream);
+            var reader = new StreamReader(resource as Stream);
+            var dataTextPlain = reader.ReadToEnd();
+            var someTestShaderCodeSample = "#version 420 core &#13;\nlayout(location = 0) in vec3 position; &#13;";
+            Assert.AreEqual(dataTextPlain, someTestShaderCodeSample);
+
+
+            //TODO: complete tests for data:uri as seen in https://developer.mozilla.org/en-US/docs/Web/HTTP/data_URIs
+        }
+
+        #endregion
+
         #region Web URIs HTTP/HTTPS
+
         public void TestURIWithBackupURI()
         {
             string url;
@@ -177,7 +207,8 @@ namespace Tests
             object resource;
             bool success;
 
-            url = "\"images/left.png\" \"http://www.web3d.org/x3d/content/examples/Basic/DistributedInteractiveSimulation/images/left.png\"";
+            url =
+                "\"images/left.png\" \"http://www.web3d.org/x3d/content/examples/Basic/DistributedInteractiveSimulation/images/left.png\"";
 
             uris = X3DTypeConverters.GetMFString(url);
 
@@ -202,7 +233,8 @@ namespace Tests
             object resource;
             bool success;
 
-            url = "\"http://www.web3d.org/x3d/content/examples/Basic/DistributedInteractiveSimulation/images/left.png\" \"http://www.web3d.org/x3d/content/examples/Basic/DistributedInteractiveSimulation/images/right.png\" \"http://www.web3d.org/x3d/content/examples/Basic/DistributedInteractiveSimulation/images/front.png\"";
+            url =
+                "\"http://www.web3d.org/x3d/content/examples/Basic/DistributedInteractiveSimulation/images/left.png\" \"http://www.web3d.org/x3d/content/examples/Basic/DistributedInteractiveSimulation/images/right.png\" \"http://www.web3d.org/x3d/content/examples/Basic/DistributedInteractiveSimulation/images/front.png\"";
 
             uris = X3DTypeConverters.GetMFString(url);
 
@@ -224,14 +256,16 @@ namespace Tests
         [TestMethod]
         public void TestRelativeWebURIs()
         {
-            SceneManager.CurrentLocation = "http://www.web3d.org/x3d/content/examples/Basic/DistributedInteractiveSimulation/";
+            SceneManager.CurrentLocation =
+                "http://www.web3d.org/x3d/content/examples/Basic/DistributedInteractiveSimulation/";
 
             string url;
             string[] uris;
             object resource;
             bool success;
 
-            url = "\"images/left.png\" \"images/right.png\" \"images/front.png\" \"images/back.png\" \"images/top.png\" \"images/bottom.png\"";
+            url =
+                "\"images/left.png\" \"images/right.png\" \"images/front.png\" \"images/back.png\" \"images/top.png\" \"images/bottom.png\"";
 
             uris = X3DTypeConverters.GetMFString(url);
 
@@ -260,36 +294,6 @@ namespace Tests
             success = SceneManager.FetchSingle(uris[5], out resource);
             Assert.IsTrue(success);
             Assert.IsTrue(resource is Stream);
-        }
-
-        #endregion
-
-        #region data:uri content data URI tests
-
-        [TestMethod]
-        public void TestContentDataURIs()
-        {
-            string dataUri;
-            string[] uris;
-            object resource;
-            bool success;
-
-            dataUri = "'data:text/plain\n#version 420 core &#13;\nlayout(location = 0) in vec3 position; &#13;'";
-
-
-            uris = X3DTypeConverters.GetMFString(dataUri);
-            Assert.IsTrue(uris.Length == 1);
-            success = SceneManager.FetchSingle(uris[0], out resource);
-            Assert.IsTrue(success);
-            Assert.IsTrue(resource is Stream);
-            StreamReader reader = new StreamReader(resource as Stream);
-            string dataTextPlain = reader.ReadToEnd();
-            string someTestShaderCodeSample = "#version 420 core &#13;\nlayout(location = 0) in vec3 position; &#13;";
-            Assert.AreEqual(dataTextPlain, someTestShaderCodeSample);
-
-
-            //TODO: complete tests for data:uri as seen in https://developer.mozilla.org/en-US/docs/Web/HTTP/data_URIs
-
         }
 
         #endregion

@@ -1,10 +1,13 @@
-using System;
 using OpenTK;
 
 public class MatrixExtensions
 {
-    public MatrixExtensions(Matrix4 mat4) { Matrix4 = mat4; }
-    public Matrix4 Matrix4 { get; private set; }
+    public MatrixExtensions(Matrix4 mat4)
+    {
+        Matrix4 = mat4;
+    }
+
+    public Matrix4 Matrix4 { get; }
 
     public static implicit operator MatrixExtensions(Matrix4 mat4)
     {
@@ -144,15 +147,14 @@ public class MatrixExtensions
 
     //	return result;
     //}
-
     public static Vector3 Transform(Matrix4 m, Vector3 v)
     {
         //float x_ =  (storage[0] * arg.storage[0]) + (storage[4] * arg.storage[1]) + (storage[8] * arg.storage[2]) + storage[12];
         //float y_ =  (storage[1] * arg.storage[0]) + (storage[5] * arg.storage[1]) + (storage[9] * arg.storage[2]) + storage[13];
         //float z_ =  (storage[2] * arg.storage[0]) + (storage[6] * arg.storage[1]) + (storage[10] * arg.storage[2]) + storage[14];
-        float x_ = (m.M11 * v.X) + (m.M14 * v.Y) + (m.M23 * v.Z) + m.M32;
-        float y_ = (m.M12 * v.X) + (m.M21 * v.Y) + (m.M24 * v.Z) + m.M33;
-        float z_ = (m.M13 * v.X) + (m.M22 * v.Y) + (m.M31 * v.Z) + m.M34;
+        var x_ = m.M11 * v.X + m.M14 * v.Y + m.M23 * v.Z + m.M32;
+        var y_ = m.M12 * v.X + m.M21 * v.Y + m.M24 * v.Z + m.M33;
+        var z_ = m.M13 * v.X + m.M22 * v.Y + m.M31 * v.Z + m.M34;
         v.X = x_;
         v.Y = y_;
         v.Z = z_;

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using X3D.Engine;
+﻿using X3D.Engine;
 
 namespace X3D.ConstructionSet
 {
@@ -25,7 +19,7 @@ namespace X3D.ConstructionSet
         public static IConstructionSet GetConstructionSetProvider()
         {
             IConstructionSet constructionSet = new X3DConsructionSet();
-            ElevationBuilder elevationProvider = new ElevationBuilder();
+            var elevationProvider = new ElevationBuilder();
 
             // Makes use of whatever OpenGL context invokes this construction set
 

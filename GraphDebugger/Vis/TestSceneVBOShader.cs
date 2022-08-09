@@ -1,27 +1,13 @@
 ﻿using System;
 using System.Drawing;
 using OpenTK;
-using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
 namespace GraphDebugger.OpenGL
 {
     public class UniformVariableTestProgram : GameWindow
     {
-        string vertexShaderSource = @"
-#version 330
- 
-layout (location = 0) in vec3 Position;
- 
-uniform float scale;
- 
-void main()
-{
-	gl_Position = vec4(scale * Position.x,
-	                   scale * Position.y,
-	                   Position.z, 1.0);
-}";
-        string fragmentShaderSource = @"
+        private readonly string fragmentShaderSource = @"
 #version 330
  
 out vec4 FragColor;
@@ -31,7 +17,10 @@ void main()
 	FragColor = vec4(0.5, 0.8, 1.0, 1.0);
 }";
 
+        private double time;
 
+        private int uniformScale;
+        private float variableScale;
 
 
         //        string vertexShaderSource = @"
@@ -56,28 +45,37 @@ void main()
         //}";
 
 
-        int vbo, shaderProgramHandle, vertexShaderHandle, fragmentShaderHandle;
+        private int vbo, shaderProgramHandle, vertexShaderHandle, fragmentShaderHandle;
 
-        int uniformScale;
-        float variableScale;
+        private readonly string vertexShaderSource = @"
+#version 330
+ 
+layout (location = 0) in vec3 Position;
+ 
+uniform float scale;
+ 
+void main()
+{
+	gl_Position = vec4(scale * Position.x,
+	                   scale * Position.y,
+	                   Position.z, 1.0);
+}";
 
-        double time;
-
-        void CreateVertexBuffer()
+        private void CreateVertexBuffer()
         {
-            Vector3[] vertices = new Vector3[3];
+            var vertices = new Vector3[3];
             vertices[0] = new Vector3(-1f, -1f, 0f);
             vertices[1] = new Vector3(1f, -1f, 0f);
             vertices[2] = new Vector3(0f, 1f, 0f);
 
             GL.GenBuffers(1, out vbo);
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-            GL.BufferData<Vector3>(BufferTarget.ArrayBuffer,
-                                   new IntPtr(vertices.Length * Vector3.SizeInBytes),
-                                   vertices, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer,
+                new IntPtr(vertices.Length * Vector3.SizeInBytes),
+                vertices, BufferUsageHint.StaticDraw);
         }
 
-        void CreateShaders()
+        private void CreateShaders()
         {
             shaderProgramHandle = GL.CreateProgram();
 
@@ -112,9 +110,9 @@ void main()
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            time = (time >= Math.PI) ? 0.0 : time + e.Time;
+            time = time >= Math.PI ? 0.0 : time + e.Time;
 
-            variableScale = (float)(Math.Sin(time));
+            variableScale = (float)Math.Sin(time);
             GL.Uniform1(uniformScale, variableScale);
 
             GL.EnableVertexAttribArray(0);
@@ -130,7 +128,7 @@ void main()
 
         public static void View_Init()
         {
-            using (UniformVariableTestProgram p = new UniformVariableTestProgram())
+            using (var p = new UniformVariableTestProgram())
             {
                 p.Run(60);
             }

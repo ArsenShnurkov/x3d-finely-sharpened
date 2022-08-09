@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenTK;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace X3D
 {
@@ -12,20 +7,17 @@ namespace X3D
         private bool _isHidden;
 
         /// <summary>
-        /// If true, disabled the node from any Render() calls. KeepAlive() is then called instead.
+        ///     If true, disabled the node from any Render() calls. KeepAlive() is then called instead.
         /// </summary>
         [XmlIgnore]
         public new bool Hidden
         {
-            get
-            {
-                return _isHidden;
-            }
+            get => _isHidden;
             set
             {
                 _isHidden = value;
 
-                this.Decendants().ForEach(n => n.Hidden = value);
+                Decendants().ForEach(n => n.Hidden = value);
             }
         }
     }

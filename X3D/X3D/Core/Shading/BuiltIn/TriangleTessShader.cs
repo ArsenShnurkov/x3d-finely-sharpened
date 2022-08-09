@@ -1,10 +1,5 @@
 ﻿// original source for shader tessellation adapted from Philip Rideout http://prideout.net/blog/?p=48
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace X3D.Core.Shading
 {
     public class TriangleTessShader
@@ -60,6 +55,7 @@ void main()
     gl_Position = projection * modelview * vec4(tePosition, 1);
 }
 ";
+
         public static string geometryShaderSource = @"
 #version 420 core
 uniform mat4 modelview;

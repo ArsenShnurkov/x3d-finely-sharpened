@@ -7,32 +7,22 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace X3D.Parser
 {
     /// <summary>
-    /// Serialize an X3D scene graph starting from its root node outputting and inlining XML for each child.
-    /// Scene graph nodes dont have to implement IXmlSerializable. 
-    /// Infact using IXmlSerializable causes problems with X3D Model.
+    ///     Serialize an X3D scene graph starting from its root node outputting and inlining XML for each child.
+    ///     Scene graph nodes dont have to implement IXmlSerializable.
+    ///     Infact using IXmlSerializable causes problems with X3D Model.
     /// </summary>
     public class X3DSceneGraphXMLSerializer
     {
-        private SceneGraphNode root;
+        private const string
+            ID_PROPERTY = "__________id"; // tempoary id nodes have to make XmlDocument merging on 2nd pass easier
 
-        private static Encoding encoding = Encoding.UTF8;
-        private const string ID_PROPERTY = "__________id";  // tempoary id nodes have to make XmlDocument merging on 2nd pass easier
-
-        private class _node
-        {
-            public SceneGraphNode data;
-            public XmlDocument dom;
-            public string outerXml;
-            public int depth;
-            public List<_node> children = new List<_node>();
-            public _node parent;
-        }
+        private static readonly Encoding encoding = Encoding.UTF8;
+        private readonly SceneGraphNode root;
 
         public X3DSceneGraphXMLSerializer(SceneGraphNode root)
         {
@@ -40,10 +30,10 @@ namespace X3D.Parser
         }
 
         /// <summary>
-        /// Serializes an X3D Scene from model back to XML.
+        ///     Serializes an X3D Scene from model back to XML.
         /// </summary>
         /// <returns>
-        /// Returns an XML document in a string.
+        ///     Returns an XML document in a string.
         /// </returns>
         public string Serialize()
         {
@@ -53,13 +43,13 @@ namespace X3D.Parser
             XmlDocument childDoc;
             SceneGraphNode node;
             XmlNode parent, p;
-            Stack<_node> work_items = new Stack<_node>();
+            var work_items = new Stack<_node>();
             dynamic instanceOfDerived;
             XmlTextWriter writer;
             StreamReader reader;
             MemoryStream ms;
             int depth;
-            int maxDepth = 0;
+            var maxDepth = 0;
             XmlNode curr;
             XmlDocument @new;
             XmlElement elemp;
@@ -75,7 +65,7 @@ namespace X3D.Parser
             document = new XmlDocument();
             document.LoadXml(xml);
 
-            ro = new _node()
+            ro = new _node
             {
                 data = root,
                 dom = document,
@@ -85,20 +75,19 @@ namespace X3D.Parser
 
             work_items.Push(ro);
 
-            
 
             // X3D SERIALIZE
 
             // have to do in 2 passes to join the XmlDocuments since each child is a separate XmlDocument
 
-            int id = 0;
-            while(work_items.Count > 0)
+            var id = 0;
+            while (work_items.Count > 0)
             {
                 item = work_items.Pop();
                 node = item.data;
                 parent = item.dom.FirstChild;
 
-                
+
                 elem = (XmlElement)item.dom.FirstChild;
                 elem.SetAttribute(ID_PROPERTY, id.ToString()); // add temporary id to make merging XmlDocuments easier.
 
@@ -118,12 +107,9 @@ namespace X3D.Parser
                         p = p.ParentNode;
                     }
 
-                    if(depth > maxDepth)
-                    {
-                        maxDepth = depth;
-                    }
+                    if (depth > maxDepth) maxDepth = depth;
 
-                    ch = new _node()
+                    ch = new _node
                     {
                         data = child,
                         dom = childDoc,
@@ -161,7 +147,7 @@ namespace X3D.Parser
                 }
                 else
                 {
-                    string _id = elemp.GetAttribute(ID_PROPERTY);
+                    var _id = elemp.GetAttribute(ID_PROPERTY);
 
                     curr = findNodeDfs(_id, @new);
 
@@ -170,10 +156,7 @@ namespace X3D.Parser
                     curr.AppendChild(n);
                 }
 
-                foreach (_node child in item.children)
-                {
-                    work_items.Push(child);
-                }
+                foreach (var child in item.children) work_items.Push(child);
             }
 
             document = @new;
@@ -198,7 +181,7 @@ namespace X3D.Parser
             XmlNode n = null;
             XmlElement elem;
 
-            Stack<XmlNode> work_items = new Stack<XmlNode>();
+            var work_items = new Stack<XmlNode>();
             work_items.Push(document.FirstChild);
 
             while (work_items.Count > 0)
@@ -207,15 +190,9 @@ namespace X3D.Parser
 
                 elem = (XmlElement)n;
 
-                if (elem.GetAttribute(ID_PROPERTY) == id)
-                {
-                    break;
-                }
+                if (elem.GetAttribute(ID_PROPERTY) == id) break;
 
-                foreach (XmlNode child in n.ChildNodes)
-                {
-                    work_items.Push(child);
-                }
+                foreach (XmlNode child in n.ChildNodes) work_items.Push(child);
             }
 
             return n;
@@ -232,17 +209,16 @@ namespace X3D.Parser
             PropertyInfo[] destProperties;
             PropertyInfo dest;
 
-            srcProperties = otherObject.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty);
-            destProperties = obj.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty);
+            srcProperties = otherObject.GetType()
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty);
+            destProperties = obj.GetType()
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.SetProperty);
 
-            foreach (PropertyInfo property in srcProperties)
+            foreach (var property in srcProperties)
             {
                 dest = destProperties.FirstOrDefault(x => x.Name == property.Name);
 
-                if (dest != null && dest.CanWrite)
-                {
-                    dest.SetValue(obj, property.GetValue(otherObject, null), null);
-                }  
+                if (dest != null && dest.CanWrite) dest.SetValue(obj, property.GetValue(otherObject, null), null);
             }
 
             return obj;
@@ -250,25 +226,32 @@ namespace X3D.Parser
 
         private static string Serialize<T>(T node)
         {
-            MemoryStream memStream = new MemoryStream();
-            XmlSerializerNamespaces ns = new XmlSerializerNamespaces(); ns.Add("", "");
+            var memStream = new MemoryStream();
+            var ns = new XmlSerializerNamespaces();
+            ns.Add("", "");
             XmlSerializer serializer;
 
-            using (XmlTextWriter w = new XmlTextWriter(memStream, encoding))
+            using (var w = new XmlTextWriter(memStream, encoding))
             {
                 serializer = new XmlSerializer(typeof(T));
                 serializer.Serialize(w, node, ns);
 
                 memStream = w.BaseStream as MemoryStream;
             }
+
             if (memStream != null)
-            {
                 return encoding.GetString(memStream.ToArray());
-            }
-            else
-            {
-                return string.Empty;
-            }   
+            return string.Empty;
+        }
+
+        private class _node
+        {
+            public readonly List<_node> children = new List<_node>();
+            public SceneGraphNode data;
+            public int depth;
+            public XmlDocument dom;
+            public string outerXml;
+            public _node parent;
         }
     }
 }

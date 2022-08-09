@@ -1,30 +1,30 @@
-﻿using OpenTK.Input;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
+using OpenTK.Input;
 using X3D.Engine;
 
 namespace X3D
 {
     /// <summary>
-    /// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/scripting.html
+    ///     http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/scripting.html
     /// </summary>
     public partial class Script
     {
         public static bool ScriptingEnabled = false;
         public static bool EngineEnabled = true;
 
-        private head parentHead = null;
-        private bool isHeadScript = false;
-        private bool compiled = false;
-        //private bool executed = false;
-        private int headScriptIndex = -1;
-        private int numHeadScripts = 0;
+        private static bool documentEventsBound = false;
         private List<field> _fields;
 
-        private static bool documentEventsBound = false;
+        private bool compiled = false;
+
+        //private bool executed = false;
+        private int headScriptIndex = -1;
+        private bool isHeadScript = false;
+        private int numHeadScripts = 0;
+
+        private head parentHead = null;
 
         #region Rendering Methods
 
@@ -44,7 +44,7 @@ namespace X3D
             {
                 object resource;
 
-                if(SceneManager.Fetch(this.url, out resource))
+                if (SceneManager.Fetch(this.url, out resource))
                 {
                     this.ScriptSource = (string)resource;
 
@@ -69,7 +69,7 @@ namespace X3D
             if (!string.IsNullOrEmpty(this.ScriptSource))
             {
                 var engine = ScriptingEngine.CurrentContext;
-                
+
                 // COMPILE
 
                 if (engine != null && !compiled)
@@ -80,6 +80,7 @@ namespace X3D
                     {
                         engine.OnFirstHeadScript();
                     }
+
                     if ((headScriptIndex == numHeadScripts - 1))
                     {
                         engine.OnHeadScriptsLoaded();
@@ -90,10 +91,9 @@ namespace X3D
                         // Bind events, then when they occur, call associated dom javascript events
 
                         // KEYBINDINGS
-                        
-                        
-                        
-                        rc.Keyboard.KeyDown += (object sender, OpenTK.Input.KeyboardKeyEventArgs e) =>
+
+
+                        rc.Keyboard.KeyDown += (object sender, KeyboardKeyEventArgs e) =>
                         {
                             int charCode = (int)e.ScanCode;
                             int keyCode;
@@ -110,8 +110,6 @@ namespace X3D
                             {
                                 Console.WriteLine("*** key {0} not bound *** ", charCode);
                             }
-
-                            
                         };
 
                         // MOUSE POINTER BINDINGS

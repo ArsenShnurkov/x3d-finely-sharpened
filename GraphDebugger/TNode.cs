@@ -1,12 +1,31 @@
-﻿using OpenTK;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+using OpenTK;
 
 public class TNode
 {
+    private const double TWO_PI = 2.0 * Math.PI;
+
+    public float
+        angle, // angle from root coordinate in radians
+        prev_gap,
+        prev_angle,
+        rightBisector,
+        leftBisector,
+        leftTangent, // the left tangent angle
+        rightTangent, // the right tangent angle
+        sectorStartAngle, // the left angle of the sector specifying the start of the sector for the node's children
+        sectorEndAngle; // the right angle of the sector specifying the end of the sector for the node's children
+
+    public Vector3 Point;
+
+    public TNode()
+    {
+        Visible = true;
+        Children = new List<TNode>();
+        Point = Vector3.Zero;
+    }
+
     public object Data { get; set; }
 
     public TNode Parent { get; set; }
@@ -14,8 +33,6 @@ public class TNode
     public bool Visible { get; set; }
     public int Level { get; set; }
     public int ChildIndex { get; set; }
-
-    public Vector3 Point;
 
     public TNode Left
     {
@@ -32,6 +49,7 @@ public class TNode
             else Children[0] = value;
         }
     }
+
     public TNode Right
     {
         get
@@ -45,35 +63,22 @@ public class TNode
             if (Children.Count < 2)
                 Children.Add(value);
             else Children[1] = value;
-            
         }
     }
 
-    public float 
-        angle, // angle from root coordinate in radians
-        prev_gap,prev_angle,
-        rightBisector, 
-        leftBisector,
-        leftTangent, // the left tangent angle
-        rightTangent, // the right tangent angle
-        sectorStartAngle, // the left angle of the sector specifying the start of the sector for the node's children
-        sectorEndAngle; // the right angle of the sector specifying the end of the sector for the node's children
-
-    private const double TWO_PI=2.0 * Math.PI;
-
-    public bool IsLeaf { get { return this.Children.Count == 0; } }
-    public bool HasChildren { get { return this.Children.Count > 0; } }
+    public bool IsLeaf => Children.Count == 0;
+    public bool HasChildren => Children.Count > 0;
 
     public float LeftLimit()
     {
-        return (float)Math.Min(this.normalize(this.leftBisector),(this.leftTangent));
+        return (float)Math.Min(normalize(leftBisector), leftTangent);
     }
 
     public float RightLimit()
     {
-        return (float)Math.Max(this.normalize(this.rightBisector),(this.rightTangent));
+        return (float)Math.Max(normalize(rightBisector), rightTangent);
     }
-        
+
     private double normalize(double angle)
     {
         //while (angle > TWO_PI) {
@@ -83,12 +88,5 @@ public class TNode
         //    angle += TWO_PI;
         //}
         return angle;
-    }
-
-    public TNode()
-    {
-        Visible=true;
-        Children=new List<TNode>();
-        Point = Vector3.Zero;
     }
 }

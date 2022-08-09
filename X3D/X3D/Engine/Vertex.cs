@@ -1,21 +1,17 @@
-﻿using OpenTK;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
+﻿using System.Runtime.InteropServices;
+using OpenTK;
 
 namespace X3D.Core
 {
     /// <summary>
-    /// Vertex structure for Interleaved Geometry and Meshing.
-    /// Mimics InterleavedArrayFormat.T2fC4fN3fV3f
+    ///     Vertex structure for Interleaved Geometry and Meshing.
+    ///     Mimics InterleavedArrayFormat.T2fC4fN3fV3f
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct Vertex 
-    { 
+    public struct Vertex
+    {
         /// <summary>
-        /// Required
+        ///     Required
         /// </summary>
         public Vector3 Position;
 
@@ -29,7 +25,7 @@ namespace X3D.Core
         {
             get
             {
-                Vertex v = new Vertex();
+                var v = new Vertex();
                 v.Position = Vector3.Zero;
                 v.TexCoord = Vector2.Zero;
                 v.Normal = Vector3.Zero;
@@ -42,38 +38,40 @@ namespace X3D.Core
 
         public Vertex(Vector3 position)
         {
-            this.Position = position;
-            this.TexCoord = Vector2.Zero;
-            this.Normal = Vector3.Zero;
-            this.Color = new Vector4(0.0f, 0, 0, 1.0f);
+            Position = position;
+            TexCoord = Vector2.Zero;
+            Normal = Vector3.Zero;
+            Color = new Vector4(0.0f, 0, 0, 1.0f);
         }
 
         public Vertex(Vector3 position, Vector2 texCoord)
         {
-            this.Position = position;
-            this.TexCoord = texCoord;
-            this.Normal = Vector3.Zero;
-            this.Color = new Vector4(0.0f, 0, 0, 1.0f);
+            Position = position;
+            TexCoord = texCoord;
+            Normal = Vector3.Zero;
+            Color = new Vector4(0.0f, 0, 0, 1.0f);
         }
 
         public Vertex(Vector3 position, Vector2 texCoord, Vector3 norm)
         {
-            this.Position = position;
-            this.TexCoord = texCoord;
-            this.Normal = norm;
-            this.Color = new Vector4(0.0f, 0, 0, 1.0f);
+            Position = position;
+            TexCoord = texCoord;
+            Normal = norm;
+            Color = new Vector4(0.0f, 0, 0, 1.0f);
         }
 
         public Vertex(Vector3 position, Vector2 texCoord, Vector3 norm, Vector4 color)
         {
-            this.Position = position;
-            this.TexCoord = texCoord;
-            this.Normal = norm;
-            this.Color = color;
+            Position = position;
+            TexCoord = texCoord;
+            Normal = norm;
+            Color = color;
         }
+
         #endregion
 
-        public static readonly int SizeInBytes = Vector2.SizeInBytes + Vector4.SizeInBytes + Vector3.SizeInBytes + Vector3.SizeInBytes;
+        public static readonly int SizeInBytes =
+            Vector2.SizeInBytes + Vector4.SizeInBytes + Vector3.SizeInBytes + Vector3.SizeInBytes;
 
         public static readonly int Stride = Marshal.SizeOf(default(Vertex));
     }

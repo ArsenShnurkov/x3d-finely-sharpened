@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
-using OpenTK;
-using OpenTK.Graphics.OpenGL4;
-using X3D.Engine;
-using System.IO;
 using System.Xml.Serialization;
-using X3D.Core;
+using X3D.Engine;
 using X3D.Parser;
 
 namespace X3D
@@ -17,30 +11,16 @@ namespace X3D
         private ComposedShader parentShader;
         private Shape parentShape;
 
-        [XmlIgnore]
-        public int ShaderHandle { get; set; }
+        [XmlIgnore] public int ShaderHandle { get; set; }
 
         [XmlIgnore]
         public shaderPartTypeValues Type
         {
-            get
-            {
-                return this.type;
-            }
-            set
-            {
-                this.type = value;
-            }
+            get => type;
+            set => type = value;
         }
 
-        [XmlIgnore]
-        public string[] Urls
-        {
-            get
-            {
-                return this.MFString;
-            }
-        }
+        [XmlIgnore] public string[] Urls => MFString;
 
         //[XmlIgnore]
         //public string ShaderSource;
@@ -64,7 +44,7 @@ namespace X3D
             else if (Urls != null)
             {
                 file = Urls.FirstOrDefault();
-                
+
                 if (!string.IsNullOrEmpty(file))
                 {
                     _url = _url.TrimStart();
@@ -86,22 +66,20 @@ namespace X3D
 
                             mf_urls = X3DTypeConverters.GetMFString(file);
 
-                            foreach (string url in mf_urls)
-                            {
+                            foreach (var url in mf_urls)
                                 if (SceneManager.FetchSingle(url, out resource))
                                 {
                                     Stream s;
 
                                     s = (Stream)resource;
 
-                                    StreamReader sr = new StreamReader(s);
+                                    var sr = new StreamReader(s);
                                     ShaderSource = sr.ReadToEnd();
 
                                     s.Close();
 
                                     break;
                                 }
-                            }
                         }
                         else
                         {
@@ -110,8 +88,6 @@ namespace X3D
                             LinkShaderSource(ShaderSource);
                         }
                     }
-
-
                 }
             }
         }
@@ -120,17 +96,12 @@ namespace X3D
         {
             ShaderSource = X3DTypeConverters.UnescapeXMLValue(source).Trim();
 
-            if (parentShader != null && parentShape != null)
-            {
-                parentShader.ShaderParts.Add(this);
-            }
+            if (parentShader != null && parentShape != null) parentShader.ShaderParts.Add(this);
         }
 
         public override void Render(RenderingContext rc)
         {
             base.Render(rc);
-
-
         }
 
         #endregion

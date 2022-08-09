@@ -1,23 +1,19 @@
-﻿using OpenTK;
-using System;
+﻿using System;
 using System.Drawing;
+using OpenTK;
 using X3D.Engine;
 using X3D.Parser;
 
 namespace X3D.ConstructionSet
 {
-
-
-
     public class ElevationBuilder : IElevationBuilder
     {
-
         public ElevationGrid BuildHeightmapFromGenerator(RenderingContext rc,
-                                                      IHeightMapGenerator generator, 
-                                                      out Bitmap largePerlinImage, 
-                                                      int x, int z, int h, 
-                                                      float sx, 
-                                                      float sz)
+            IHeightMapGenerator generator,
+            out Bitmap largePerlinImage,
+            int x, int z, int h,
+            float sx,
+            float sz)
         {
             ElevationGrid g;
             Bitmap noiseBitmap;
@@ -32,15 +28,15 @@ namespace X3D.ConstructionSet
             noiseBitmap = (Bitmap)newImage;
 
             Console.WriteLine("Going through each depth pixel to generate an ElevationGrid");
-            g = BuildHeightmapFromTexture(sx, sz, noiseBitmap, h); 
+            g = BuildHeightmapFromTexture(sx, sz, noiseBitmap, h);
 
             return g;
         }
 
         public ElevationGrid BuildHeightmapFromTexture(
-                                            float xSpacing, float zSpacing, 
-                                            Bitmap texture, 
-                                            float maxHeight = 1.0f)
+            float xSpacing, float zSpacing,
+            Bitmap texture,
+            float maxHeight = 1.0f)
         {
             ElevationGrid g = new ElevationGrid();
             Color colorNode = new Color();
@@ -111,33 +107,35 @@ namespace X3D.ConstructionSet
 
 
         public ElevationGrid BuildCheckerboard(int xDimension, int zDimension,
-                                            float xSpacing, float zSpacing, 
-                                            Vector3 colorOdd, Vector3 colorEven)
+            float xSpacing, float zSpacing,
+            Vector3 colorOdd, Vector3 colorEven)
         {
             ElevationGrid g;
 
-            g = BuildFlatPlane(xDimension, zDimension, xSpacing, zSpacing, false, (int face, int vertex, int x, int z) => {
-                Vector3 color = new Vector3();
-
-                if (vertex % 2 == 0)
+            g = BuildFlatPlane(xDimension, zDimension, xSpacing, zSpacing, false,
+                (int face, int vertex, int x, int z) =>
                 {
-                    color = colorEven;
-                }
-                else
-                {
-                    color = colorOdd;
-                }
+                    Vector3 color = new Vector3();
 
-                return color;
-            });
+                    if (vertex % 2 == 0)
+                    {
+                        color = colorEven;
+                    }
+                    else
+                    {
+                        color = colorOdd;
+                    }
+
+                    return color;
+                });
 
             return g;
         }
 
-        public ElevationGrid BuildFlatPlane(int xDimension, int zDimension, 
-                                            float xSpacing, float zSpacing, 
-                                            bool colorPerVertex,
-                                            ElevationColorSequencerDelegate colorSequencer)
+        public ElevationGrid BuildFlatPlane(int xDimension, int zDimension,
+            float xSpacing, float zSpacing,
+            bool colorPerVertex,
+            ElevationColorSequencerDelegate colorSequencer)
         {
             ElevationGrid g = new ElevationGrid();
             Color colorNode = new Color();
@@ -185,11 +183,11 @@ namespace X3D.ConstructionSet
             return g;
         }
 
-        public ElevationGrid BuildVaryingHeightMap(int xDimension, int zDimension, 
-                                                   float xSpacing, float zSpacing,
-                                                   bool colorPerVertex,
-                                                   ElevationColorSequencerDelegate colorSequencer,
-                                                   HeightComputationDelegate geometrySequencer)
+        public ElevationGrid BuildVaryingHeightMap(int xDimension, int zDimension,
+            float xSpacing, float zSpacing,
+            bool colorPerVertex,
+            ElevationColorSequencerDelegate colorSequencer,
+            HeightComputationDelegate geometrySequencer)
         {
             ElevationGrid g = new ElevationGrid();
             Color colorNode = new Color();
@@ -219,7 +217,7 @@ namespace X3D.ConstructionSet
 
                     g.height += string.Format(" {0}", geometrySequencer(x, z));
 
-                    if(colorSequencer != null)
+                    if (colorSequencer != null)
                     {
                         color = colorSequencer(faceIndex, coordIndex, x, z);
                         colorNode.color += X3DTypeConverters.ToString(color) + ", ";
@@ -252,13 +250,12 @@ namespace X3D.ConstructionSet
 
         private void updateProgress(int coordIndex, int numHeights)
         {
-
             float percent = ((float)(coordIndex + 1) / (float)numHeights) * 100;
 
             if (percent > 0 && percent % 1.0f == 0)
             {
                 //Console.SetCursorPosition(0, 15);
-                
+
                 Console.Write(" {0}%", percent);
             }
         }
@@ -277,7 +274,7 @@ namespace X3D.ConstructionSet
 
             scene.Children.Add(shape);
             head.Children.Add(meta);
-            
+
             root.Children.Add(scene);
             root.Children.Add(head);
         }

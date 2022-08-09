@@ -1,16 +1,12 @@
-﻿using OpenTK;
-using OpenTK.Graphics.OpenGL4;
-using OpenTK.Input;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
+using OpenTK;
+using OpenTK.Graphics.OpenGL4;
 using X3D.Core;
 using X3D.Core.Shading;
 using X3D.Core.Shading.DefaultUniforms;
 using X3D.Engine;
-using X3D.Parser;
 
 namespace X3D
 {
@@ -33,18 +29,21 @@ namespace X3D
 
         // GEOMETRY
         private GeometryHandle _handle;
+
         //private int vbo3, vbo4, NumVerticies3, NumVerticies4;
         private BoundingBox bbox;
+
         //private bool hasGeometry = false;
-        private bool loadedGeometry = false;
+        private bool loadedGeometry;
 
         private Vector3 size = new Vector3(1, 1, 1);
-        private Vector3 scale = new Vector3(0.05f, 0.05f, 0.05f);
-        //var scale = new Vector3(0.04f, 0.04f, 0.04f); //Sphere
-        private ComposedShader quadShader = null;
-        private bool coloring = false;
-        private bool texturing = false;
 
+        private Vector3 scale = new Vector3(0.05f, 0.05f, 0.05f);
+
+        //var scale = new Vector3(0.04f, 0.04f, 0.04f); //Sphere
+        private ComposedShader quadShader;
+        private bool coloring;
+        private bool texturing;
 
         #endregion
 
@@ -60,36 +59,25 @@ namespace X3D
 
         #region Public Fields
 
+        [XmlIgnore] public bool drawBoundingBox;
 
-        [XmlIgnore]
-        public bool drawBoundingBox = false;
+        [XmlAttribute("depthMask")] public bool depthMask = true;
 
-        [XmlAttribute("depthMask")]
-        public bool depthMask = true;
+        [XmlIgnore] public List<ComposedShader> ComposedShaders = new List<ComposedShader>();
 
-        [XmlIgnore]
-        public List<ComposedShader> ComposedShaders = new List<ComposedShader>();
+        [XmlIgnore] public bool texturingEnabled;
 
-        [XmlIgnore]
-        public bool texturingEnabled;
+        [XmlIgnore] public int uniformModelview, uniformProjection;
 
-        [XmlIgnore]
-        public int uniformModelview, uniformProjection;
+        [XmlIgnore] public ShaderUniformsPNCT uniforms = new ShaderUniformsPNCT();
 
-        [XmlIgnore]
-        public ShaderUniformsPNCT uniforms = new ShaderUniformsPNCT();
+        [XmlIgnore] public ShaderMaterialUniforms Materials = new ShaderMaterialUniforms();
 
-        [XmlIgnore]
-        public ShaderMaterialUniforms Materials = new ShaderMaterialUniforms();
+        [XmlIgnore] public TessShaderUniforms Uniforms = new TessShaderUniforms();
 
-        [XmlIgnore]
-        public TessShaderUniforms Uniforms = new TessShaderUniforms();
+        [XmlIgnore] public Matrix3 NormalMatrix = Matrix3.Identity;
 
-        [XmlIgnore]
-        public Matrix3 NormalMatrix = Matrix3.Identity;
-
-        [XmlIgnore]
-        public ComposedShader CurrentShader = null;
+        [XmlIgnore] public ComposedShader CurrentShader;
 
         [XmlIgnore]
         public Vector3 centerOfRotation = new Vector3(0.0f, -0.09f, 0.0f); // TODO: calculate from bounding box center
@@ -98,7 +86,9 @@ namespace X3D
 
         #region Constructors
 
-        public Shape() {}
+        public Shape()
+        {
+        }
 
         public Shape(X3DGeometryNode geometry)
         {
@@ -106,27 +96,25 @@ namespace X3D
 
             geometry.Parent = this;
 
-            this.Items.Add(geometry);
-            this.Children.Add(geometry);
+            Items.Add(geometry);
+            Children.Add(geometry);
 
             Load();
-            
         }
 
         public Shape(X3DGeometryNode geometry, Transform transform)
         {
-            this.Parent = transform;
+            Parent = transform;
             transform.Children.Add(this);
 
             this.geometry = geometry;
 
             geometry.Parent = this;
 
-            this.Items.Add(geometry);
-            this.Children.Add(geometry);
+            Items.Add(geometry);
+            Children.Add(geometry);
 
             Load();
-
         }
 
         #endregion
@@ -140,14 +128,14 @@ namespace X3D
             Appearance appearance;
 
             materials = new List<Material>();
-            appearance = this.ItemsByType<Appearance>().FirstOrDefault();
+            appearance = ItemsByType<Appearance>().FirstOrDefault();
 
             if (appearance != null)
                 materials = appearance.ItemsByType<Material>();
 
             shaderMaterials = new List<ShaderMaterial>();
 
-            foreach (Material material in materials)
+            foreach (var material in materials)
             {
                 shaderMaterial = ShaderMaterial.FromX3DMaterial(material);
 
@@ -161,7 +149,7 @@ namespace X3D
             Appearance appearance;
 
             materials = new List<Material>();
-            appearance = this.ItemsByType<Appearance>().FirstOrDefault();
+            appearance = ItemsByType<Appearance>().FirstOrDefault();
 
             if (appearance != null)
                 materials = appearance.ItemsByType<Material>();
@@ -170,21 +158,17 @@ namespace X3D
 
             if (materials.Any())
             {
-
-            }
-            else
-            {
-                //shaderMaterials.Add(new ShaderMaterial()
-                //{
-                //     ambientIntensity = 0.1f,
-                //     diffuseColor = new Vector4(0,0,0,0),
-                //     emissiveColor = new Vector4(0,0,0,0),
-                //    specularColor = new Vector4(1, 1, 1, 1),
-                //    transparency = 1.0f,
-                //    shininess = 0.2f
-                //});
             }
 
+            //shaderMaterials.Add(new ShaderMaterial()
+            //{
+            //     ambientIntensity = 0.1f,
+            //     diffuseColor = new Vector4(0,0,0,0),
+            //     emissiveColor = new Vector4(0,0,0,0),
+            //    specularColor = new Vector4(1, 1, 1, 1),
+            //    transparency = 1.0f,
+            //    shininess = 0.2f
+            //});
             shader.SetFieldValue("materialsCount", shaderMaterials.Count);
 
             Buffering.BufferMaterials(shader, shaderMaterials, "materials");
@@ -193,7 +177,6 @@ namespace X3D
 
         public Matrix4 ApplyGeometricTransformations(RenderingContext rc, ComposedShader shader, SceneGraphNode context)
         {
-
             RefreshDefaultUniforms(shader);
             //RefreshMaterialUniforms();
 
@@ -201,30 +184,32 @@ namespace X3D
                 RefreshTessUniforms(shader);
 
 
-            Matrix4 view = Matrix4.LookAt(new Vector3(4, 3, 3),  // Camera is at (4,3,3), in World Space
-                new Vector3(0, 0, 0),  // and looks at the origin
+            var view = Matrix4.LookAt(new Vector3(4, 3, 3), // Camera is at (4,3,3), in World Space
+                new Vector3(0, 0, 0), // and looks at the origin
                 new Vector3(0, 1, 0) // Head is up (set to 0,-1,0 to look upside-down)
             );
 
             Matrix4 model; // applied transformation hierarchy
 
-            SceneGraphNode transform_context = context == null ? this : context;
+            var transform_context = context == null ? this : context;
 
-            List<Transform> transformationHierarchy = transform_context
+            var transformationHierarchy = transform_context
                 .AscendantByType<Transform>()
-                .Select(t => (Transform)t)
+                .Select(t => t)
                 .Where(t => t.Hidden == false)
                 .ToList();
 
-            Matrix4 modelview = Matrix4.Identity;// * rc.matricies.worldview;
+            var modelview = Matrix4.Identity; // * rc.matricies.worldview;
 
             // using Def_Use/Figure02.1Hut.x3d Cone and Cylinder 
-            Vector3 x3dScale = new Vector3(0.06f, 0.06f, 0.06f); // scaling down to conform with X3D standard (note this was done manually and might need tweaking)
+            var x3dScale =
+                new Vector3(0.06f, 0.06f,
+                    0.06f); // scaling down to conform with X3D standard (note this was done manually and might need tweaking)
 
             //x3dScale = Vector3.One;
 
-            Quaternion modelrotation = Quaternion.Identity;
-            Matrix4 modelLocalRotation = Matrix4.Identity;
+            var modelrotation = Quaternion.Identity;
+            var modelLocalRotation = Matrix4.Identity;
 
 
             //if (rc.cam.OrbitLocalOrientation != Vector2.Zero)
@@ -241,59 +226,51 @@ namespace X3D
 
             //const float bbscale = 0.0329999961f;
 
-            Vector3 centerOffset = Vector3.Zero;
+            var centerOffset = Vector3.Zero;
 
-            foreach (Transform transform in transformationHierarchy)
-            {
+            foreach (var transform in transformationHierarchy)
                 modelview = SceneEntity.ApplyX3DTransform(centerOffset,
-                                                     Vector3.Zero,
-                                                     transform.Scale,
-                                                     Vector3.Zero,
-                                                     transform.Translation, // * x3dScale,
-                                                     modelview);
-
-                //modelview *= Matrix4.CreateTranslation(transform.Translation * x3dScale);
-
-                //modelrotation = new Quaternion(transform.Rotation.X, transform.Rotation.Y, transform.Rotation.Z, transform.Rotation.W);
-                //modelrotations *= Matrix4.CreateFromQuaternion(modelrotation);
-
-                //modelrotations *= MathHelpers.CreateRotation(ref modelrotation);
-            }
-
+                    Vector3.Zero,
+                    transform.Scale,
+                    Vector3.Zero,
+                    transform.Translation, // * x3dScale,
+                    modelview);
+            //modelview *= Matrix4.CreateTranslation(transform.Translation * x3dScale);
+            //modelrotation = new Quaternion(transform.Rotation.X, transform.Rotation.Y, transform.Rotation.Z, transform.Rotation.W);
+            //modelrotations *= Matrix4.CreateFromQuaternion(modelrotation);
+            //modelrotations *= MathHelpers.CreateRotation(ref modelrotation);
             //Vector3 center = modelview.ExtractTranslation();
             //Vector3 centerOffsetVector = center + (bbox.Maximum - bbox.Minimum);
             //Matrix4 centerOffset = Matrix4.CreateTranslation(centerOffsetVector);
 
 
-
             model = modelview;
 
-            Matrix4 cameraTransl = Matrix4.CreateTranslation(rc.cam.Position);
+            var cameraTransl = Matrix4.CreateTranslation(rc.cam.Position);
 
-            Quaternion q = rc.cam.Orientation;
+            var q = rc.cam.Orientation;
 
             Matrix4 cameraRot;
 
             cameraRot = Matrix4.CreateFromQuaternion(q); // cameraRot = MathHelpers.CreateRotation(ref q);
 
 
-            Matrix4 MVP = ((modelLocalRotation * model) * cameraTransl) * cameraRot; // position and orient the Shape relative to the world and camera
+            var MVP = modelLocalRotation * model * cameraTransl *
+                      cameraRot; // position and orient the Shape relative to the world and camera
 
-                
 
             //shader.SetFieldValue("size", new Vector3(bbox.Width, bbox.Height, bbox.Depth) * bbscale);
-            shader.SetFieldValue("modelview", ref MVP); //GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);
+            shader.SetFieldValue("modelview",
+                ref MVP); //GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);
             shader.SetFieldValue("projection", ref rc.matricies.projection);
             shader.SetFieldValue("camscale", rc.cam.Scale.X); //GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
             shader.SetFieldValue("X3DScale", rc.matricies.Scale); //GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
-            shader.SetFieldValue("coloringEnabled", this.coloring ? 1 : 0); //GL.Uniform1(uniforms.a_coloringEnabled, 0);
-            shader.SetFieldValue("texturingEnabled", this.texturingEnabled ? 1 : 0); //GL.Uniform1(uniforms.a_texturingEnabled, this.texturingEnabled ? 1 : 0);
+            shader.SetFieldValue("coloringEnabled", coloring ? 1 : 0); //GL.Uniform1(uniforms.a_coloringEnabled, 0);
+            shader.SetFieldValue("texturingEnabled",
+                texturingEnabled ? 1 : 0); //GL.Uniform1(uniforms.a_texturingEnabled, this.texturingEnabled ? 1 : 0);
             shader.SetFieldValue("lightingEnabled", 1);
 
-            if (shader.IsBuiltIn == false)
-            {
-                shader.ApplyFieldsAsUniforms(rc);
-            }
+            if (shader.IsBuiltIn == false) shader.ApplyFieldsAsUniforms(rc);
 
             return MVP;
         }
@@ -315,28 +292,22 @@ namespace X3D
 
             RefreshDefaultUniforms(shader);
 
-            if (shader.IsTessellator)
-            {
-                RefreshTessUniforms(shader);
-            }
+            if (shader.IsTessellator) RefreshTessUniforms(shader);
 
             ComposedShaders.Add(shader);
         }
 
         public void IncludeTesselationShaders(string tessControlShaderSource, string tessEvalShaderSource,
-                                              string geometryShaderSource)
+            string geometryShaderSource)
         {
             CurrentShader = ShaderCompiler.ApplyShader(DefaultShader.vertexShaderSource,
-                                                       DefaultShader.fragmentShaderSource,
-                                                       tessControlShaderSource,
-                                                       tessEvalShaderSource,
-                                                       geometryShaderSource);
-
+                DefaultShader.fragmentShaderSource,
+                tessControlShaderSource,
+                tessEvalShaderSource,
+                geometryShaderSource);
 
 
             //IncludeComposedShader(CurrentShader);
-
-
         }
 
         public void RefreshTessUniforms(ComposedShader shader = null)
@@ -371,41 +342,38 @@ namespace X3D
 
         public Vector3 GetPosition(RenderingContext rc)
         {
-            Vector3 pos = Vector3.Zero;
-            Vector3 center = Vector3.Zero;
+            var pos = Vector3.Zero;
+            var center = Vector3.Zero;
             Matrix4 model; // applied transformation hierarchy
             Matrix4 modelview;
             List<Transform> transformationHierarchy;
             Vector3 x3dScale;
 
-            transformationHierarchy = 
+            transformationHierarchy =
                 AscendantByType<Transform>()
-                .Select(t => (Transform)t)
-                .Where(t => t.Hidden == false)
-                .ToList();
+                    .Select(t => t)
+                    .Where(t => t.Hidden == false)
+                    .ToList();
 
             modelview = Matrix4.Identity;
 
-            x3dScale = new Vector3(0.06f, 0.06f, 0.06f); // scaling down to conform with X3D standard (note this was done manually and might need tweaking)
+            x3dScale = new Vector3(0.06f, 0.06f,
+                0.06f); // scaling down to conform with X3D standard (note this was done manually and might need tweaking)
 
-            foreach (Transform transform in transformationHierarchy)
-            {
+            foreach (var transform in transformationHierarchy)
                 modelview *= SceneEntity.ApplyX3DTransform(Vector3.Zero,
-                                                     Vector3.Zero,
-                                                     transform.Scale,
-                                                     Vector3.Zero,
-                                                     transform.Translation * x3dScale,
-                                                     modelview);
-                //modelview *= Matrix4.CreateTranslation(transform.Translation * x3dScale);
-            }
-
-
+                    Vector3.Zero,
+                    transform.Scale,
+                    Vector3.Zero,
+                    transform.Translation * x3dScale,
+                    modelview);
+            //modelview *= Matrix4.CreateTranslation(transform.Translation * x3dScale);
 
             model = modelview;
 
-            Matrix4 cameraTransl = rc.cam.GetModelTranslation();
+            var cameraTransl = rc.cam.GetModelTranslation();
 
-            Matrix4 MVP = ((model));
+            var MVP = model;
 
 
             center = modelview.ExtractTranslation(); // position is from the center of the geometry
@@ -431,16 +399,14 @@ namespace X3D
         private void Geometry(RenderingContext rc)
         {
             if (geometry == null)
-            {
-                geometry = (X3DGeometryNode)this.Children.First(n => (typeof(X3DGeometryNode)).IsInstanceOfType(n));
-            }
+                geometry = (X3DGeometryNode)Children.First(n => typeof(X3DGeometryNode).IsInstanceOfType(n));
 
             if (geometry != null)
             {
                 //TODO: refactor geometry interleaving code and make it callable here
 
                 //TODO: should then be able to calculate bounding boxes of arbitrary geometry here
-                
+
                 geometry.CollectGeometry(rc, out _handle, out bbox, out coloring, out texturing);
 
 
@@ -451,17 +417,11 @@ namespace X3D
                 }
 
 
-                if (_handle.NumVerticies4 > 0)
-                {
-                    quadShader = ShaderCompiler.CreateNewInstance(CurrentShader, true);
-                }
+                if (_handle.NumVerticies4 > 0) quadShader = ShaderCompiler.CreateNewInstance(CurrentShader);
 
                 loadedGeometry = _handle.HasGeometry;
 
-                if (drawBoundingBox && bbox != null)
-                {
-                    bbox.EnableRendering(GetPosition(rc));
-                }
+                if (drawBoundingBox && bbox != null) bbox.EnableRendering(GetPosition(rc));
             }
         }
 
@@ -470,30 +430,19 @@ namespace X3D
             base.PreRenderOnce(rc);
 
             if (typeof(Text).IsInstanceOfType(geometry))
-            {
-
                 // 2D Text Shader, used to apply transparancy. Since alpha blending didnt work transparent background
                 IncludeDefaultShader(ColorReplaceShader.vertexShaderSource,
-                                     ColorReplaceShader.fragmentShaderSource);
-            }
+                    ColorReplaceShader.fragmentShaderSource);
             else if (typeof(Sphere).IsInstanceOfType(geometry))
-            {
                 // TESSELLATION
                 IncludeTesselationShaders(TriangleTessShader.tessControlShader,
-                                          TriangleTessShader.tessEvalShader,
-                                          TriangleTessShader.geometryShaderSource);
-
-                //CurrentShader.SetFieldValue("spherical", 1);
-            }
+                    TriangleTessShader.tessEvalShader,
+                    TriangleTessShader.geometryShaderSource);
+            //CurrentShader.SetFieldValue("spherical", 1);
             else
-            {
                 CurrentShader = ShaderCompiler.BuildDefaultShader();
-            }
 
-            if (ComposedShaders.Any())
-            {
-                CurrentShader = ComposedShaders.First();
-            }
+            if (ComposedShaders.Any()) CurrentShader = ComposedShaders.First();
 
             CurrentShader.Link();
             CurrentShader.Use();
@@ -510,28 +459,28 @@ namespace X3D
 
             texturingEnabled = GL.IsEnabled(EnableCap.Texture2D);
 
-            shaders = this.DecendantsByType(typeof(X3DShaderNode)).Select(n => (X3DShaderNode)n).ToList();
+            shaders = DecendantsByType(typeof(X3DShaderNode)).Select(n => (X3DShaderNode)n).ToList();
             hasShaders = shaders.Any();
         }
 
         private void ApplyAppearance(RenderingContext rc)
         {
-            if(appearance == null)
-            {
-                appearance = (X3DAppearanceNode)this.Children.FirstOrDefault(n => (typeof(X3DAppearanceNode)).IsInstanceOfType(n));
-            }
+            if (appearance == null)
+                appearance =
+                    (X3DAppearanceNode)Children.FirstOrDefault(n => typeof(X3DAppearanceNode).IsInstanceOfType(n));
 
-            Appearance ap = (Appearance)appearance;
+            var ap = (Appearance)appearance;
 
 
-            ApplyMaterials(CurrentShader); // apply materials should really be done once at load but havent figured it out fully
+            ApplyMaterials(
+                CurrentShader); // apply materials should really be done once at load but havent figured it out fully
 
-            
-            this.DecendantsByType<ImageTexture>().ForEach(TeXtUrE => TeXtUrE.Bind());
+
+            DecendantsByType<ImageTexture>().ForEach(TeXtUrE => TeXtUrE.Bind());
 
             if (typeof(Text).IsInstanceOfType(geometry))
             {
-                Text txt = (Text)geometry;
+                var txt = (Text)geometry;
                 txt.BindTextures(rc);
                 //CurrentShader.SetFieldValue("threshold", new Vector4(0.1f, 0.1f, 0.1f, 1.0f));
             }
@@ -546,29 +495,25 @@ namespace X3D
             //if (!loadedGeometry) return;
 
             // PREPARE shape for rendering
-            
+
             NormalMatrix = new Matrix3(rc.matricies.modelview); // NormalMatrix = M4GetUpper3x3(ModelviewMatrix);
 
             var shader = CurrentShader;
 
             if (shader != null)
             {
-               // CurrentShader = linkedShaders;
+                // CurrentShader = linkedShaders;
 
 
                 shader.Use();
 
                 if (shader.IsTessellator)
-                {
                     if (shader.IsBuiltIn)
                     {
                         // its a built in system shader so we are using the the fixed parameter inbuilt tesselator
-                        CurrentShader.SetFieldValue("TessLevelInner", this.tessLevelInner);
-                        CurrentShader.SetFieldValue("TessLevelOuter", this.tessLevelOuter);
-
-
+                        CurrentShader.SetFieldValue("TessLevelInner", tessLevelInner);
+                        CurrentShader.SetFieldValue("TessLevelOuter", tessLevelOuter);
                     }
-                }
 
                 shader.SetFieldValue("lightingEnabled", 1);
                 shader.SetFieldValue("headlightEnabled", 0);
@@ -577,16 +522,17 @@ namespace X3D
 
                 if (depthMask)
                 {
-                    Matrix4 MVP = ApplyGeometricTransformations(rc, shader, this);
-                    Vector3 lookat = QuaternionExtensions.Rotate(rc.cam.Orientation, Vector3.UnitZ);
-                    Vector3 forward = new Vector3(lookat.X, 0, lookat.Z).Normalized();
-                    Vector3 up = Vector3.UnitY;
-                    Vector3 left = up.Cross(forward);
+                    var MVP = ApplyGeometricTransformations(rc, shader, this);
+                    var lookat = QuaternionExtensions.Rotate(rc.cam.Orientation, Vector3.UnitZ);
+                    var forward = new Vector3(lookat.X, 0, lookat.Z).Normalized();
+                    var up = Vector3.UnitY;
+                    var left = up.Cross(forward);
 
                     Vector2 orient;
                     Vector3 position;
 
-                    orient = QuaternionExtensions.ExtractPitchYawRoll(rc.cam.Orientation.Inverted()).Xy; // pitch and yaw only
+                    orient = QuaternionExtensions.ExtractPitchYawRoll(rc.cam.Orientation.Inverted())
+                        .Xy; // pitch and yaw only
                     position = rc.cam.Position;
 
                     shader.SetFieldValue("headlightEnabled", NavigationInfo.HeadlightEnabled ? 1 : 0);
@@ -597,7 +543,6 @@ namespace X3D
                     shader.SetFieldValue("forward", forward);
                     shader.SetFieldValue("up", up);
                     shader.SetFieldValue("left", left);
-
                 }
                 else
                 {
@@ -615,24 +560,23 @@ namespace X3D
                     //shader.SetFieldValue("modelview", ref MVP); //GL.UniformMatrix4(uniformModelview, false, ref rc.matricies.modelview);
                     shader.SetFieldValue("projection", ref rc.matricies.projection);
                     shader.SetFieldValue("camscale", rc.cam.Scale.X); //GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
-                    shader.SetFieldValue("X3DScale", rc.matricies.Scale); //GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
+                    shader.SetFieldValue("X3DScale",
+                        rc.matricies.Scale); //GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
                     shader.SetFieldValue("coloringEnabled", coloring ? 1 : 0);
-                    shader.SetFieldValue("texturingEnabled", this.texturingEnabled ? 1 : 0); //GL.Uniform1(uniforms.a_texturingEnabled, this.texturingEnabled ? 1 : 0);
+                    shader.SetFieldValue("texturingEnabled",
+                        texturingEnabled
+                            ? 1
+                            : 0); //GL.Uniform1(uniforms.a_texturingEnabled, this.texturingEnabled ? 1 : 0);
                     shader.SetFieldValue("normalmatrix", ref NormalMatrix);
-
                 }
-                
+
                 ApplyAppearance(rc);
 
                 // RENDER shape
                 RenderShape(rc);
-
             }
 
-            if(drawBoundingBox && bbox != null)
-            {
-                RenderBoundingBox(rc);
-            }
+            if (drawBoundingBox && bbox != null) RenderBoundingBox(rc);
         }
 
         private void RenderBoundingBox(RenderingContext rc)
@@ -651,10 +595,9 @@ namespace X3D
 
             if (shader != null)
             {
-
                 shader.Use();
 
-                if(bbox != null)
+                if (bbox != null)
                 {
                     shader.SetFieldValue("bboxMaxWidth", bbox.Width);
                     shader.SetFieldValue("bboxMaxHeight", bbox.Height);
@@ -673,7 +616,7 @@ namespace X3D
                     shader.SetFieldValue("texturingEnabled", 1);
                 }
 
-                Vector3 tmp = rc.matricies.Scale;
+                var tmp = rc.matricies.Scale;
                 if (typeof(Text).IsInstanceOfType(geometry))
                 {
                     rc.PushMatricies();
@@ -683,11 +626,12 @@ namespace X3D
                 if (depthMask == false)
                 {
                     //REFACTOR!!
-                    Matrix4 mat4 = Matrix4.Identity;
+                    var mat4 = Matrix4.Identity;
                     //Quaternion qRotFix = QuaternionExtensions.EulerToQuat(rc.cam.calibOrient.X, rc.cam.calibOrient.Y, rc.cam.calibOrient.Z);
                     //mat4 *= Matrix4.CreateTranslation(rc.cam.calibTrans) * Matrix4.CreateFromQuaternion(qRotFix);
-                    Quaternion qRotFix = QuaternionExtensions.EulerToQuat(0.15f, 3.479997f, 0f);
-                    mat4 *= Matrix4.CreateTranslation(new Vector3(0f, 0f, -0.29f)) * Matrix4.CreateFromQuaternion(qRotFix);
+                    var qRotFix = QuaternionExtensions.EulerToQuat(0.15f, 3.479997f, 0f);
+                    mat4 *= Matrix4.CreateTranslation(new Vector3(0f, 0f, -0.29f)) *
+                            Matrix4.CreateFromQuaternion(qRotFix);
                     // test weapon/gun rendering fixed in front of player
                     //TODO: port this to X3D
 
@@ -711,7 +655,8 @@ namespace X3D
                         {
                             RenderPoints(rc);
                         }
-                        else if (typeof(IndexedLineSet).IsInstanceOfType(geometry) || typeof(LineSet).IsInstanceOfType(geometry))
+                        else if (typeof(IndexedLineSet).IsInstanceOfType(geometry) ||
+                                 typeof(LineSet).IsInstanceOfType(geometry))
                         {
                             RenderLines(rc);
                         }
@@ -734,7 +679,6 @@ namespace X3D
                     rc.PopMatricies();
                     rc.matricies.Scale = tmp;
                 }
-
             }
         }
 
@@ -749,11 +693,11 @@ namespace X3D
             //GL.Uniform3(Uniforms.AmbientMaterial, X3DTypeConverters.ToVec3(OpenTK.Graphics.Color4.Aqua)); // 0.04f, 0.04f, 0.04f
             //GL.Uniform3(Uniforms.DiffuseMaterial, 0.0f, 0.75f, 0.75f);
 
-            int PatchMatrix = GL.GetUniformLocation(CurrentShader.ShaderHandle, "B");
-            int TransposedPatchMatrix = GL.GetUniformLocation(CurrentShader.ShaderHandle, "BT");
+            var PatchMatrix = GL.GetUniformLocation(CurrentShader.ShaderHandle, "B");
+            var TransposedPatchMatrix = GL.GetUniformLocation(CurrentShader.ShaderHandle, "BT");
 
-            Matrix4 bezier = new Matrix4
-                (-1, 3, -3, 1,
+            var bezier = new Matrix4
+            (-1, 3, -3, 1,
                 3, -6, 3, 0,
                 -3, 3, 0, 0,
                 1, 0, 0, 0);
@@ -795,7 +739,7 @@ namespace X3D
         private void RenderPoints(RenderingContext rc)
         {
             if (_handle.NumVerticies3 > 0)
-            { 
+            {
                 GL.UseProgram(CurrentShader.ShaderHandle);
 
                 CurrentShader.SetFieldValue("lightingEnabled", 0);
@@ -836,19 +780,20 @@ namespace X3D
 
                 if (typeof(IndexedLineSet).IsInstanceOfType(geometry))
                 {
-                    IndexedLineSet ils = (IndexedLineSet)geometry;
+                    var ils = (IndexedLineSet)geometry;
                     prim = ils.PrimativeType;
                 }
+
                 if (typeof(LineSet).IsInstanceOfType(geometry))
                 {
-                    LineSet ls = (LineSet)geometry;
+                    var ls = (LineSet)geometry;
                     prim = ls.PrimativeType;
                 }
 
                 GL.BindBuffer(BufferTarget.ArrayBuffer, _handle.vbo3);
                 Buffering.ApplyBufferPointers(CurrentShader);
                 GL.DrawArrays(prim, 0, _handle.NumVerticies3);
-                
+
 
                 GL.UseProgram(0);
                 GL.LineWidth(1.0f);
@@ -885,11 +830,12 @@ namespace X3D
                 else
                 {
                     //REFACTOR!!
-                    Matrix4 mat4 = Matrix4.Identity;
+                    var mat4 = Matrix4.Identity;
                     //Quaternion qRotFix = QuaternionExtensions.EulerToQuat(rc.cam.calibOrient.X, rc.cam.calibOrient.Y, rc.cam.calibOrient.Z);
                     //mat4 *= Matrix4.CreateTranslation(rc.cam.calibTrans) * Matrix4.CreateFromQuaternion(qRotFix);
-                    Quaternion qRotFix = QuaternionExtensions.EulerToQuat(0.15f, 3.479997f, 0f);
-                    mat4 *= Matrix4.CreateTranslation(new Vector3(0f, 0f, -0.29f)) * Matrix4.CreateFromQuaternion(qRotFix);
+                    var qRotFix = QuaternionExtensions.EulerToQuat(0.15f, 3.479997f, 0f);
+                    mat4 *= Matrix4.CreateTranslation(new Vector3(0f, 0f, -0.29f)) *
+                            Matrix4.CreateFromQuaternion(qRotFix);
 
                     // test weapon/gun rendering fixed in front of player
                     //TODO: port this to X3D
@@ -902,12 +848,17 @@ namespace X3D
                     quadShader.SetFieldValue("bbox_y", bbox.Height);
                     quadShader.SetFieldValue("bbox_z", bbox.Depth);
                     quadShader.SetFieldValue("projection", ref rc.matricies.projection);
-                    quadShader.SetFieldValue("camscale", rc.cam.Scale.X); //GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
-                    quadShader.SetFieldValue("X3DScale", rc.matricies.Scale); //GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
+                    quadShader.SetFieldValue("camscale",
+                        rc.cam.Scale.X); //GL.Uniform1(uniformCameraScale, rc.cam.Scale.X);
+                    quadShader.SetFieldValue("X3DScale",
+                        rc.matricies.Scale); //GL.Uniform3(uniformX3DScale, rc.matricies.Scale);
                     quadShader.SetFieldValue("coloringEnabled", coloring ? 1 : 0);
-                    quadShader.SetFieldValue("texturingEnabled", texturingEnabled ? 1 : 0); //GL.Uniform1(uniforms.a_texturingEnabled, this.texturingEnabled ? 1 : 0);
-
+                    quadShader.SetFieldValue("texturingEnabled",
+                        texturingEnabled
+                            ? 1
+                            : 0); //GL.Uniform1(uniforms.a_texturingEnabled, this.texturingEnabled ? 1 : 0);
                 }
+
                 quadShader.SetFieldValue("size", size);
                 quadShader.SetFieldValue("scale", scale);
 
@@ -927,11 +878,11 @@ namespace X3D
 
             CurrentShader.Deactivate();
 
-            this.DecendantsByType<ImageTexture>().ForEach(TeXtUrE => TeXtUrE.Deactivate());
+            DecendantsByType<ImageTexture>().ForEach(TeXtUrE => TeXtUrE.Deactivate());
 
             if (typeof(Text).IsInstanceOfType(geometry))
             {
-                Text txt = (Text)geometry;
+                var txt = (Text)geometry;
                 txt.UnbindTextures(rc);
             }
 

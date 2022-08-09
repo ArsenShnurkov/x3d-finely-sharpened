@@ -1,18 +1,57 @@
 ﻿//#define VSYNC_OFF
 
 using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics;
-using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using X3D.Engine;
 
 namespace X3D.Runtime
 {
     public class X3DProgram : IWin32Window
     {
+        #region Public Static Fields
+
+        public static string url;
+
+        #endregion
+
+        #region Private Static Methods
+
+        private static void LoadBrowserWithURL()
+        {
+            url = App.SelectFile();
+
+            closureEvent = new AutoResetEvent(false);
+
+            var task = Task.Run(LoadBrowserWithURLAsync);
+
+            closureEvent.WaitOne();
+
+            if (!quitRequired && restartRequired)
+            {
+                restartRequired = false;
+                LoadBrowserWithURL();
+            }
+
+            if (quitRequired)
+            {
+                task.ConfigureAwait(false);
+                //th.Abort();
+                //bw.CancelAsync();
+                //System.Windows.Forms.Application.Exit();
+                //System.Threading.Thread.CurrentThread.Abort();
+                //Environment.Exit(0);
+                //Application.Exit();
+                Process.GetCurrentProcess().Kill(); // Fast !
+            }
+        }
+
+        #endregion
 
         #region WINDOWS PLATFORM
 
@@ -21,16 +60,7 @@ namespace X3D.Runtime
         [DllImport("kernel32.dll")]
         private static extern IntPtr GetConsoleWindow();
 
-        public IntPtr Handle
-        {
-            get { return GetConsoleWindow(); }
-        }
-
-        #endregion
-
-        #region Public Static Fields
-
-        public static string url;
+        public IntPtr Handle => GetConsoleWindow();
 
         #endregion
 
@@ -38,8 +68,8 @@ namespace X3D.Runtime
 
         private const int EXIT_SUCCESS = 0;
         private static VSyncMode VSync;
-        private static bool restartRequired = false;
-        private static bool quitRequired = false;
+        private static bool restartRequired;
+        private static bool quitRequired;
         private static X3DBrowser browser;
         private static AutoResetEvent closureEvent;
 
@@ -50,7 +80,6 @@ namespace X3D.Runtime
         [STAThread]
         public static int Main(string[] args)
         {
-
             LoadBrowserWithURL();
 
             return EXIT_SUCCESS;
@@ -63,7 +92,7 @@ namespace X3D.Runtime
             quitRequired = true;
             restartRequired = false;
             browser.Close();
-            if(closureEvent!=null) closureEvent.Set();
+            if (closureEvent != null) closureEvent.Set();
         }
 
         public static void Restart()
@@ -98,7 +127,7 @@ namespace X3D.Runtime
             await Task.Run(() =>
             {
                 browser = new X3DBrowser(
-                    OpenTK.VSyncMode.On,
+                    VSyncMode.On,
                     graph,
                     Resolution.Size800x600,
                     new GraphicsMode(32, 16, 0, 4)
@@ -128,39 +157,6 @@ namespace X3D.Runtime
                 browser.Run(60);
 #endif
             });
-        }
-
-        #endregion
-
-        #region Private Static Methods
-
-        private static void LoadBrowserWithURL()
-        {
-            url = App.SelectFile();
-
-            closureEvent = new AutoResetEvent(false);
-
-            var task = Task.Run(LoadBrowserWithURLAsync);
-            
-            closureEvent.WaitOne();
-
-            if (!quitRequired && restartRequired)
-            {
-                restartRequired = false;
-                LoadBrowserWithURL();
-            }
-
-            if (quitRequired)
-            {
-                task.ConfigureAwait(false);
-                //th.Abort();
-                //bw.CancelAsync();
-                //System.Windows.Forms.Application.Exit();
-                //System.Threading.Thread.CurrentThread.Abort();
-                //Environment.Exit(0);
-                //Application.Exit();
-                System.Diagnostics.Process.GetCurrentProcess().Kill(); // Fast !
-            }
         }
 
         #endregion

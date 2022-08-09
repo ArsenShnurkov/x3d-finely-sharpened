@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace X3D.Engine
 {
@@ -11,22 +8,22 @@ namespace X3D.Engine
 
         private static Dictionary<int, int> scanCodeToKeyCodeMap()
         {
-            Dictionary<int, int> k = new Dictionary<int, int>();
+            var k = new Dictionary<int, int>();
 
             // ~~~ OpenTK Scan Codes -> Javascript keycode map ~~~
 
-            k.Add(0, 0);    // Unknown
-            k.Add(1, 16);   // LShift
-            k.Add(2, 16);   // RShift
-            k.Add(3, 17);   // LControl
-            k.Add(4, 17);   // RControl
-            k.Add(5, 18);   // LAlt
-            k.Add(6, 18);   // RAlt
+            k.Add(0, 0); // Unknown
+            k.Add(1, 16); // LShift
+            k.Add(2, 16); // RShift
+            k.Add(3, 17); // LControl
+            k.Add(4, 17); // RControl
+            k.Add(5, 18); // LAlt
+            k.Add(6, 18); // RAlt
 
-            k.Add(7, 91);   // LWin OSKey
-            k.Add(8, 91);   // RWin OSKey
+            k.Add(7, 91); // LWin OSKey
+            k.Add(8, 91); // RWin OSKey
 
-            k.Add(9, 93);   // Menu CONTEXT_MENU
+            k.Add(9, 93); // Menu CONTEXT_MENU
 
             k.Add(10, 112); // F1
             k.Add(11, 113); // F2
@@ -64,35 +61,35 @@ namespace X3D.Engine
             k.Add(43, 145); // F34
             k.Add(44, 146); // F35
 
-            k.Add(45, 38);  // Up Arrow
-            k.Add(46, 40);  // Down Arrow
-            k.Add(47, 37);  // Left Arrow
-            k.Add(48, 39);  // Right Arrow
+            k.Add(45, 38); // Up Arrow
+            k.Add(46, 40); // Down Arrow
+            k.Add(47, 37); // Left Arrow
+            k.Add(48, 39); // Right Arrow
 
-            k.Add(49, 13);  // Enter
-            k.Add(50, 27);  // Escape
-            k.Add(51, 32);  // Space
-            k.Add(52, 9);   // Tab
-            k.Add(53, 8);   // Backspace
-            k.Add(54, 45);  // Insert
-            k.Add(55, 46);  // Delete
-            k.Add(56, 33);  // PageUp
-            k.Add(57, 34);  // PageDown
-            k.Add(58, 36);  // Home
-            k.Add(59, 35);  // End
-            k.Add(60, 20);  // Capslock
+            k.Add(49, 13); // Enter
+            k.Add(50, 27); // Escape
+            k.Add(51, 32); // Space
+            k.Add(52, 9); // Tab
+            k.Add(53, 8); // Backspace
+            k.Add(54, 45); // Insert
+            k.Add(55, 46); // Delete
+            k.Add(56, 33); // PageUp
+            k.Add(57, 34); // PageDown
+            k.Add(58, 36); // Home
+            k.Add(59, 35); // End
+            k.Add(60, 20); // Capslock
             k.Add(61, 145); // Scrollock
-            k.Add(62, 44);  // PrintScreen
-            k.Add(63, 19);  // Pause
+            k.Add(62, 44); // PrintScreen
+            k.Add(63, 19); // Pause
             k.Add(64, 144); // Numlock
             k.Add(65, 254); // Win Clear
 
-            k.Add(66, 95);  // Sleep
+            k.Add(66, 95); // Sleep
 
-            k.Add(67, 96);  // Keypad0
-            k.Add(68, 97);  // Keypad1
-            k.Add(69, 98);  // Keypad2
-            k.Add(70, 99);  // Keypad3
+            k.Add(67, 96); // Keypad0
+            k.Add(68, 97); // Keypad1
+            k.Add(69, 98); // Keypad2
+            k.Add(70, 99); // Keypad3
             k.Add(71, 100); // Keypad4
             k.Add(72, 101); // Keypad5
             k.Add(73, 102); // Keypad6
@@ -105,25 +102,25 @@ namespace X3D.Engine
             k.Add(79, 109); // KeypadSubtract
             k.Add(80, 107); // KeypadAdd
             k.Add(81, 110); // KeypadPeriod
-            k.Add(82, 13);  // KeypadEnter
+            k.Add(82, 13); // KeypadEnter
 
-            k.Add(83, 65);  // A
-            k.Add(84, 66);  // B
-            k.Add(85, 67);  // C
-            k.Add(86, 68);  // D
-            k.Add(87, 69);  // E
-            k.Add(88, 70);  // F
-            k.Add(89, 71);  // G
-            k.Add(90, 72);  // H
-            k.Add(91, 73);  // I
-            k.Add(92, 74);  // J
-            k.Add(93, 75);  // K
-            k.Add(94, 76);  // L
-            k.Add(95, 77);  // M
-            k.Add(96, 78);  // N
-            k.Add(97, 79);  // O
-            k.Add(98, 80);  // P
-            k.Add(99, 81);  // Q
+            k.Add(83, 65); // A
+            k.Add(84, 66); // B
+            k.Add(85, 67); // C
+            k.Add(86, 68); // D
+            k.Add(87, 69); // E
+            k.Add(88, 70); // F
+            k.Add(89, 71); // G
+            k.Add(90, 72); // H
+            k.Add(91, 73); // I
+            k.Add(92, 74); // J
+            k.Add(93, 75); // K
+            k.Add(94, 76); // L
+            k.Add(95, 77); // M
+            k.Add(96, 78); // N
+            k.Add(97, 79); // O
+            k.Add(98, 80); // P
+            k.Add(99, 81); // Q
             k.Add(100, 82); // R
             k.Add(101, 83); // S
             k.Add(102, 84); // T
@@ -161,6 +158,5 @@ namespace X3D.Engine
 
             return k;
         }
-
     }
 }

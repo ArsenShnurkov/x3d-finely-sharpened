@@ -32,7 +32,7 @@ namespace X3D
         {
             Console.WriteLine(" + "\"" + "X3D Compiled Application - Hello World!" + "\"" + @");
             
-            "+ "\n" + initilizers + "\n" + @"
+            " + "\n" + initilizers + "\n" + @"
 
         }
 
@@ -62,6 +62,5 @@ namespace X3D
 ";
             return code;
         }
-
     }
 }

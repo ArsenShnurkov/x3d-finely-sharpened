@@ -39,10 +39,6 @@ D:\projects\X3D\x3d-finely-sharpened\X3D\bin\Debug\V8.Net.SharedTypes.xml
 D:\projects\X3D\x3d-finely-sharpened\X3D\bin\Debug\V8.Net.dll
 D:\projects\X3D\x3d-finely-sharpened\X3D\bin\Debug\V8.Net.SharedTypes.dll
 D:\projects\X3D\x3d-finely-sharpened\X3D\obj\Debug\X3D.csprojResolveAssemblyReference.cache
-C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\obj\Debug\X3D.csproj.AssemblyReference.cache
-C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\obj\Debug\X3D.Properties.Resources.resources
-C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\obj\Debug\X3D.csproj.GenerateResource.cache
-C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\obj\Debug\X3D.csproj.CoreCompileInputs.cache
 C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\bin\Debug\X3D.dll
 C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\bin\Debug\X3D.pdb
 C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\bin\Debug\FastInfoSet.dll
@@ -70,6 +66,10 @@ C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\bin\Debug\System.Buffers.xm
 C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\bin\Debug\System.Memory.xml
 C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\bin\Debug\System.Numerics.Vectors.xml
 C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\obj\Debug\X3D.csproj.AssemblyReference.cache
+C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\obj\Debug\X3D.Properties.Resources.resources
+C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\obj\Debug\X3D.csproj.GenerateResource.cache
+C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\obj\Debug\X3D.csproj.CoreCompileInputs.cache
 C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\obj\Debug\X3D.csproj.CopyComplete
 C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\obj\Debug\X3D.dll
 C:\Users\kevin\Source\Repos\x3d-finely-sharpened\X3D\obj\Debug\X3D.pdb

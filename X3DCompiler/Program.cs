@@ -1,46 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.IO;
-using X3D.Engine;
+using System.Windows.Forms;
 using OpenTK.Graphics;
+using OpenTK.Platform;
+using X3D.Engine;
 
 namespace X3D
 {
     public class Program
     {
-        public static string X3DExamplesDirectory = System.IO.Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "..\\..\\..\\x3d-examples\\");
+        public static string X3DExamplesDirectory =
+            Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "..\\..\\..\\x3d-examples\\");
 
         private static GraphicsContext context;
-        private static OpenTK.Platform.IWindowInfo windowInfo;
+        private static IWindowInfo windowInfo;
         private static Control control;
-
-        #region Dummy Context
-
-        public static void CreateDummyContext()
-        {
-            IntPtr hWnd;
-
-            control = new Control();
-            hWnd = control.Handle;
-            windowInfo = OpenTK.Platform.Utilities.CreateWindowsWindowInfo(hWnd);
-            context = new GraphicsContext(GraphicsMode.Default, windowInfo);
-            context.MakeCurrent(windowInfo);
-
-            context.LoadAll();
-        }
-
-        public static void DestroyDummyContext()
-        {
-            context.Dispose();
-            windowInfo.Dispose();
-            control.Dispose();
-        }
-
-        #endregion
 
         [STAThread]
         public static void Main(string[] args)
@@ -60,16 +34,13 @@ namespace X3D
             fileui = new OpenFileDialog();
             fileui.Multiselect = false;
             fileui.Title = "Select X3D Scene to compile to standalone executable";
-            fileui.Filter = "X3D Files (*.x3d)|*.x3d|XML Files (*.xml)|*.xml|X3D Binary Files (*.x3db)|*.x3db|Classic VRML Files (*.x3dv)|*.x3dv|VRML Files (*.wrl)|*.wrl|All Files (*.*)|*.*";
+            fileui.Filter =
+                "X3D Files (*.x3d)|*.x3d|XML Files (*.xml)|*.xml|X3D Binary Files (*.x3db)|*.x3db|Classic VRML Files (*.x3dv)|*.x3dv|VRML Files (*.wrl)|*.wrl|All Files (*.*)|*.*";
 
-            if (System.IO.Directory.Exists(X3DExamplesDirectory))
-            {
+            if (Directory.Exists(X3DExamplesDirectory))
                 fileui.InitialDirectory = X3DExamplesDirectory;
-            }
             else
-            {
                 fileui.InitialDirectory = "C:\\";
-            }
 
             while (true)
             {
@@ -79,10 +50,7 @@ namespace X3D
                 {
                     x3dFile = fileui.FileName;
 
-                    if (File.Exists(x3dFile))
-                    {
-                        break;
-                    }
+                    if (File.Exists(x3dFile)) break;
                 }
             }
 
@@ -94,21 +62,21 @@ namespace X3D
             SceneManager.BaseURL = x3dFile;
             SceneManager.BaseMIME = mime;
             Script.EngineEnabled = false;
-            
+
             scene = SceneManager.fromURL(x3dFile, mime);
             graphTarget = scene.SceneGraph;
 
-            if(graphTarget != null)
+            if (graphTarget != null)
             {
-                compiled = X3DCompiler.Compile(graphTarget, PlatformTarget.Windows);
+                compiled = X3DCompiler.Compile(graphTarget);
 
-                tmpFile = System.IO.Path.GetTempFileName() + ".exe";
+                tmpFile = Path.GetTempFileName() + ".exe";
 
                 Console.WriteLine("Saving to {0}" + tmpFile);
 
                 writer = new StreamWriter(compiled);
 
-                using (FileStream fileStream = File.Create(tmpFile))
+                using (var fileStream = File.Create(tmpFile))
                 {
                     compiled.Position = 0;
                     compiled.Seek(0, SeekOrigin.Begin);
@@ -122,5 +90,29 @@ namespace X3D
 
             DestroyDummyContext();
         }
+
+        #region Dummy Context
+
+        public static void CreateDummyContext()
+        {
+            IntPtr hWnd;
+
+            control = new Control();
+            hWnd = control.Handle;
+            windowInfo = Utilities.CreateWindowsWindowInfo(hWnd);
+            context = new GraphicsContext(GraphicsMode.Default, windowInfo);
+            context.MakeCurrent(windowInfo);
+
+            context.LoadAll();
+        }
+
+        public static void DestroyDummyContext()
+        {
+            context.Dispose();
+            windowInfo.Dispose();
+            control.Dispose();
+        }
+
+        #endregion
     }
 }

@@ -1,17 +1,13 @@
-﻿using GraphDebugger.OpenGL;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel;
 using System.Threading;
+using GraphDebugger.OpenGL;
 using X3D.Engine;
 
 namespace X3D
 {
     public class X3DGraphDebugger
     {
-        public static bool hasLoaded = false;
+        public static bool hasLoaded;
         private static AutoResetEvent closureEvent;
         private static BackgroundWorker worker;
         private static GraphView view;
@@ -25,14 +21,13 @@ namespace X3D
 
                 hasLoaded = true;
             }
-            
         }
 
         public static void Hide()
         {
             if (hasLoaded)
             {
-                if(!worker.CancellationPending)
+                if (!worker.CancellationPending)
                     worker.CancelAsync();
 
                 closureEvent.Set();
@@ -43,7 +38,7 @@ namespace X3D
         {
             if (hasLoaded)
             {
-                if(view == null)
+                if (view == null)
                 {
                     hasLoaded = false;
                     Display(graph);
@@ -54,7 +49,6 @@ namespace X3D
 
                     view.RebuildLayout();
                 }
-
             }
         }
     }

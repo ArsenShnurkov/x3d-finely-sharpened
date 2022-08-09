@@ -1,59 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OpenTK;
+using X3D.Parser;
 
 namespace X3D.Core.Shading
 {
     using Verticies = List<Vertex>;
     using Mesh = List<List<Vertex>>; // Mesh will contain faces made up of either or Triangles, and Quads
-    using DefaultUniforms;
-    using Parser;
 
     /// <summary>
-    /// A Mesh of primatives, hence "Packed Geometry", 
-    /// of which primativies are usually interleavable using coresponding coordinate indicies.
+    ///     A Mesh of primatives, hence "Packed Geometry",
+    ///     of which primativies are usually interleavable using coresponding coordinate indicies.
     /// </summary>
     public class PackedGeometry
     {
-        public bool Texturing;
-        public bool Coloring;
-        public bool RGBA;
-        public bool RGB;
-        public bool generateColorMap;
-        public bool colorPerVertex;
-        public BoundingBox bbox;
-
-        public int? restartIndex;
-        public int? vertexStride;
-        public int? vertexCount;
+        private const int RESTART_INDEX = -1;
+        public int[] _colorIndicies;
+        public Vector3[] _coords;
 
 
         public int[] _indices;
-        public int[] _texIndices;
-        public int[] _colorIndicies;
         public Vector2[] _texCoords;
-        public Vector3[] _coords;
+        public int[] _texIndices;
+        public BoundingBox bbox;
         public float[] color;
-        public float[] normals;
+        public bool Coloring;
+        public bool colorPerVertex;
+        internal List<int> colset;
+        internal List<int> faceset;
+        public bool generateColorMap;
 
         public Verticies interleaved3 = new Verticies();
         public Verticies interleaved4 = new Verticies();
 
-        private const int RESTART_INDEX = -1;
-
         internal Vector3 maximum;
         internal Vector3 minimum;
-        internal List<int> faceset;
+        public float[] normals;
+
+        public int? restartIndex;
+        public bool RGB;
+        public bool RGBA;
         internal List<int> texset;
-        internal List<int> colset;
+        public bool Texturing;
+        public int? vertexCount;
+        public int? vertexStride;
 
         public void Interleave(bool calcBounds = true)
         {
-            PackedGeometry pack = this;
-            
-            Buffering.Interleave(ref pack, genTexCoordPerVertex: false, calcBounds: calcBounds);
+            var pack = this;
+
+            Buffering.Interleave(ref pack, false, calcBounds);
         }
 
         public GeometryHandle CreateHandle()
@@ -71,7 +67,7 @@ namespace X3D.Core.Shading
 
             p = new PackedGeometry();
 
-            foreach (PackedGeometry g in packs)
+            foreach (var g in packs)
             {
                 p.interleaved3.AddRange(g.interleaved3);
                 p.interleaved4.AddRange(g.interleaved4);
@@ -91,10 +87,14 @@ namespace X3D.Core.Shading
             packed = new PackedGeometry();
             //packed.Texturing = ifs.texCoordinate != null;// || parentShape.texturingEnabled;
 
-            texCoordinate = (TextureCoordinate)its.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(TextureCoordinate));
-            coordinate = (Coordinate)its.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
+            texCoordinate =
+                (TextureCoordinate)its.ChildrenWithAppliedReferences.FirstOrDefault(n =>
+                    n.GetType() == typeof(TextureCoordinate));
+            coordinate =
+                (Coordinate)its.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
             colorNode = (Color)its.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Color));
-            colorRGBANode = (ColorRGBA)its.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(ColorRGBA));
+            colorRGBANode =
+                (ColorRGBA)its.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(ColorRGBA));
 
             packed.RGBA = colorRGBANode != null;
             packed.RGB = colorNode != null;
@@ -102,18 +102,10 @@ namespace X3D.Core.Shading
             packed.generateColorMap = packed.Coloring;
 
             if (packed.RGB && !packed.RGBA)
-            {
                 packed.color = X3DTypeConverters.Floats(colorNode.color);
-            }
-            else if (packed.RGBA && !packed.RGB)
-            {
-                packed.color = X3DTypeConverters.Floats(colorRGBANode.color);
-            }
+            else if (packed.RGBA && !packed.RGB) packed.color = X3DTypeConverters.Floats(colorRGBANode.color);
 
-            if (texCoordinate != null)
-            {
-                packed._texCoords = X3DTypeConverters.MFVec2f(texCoordinate.point);
-            }
+            if (texCoordinate != null) packed._texCoords = X3DTypeConverters.MFVec2f(texCoordinate.point);
 
             if (coordinate != null && !string.IsNullOrEmpty(its.index))
             {
@@ -136,7 +128,8 @@ namespace X3D.Core.Shading
             packed = new PackedGeometry();
             //packed.Texturing = ifs.texCoordinate != null;// || parentShape.texturingEnabled;
 
-            coordinate = (Coordinate)ils.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
+            coordinate =
+                (Coordinate)ils.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
 
             packed.RGBA = false;
             packed.RGB = false;
@@ -148,10 +141,7 @@ namespace X3D.Core.Shading
                 packed._indices = X3DTypeConverters.ParseIndicies(ils.coordIndex);
                 packed._coords = X3DTypeConverters.MFVec3f(coordinate.point);
 
-                if (ils.coordIndex.Contains(RESTART_INDEX.ToString()))
-                {
-                    packed.restartIndex = RESTART_INDEX;
-                }
+                if (ils.coordIndex.Contains(RESTART_INDEX.ToString())) packed.restartIndex = RESTART_INDEX;
 
                 packed.vertexStride = 2;
 
@@ -167,8 +157,10 @@ namespace X3D.Core.Shading
             Coordinate coordinate;
 
             packed = new PackedGeometry();
-            
-            coordinate = (Coordinate)lineSet.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
+
+            coordinate =
+                (Coordinate)lineSet.ChildrenWithAppliedReferences.FirstOrDefault(n =>
+                    n.GetType() == typeof(Coordinate));
 
             packed.RGBA = false;
             packed.RGB = false;
@@ -198,9 +190,12 @@ namespace X3D.Core.Shading
 
             packed = new PackedGeometry();
 
-            coordinate = (Coordinate)pointSet.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
+            coordinate =
+                (Coordinate)pointSet.ChildrenWithAppliedReferences.FirstOrDefault(
+                    n => n.GetType() == typeof(Coordinate));
             colorNode = (Color)pointSet.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Color));
-            colorRGBANode = (ColorRGBA)pointSet.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(ColorRGBA));
+            colorRGBANode =
+                (ColorRGBA)pointSet.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(ColorRGBA));
 
             packed.RGBA = colorRGBANode != null;
             packed.RGB = colorNode != null;
@@ -208,21 +203,16 @@ namespace X3D.Core.Shading
             packed.generateColorMap = packed.Coloring;
 
             if (packed.RGB && !packed.RGBA)
-            {
                 packed.color = X3DTypeConverters.Floats(colorNode.color);
-            }
-            else if (packed.RGBA && !packed.RGB)
-            {
-                packed.color = X3DTypeConverters.Floats(colorRGBANode.color);
-            }
+            else if (packed.RGBA && !packed.RGB) packed.color = X3DTypeConverters.Floats(colorRGBANode.color);
 
             if (coordinate != null)
             {
                 packed._coords = X3DTypeConverters.MFVec3f(coordinate.point);
-                
+
                 packed.restartIndex = null;
                 packed.vertexStride = 1;
-                
+
                 packed.Interleave();
             }
 
@@ -240,10 +230,14 @@ namespace X3D.Core.Shading
             packed = new PackedGeometry();
             //packed.Texturing = ifs.texCoordinate != null;// || parentShape.texturingEnabled;
 
-            texCoordinate = (TextureCoordinate)ifs.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(TextureCoordinate));
-            coordinate = (Coordinate)ifs.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
+            texCoordinate =
+                (TextureCoordinate)ifs.ChildrenWithAppliedReferences.FirstOrDefault(n =>
+                    n.GetType() == typeof(TextureCoordinate));
+            coordinate =
+                (Coordinate)ifs.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Coordinate));
             colorNode = (Color)ifs.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(Color));
-            colorRGBANode = (ColorRGBA)ifs.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(ColorRGBA));
+            colorRGBANode =
+                (ColorRGBA)ifs.ChildrenWithAppliedReferences.FirstOrDefault(n => n.GetType() == typeof(ColorRGBA));
 
             packed.RGBA = colorRGBANode != null;
             packed.RGB = colorNode != null;
@@ -251,13 +245,8 @@ namespace X3D.Core.Shading
             packed.generateColorMap = packed.Coloring;
 
             if (packed.RGB && !packed.RGBA)
-            {
                 packed.color = X3DTypeConverters.Floats(colorNode.color);
-            }
-            else if (packed.RGBA && !packed.RGB)
-            {
-                packed.color = X3DTypeConverters.Floats(colorRGBANode.color);
-            }
+            else if (packed.RGBA && !packed.RGB) packed.color = X3DTypeConverters.Floats(colorRGBANode.color);
 
             if (texCoordinate != null && !string.IsNullOrEmpty(ifs.texCoordIndex))
             {
@@ -272,14 +261,9 @@ namespace X3D.Core.Shading
                 packed._coords = X3DTypeConverters.MFVec3f(coordinate.point);
 
                 if (!string.IsNullOrEmpty(ifs.colorIndex))
-                {
                     packed._colorIndicies = X3DTypeConverters.ParseIndicies(ifs.colorIndex);
-                }
 
-                if (ifs.coordIndex.Contains(RESTART_INDEX.ToString()))
-                {
-                    packed.restartIndex = RESTART_INDEX;
-                }
+                if (ifs.coordIndex.Contains(RESTART_INDEX.ToString())) packed.restartIndex = RESTART_INDEX;
 
                 packed.Interleave();
             }

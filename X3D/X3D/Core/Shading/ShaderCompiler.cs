@@ -1,32 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenTK;
+using System.IO;
 using OpenTK.Graphics.OpenGL4;
 using X3D.Core.Shading;
-using System.IO;
 
 namespace X3D.Core
 {
     public class ShaderCompiler
     {
-
         public static string GetShaderSource(string fileAbsolutePath, string basePath)
         {
-            string @base = System.IO.Path.GetFullPath(basePath);
+            var @base = Path.GetFullPath(basePath);
 
             return File.ReadAllText(@base + fileAbsolutePath);
         }
 
         /// <summary>
-        /// Create a copy of a Shader program using same source but linked in another new program instance.
+        ///     Create a copy of a Shader program using same source but linked in another new program instance.
         /// </summary>
         /// <param name="copyTarget">
-        /// The shader to derive a new instance from.
+        ///     The shader to derive a new instance from.
         /// </param>
         /// <param name="link">
-        /// If the shader copy is to be linked
+        ///     If the shader copy is to be linked
         /// </param>
         /// <returns></returns>
         public static ComposedShader CreateNewInstance(ComposedShader copyTarget, bool link = true)
@@ -38,7 +34,7 @@ namespace X3D.Core
             derived.language = copyTarget.language;
             derived.IsBuiltIn = copyTarget.IsBuiltIn;
 
-            foreach(ShaderPart part in copyTarget.ShaderParts)
+            foreach (var part in copyTarget.ShaderParts)
             {
                 partClone = new ShaderPart();
                 partClone.ShaderSource = part.ShaderSource;
@@ -47,10 +43,7 @@ namespace X3D.Core
                 derived.ShaderParts.Add(partClone);
             }
 
-            if (link)
-            {
-                derived.Link();
-            }
+            if (link) derived.Link();
 
             return derived;
         }
@@ -63,21 +56,17 @@ namespace X3D.Core
             defaultsh.language = "GLSL";
 
             if (additionalShaderParts != null)
-            {
                 // FORWARD DECLARATION of additional shader parts
-                foreach (ShaderPart part in additionalShaderParts)
-                {
+                foreach (var part in additionalShaderParts)
                     defaultsh.ShaderParts.Add(part);
-                }
-            }
 
-            defaultsh.ShaderParts.Add(new ShaderPart()
+            defaultsh.ShaderParts.Add(new ShaderPart
             {
                 ShaderSource = DefaultShader.vertexShaderSource,
                 Type = shaderPartTypeValues.VERTEX
             });
 
-            defaultsh.ShaderParts.Add(new ShaderPart()
+            defaultsh.ShaderParts.Add(new ShaderPart
             {
                 ShaderSource = DefaultShader.fragmentShaderSource,
                 Type = shaderPartTypeValues.FRAGMENT
@@ -88,28 +77,24 @@ namespace X3D.Core
 
         public static ComposedShader ApplyShader(string vertexShaderSource, string fragmentShaderSource)
         {
-            ComposedShader shader = new ComposedShader();
+            var shader = new ComposedShader();
 
             shader.IsBuiltIn = true; // specifies this is a built in system shader
             shader.language = "GLSL";
 
             if (!string.IsNullOrEmpty(vertexShaderSource))
-            {
-                shader.ShaderParts.Add(new ShaderPart()
+                shader.ShaderParts.Add(new ShaderPart
                 {
                     ShaderSource = vertexShaderSource,
                     Type = shaderPartTypeValues.VERTEX
                 });
-            }
 
             if (!string.IsNullOrEmpty(fragmentShaderSource))
-            {
-                shader.ShaderParts.Add(new ShaderPart()
+                shader.ShaderParts.Add(new ShaderPart
                 {
                     ShaderSource = fragmentShaderSource,
                     Type = shaderPartTypeValues.FRAGMENT
                 });
-            }
 
             return shader;
         }
@@ -117,56 +102,46 @@ namespace X3D.Core
         public static ComposedShader ApplyShader(string vertexShaderSource, string fragmentShaderSource,
             string tessControlSource = "", string tessEvalSource = "", string geometryShaderSource = "")
         {
-            ComposedShader shader = new ComposedShader();
+            var shader = new ComposedShader();
 
             shader.IsBuiltIn = true; // specifies this is a built in system shader
             shader.language = "GLSL";
 
             if (!string.IsNullOrEmpty(vertexShaderSource))
-            {
-                shader.ShaderParts.Add(new ShaderPart()
+                shader.ShaderParts.Add(new ShaderPart
                 {
                     ShaderSource = vertexShaderSource.Trim(),
                     Type = shaderPartTypeValues.VERTEX
                 });
-            }
 
             if (!string.IsNullOrEmpty(tessControlSource))
-            {
-                shader.ShaderParts.Add(new ShaderPart()
+                shader.ShaderParts.Add(new ShaderPart
                 {
                     ShaderSource = tessControlSource.Trim(),
                     Type = shaderPartTypeValues.TESS_CONTROL
                 });
-            }
 
             if (!string.IsNullOrEmpty(tessEvalSource))
-            {
-                shader.ShaderParts.Add(new ShaderPart()
+                shader.ShaderParts.Add(new ShaderPart
                 {
                     ShaderSource = tessEvalSource.Trim(),
                     Type = shaderPartTypeValues.TESS_EVAL
                 });
-            }
 
 
             if (!string.IsNullOrEmpty(geometryShaderSource))
-            {
-                shader.ShaderParts.Add(new ShaderPart()
+                shader.ShaderParts.Add(new ShaderPart
                 {
                     ShaderSource = geometryShaderSource.Trim(),
                     Type = shaderPartTypeValues.GEOMETRY
                 });
-            }
 
             if (!string.IsNullOrEmpty(fragmentShaderSource))
-            {
-                shader.ShaderParts.Add(new ShaderPart()
+                shader.ShaderParts.Add(new ShaderPart
                 {
                     ShaderSource = fragmentShaderSource.Trim(),
                     Type = shaderPartTypeValues.FRAGMENT
                 });
-            }
 
 
             return shader;
@@ -174,7 +149,7 @@ namespace X3D.Core
 
         public static int ApplyShaderPart(int shaderProgramHandle, ShaderPart part)
         {
-            ShaderType type = ShaderType.VertexShader;
+            var type = ShaderType.VertexShader;
 
             switch (part.Type)
             {
@@ -202,7 +177,7 @@ namespace X3D.Core
             GL.ShaderSource(part.ShaderHandle, part.ShaderSource);
             GL.CompileShader(part.ShaderHandle);
 
-            string err = GL.GetShaderInfoLog(part.ShaderHandle).Trim();
+            var err = GL.GetShaderInfoLog(part.ShaderHandle).Trim();
             if (!string.IsNullOrEmpty(err))
                 Console.WriteLine(err);
 
@@ -211,11 +186,12 @@ namespace X3D.Core
 
             return part.ShaderHandle;
         }
+
         public static int ApplyShader(string shaderSource, ShaderType type)
         {
-            int shaderProgramHandle = GL.CreateProgram();
+            var shaderProgramHandle = GL.CreateProgram();
 
-            int shaderHandle = GL.CreateShader(type);
+            var shaderHandle = GL.CreateShader(type);
 
             GL.ShaderSource(shaderHandle, shaderSource);
 
@@ -233,9 +209,9 @@ namespace X3D.Core
 
         public static int ApplyComputeShader(string computeShaderSource)
         {
-            int shaderProgramHandle = GL.CreateProgram();
+            var shaderProgramHandle = GL.CreateProgram();
 
-            int shaderHandle = GL.CreateShader(ShaderType.ComputeShader);
+            var shaderHandle = GL.CreateShader(ShaderType.ComputeShader);
 
             GL.ShaderSource(shaderHandle, computeShaderSource);
 
@@ -248,7 +224,7 @@ namespace X3D.Core
             {
                 Console.WriteLine("Error in compiling the compute shader\n");
 
-                string err = GL.GetShaderInfoLog(shaderHandle).Trim();
+                var err = GL.GetShaderInfoLog(shaderHandle).Trim();
 
                 Console.WriteLine("Compiler error:\n{0}", err);
 
@@ -263,7 +239,7 @@ namespace X3D.Core
             {
                 Console.WriteLine("Error in linking compute shader program");
 
-                string err = GL.GetProgramInfoLog(shaderProgramHandle).Trim();
+                var err = GL.GetProgramInfoLog(shaderProgramHandle).Trim();
 
                 Console.WriteLine("Linker error:\n{0}", err);
 

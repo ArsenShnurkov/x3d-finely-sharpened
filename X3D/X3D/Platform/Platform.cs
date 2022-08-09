@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace X3D.Platform
 {
@@ -14,7 +10,7 @@ namespace X3D.Platform
         {
             get
             {
-                bool isWindows = false;
+                var isWindows = false;
 
                 switch (PlatformID)
                 {
@@ -30,28 +26,14 @@ namespace X3D.Platform
                     case PlatformID.WinCE:
                         isWindows = true;
                         break;
-                    default:
-                        break;
                 }
 
                 return isWindows;
             }
         }
 
-        public static bool IsUnix
-        {
-            get
-            {
-                return PlatformID == PlatformID.Unix;
-            }
-        }
+        public static bool IsUnix => PlatformID == PlatformID.Unix;
 
-        public static bool IsMacOSX
-        {
-            get
-            {
-                return PlatformID == PlatformID.MacOSX;
-            }
-        }
+        public static bool IsMacOSX => PlatformID == PlatformID.MacOSX;
     }
 }
