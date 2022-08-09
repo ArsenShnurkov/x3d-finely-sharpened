@@ -112,7 +112,7 @@ namespace X3D.Engine
             script = start.StartsWith(ES_REF) ? script.Remove(0, ES_REF.Length) : script;
             script = start.StartsWith(JS_REF) ? script.Remove(0, JS_REF.Length) : script;
 
-            using (InternalHandle handle = v8.Compile(script, SOURCE_NAME, false).AsInternalHandle)
+            using (InternalHandle handle = v8.Compile(script, SOURCE_NAME, false))
             {
                 if (!handle.IsError)
                 {
@@ -142,7 +142,7 @@ namespace X3D.Engine
 
             using (Handle handle = v8.Execute(script, SOURCE_NAME, false))
             {
-                result = handle.AsString;
+                result = handle.InternalHandle;
             }
 
             return result;
@@ -193,14 +193,14 @@ namespace X3D.Engine
 
             using (Handle functHandle = v8.Execute("document.onkeydown", SOURCE_NAME, false))
             {
-                if (functHandle.ValueType != JSValueType.CompilerError && functHandle.IsFunction)
+                if (functHandle.InternalHandle.ValueType != JSValueType.CompilerError && functHandle.InternalHandle.IsFunction)
                 {
                     InternalHandle obj = v8.CreateObject();
 
                     obj.SetProperty("keyCode", keyCode);
                     obj.SetProperty("charCode", charCode);
 
-                    functHandle.AsInternalHandle.StaticCall(obj);
+                    functHandle.InternalHandle.StaticCall(obj);
                 }
             }
         }
@@ -224,9 +224,9 @@ namespace X3D.Engine
 
             using (Handle functHandle = v8.Execute(name, SOURCE_NAME, false))
             {
-                if (functHandle.ValueType != JSValueType.CompilerError && functHandle.IsFunction)
+                if (functHandle.InternalHandle.ValueType != JSValueType.CompilerError && functHandle.InternalHandle.IsFunction)
                 {
-                    functHandle.AsInternalHandle.StaticCall();
+                    functHandle.InternalHandle.StaticCall();
                 }
             }
         }
@@ -237,13 +237,13 @@ namespace X3D.Engine
 
             using (Handle functHandle = v8.Execute("onRenderFrame", SOURCE_NAME, false))
             {
-                if (functHandle.ValueType != JSValueType.CompilerError && functHandle.IsFunction)
+                if (functHandle.InternalHandle.ValueType != JSValueType.CompilerError && functHandle.InternalHandle.IsFunction)
                 {
                     InternalHandle obj = v8.CreateObject();
 
                     obj.SetProperty("time", rc.Time);
 
-                    functHandle.AsInternalHandle.StaticCall(obj);
+                    functHandle.InternalHandle.StaticCall(obj);
                 }
             }
         }

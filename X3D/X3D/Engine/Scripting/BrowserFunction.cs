@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting;
 using System.Text;
 using V8.Net;
 
@@ -34,7 +35,7 @@ namespace X3D.Engine
         }
 
 
-        public override ObjectHandle Initialize(bool isConstructCall, params InternalHandle[] args)
+        public override InternalHandle Initialize(bool isConstructCall, params InternalHandle[] args)
         {
             //SetProperty("getName", Engine.CreateFunctionTemplate().GetFunctionObject(this.GetName));
             //SetProperty("getVersion", Engine.CreateFunctionTemplate().GetFunctionObject(this.GetVersion));

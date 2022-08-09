@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting;
 using System.Text;
 using V8.Net;
 
@@ -12,7 +13,7 @@ namespace X3D.Engine
     /// </summary>
     public class WindowFunction : V8Function
     {
-        public override ObjectHandle Initialize(bool isConstructCall, params InternalHandle[] args)
+        public override InternalHandle Initialize(bool isConstructCall, params InternalHandle[] args)
         {
             SetProperty("screen", screen);
             SetProperty("setInterval", Engine.CreateFunctionTemplate().GetFunctionObject(this.setInterval));
