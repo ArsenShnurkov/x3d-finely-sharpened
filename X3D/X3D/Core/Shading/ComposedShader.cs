@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
+using OpenTK;
 using OpenTK.Graphics.OpenGL4;
 using X3D.Core;
-using OpenTK;
-using X3D.Parser;
 using X3D.Core.Shading.DefaultUniforms;
+using X3D.Parser;
 
 namespace X3D
 {
@@ -23,46 +23,42 @@ namespace X3D
 
     public partial class ComposedShader
     {
-        private ShaderUniformsPNCT uniforms = new ShaderUniformsPNCT();
+        [XmlIgnore] public bool HasErrors;
 
-        [XmlIgnore]
-        public bool HasErrors = false;
+        [XmlIgnore] public int ShaderHandle;
 
-        [XmlIgnore]
-        public int ShaderHandle;
+        [XmlIgnore] public List<ShaderPart> ShaderParts = new List<ShaderPart>();
 
-        [XmlIgnore]
-        public List<field> Fields { get; set; }
-        [XmlIgnore]
-        public List<ShaderPart> ShaderParts = new List<ShaderPart>();
+        private readonly ShaderUniformsPNCT uniforms = new ShaderUniformsPNCT();
 
-        [XmlIgnore]
-        public bool Linked { get; internal set; }
+        public ComposedShader()
+        {
+            containerField = "shaders";
+        }
+
+        [XmlIgnore] public List<field> Fields { get; set; }
+
+        [XmlIgnore] public bool Linked { get; internal set; }
 
         [XmlIgnore]
         public bool IsTessellator
         {
             get
             {
-                var sps = ShaderParts.Any(s => s.type == shaderPartTypeValues.TESS_CONTROL 
-                                         || s.type == shaderPartTypeValues.TESS_EVAL
-                                         || s.type == shaderPartTypeValues.GEOMETRY
-                        );
+                var sps = ShaderParts.Any(s => s.type == shaderPartTypeValues.TESS_CONTROL
+                                               || s.type == shaderPartTypeValues.TESS_EVAL
+                                               || s.type == shaderPartTypeValues.GEOMETRY
+                );
 
                 return sps;
             }
         }
 
         /// <summary>
-        /// If the shader is a built in system shader
+        ///     If the shader is a built in system shader
         /// </summary>
         [XmlIgnore]
         public bool IsBuiltIn { get; internal set; }
-
-        public ComposedShader()
-        {
-            this.containerField = "shaders";
-        }
 
         public override void Load()
         {
@@ -81,7 +77,18 @@ namespace X3D
 
         public ComposedShader Use()
         {
-            if(!HasErrors) GL.UseProgram(this.ShaderHandle);
+            if (!HasErrors) {
+                try
+                {
+
+                    GL.UseProgram(ShaderHandle);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.StackTrace); 
+
+                }
+            }
             return this;
         }
 
@@ -95,6 +102,72 @@ namespace X3D
             GL.Uniform1(uniforms.sampler, sampler);
         }
 
+        public void Deactivate()
+        {
+            GL.UseProgram(0);
+        }
+
+        public void Link()
+        {
+            Console.WriteLine("ComposedShader {0}", language);
+
+            if (language == "GLSL")
+            {
+                ShaderHandle = GL.CreateProgram();
+
+                foreach (var part in ShaderParts) ShaderCompiler.ApplyShaderPart(ShaderHandle, part);
+
+                GL.LinkProgram(ShaderHandle);
+                var err = GL.GetProgramInfoLog(ShaderHandle).Trim();
+
+                if (!string.IsNullOrEmpty(err))
+                {
+                    Console.WriteLine(err);
+
+                    if (err.ToLower().Contains("error")) HasErrors = true;
+                }
+
+
+                if (GL.GetError() != ErrorCode.NoError)
+                {
+                    HasErrors = true;
+                    //throw new Exception("Error Linking ComposedShader Shader Program");
+                }
+                else
+                {
+                    Linked = true;
+
+                    Console.WriteLine("ComposedShader [linked]"); //TODO: check for more link errors
+
+                    try
+                    {
+                        GL.UseProgram(ShaderHandle);
+                        BindDefaultPointers();
+                        GL.UseProgram(0);
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("ComposedShader language {0} unsupported", language);
+            }
+        }
+
+        internal void ApplyFieldsAsUniforms(RenderingContext rc)
+        {
+            var fields = Children.Where(n => n.GetType() == typeof(field)).Select(n => (field)n).ToArray();
+
+            foreach (var f in fields)
+            {
+                var access = f.accessType.ToLower();
+
+                if (access == "inputonly" || access == "inputoutput") SetFieldValueSTR(f.name, f.value, f.type);
+            }
+        }
+
         #region Buffer Data Pointer Helpers
 
         public void SetPointer(string name, VertexAttribType type)
@@ -103,32 +176,40 @@ namespace X3D
             switch (type)
             {
                 case VertexAttribType.Position:
-                    if(uniforms.a_position != -1)
+                    if (uniforms.a_position != -1)
                     {
                         GL.EnableVertexAttribArray(uniforms.a_position);
-                        GL.VertexAttribPointer(uniforms.a_position, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)0);
+                        GL.VertexAttribPointer(uniforms.a_position, 3, VertexAttribPointerType.Float, false,
+                            Vertex.Stride, (IntPtr)0);
                     }
+
                     break;
                 case VertexAttribType.TextureCoord:
                     if (uniforms.a_texcoord != -1)
                     {
                         GL.EnableVertexAttribArray(uniforms.a_texcoord);
-                        GL.VertexAttribPointer(uniforms.a_texcoord, 2, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes + Vector4.SizeInBytes));
+                        GL.VertexAttribPointer(uniforms.a_texcoord, 2, VertexAttribPointerType.Float, false,
+                            Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes + Vector4.SizeInBytes));
                     }
+
                     break;
                 case VertexAttribType.Normal:
                     if (uniforms.a_normal != -1)
                     {
                         GL.EnableVertexAttribArray(uniforms.a_normal);
-                        GL.VertexAttribPointer(uniforms.a_normal, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes));
+                        GL.VertexAttribPointer(uniforms.a_normal, 3, VertexAttribPointerType.Float, false,
+                            Vertex.Stride, (IntPtr)Vector3.SizeInBytes);
                     }
+
                     break;
                 case VertexAttribType.Color:
                     if (uniforms.a_color != -1)
                     {
                         GL.EnableVertexAttribArray(uniforms.a_color);
-                        GL.VertexAttribPointer(uniforms.a_color, 4, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes));
+                        GL.VertexAttribPointer(uniforms.a_color, 4, VertexAttribPointerType.Float, false, Vertex.Stride,
+                            (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes));
                     }
+
                     break;
             }
         }
@@ -146,14 +227,14 @@ namespace X3D
         #region Field Setter Helpers
 
         /// <summary>
-        /// Updates the field with a new value just in the SceneGraph.
-        /// (Changes in the field are picked up by a currrently running X3DProgrammableShaderObject)
+        ///     Updates the field with a new value just in the SceneGraph.
+        ///     (Changes in the field are picked up by a currrently running X3DProgrammableShaderObject)
         /// </summary>
         public void setFieldValue(string name, object value)
         {
-            field field = (field)this.Children
-                .FirstOrDefault(n => n.GetType() == typeof(field) 
-                && n.getAttribute("name").ToString() == name);
+            var field = (field)Children
+                .FirstOrDefault(n => n.GetType() == typeof(field)
+                                     && n.getAttribute("name").ToString() == name);
 
             Type type;
             object convValue;
@@ -169,20 +250,13 @@ namespace X3D
                 if (conv == typeof(float)) UpdateField(name, X3DTypeConverters.ToString((float)convValue));
                 if (conv == typeof(Vector3)) UpdateField(name, X3DTypeConverters.ToString((Vector3)convValue));
                 if (conv == typeof(Vector4)) UpdateField(name, X3DTypeConverters.ToString((Vector4)convValue));
-                if (conv == typeof(Matrix3))
-                {
-                    UpdateField(name, X3DTypeConverters.ToString((Matrix3)convValue));
-                }
-                if (conv == typeof(Matrix4))
-                {
-                    UpdateField(name, X3DTypeConverters.ToString((Matrix4)convValue));
-                }
+                if (conv == typeof(Matrix3)) UpdateField(name, X3DTypeConverters.ToString((Matrix3)convValue));
+                if (conv == typeof(Matrix4)) UpdateField(name, X3DTypeConverters.ToString((Matrix4)convValue));
             }
-            catch 
+            catch
             {
                 Console.WriteLine("error");
             }
-
         }
 
         public void SetFieldValueSTR(string name, string value, string x3dType)
@@ -200,12 +274,13 @@ namespace X3D
             if (type == typeof(Vector4)) SetFieldValue(name, (Vector4)v);
             if (type == typeof(Matrix3))
             {
-                Matrix3 m = (Matrix3)v;
+                var m = (Matrix3)v;
                 SetFieldValue(name, ref m);
             }
+
             if (type == typeof(Matrix4))
             {
-                Matrix4 m = (Matrix4)v;
+                var m = (Matrix4)v;
                 SetFieldValue(name, ref m);
             }
         }
@@ -214,33 +289,34 @@ namespace X3D
         {
             if (HasErrors) return;
 
-            float[] floats = value;
+            var floats = value;
 
-            if(sizeConstrain > 0)
+            if (sizeConstrain > 0)
             {
-                float[] tmp = new float[sizeConstrain];
+                var tmp = new float[sizeConstrain];
                 value.CopyTo(tmp, 0);
                 floats = tmp;
             }
 
-            GL.Uniform1(GL.GetUniformLocation(this.ShaderHandle, name), floats.Length, floats);
+            GL.Uniform1(GL.GetUniformLocation(ShaderHandle, name), floats.Length, floats);
 
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
+
         public void SetFieldValue(string name, Vector3[] value, int sizeConstrain = -1)
         {
             if (HasErrors) return;
 
-            List<float> vectors = new List<float>();
+            var vectors = new List<float>();
 
-            foreach(Vector3 vec in value)
+            foreach (var vec in value)
             {
                 vectors.Add(vec.X);
                 vectors.Add(vec.Y);
                 vectors.Add(vec.Z);
             }
 
-            float[] floats = vectors.ToArray();
+            var floats = vectors.ToArray();
 
             SetFieldValue(name, floats, sizeConstrain);
 
@@ -254,8 +330,17 @@ namespace X3D
         {
             if (HasErrors) return;
 
-            GL.Uniform1(GL.GetUniformLocation(this.ShaderHandle, name), value);
+            try
+            {
 
+
+
+                GL.Uniform1(GL.GetUniformLocation(ShaderHandle, name), value);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+            }
 
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
@@ -264,17 +349,31 @@ namespace X3D
         {
             if (HasErrors) return;
 
-            var loc = GL.GetUniformLocation(this.ShaderHandle, name);
-            GL.Uniform1(loc, value);
+            try
+            {
+                var loc = GL.GetUniformLocation(ShaderHandle, name);
+                GL.Uniform1(loc, value);
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.StackTrace);
+            }
+            
 
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
+
         public void SetFieldValue(string name, Vector2 value)
         {
             if (HasErrors) return;
-
-            GL.Uniform2(GL.GetUniformLocation(this.ShaderHandle, name), ref value);
-
+            try
+            {
+                GL.Uniform2(GL.GetUniformLocation(ShaderHandle, name), ref value);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+            }
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
 
@@ -282,8 +381,14 @@ namespace X3D
         {
             if (HasErrors) return;
 
-            GL.Uniform3(GL.GetUniformLocation(this.ShaderHandle, name), ref value);
-
+            try
+            {
+                GL.Uniform3(GL.GetUniformLocation(ShaderHandle, name), ref value);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+            }
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
 
@@ -291,7 +396,7 @@ namespace X3D
         {
             if (HasErrors) return;
 
-            GL.Uniform4(GL.GetUniformLocation(this.ShaderHandle, name), ref value);
+            GL.Uniform4(GL.GetUniformLocation(ShaderHandle, name), ref value);
 
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
@@ -300,7 +405,7 @@ namespace X3D
         {
             if (HasErrors) return;
 
-            GL.UniformMatrix3(GL.GetUniformLocation(this.ShaderHandle, name), false, ref value);
+            GL.UniformMatrix3(GL.GetUniformLocation(ShaderHandle, name), false, ref value);
 
             //TODO: convert matrix back to string and update field
             //UpdateField(name, X3DTypeConverters.ToString(value));
@@ -310,104 +415,27 @@ namespace X3D
         {
             if (HasErrors) return;
 
-            GL.UniformMatrix4(GL.GetUniformLocation(this.ShaderHandle, name), false, ref value);
-
+            try
+            {
+                GL.UniformMatrix4(GL.GetUniformLocation(ShaderHandle, name), false, ref value);
+            }
+            catch (Exception ex)
+            {
+                Console.Write(ex.StackTrace);
+            }
             //TODO: convert matrix back to string and update field
             //UpdateField(name, X3DTypeConverters.ToString(value));
         }
 
         public void UpdateField(string name, string value)
         {
-            List<field> fields = this.Children
+            var fields = Children
                 .Where(n => n.GetType() == typeof(field) && n.getAttribute("name").ToString() == name)
-                .Select(n=> (field)n).ToList();
+                .Select(n => (field)n).ToList();
 
-            foreach(field f in fields)
-            {
-                f.value = value;
-            }
+            foreach (var f in fields) f.value = value;
         }
-        
+
         #endregion
-
-        public void Deactivate()
-        {
-            GL.UseProgram(0);
-        }
-
-        public void Link()
-        {
-            Console.WriteLine("ComposedShader {0}", this.language);
-
-            if (this.language == "GLSL")
-            {
-                this.ShaderHandle = GL.CreateProgram();
-
-                foreach (ShaderPart part in this.ShaderParts)
-                {
-                    ShaderCompiler.ApplyShaderPart(this.ShaderHandle, part);
-                }
-
-                GL.LinkProgram(this.ShaderHandle);
-                string err = GL.GetProgramInfoLog(this.ShaderHandle).Trim();
-
-                if (!string.IsNullOrEmpty(err))
-                {
-                    Console.WriteLine(err);
-
-                    if (err.ToLower().Contains("error"))
-                    {
-                        this.HasErrors = true;
-                    }
-                }
-                    
-  
-                if (GL.GetError() != ErrorCode.NoError)
-                {
-                    this.HasErrors = true;
-                    //throw new Exception("Error Linking ComposedShader Shader Program");
-                }
-                else
-                {
-                    this.Linked = true;
-                    
-                    Console.WriteLine("ComposedShader [linked]"); //TODO: check for more link errors
-
-                    try
-                    {
-                        GL.UseProgram(ShaderHandle);
-                        BindDefaultPointers();
-                        GL.UseProgram(0);
-                    }
-                    catch 
-                    {
-
-                    }
-
-                }
-            }
-            else
-            {
-                Console.WriteLine("ComposedShader language {0} unsupported", this.language);
-            }
-        }
-
-        internal void ApplyFieldsAsUniforms(RenderingContext rc)
-        {
-            field[] fields = this.Children.Where(n => n.GetType() == typeof(field)).Select(n => (field)n) .ToArray();
-
-            foreach(field f in fields)
-            {
-                string access = f.accessType.ToLower();
-
-                if (access == "inputonly" || access == "inputoutput")
-                {
-                    SetFieldValueSTR(f.name, f.value, f.type);
-
-                }
-            }
-
-        }
-
     }
 }

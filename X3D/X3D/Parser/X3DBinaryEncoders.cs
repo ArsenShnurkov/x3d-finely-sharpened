@@ -1,10 +1,7 @@
-﻿using LiquidTechnologies.FastInfoset;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
+using LiquidTechnologies.FastInfoset;
 
 namespace X3D.Parser.X3DB
 {
@@ -13,8 +10,8 @@ namespace X3D.Parser.X3DB
 
 
     /// <summary>
-    /// This encoder takes an array of float values and encodes them as a quantized form 
-    /// of the single precision floating point numbers defined in IEC 60559.
+    ///     This encoder takes an array of float values and encodes them as a quantized form
+    ///     of the single precision floating point numbers defined in IEC 60559.
     /// </summary>
     public class QuantizedzlibFloatArrayEncoder : FIEncodingAlgorithm
     {
@@ -41,7 +38,6 @@ This technique is a lossy encoder.
         public QuantizedzlibFloatArrayEncoder() : base(
             new Uri("encoder://web3d.org/QuantizedzlibFloatArrayEncoder"), 34)
         {
-
         }
 
         public override string Decode(byte[] data)
@@ -52,8 +48,6 @@ This technique is a lossy encoder.
             using (var inflater = new DeflateStream(stream, CompressionMode.Decompress))
             using (var streamReader = new StreamReader(inflater))
             {
-
-
                 result = streamReader.ReadToEnd();
             }
 
@@ -70,7 +64,6 @@ This technique is a lossy encoder.
     {
         public QuantizedFloatArrayEncoder() : base(new Uri("encoder://web3d.org/QuantizedFloatArrayEncoder"), 32)
         {
-
         }
 
         public override string Decode(byte[] data)
@@ -88,7 +81,6 @@ This technique is a lossy encoder.
     {
         public DeltazlibIntArrayEncoder() : base(new Uri("encoder://web3d.org/DeltazlibIntArrayEncoder"), 33)
         {
-
         }
 
         public override string Decode(byte[] data)
@@ -106,7 +98,6 @@ This technique is a lossy encoder.
     {
         public zlibFloatArrayEncoder() : base(new Uri("encoder://web3d.org/zlibFloatArrayEncoder"), 35)
         {
-
         }
 
         public override string Decode(byte[] data)
@@ -124,7 +115,6 @@ This technique is a lossy encoder.
     {
         public QuantizedDoubleArrayEncoder() : base(new Uri("encoder://web3d.org/QuantizedDoubleArrayEncoder"), 36)
         {
-
         }
 
         public override string Decode(byte[] data)
@@ -142,7 +132,6 @@ This technique is a lossy encoder.
     {
         public zlibDoubleArrayEncoder() : base(new Uri("encoder://web3d.org/zlibDoubleArrayEncoder"), 37)
         {
-
         }
 
         public override string Decode(byte[] data)
@@ -158,9 +147,9 @@ This technique is a lossy encoder.
 
     public class QuantizedzlibDoubleArrayEncoder : FIEncodingAlgorithm
     {
-        public QuantizedzlibDoubleArrayEncoder() : base(new Uri("encoder://web3d.org/QuantizedzlibDoubleArrayEncoder"), 38)
+        public QuantizedzlibDoubleArrayEncoder() : base(new Uri("encoder://web3d.org/QuantizedzlibDoubleArrayEncoder"),
+            38)
         {
-
         }
 
         public override string Decode(byte[] data)
@@ -178,7 +167,6 @@ This technique is a lossy encoder.
     {
         public RangeIntArrayEncoder() : base(new Uri("encoder://web3d.org/RangeIntArrayEncoder"), 39)
         {
-
         }
 
         public override string Decode(byte[] data)

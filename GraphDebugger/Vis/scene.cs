@@ -4,24 +4,41 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using OpenTK;
-using OpenTK.Graphics.OpenGL;
 using System.ComponentModel;
-using System.Threading;
-using OpenTK.Input;
 using System.Drawing;
+using System.IO;
+using System.Threading;
+using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
+using OpenTK.Input;
 using X3D;
 using X3D.Engine;
+using Color = System.Drawing.Color;
 
 namespace GraphDebugger.OpenGL
 {
     public partial class GraphView : GameWindow
     {
+        #region Constructors
+
+        public GraphView() : base(RES_W, RES_H, new GraphicsMode(32, 16, 0, 4))
+        {
+#if FORCE_HIGH_FPS
+            this.VSync = VSyncMode.Off;
+#else
+            this.VSync = VSyncMode.On;
+#endif
+        }
+
+        #endregion
+
+        #region Public Properties
+
+        public SceneGraph Graph { get; set; }
+
+        #endregion
+
         #region Public Static Methods
 
         public static GraphView CreateView(SceneGraph graph, out AutoResetEvent closure, out BackgroundWorker worker)
@@ -29,7 +46,7 @@ namespace GraphDebugger.OpenGL
             BackgroundWorker bw; // Have to use the BackgroundWorker to stop COM Interop flop x_x
             AutoResetEvent closureEvent;
             GraphView view = null;
-            
+
             closureEvent = new AutoResetEvent(false);
             bw = new BackgroundWorker();
 
@@ -47,10 +64,11 @@ namespace GraphDebugger.OpenGL
 #endif
             });
 
-            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
-            {
-                closureEvent.Set();
-            });
+            bw.RunWorkerCompleted +=
+                new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
+                {
+                    closureEvent.Set();
+                });
 
             bw.RunWorkerAsync();
 
@@ -63,9 +81,84 @@ namespace GraphDebugger.OpenGL
 
         #endregion
 
-        #region Public Properties
+        #region Private Methods
 
-        public SceneGraph Graph { get; set; }
+        private void bind_keys()
+        {
+            float real_slow = 0.11f;
+            float slow = 0.07f;
+            float fast = 0.5f;
+
+            if (Keyboard[Key.W])
+            {
+                cam_position.Y -= slow;
+            }
+
+            if (Keyboard[Key.S])
+            {
+                cam_position.Y += slow;
+            }
+
+            if (Keyboard[Key.A])
+            {
+                cam_position.X += slow;
+            }
+
+            if (Keyboard[Key.D])
+            {
+                cam_position.X -= slow;
+            }
+
+            if (Keyboard[Key.R])
+            {
+                cam_position.Z -= slow;
+            }
+
+            if (Keyboard[Key.F])
+            {
+                cam_position.Z += slow;
+            }
+
+            if (Keyboard[Key.Up])
+            {
+                cam_position.Y -= fast;
+            }
+
+            if (Keyboard[Key.Down])
+            {
+                cam_position.Y += fast;
+            }
+
+            if (Keyboard[Key.Left])
+            {
+                cam_position.X += slow * 4;
+            }
+
+            if (Keyboard[Key.Right])
+            {
+                cam_position.X -= slow * 4;
+            }
+
+            if (Keyboard[Key.T])
+            {
+                cam_position.Z -= fast;
+            }
+
+            if (Keyboard[Key.G])
+            {
+                cam_position.Z += fast;
+            }
+
+            if (Keyboard[Key.Y])
+            {
+                cam_position.Z -= real_slow;
+            }
+
+            if (Keyboard[Key.H])
+            {
+                cam_position.Z += real_slow;
+            }
+        }
 
         #endregion
 
@@ -87,19 +180,6 @@ namespace GraphDebugger.OpenGL
         private GfxTextNode2D lblTitle;
 
         private static string @base = AppDomain.CurrentDomain.BaseDirectory + "..\\..\\Shaders\\";
-
-        #endregion
-
-        #region Constructors
-
-        public GraphView(): base(RES_W, RES_H, new OpenTK.Graphics.GraphicsMode(32, 16, 0, 4))
-        {
-#if FORCE_HIGH_FPS
-            this.VSync = VSyncMode.Off;
-#else
-            this.VSync = VSyncMode.On;
-#endif
-        }
 
         #endregion
 
@@ -141,9 +221,9 @@ namespace GraphDebugger.OpenGL
 
             Vector3 root_pos = Vector3.Zero;
             _graph = new GfxGraph();
-            _graph.NodeForeColor = System.Drawing.Color.Yellow;
-            _graph.NodeBackColor = System.Drawing.Color.Transparent;
-            _graph.EdgeColor = System.Drawing.Color.Green;
+            _graph.NodeForeColor = Color.Yellow;
+            _graph.NodeBackColor = Color.Transparent;
+            _graph.EdgeColor = Color.Green;
             _graph.RootVisible = true;
             _graph.Init(shader);
             _graph.gfx_model.Parent = gfx_model;
@@ -163,14 +243,14 @@ namespace GraphDebugger.OpenGL
 
                 string @string;
                 Font font;
-                System.Drawing.Color forecolor;
+                Color forecolor;
 
-                @string = sgn.ToString().Replace("X3D.","");
+                @string = sgn.ToString().Replace("X3D.", "");
 
-                if(sgn.Parent == null)
+                if (sgn.Parent == null)
                 {
                     font = new Font("Times New Roman", 40.0f);
-                    forecolor = System.Drawing.Color.White;
+                    forecolor = Color.White;
                 }
                 else
                 {
@@ -207,24 +287,24 @@ namespace GraphDebugger.OpenGL
         protected override void OnLoad(EventArgs e)
         {
             // SCENE
-            string info = "[Vendor] "+GL.GetString(StringName.Vendor) + " "
-                + "[Version] "+GL.GetString(StringName.Version) + "\n"
-                + "[Renderer] "+GL.GetString(StringName.Renderer) + "\n"
-                + "[ShadingLanguageVersion] " + GL.GetString(StringName.ShadingLanguageVersion) + "\n"
-                + "[Extensions] " + GL.GetString(StringName.Extensions)
+            string info = "[Vendor] " + GL.GetString(StringName.Vendor) + " "
+                          + "[Version] " + GL.GetString(StringName.Version) + "\n"
+                          + "[Renderer] " + GL.GetString(StringName.Renderer) + "\n"
+                          + "[ShadingLanguageVersion] " + GL.GetString(StringName.ShadingLanguageVersion) + "\n"
+                          + "[Extensions] " + GL.GetString(StringName.Extensions)
                 ;
-            
+
             Console.WriteLine(info);
 
-            GL.ClearDepth(1.0f);                 // Depth Buffer Setup
-            GL.Enable(EnableCap.DepthTest);      // Enables Depth Testing
-            GL.ClearColor(OpenTK.Graphics.Color4.Black);
+            GL.ClearDepth(1.0f); // Depth Buffer Setup
+            GL.Enable(EnableCap.DepthTest); // Enables Depth Testing
+            GL.ClearColor(Color4.Black);
             GL.PointSize(5f);
 
             /* load shaders */
             var shaders = new List<Shader>();
-            shaders.Add(new VertexShader { FileName = System.IO.Path.GetFullPath(@base + "SceneGraphVertex.shader") });
-            shaders.Add(new FragmentShader { FileName = System.IO.Path.GetFullPath(@base + "SceneGraphFragment.shader") });
+            shaders.Add(new VertexShader { FileName = Path.GetFullPath(@base + "SceneGraphVertex.shader") });
+            shaders.Add(new FragmentShader { FileName = Path.GetFullPath(@base + "SceneGraphFragment.shader") });
             shader = ShaderProgram.CreateLoadAndLinkProgram(shaders);
 
             /* bind shader variables, and bind buffers */
@@ -264,14 +344,14 @@ namespace GraphDebugger.OpenGL
             //shader.UseZero();
 
             GL.Flush();
-            
+
             SwapBuffers();
 
             base.OnRenderFrame(e);
         }
 
         protected override void OnResize(EventArgs e)
-        {            
+        {
             GL.Viewport(this.ClientRectangle);
 
             gfx_model.UpdateProjection(window: this);
@@ -284,75 +364,6 @@ namespace GraphDebugger.OpenGL
             base.OnUpdateFrame(e);
 
             bind_keys();
-        }
-
-        #endregion
-
-        #region Private Methods
-
-        private void bind_keys()
-        {
-            float real_slow = 0.11f;
-            float slow = 0.07f;
-            float fast = 0.5f;
-
-            if(Keyboard[Key.W])
-            {
-                cam_position.Y -= slow;
-            }
-            if (Keyboard[Key.S])
-            {
-                cam_position.Y += slow;
-            }
-            if (Keyboard[Key.A])
-            {
-                cam_position.X += slow;
-            }
-            if (Keyboard[Key.D])
-            {
-                cam_position.X -= slow;
-            }
-            if (Keyboard[Key.R])
-            {
-                cam_position.Z -= slow;
-            }
-            if (Keyboard[Key.F])
-            {
-                cam_position.Z += slow;
-            }
-
-            if (Keyboard[Key.Up])
-            {
-                cam_position.Y -= fast;
-            }
-            if (Keyboard[Key.Down])
-            {
-                cam_position.Y += fast;
-            }
-            if (Keyboard[Key.Left])
-            {
-                cam_position.X += slow * 4;
-            }
-            if (Keyboard[Key.Right])
-            {
-                cam_position.X -= slow * 4;
-            }
-            if (Keyboard[Key.T])
-            {
-                cam_position.Z -= fast;
-            }
-            if (Keyboard[Key.G])
-            {
-                cam_position.Z += fast;
-            }
-            if (Keyboard[Key.Y])
-            {
-                cam_position.Z -= real_slow;
-            }
-            if (Keyboard[Key.H])
-            {
-                cam_position.Z += real_slow;
-            }
         }
 
         #endregion

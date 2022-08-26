@@ -1,12 +1,13 @@
-﻿using OpenTK.Graphics.OpenGL4;
-using OpenTK;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
+using OpenTK;
+using OpenTK.Graphics.OpenGL4;
 using X3D.Engine;
 using X3D.Parser;
+using X3D.Properties;
+using PixelFormat = System.Drawing.Imaging.PixelFormat;
 
 //TODO: later diverge texturing functionality slightly when handling MultiTexturing and Texture3D
 //TODO: Refactor. Keep all texturing related functionality coupled together.
@@ -22,11 +23,28 @@ namespace X3D
 
     public partial class ImageTexture : IDisposable
     {
+        // more consts can be found here: https://github.com/adobe/GLS3D/blob/master/libGLconsts.as
+        public const int GL_EYE_LINEAR = 0x2400;
+        public const int GL_OBJECT_LINEAR = 0x2401;
+        public const int GL_SPHERE_MAP = 0x2402;
+        public const int GL_NORMAL_MAP = 0x8511;
+        public const int GL_REFLECTION_MAP = 0x8512;
+
+        private int _textureID = -1;
+        private InternalImageType _type;
+        public int Height;
+        public int Index;
+        public bool IsLoaded;
+        private TextureTarget textureTarget = TextureTarget.Texture2D;
+        private TextureUnit textureUnit = TextureUnit.Texture0; // multitexturing
+
+        public int Width;
+
         #region Public Static Methods
 
         public static ImageTexture CreateTextureFromImage(Bitmap image, RectangleF boundingbox, bool adjustSize = false)
         {
-            Rectangle bounds = new Rectangle()
+            var bounds = new Rectangle
             {
                 X = (int)boundingbox.X,
                 Y = (int)boundingbox.Y,
@@ -35,13 +53,13 @@ namespace X3D
                 Size = boundingbox.Size.ToSize(),
                 Location = new Point((int)boundingbox.Location.X, (int)boundingbox.Location.Y)
             };
-            
+
             return CreateTextureFromImage(image, bounds, adjustSize);
         }
 
         public static ImageTexture CreateTextureFromImage(Bitmap image, Rectangle boundingbox, bool adjustSize = false)
         {
-            ImageTexture texture = new ImageTexture();
+            var texture = new ImageTexture();
 
             texture._type = InternalImageType.Bitmap;
             texture.Width = boundingbox.Width;
@@ -51,33 +69,34 @@ namespace X3D
             if (adjustSize)
             {
                 /*	Get the maximum texture size supported by OpenGL: */
-                int[] textureMaxSize = new int[] { 0 };
+                int[] textureMaxSize = { 0 };
                 GL.GetInteger(GetPName.MaxTextureSize, textureMaxSize);
                 //gl.GetInteger(OpenGL.GL_MAX_TEXTURE_SIZE,textureMaxSize);
 
                 /*	Find the target width and height sizes, which is just the highest
                  *	posible power of two that'll fit into the image. */
-                int glTexWidth = textureMaxSize[0];
-                int glTexHeight = textureMaxSize[0];
-                for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+                var glTexWidth = textureMaxSize[0];
+                var glTexHeight = textureMaxSize[0];
+                for (var size = 1; size <= textureMaxSize[0]; size *= 2)
                 {
                     if (image.Width < size)
                     {
                         glTexWidth = size / 2;
                         break;
                     }
+
                     if (image.Width == size)
                         glTexWidth = size;
-
                 }
 
-                for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+                for (var size = 1; size <= textureMaxSize[0]; size *= 2)
                 {
                     if (image.Height < size)
                     {
                         glTexHeight = size / 2;
                         break;
                     }
+
                     if (image.Height == size)
                         glTexHeight = size;
                 }
@@ -85,7 +104,7 @@ namespace X3D
                 if (image.Width != glTexWidth || image.Height != glTexHeight)
                 {
                     /* Scale the image according to OpenGL requirements */
-                    Image newImage = image.GetThumbnailImage(glTexWidth, glTexHeight, null, IntPtr.Zero);
+                    var newImage = image.GetThumbnailImage(glTexWidth, glTexHeight, null, IntPtr.Zero);
 
                     image.Dispose();
                     image = (Bitmap)newImage;
@@ -104,8 +123,8 @@ namespace X3D
             //    OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
 
             texture.pixelData = image.LockBits(boundingbox,
-                    System.Drawing.Imaging.ImageLockMode.ReadOnly,
-                    System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+                ImageLockMode.ReadOnly,
+                PixelFormat.Format32bppArgb);
 
             texture.image = image;
 
@@ -125,7 +144,7 @@ namespace X3D
 
             bmp = new Bitmap(width, height);
 
-            using (Graphics g2D = Graphics.FromImage(bmp))
+            using (var g2D = Graphics.FromImage(bmp))
             {
                 g2D.Clear(backgroundColor);
             }
@@ -134,7 +153,8 @@ namespace X3D
             return bmp;
         }
 
-        public static bool GetTextureImageFromMFString(string mfstring, out Bitmap image, out int width, out int height, bool flipX = false, bool? rotCW = null)
+        public static bool GetTextureImageFromMFString(string mfstring, out Bitmap image, out int width, out int height,
+            bool flipX = false, bool? rotCW = null)
         {
             Rectangle imgRect;
 
@@ -151,11 +171,13 @@ namespace X3D
             width = 0;
             height = 0;
 
-            foreach (string url in urls)
+            foreach (var url in urls)
             {
                 if (Path.GetExtension(url).Contains("tga"))
                 {
-                    Console.WriteLine("ImageTexture of type '{1}' can not be loaded using C# Bitmap. {0} \nError assett type not supported yet. Consider converting to jpg or png formats to continue",url, Path.GetExtension(url));
+                    Console.WriteLine(
+                        "ImageTexture of type '{1}' can not be loaded using C# Bitmap. {0} \nError assett type not supported yet. Consider converting to jpg or png formats to continue",
+                        url, Path.GetExtension(url));
                     continue;
                 }
 
@@ -175,10 +197,8 @@ namespace X3D
                         }
                         catch
                         {
-
                             continue;
                         }
-                        
                     }
                     else
                     {
@@ -189,18 +209,12 @@ namespace X3D
                 }
             }
 
-            if (!actually_loaded_something)
-            {
-                image = Properties.Resources.ErrorTexture;
-            }
+            if (!actually_loaded_something) image = Resources.ErrorTexture;
 
-            if (image == null)
-            {
-                return false;
-            }
+            if (image == null) return false;
 
             /*	Get the maximum texture size supported by OpenGL: */
-            textureMaxSize = new int[] { 0 };
+            textureMaxSize = new[] { 0 };
             GL.GetInteger(GetPName.MaxTextureSize, textureMaxSize);
             //gl.GetInteger(OpenGL.GL_MAX_TEXTURE_SIZE,textureMaxSize);
 
@@ -208,25 +222,26 @@ namespace X3D
              *	posible power of two that'll fit into the image. */
             glTexWidth = textureMaxSize[0];
             glTexHeight = textureMaxSize[0];
-            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+            for (var size = 1; size <= textureMaxSize[0]; size *= 2)
             {
                 if (image.Width < size)
                 {
                     glTexWidth = size / 2;
                     break;
                 }
+
                 if (image.Width == size)
                     glTexWidth = size;
-
             }
 
-            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+            for (var size = 1; size <= textureMaxSize[0]; size *= 2)
             {
                 if (image.Height < size)
                 {
                     glTexHeight = size / 2;
                     break;
                 }
+
                 if (image.Height == size)
                     glTexHeight = size;
             }
@@ -234,29 +249,23 @@ namespace X3D
             if (image.Width != glTexWidth || image.Height != glTexHeight)
             {
                 /* Scale the image according to OpenGL requirements */
-                Image newImage = image.GetThumbnailImage(glTexWidth, glTexHeight, null, IntPtr.Zero);
+                var newImage = image.GetThumbnailImage(glTexWidth, glTexHeight, null, IntPtr.Zero);
 
                 image.Dispose();
                 image = (Bitmap)newImage;
             }
+
             //image.RotateFlip(RotateFlipType.RotateNoneFlipY); //TODO: figure out more efficient code
-            if (flipX)
-            {
-                image.RotateFlip(RotateFlipType.RotateNoneFlipX);
-            }
+            if (flipX) image.RotateFlip(RotateFlipType.RotateNoneFlipX);
 
             if (rotCW.HasValue)
             {
                 if (rotCW.Value)
-                {
                     // Clockwise by 90 degrees
                     image.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                }
                 else
-                {
                     // Counterclockwise by -90 degrees
                     image.RotateFlip(RotateFlipType.Rotate270FlipNone);
-                }
             }
 
             /* Another way to rotate texture on draw()
@@ -276,23 +285,6 @@ namespace X3D
 
         #endregion
 
-        private int _textureID = -1;
-        private InternalImageType _type;
-        private TextureTarget textureTarget = TextureTarget.Texture2D;
-        private TextureUnit textureUnit = TextureUnit.Texture0; // multitexturing
-
-        public int Width;
-        public int Height;
-        public int Index;
-        public bool IsLoaded = false;
-
-        // more consts can be found here: https://github.com/adobe/GLS3D/blob/master/libGLconsts.as
-        public const int GL_EYE_LINEAR = 0x2400;
-        public const int GL_OBJECT_LINEAR = 0x2401;
-        public const int GL_SPHERE_MAP = 0x2402;
-        public const int GL_NORMAL_MAP = 0x8511;
-        public const int GL_REFLECTION_MAP = 0x8512;
-
         #region Rendering Methods
 
         public override void Load()
@@ -301,15 +293,12 @@ namespace X3D
 
             if (!string.IsNullOrEmpty(url) && _textureID == -1)
             {
-
                 //this._textureID = SceneManager.CreateTexture(this);
-                this.Index = GL.GenTexture();
+                Index = GL.GenTexture();
 
-                if (GetTextureImageFromMFString(url) == true)
-                {
+                if (GetTextureImageFromMFString(url))
                     // Upload done later by system automatically
-                    this.LoadTexture();
-                }
+                    LoadTexture();
             }
         }
 
@@ -317,10 +306,7 @@ namespace X3D
         {
             base.Render(rc);
 
-            if (this.Index != -1)
-            {
-                this.Bind();
-            }
+            if (Index != -1) Bind();
         }
 
         #endregion
@@ -329,9 +315,9 @@ namespace X3D
 
         public Vector3 GetRGB(int x, int y)
         {
-            Vector3 c = Vector3.Zero;
+            var c = Vector3.Zero;
 
-            System.Drawing.Color col = image.GetPixel(x, y);
+            var col = image.GetPixel(x, y);
 
             c.X = col.R;
             c.Y = col.G;
@@ -343,8 +329,7 @@ namespace X3D
 
         public void LoadTexture()
         {
-
-            this.Bind();
+            Bind();
 
             //TODO: parse X3D TextureProperties node
 
@@ -374,15 +359,12 @@ namespace X3D
             // The GL_MODULATE attribute allows you to apply effects such as lighting and coloring to your texture
             // If you do not want lighting and coloring to effect your texture 
             // and you would like to display the texture unchanged when coloring is applied replace GL_MODULATE with GL_DECAL
-            this.Upload();
-            this.Dispose();
+            Upload();
+            Dispose();
 
-            if (GL.GetError() != ErrorCode.NoError)
-            {
-                throw new Exception("Error loading texture ");
-            }
+            if (GL.GetError() != ErrorCode.NoError) throw new Exception("Error loading texture ");
 
-            this.Unbind();
+            Unbind();
 
             IsLoaded = true;
         }
@@ -393,12 +375,9 @@ namespace X3D
             //textureUnit = TextureUnit.Texture0 + 2 * (this.Index - 1);
             //GL.ActiveTexture(textureUnit);
 
-            if (!GL.IsEnabled(EnableCap.Texture2D))
-            {
-                GL.Enable(EnableCap.Texture2D);
-            }
+            if (!GL.IsEnabled(EnableCap.Texture2D)) GL.Enable(EnableCap.Texture2D);
 
-            GL.BindTexture(textureTarget, this.Index);
+            GL.BindTexture(textureTarget, Index);
         }
 
         public void Unbind()
@@ -414,10 +393,7 @@ namespace X3D
 
             GL.ActiveTexture(textureUnit);
 
-            if (GL.IsEnabled(EnableCap.Texture2D))
-            {
-                GL.Disable(EnableCap.Texture2D);
-            }
+            if (GL.IsEnabled(EnableCap.Texture2D)) GL.Disable(EnableCap.Texture2D);
         }
 
         public void FreeTexture()
@@ -427,15 +403,13 @@ namespace X3D
 
         public void Upload()
         {
-
             if (_type == InternalImageType.WindowsHandle)
             {
-                GL.TexImage2D(textureTarget, 0, PixelInternalFormat.Rgba, this.Width, this.Height, 0,
-                    OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, this.pTexImage);
+                GL.TexImage2D(textureTarget, 0, PixelInternalFormat.Rgba, Width, Height, 0,
+                    OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, pTexImage);
             }
             else if (_type == InternalImageType.Bitmap)
             {
-
                 //Rectangle boundingbox = new Rectangle(0,0, this.Width, this.Height);
 
                 //this.pixelData = image.LockBits(boundingbox,
@@ -443,12 +417,11 @@ namespace X3D
                 //    System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
 
-                GL.TexImage2D(textureTarget, 0, PixelInternalFormat.Rgba, this.Width, this.Height, 0,
-                    OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, this.pixelData.Scan0);
+                GL.TexImage2D(textureTarget, 0, PixelInternalFormat.Rgba, Width, Height, 0,
+                    OpenTK.Graphics.OpenGL4.PixelFormat.Bgra, PixelType.UnsignedByte, pixelData.Scan0);
 
-                image.UnlockBits(this.pixelData);
+                image.UnlockBits(pixelData);
             }
-
 
 
             //gl.TexImage2D(OpenGL.GL_TEXTURE_2D,0,(int)OpenGL.GL_RGBA,
@@ -473,7 +446,7 @@ namespace X3D
                 glTexHeight;
 
             /*	Get the maximum texture size supported by OpenGL: */
-            textureMaxSize = new int[] { 0 };
+            textureMaxSize = new[] { 0 };
             GL.GetInteger(GetPName.MaxTextureSize, textureMaxSize);
             //gl.GetInteger(OpenGL.GL_MAX_TEXTURE_SIZE,textureMaxSize);
 
@@ -481,30 +454,31 @@ namespace X3D
              *	posible power of two that'll fit into the image. */
             glTexWidth = textureMaxSize[0];
             glTexHeight = textureMaxSize[0];
-            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+            for (var size = 1; size <= textureMaxSize[0]; size *= 2)
             {
                 if (image.Width < size)
                 {
                     glTexWidth = size / 2;
                     break;
                 }
+
                 if (image.Width == size)
                     glTexWidth = size;
-
             }
 
-            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+            for (var size = 1; size <= textureMaxSize[0]; size *= 2)
             {
                 if (image.Height < size)
                 {
                     glTexHeight = size / 2;
                     break;
                 }
+
                 if (image.Height == size)
                     glTexHeight = size;
             }
 
-            result = new Size()
+            result = new Size
             {
                 Width = glTexWidth,
                 Height = glTexHeight
@@ -514,7 +488,7 @@ namespace X3D
         }
 
         /// <summary>
-        /// Rescale image to default OpenGL size
+        ///     Rescale image to default OpenGL size
         /// </summary>
         public static void Rescale(ref Bitmap image)
         {
@@ -526,7 +500,7 @@ namespace X3D
             if (image.Width != newSize.Width || image.Height != newSize.Height)
             {
                 /* Scale the image according to OpenGL requirements */
-                Image newImage = image.GetThumbnailImage(newSize.Width, newSize.Height, null, IntPtr.Zero);
+                var newImage = image.GetThumbnailImage(newSize.Width, newSize.Height, null, IntPtr.Zero);
 
                 image.Dispose();
                 image = (Bitmap)newImage;
@@ -542,8 +516,8 @@ namespace X3D
             int newWidth;
             int newHeight;
 
-            ratioX = (double)newSize.Width / (double)image.Width;
-            ratioY = (double)newSize.Height / (double)image.Height;
+            ratioX = newSize.Width / (double)image.Width;
+            ratioY = newSize.Height / (double)image.Height;
             aspectRatio = Math.Min(ratioX, ratioY);
 
             newWidth = (int)(image.Width * aspectRatio);
@@ -551,7 +525,7 @@ namespace X3D
 
             result = new Bitmap(newWidth, newHeight);
 
-            using (Graphics graphics = Graphics.FromImage(result))
+            using (var graphics = Graphics.FromImage(result))
             {
                 graphics.DrawImage(image, 0, 0, newWidth, newHeight);
             }
@@ -568,7 +542,7 @@ namespace X3D
         private BitmapData pixelData;
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        ///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
         {
@@ -596,16 +570,15 @@ namespace X3D
             actually_loaded_something = false;
             urls = X3DTypeConverters.GetMFString(mfstring);
 
-            foreach (string url in urls)
-            {
+            foreach (var url in urls)
                 if (SceneManager.FetchSingle(url, out resource))
                 {
-                    if(resource is Stream)
+                    if (resource is Stream)
                     {
                         Stream s;
 
                         s = (Stream)resource;
-                        this.image = new Bitmap(s);
+                        image = new Bitmap(s);
                         s.Close();
                         actually_loaded_something = true;
                     }
@@ -616,17 +589,10 @@ namespace X3D
 
                     break;
                 }
-            }
 
-            if (!actually_loaded_something)
-            {
-                this.image = Properties.Resources.ErrorTexture;
-            }
+            if (!actually_loaded_something) image = Resources.ErrorTexture;
 
-            if (this.image == null)
-            {
-                return false;
-            }
+            if (image == null) return false;
 
             var newSize = GetTextureGLMaxSize(image);
 
@@ -643,7 +609,7 @@ namespace X3D
              */
             //}
             imgRect = new Rectangle(0, 0, image.Width, image.Height);
-            pixelData = image.LockBits(imgRect, ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            pixelData = image.LockBits(imgRect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
             pTexImage = pixelData.Scan0;
             Width = image.Width;
@@ -666,41 +632,32 @@ namespace X3D
 
             if (X3DTypeConverters.IsMFString(mfstring))
             {
-
                 actually_loaded_something = false;
                 urls = X3DTypeConverters.GetMFString(mfstring);
 
-                foreach (string url in urls)
-                {
+                foreach (var url in urls)
                     if (SceneManager.FetchSingle(url, out resource))
                     {
                         Stream s;
 
                         s = (Stream)resource;
-                        this.image = new Bitmap(s);
+                        image = new Bitmap(s);
                         s.Close();
                         actually_loaded_something = true;
                         break;
                     }
-                }
 
-                if (!actually_loaded_something)
-                {
-                    this.image = Properties.Resources.ErrorTexture;
-                }
+                if (!actually_loaded_something) image = Resources.ErrorTexture;
             }
             else
             {
-                this.image = new Bitmap(mfstring);
+                image = new Bitmap(mfstring);
             }
 
-            if (this.image == null)
-            {
-                return false;
-            }
+            if (image == null) return false;
 
             /*	Get the maximum texture size supported by OpenGL: */
-            textureMaxSize = new int[] { 0 };
+            textureMaxSize = new[] { 0 };
             GL.GetInteger(GetPName.MaxTextureSize, textureMaxSize);
             //gl.GetInteger(OpenGL.GL_MAX_TEXTURE_SIZE,textureMaxSize);
 
@@ -708,25 +665,26 @@ namespace X3D
              *	posible power of two that'll fit into the image. */
             glTexWidth = textureMaxSize[0];
             glTexHeight = textureMaxSize[0];
-            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+            for (var size = 1; size <= textureMaxSize[0]; size *= 2)
             {
                 if (image.Width < size)
                 {
                     glTexWidth = size / 2;
                     break;
                 }
+
                 if (image.Width == size)
                     glTexWidth = size;
-
             }
 
-            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+            for (var size = 1; size <= textureMaxSize[0]; size *= 2)
             {
                 if (image.Height < size)
                 {
                     glTexHeight = size / 2;
                     break;
                 }
+
                 if (image.Height == size)
                     glTexHeight = size;
             }
@@ -734,7 +692,7 @@ namespace X3D
             if (image.Width != glTexWidth || image.Height != glTexHeight)
             {
                 /* Scale the image according to OpenGL requirements */
-                Image newImage = image.GetThumbnailImage(glTexWidth, glTexHeight, null, IntPtr.Zero);
+                var newImage = image.GetThumbnailImage(glTexWidth, glTexHeight, null, IntPtr.Zero);
 
                 image.Dispose();
                 image = (Bitmap)newImage;
@@ -751,7 +709,7 @@ namespace X3D
              */
             //}
             imgRect = new Rectangle(0, 0, image.Width, image.Height);
-            pixelData = image.LockBits(imgRect, ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            pixelData = image.LockBits(imgRect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
             pTexImage = pixelData.Scan0;
             Width = image.Width;
@@ -764,7 +722,7 @@ namespace X3D
         private bool GetTextureImageFromWindowsFileSystem(string file)
         {
             //  Try and load the bitmap. Return false on failure.
-            Bitmap image = new Bitmap(file);
+            var image = new Bitmap(file);
             if (image == null)
                 return false;
 
@@ -775,28 +733,29 @@ namespace X3D
 
             //	Find the target width and height sizes, which is just the highest
             //	posible power of two that'll fit into the image.
-            int targetWidth = textureMaxSize[0];
-            int targetHeight = textureMaxSize[0];
+            var targetWidth = textureMaxSize[0];
+            var targetHeight = textureMaxSize[0];
 
-            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+            for (var size = 1; size <= textureMaxSize[0]; size *= 2)
             {
                 if (image.Width < size)
                 {
                     targetWidth = size / 2;
                     break;
                 }
+
                 if (image.Width == size)
                     targetWidth = size;
-
             }
 
-            for (int size = 1; size <= textureMaxSize[0]; size *= 2)
+            for (var size = 1; size <= textureMaxSize[0]; size *= 2)
             {
                 if (image.Height < size)
                 {
                     targetHeight = size / 2;
                     break;
                 }
+
                 if (image.Height == size)
                     targetHeight = size;
             }
@@ -805,7 +764,7 @@ namespace X3D
             if (image.Width != targetWidth || image.Height != targetHeight)
             {
                 //  Resize the image.
-                Image newImage = image.GetThumbnailImage(targetWidth, targetHeight, null, IntPtr.Zero);
+                var newImage = image.GetThumbnailImage(targetWidth, targetHeight, null, IntPtr.Zero);
 
                 //  Destory the old image, and reset.
                 image.Dispose();
@@ -813,8 +772,8 @@ namespace X3D
             }
 
             //  Lock the image bits (so that we can pass them to OGL).
-            BitmapData bitmapData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height),
-                ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            var bitmapData = image.LockBits(new Rectangle(0, 0, image.Width, image.Height),
+                ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
 
             //	Bind our texture object (make it the current texture).
@@ -825,11 +784,11 @@ namespace X3D
             //    width,height,0,OpenGL.GL_BGRA,OpenGL.GL_UNSIGNED_BYTE,
             //    bitmapData.Scan0);
 
-            this.Height = image.Height;
-            this.Width = image.Width;
-            this.pixelData = bitmapData;
+            Height = image.Height;
+            Width = image.Width;
+            pixelData = bitmapData;
             this.image = image;
-            this.pTexImage = bitmapData.Scan0;
+            pTexImage = bitmapData.Scan0;
 
             //  Unlock the image.
             //image.UnlockBits(bitmapData);
@@ -843,6 +802,5 @@ namespace X3D
         }
 
         #endregion
-
     }
 }

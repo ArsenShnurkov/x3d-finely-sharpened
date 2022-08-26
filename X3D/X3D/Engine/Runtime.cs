@@ -13,11 +13,8 @@
  */
 
 using System;
-using OpenTK.Graphics.OpenGL;
-
 using System.Collections.Generic;
 using System.Linq;
-using OpenTK;
 
 namespace X3D.Engine
 {
@@ -28,26 +25,17 @@ namespace X3D.Engine
 #if DEBUG_SCENE_GRAPH_RENDERING
             Console.Clear();
 #endif
-            Draw(scene.SceneGraph,rc);
+            Draw(scene.SceneGraph, rc);
         }
 
         public static void Draw(SceneGraph sg, RenderingContext rc)
         {
             if (!X3D.LoaderOnlyEnabled && X3D.RuntimeExecutionEnabled)
-            {
                 // PROPAGATE events (per timestamp) just before scene rendering
-
                 //BUG: event model slowing down framerate when in fullscreen even though it is on another thread
-
                 sg.EventGraph.PropagateEvents(rc);
-            }
 
-            if (X3D.RuntimePresentationEnabled)
-            {
-                draw_scenegraph_dfs_iterative(sg.GetRoot(), rc);
-            }
-            
-
+            if (X3D.RuntimePresentationEnabled) draw_scenegraph_dfs_iterative(sg.GetRoot(), rc);
         }
 
         #region Graphing Methods
@@ -63,7 +51,8 @@ namespace X3D.Engine
             SceneGraphNode node;
             SceneGraphNode defNode;
 
-            nodes_visited = new List<int>(); /* It is required to keep track of all the nodes visited for post rendering 
+            nodes_visited =
+                new List<int>(); /* It is required to keep track of all the nodes visited for post rendering 
                                                            * (there is no other way (for dfs algorithm) around this) */
             work_items = new Stack<SceneGraphNode>();
 
@@ -84,49 +73,38 @@ namespace X3D.Engine
                         // DEF node should have been linked as a sibling
 
                         defNode = node.Siblings.FirstOrDefault(n => n.DEF == node.USE);
-                        
-                        if(defNode != null)
-                        {
+
+                        if (defNode != null)
                             // Ignore rendering the USE node, maybe copy some of its properties
-
                             visit(defNode, context);
-                        }
-
                     }
                     else
                     {
                         visit(node, context);
                     }
 
-                    
 
                     num_nodes_visited++;
                 }
                 //if (HasBackEdge(node, work_items) && node.Children.Count > 0)
                 //{
-                    //TODO: dont like this recursive
-                    //draw_scenegraph_dfs_iterative(node.Children[0],context);//,__GetNodeByGUID);
+                //TODO: dont like this recursive
+                //draw_scenegraph_dfs_iterative(node.Children[0],context);//,__GetNodeByGUID);
                 //}
 
                 if (node.PassthroughAllowed)
                 {
                     children = reverseList(node.Children);
-                    foreach (SceneGraphNode n in children)
-                    {
+                    foreach (var n in children)
                         if (nodes_visited.Contains(n._id))
-                        {
                             num_children_visited++;
-                        }
                         else
-                        {
                             work_items.Push(n);
-                        }
-                    }
                 }
 
-                if ((node.PassthroughAllowed == false) || (num_children_visited == node.Children.Count))
+                if (node.PassthroughAllowed == false || num_children_visited == node.Children.Count)
                 {
-                    leave(node,context);
+                    leave(node, context);
 
                     work_items.Pop();
                 }
@@ -146,27 +124,20 @@ namespace X3D.Engine
             Console.WriteLine("".PadLeft(node.Depth,'\t')+"<"+node.GetNodeName()+">");
 #endif
 #endif
-            if (!node.Validate())
-            {
-                Console.WriteLine("X3D Validation [failed]");
-            }
+            if (!node.Validate()) Console.WriteLine("X3D Validation [failed]");
 
             if (!node.HasRendered)
             {
                 node.PreRenderOnce(rc);
                 node.HasRendered = true;
             }
+
             node.PreRender();
 
             if (node.Hidden)
-            {
                 node.KeepAlive(rc);
-            }
             else
-            {
                 node.Render(rc);
-            }
-            
         }
 
         private static void leave(SceneGraphNode node, RenderingContext rc)
@@ -178,30 +149,20 @@ namespace X3D.Engine
             Console.WriteLine("".PadLeft(node.Depth,'\t')+"</"+node.GetNodeName()+">");
 #endif
 #endif
-            if (!node.Hidden)
-            {
-                node.PostRender(rc);
-            }
+            if (!node.Hidden) node.PostRender(rc);
         }
 
         private static bool HasBackEdge(SceneGraphNode node, Stack<SceneGraphNode> work_items)
         {
             //This method takes up too much time without my FastStack
-            if (node.Parents == null || node.Parents.Count == 0)
-            {
-                return false;
-            }
+            if (node.Parents == null || node.Parents.Count == 0) return false;
 
             /* If the node's parent(s) are still in the work items
                (then we can infer that this node has a back edge to one of its parents) */
 
-            foreach (SceneGraphNode parent in node.Parents)
-            {
+            foreach (var parent in node.Parents)
                 if (work_items.Any(n => n._id == parent._id))
-                {
                     return true;
-                }
-            }
             return false;
         }
 
@@ -211,6 +172,5 @@ namespace X3D.Engine
         }
 
         #endregion
-
     }
 }

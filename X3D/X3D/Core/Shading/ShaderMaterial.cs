@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.InteropServices;
 using OpenTK;
 
@@ -46,15 +43,15 @@ SFFloat [in,out] transparency     0           [0,1]
 
         public static ShaderMaterial FromX3DMaterial(Material material)
         {
-            ShaderMaterial m = new ShaderMaterial()
+            var m = new ShaderMaterial
             {
                 diffuseColor = new Vector4(material._diffuseColor, 1.0f),
                 emissiveColor = new Vector4(material._emissiveColor, 1.0f),
                 specularColor = new Vector4(material._specularColor, 1.0f),
 
-                ambientIntensity =  material.ambientIntensity,
+                ambientIntensity = material.ambientIntensity,
                 shininess = material.shininess,
-                transparency = material.transparency,
+                transparency = material.transparency
 
                 //test = new Vector4(0, 1, 0, 1),
                 //test2 = new Vector4(1, 1, 0, 1)
@@ -69,5 +66,5 @@ SFFloat [in,out] transparency     0           [0,1]
         public static readonly int Stride = Marshal.SizeOf(default(ShaderMaterial));
 
         public static readonly int Size = BlittableValueType<ShaderMaterial>.Stride;
-    };
+    }
 }

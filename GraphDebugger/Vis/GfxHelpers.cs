@@ -1,28 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-
-using OpenTK.Graphics.OpenGL;
-using OpenTK;
 using System.Drawing;
+using System.IO;
+using OpenTK;
 using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL;
 
 namespace GraphDebugger.OpenGL
 {
     public class Draw
     {
-
         public static void Lines(List<Vector3> vectors, Color line_color)
         {
             GL.Begin(BeginMode.Lines);
 
-            for (int i = 0; i < vectors.Count; i += 2)
+            for (var i = 0; i < vectors.Count; i += 2)
             {
                 var a = vectors[i];
-                var b = vectors[i + 1]; 
+                var b = vectors[i + 1];
 
                 GL.Vertex3(a);
                 GL.Color4((Color4)line_color);
@@ -30,7 +25,7 @@ namespace GraphDebugger.OpenGL
                 GL.Vertex3(b);
                 GL.Color4((Color4)line_color);
             }
-                
+
 
             GL.End();
             GL.Color4(1f, 1f, 1f, 1f);
@@ -44,20 +39,19 @@ namespace GraphDebugger.OpenGL
             GL.Vertex3(b);
             GL.Color4((Color4)line_color);
         }
-
     }
 
     public class MatrixCollection
     {
+        internal static Matrix4 DefaultModelview = Matrix4.Identity;
+
+        internal Matrix4 projection,
+            modelview;
+
+        private int uniform_mview,
+            uniform_pview;
+
         public MatrixCollection Parent { get; set; }
-
-        internal Matrix4 projection, 
-                        modelview;
-
-        internal static Matrix4 DefaultModelview = Matrix4.Identity ;
-
-        private int uniform_mview, 
-                    uniform_pview;
 
         public void GetMatrixUniforms(ShaderProgram shader)
         {
@@ -86,19 +80,17 @@ namespace GraphDebugger.OpenGL
         public void ApplyLocalTransformations(Vector3 translation, Vector3 scale)
         {
             modelview = Matrix4.Identity
-                * Matrix4.CreateTranslation(translation)
-                * Matrix4.Scale(scale);
+                        * Matrix4.CreateTranslation(translation)
+                        * Matrix4.Scale(scale);
 
             if (Parent == null)
             {
-                
             }
             else
             {
                 modelview *= Parent.modelview;
             }
 
-            
 
             //modelview *= Matrix4.CreateTranslation(translation); // Matrix4.Mult(ref translation, ref modelview, out modelview);
             //modelview *= Matrix4.Scale(scale); // Matrix4.Mult(ref scalematrix, ref modelview, out modelview);
@@ -106,12 +98,12 @@ namespace GraphDebugger.OpenGL
 
         public void UpdateProjection(INativeWindow window)
         {
-            this.projection = CreatePerspectiveFieldOfView(window);
+            projection = CreatePerspectiveFieldOfView(window);
         }
 
         public static MatrixCollection CreateInitialMatricies()
         {
-            MatrixCollection mc = new MatrixCollection();
+            var mc = new MatrixCollection();
 
             mc.modelview = Matrix4.Identity;
             //mc.modelview = Matrix4.LookAt(Vector3.UnitX, Vector3.UnitZ, Vector3.UnitY);
@@ -122,7 +114,7 @@ namespace GraphDebugger.OpenGL
 
         public static MatrixCollection CreateInitialMatricies(INativeWindow window)
         {
-            MatrixCollection mc = new MatrixCollection();
+            var mc = new MatrixCollection();
 
             mc.modelview = Matrix4.Identity;
             //mc.modelview = Matrix4.LookAt(Vector3.UnitX, Vector3.UnitZ, Vector3.UnitY);
@@ -133,12 +125,11 @@ namespace GraphDebugger.OpenGL
 
         public static Matrix4 CreatePerspectiveFieldOfView(INativeWindow window)
         {
-            float aspect = (float)window.Width / (float)window.Height;
+            var aspect = window.Width / (float)window.Height;
 
             //return Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspect, 1.0f, 500.0f);
             return Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspect, 0.00001f, 500.0f);
         }
-
 
 
         public void BeginModel()
@@ -155,7 +146,7 @@ namespace GraphDebugger.OpenGL
     public class Matrices
     {
         /// <summary>
-        /// scene object transformation hyrachy
+        ///     scene object transformation hyrachy
         /// </summary>
         public static Stack<MatrixCollection> k = new Stack<MatrixCollection>();
 
@@ -164,12 +155,12 @@ namespace GraphDebugger.OpenGL
             //GL.PushMatrix();
             k.Push(m);
         }
+
         public static MatrixCollection PopMatrix()
         {
             //GL.PopMatrix();
             return k.Pop();
         }
-        
     }
 
     public class ShaderProgram
@@ -194,12 +185,9 @@ namespace GraphDebugger.OpenGL
         {
             int attribute_loc;
 
-            attribute_loc = GL.GetAttribLocation(this.ID, name);
+            attribute_loc = GL.GetAttribLocation(ID, name);
 
-            if (attribute_loc == -1)
-            {
-                Console.WriteLine("[Error] binding attribute variable " + name);
-            }
+            if (attribute_loc == -1) Console.WriteLine("[Error] binding attribute variable " + name);
 
             return attribute_loc;
         }
@@ -208,12 +196,9 @@ namespace GraphDebugger.OpenGL
         {
             int uniform_loc;
 
-            uniform_loc = GL.GetUniformLocation(this.ID, name);
+            uniform_loc = GL.GetUniformLocation(ID, name);
 
-            if (uniform_loc == -1)
-            {
-                Console.WriteLine("[Error] binding uniform variable " + name);
-            }
+            if (uniform_loc == -1) Console.WriteLine("[Error] binding uniform variable " + name);
 
             return uniform_loc;
         }
@@ -227,8 +212,7 @@ namespace GraphDebugger.OpenGL
             pgm = new ShaderProgram();
             pgm.ID = GL.CreateProgram();
 
-            foreach (Shader shader in shaders)
-            {
+            foreach (var shader in shaders)
                 if (shader.GetType() == typeof(VertexShader))
                 {
                     LoadShader(shader.FileName, ShaderType.VertexShader, pgm.ID, out shader_id);
@@ -239,7 +223,6 @@ namespace GraphDebugger.OpenGL
                     LoadShader(shader.FileName, ShaderType.FragmentShader, pgm.ID, out shader_id);
                     shader.ID = shader_id;
                 }
-            }
 
             GL.LinkProgram(pgm.ID);
             GL.GetProgram(pgm.ID, ProgramParameter.LinkStatus, out link_status);
@@ -247,25 +230,26 @@ namespace GraphDebugger.OpenGL
             pgm.LinkStatus = link_status;
             pgm.ProgramInfoLog = GL.GetProgramInfoLog(pgm.ID);
 
-            Console.WriteLine("[Program] " + pgm.ProgramInfoLog);            
+            Console.WriteLine("[Program] " + pgm.ProgramInfoLog);
 
             return pgm;
         }
 
-        public static void LoadShader(String filename, ShaderType type, int program, out int address)
+        public static void LoadShader(string filename, ShaderType type, int program, out int address)
         {
             address = GL.CreateShader(type);
 
             string code;
-            using (StreamReader sr = new StreamReader(filename))
+            using (var sr = new StreamReader(filename))
             {
                 code = sr.ReadToEnd();
                 GL.ShaderSource(address, code);
             }
+
             GL.CompileShader(address);
             GL.AttachShader(program, address);
 
-            string shaderInfo = GL.GetShaderInfoLog(address).Trim();
+            var shaderInfo = GL.GetShaderInfoLog(address).Trim();
 
             Console.WriteLine("[Shader] " + shaderInfo);
         }
@@ -277,8 +261,13 @@ namespace GraphDebugger.OpenGL
         public string FileName { get; set; }
     }
 
-    public class VertexShader : Shader { }
-    public class FragmentShader : Shader { }
+    public class VertexShader : Shader
+    {
+    }
+
+    public class FragmentShader : Shader
+    {
+    }
 
     public interface RenderableVertexBufferObjects
     {

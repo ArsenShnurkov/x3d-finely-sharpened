@@ -1,12 +1,13 @@
-﻿using OpenTK;
-using OpenTK.Graphics;
-using OpenTK.Graphics.OpenGL4;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using OpenTK;
+using OpenTK.Graphics;
+using OpenTK.Graphics.OpenGL4;
+using OpenTK.Input;
 using X3D.Engine;
 using X3D.Parser;
 
@@ -16,28 +17,13 @@ namespace X3D.ConstructionSet
     {
         private const int FRAMES_TO_RENDER = 1; // set to -1 to disable frame limit
 
-        #region Fields and Properties
+        #region Constructors
 
-        public static IConstructionSet ConstructionSet = X3DConsructionSet.GetConstructionSetProvider();
-
-        public static string X3DExamplesDirectory = System.IO.Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "..\\..\\..\\..\\x3d-examples\\");
-        public static string TempFileLocation = Path.GetTempPath();
-        public static string X3dGenOutputFileLocation = TempFileLocation + "test_frame_out_{0}.x3d";
-        public static string PngGenOutputFileLocation = TempFileLocation + "test_frame_out_perlin_{0}.png";
-
-
-        private static Random r = new Random();
-        private static double Rand() { return r.NextDouble(); }
-        private static double degToRad(double degr) { return (Math.PI * degr) / 180.0; }
-
-        private SceneCamera ActiveCamera;
-        private static PerlinNoise _perlin;
-        private static Bitmap largePerlinImage;
-        private int frame = 0;
-        
-        //public new OpenTK.Input.KeyboardDevice Keyboard { get { return this.InputDriver.Keyboard[0]; } }
-        //public new OpenTK.Input.MouseDevice Mouse { get { return this.InputDriver.Mouse[0]; } }
-        public OpenTK.Input.JoystickDevice Joystick { get { return this.InputDriver.Joysticks[0]; } }
+        public BuilderApplication(VSyncMode VSync, Resolution res, GraphicsMode mode) : base(res.Width, res.Height,
+            mode)
+        {
+            ActiveCamera = new SceneCamera(this.Width, this.Height);
+        }
 
         #endregion
 
@@ -45,7 +31,7 @@ namespace X3D.ConstructionSet
         {
             Console.WriteLine("Builds an ElevationGrid given parameters outputting in X3D XML encoding");
 
-            
+
             ElevationBuilder builder = new ElevationBuilder();
             ElevationGrid elevation;
             X3D root;
@@ -80,7 +66,8 @@ namespace X3D.ConstructionSet
 
             // build mountain on the fly using perlin noise shader: (requires OpenGL 4.x)
             Console.WriteLine("Using perlin noise generator");
-            elevation = builder.BuildHeightmapFromGenerator(rc, _perlin, out largePerlinImage, 40, 40, 20, 20, 20); // build a rather large height map
+            elevation = builder.BuildHeightmapFromGenerator(rc, _perlin, out largePerlinImage, 40, 40, 20, 20,
+                20); // build a rather large height map
 
             outputX3D(root, shape, elevation);
         }
@@ -116,8 +103,8 @@ namespace X3D.ConstructionSet
         }
 
         /// <summary>
-        /// Finds a new file given the specified path format 
-        /// that is postfixed with an index that does not exist on the file system.
+        ///     Finds a new file given the specified path format
+        ///     that is postfixed with an index that does not exist on the file system.
         /// </summary>
         private static string newIndexedFile(string pathFormat)
         {
@@ -137,11 +124,48 @@ namespace X3D.ConstructionSet
             return name;
         }
 
+        #region Fields and Properties
+
+        public static IConstructionSet ConstructionSet = X3DConsructionSet.GetConstructionSetProvider();
+
+        public static string X3DExamplesDirectory =
+            Path.GetFullPath(AppDomain.CurrentDomain.BaseDirectory + "..\\..\\..\\..\\x3d-examples\\");
+
+        public static string TempFileLocation = Path.GetTempPath();
+        public static string X3dGenOutputFileLocation = TempFileLocation + "test_frame_out_{0}.x3d";
+        public static string PngGenOutputFileLocation = TempFileLocation + "test_frame_out_perlin_{0}.png";
+
+
+        private static Random r = new Random();
+
+        private static double Rand()
+        {
+            return r.NextDouble();
+        }
+
+        private static double degToRad(double degr)
+        {
+            return (Math.PI * degr) / 180.0;
+        }
+
+        private SceneCamera ActiveCamera;
+        private static PerlinNoise _perlin;
+        private static Bitmap largePerlinImage;
+        private int frame = 0;
+
+        //public new OpenTK.Input.KeyboardDevice Keyboard { get { return this.InputDriver.Keyboard[0]; } }
+        //public new OpenTK.Input.MouseDevice Mouse { get { return this.InputDriver.Mouse[0]; } }
+        public JoystickDevice Joystick
+        {
+            get { return this.InputDriver.Joysticks[0]; }
+        }
+
+        #endregion
+
         #region Geometry and Color Sequencers
 
         public static float mountainGeometrySequencer(int x, int z)
         {
-
             if (x == 0)
             {
                 x = 1;
@@ -162,7 +186,6 @@ namespace X3D.ConstructionSet
 
         public static float sineGeometrySequencer(int x, int z)
         {
-
             if (x == 0)
             {
                 x = 1;
@@ -187,25 +210,16 @@ namespace X3D.ConstructionSet
 
             if (vertex % 2 == 0)
             {
-                Color4 col = OpenTK.Graphics.Color4.DarkGray;
+                Color4 col = Color4.DarkGray;
                 color = new Vector3(col.R, col.G, col.B);
             }
             else
             {
-                Color4 col = OpenTK.Graphics.Color4.Silver;
+                Color4 col = Color4.Silver;
                 color = new Vector3(col.R, col.G, col.B);
             }
 
             return color;
-        }
-
-        #endregion
-
-        #region Constructors
-
-        public BuilderApplication(VSyncMode VSync, Resolution res, GraphicsMode mode) : base(res.Width, res.Height, mode)
-        {
-            ActiveCamera = new SceneCamera(this.Width, this.Height);
         }
 
         #endregion
@@ -227,11 +241,11 @@ namespace X3D.ConstructionSet
 
             // INITILISE SCENE
 
-            GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);           // Black Background
-            GL.ClearDepth(1.0f);                            // Depth Buffer Setup
-            GL.Enable(EnableCap.DepthTest);                 // Enables Depth Testing
-            GL.DepthFunc(DepthFunction.Lequal);             // The Type Of Depth Testing To Do
-            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);  // Really Nice Perspective Calculations
+            GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Black Background
+            GL.ClearDepth(1.0f); // Depth Buffer Setup
+            GL.Enable(EnableCap.DepthTest); // Enables Depth Testing
+            GL.DepthFunc(DepthFunction.Lequal); // The Type Of Depth Testing To Do
+            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest); // Really Nice Perspective Calculations
 
             DateTime time_before = DateTime.Now;
 
@@ -242,7 +256,8 @@ namespace X3D.ConstructionSet
             _perlin.Load();
 
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("loading time: " + DateTime.Now.Subtract(time_before).TotalMilliseconds.ToString() + "ms");
+            Console.WriteLine("loading time: " + DateTime.Now.Subtract(time_before).TotalMilliseconds.ToString() +
+                              "ms");
             Console.ForegroundColor = ConsoleColor.Yellow;
         }
 
@@ -330,10 +345,11 @@ namespace X3D.ConstructionSet
                 }
             });
 
-            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
-            {
-                closureEvent.Set();
-            });
+            bw.RunWorkerCompleted +=
+                new RunWorkerCompletedEventHandler((object sender, RunWorkerCompletedEventArgs e) =>
+                {
+                    closureEvent.Set();
+                });
 
             bw.RunWorkerAsync();
             closureEvent.WaitOne();
@@ -350,10 +366,12 @@ namespace X3D.ConstructionSet
                 //AssemblyVersionAttribute ver;
                 AssemblyDescriptionAttribute desc;
 
-                asm = Assembly.GetAssembly(typeof(Parser.XMLParser));
-                productName = (AssemblyProductAttribute)Attribute.GetCustomAttribute(asm, typeof(AssemblyProductAttribute));
+                asm = Assembly.GetAssembly(typeof(XMLParser));
+                productName =
+                    (AssemblyProductAttribute)Attribute.GetCustomAttribute(asm, typeof(AssemblyProductAttribute));
                 //ver=(AssemblyVersionAttribute)Attribute.GetCustomAttribute(asm,typeof(AssemblyVersionAttribute));
-                desc = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(asm, typeof(AssemblyDescriptionAttribute));
+                desc = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(asm,
+                    typeof(AssemblyDescriptionAttribute));
 
                 string version = asm.GetName().Version.ToString();
                 return productName.Product + "_" + version + "_graph_builder";

@@ -1,32 +1,58 @@
-﻿using OpenTK;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Xml;
 using System.Xml.Serialization;
-using X3D.Parser;
-using System.Xml.Schema;
+using OpenTK;
 using X3D.Engine;
-using System.Collections.Specialized;
+using X3D.Parser;
 
 namespace X3D
 {
-    public abstract partial class SceneGraphNode
+    public abstract class SceneGraphNode
     {
+        #region Internal Methods
+
+        /// <summary>
+        ///     Used to control the visibility listing of nodes in the graph.
+        /// </summary>
+        internal void CopyToShadowDom()
+        {
+            //TODO: Note when XML Writer is used later we need to write from SwitchChildren instead of Children
+
+            if (Children != null && Children.Count > 0)
+            {
+                var tmp = new SceneGraphNode[Children.Count];
+
+                Children.CopyTo(tmp);
+
+                Shadow = tmp.ToList();
+
+                Children.Clear();
+            }
+        }
+
+        #endregion
+
+        #region Dynamic Validation
+
+        /// <summary>
+        ///     Validate relationships in scene at runtime and make adjustments instantly as necessary.
+        /// </summary>
+        /// <returns>
+        ///     True, if the types of children of the current node are allowable under this type of SceneGraphNode
+        ///     Otherwise false, if there were any children found that arent valid relationships.
+        /// </returns>
+        public bool Validate()
+        {
+            return X3DRuntimeValidator.Validate(this);
+        }
+
+        #endregion
 
         #region Private Fields
-
-        private string _description;
-        private string _documentation;
-        private string _appinfo;
-        private string _dEF;
-        private string _uSE;
-        private string _containerField = "children";
-        private string _class;
-        private string _name;
-        private bool _isHidden = false;
 
         #endregion
 
@@ -43,242 +69,119 @@ namespace X3D
         //[XmlIgnore]
         //public X3DMetadataObject metadata { get; set; }
 
-        [XmlAttribute()]
-        public string description
-        {
-            get
-            {
-                return this._description;
-            }
-            set
-            {
-                this._description = value;
-            }
-        }
+        [XmlAttribute] public string description { get; set; }
 
-        [XmlAttribute()]
-        public string documentation
-        {
-            get
-            {
-                return this._documentation;
-            }
-            set
-            {
-                this._documentation = value;
-            }
-        }
+        [XmlAttribute] public string documentation { get; set; }
 
-        [XmlAttribute()]
-        public string appinfo
-        {
-            get
-            {
-                return this._appinfo;
-            }
-            set
-            {
-                _appinfo = value;
-            }
-        }
+        [XmlAttribute] public string appinfo { get; set; }
 
-        [XmlAttribute(DataType = "ID")]
-        public string DEF
-        {
-            get
-            {
-                return this._dEF;
-            }
-            set
-            {
-                this._dEF = value;
-            }
-        }
+        [XmlAttribute(DataType = "ID")] public string DEF { get; set; }
 
-        [XmlAttribute(DataType = "IDREF")]
-        public string USE
-        {
-            get
-            {
-                return this._uSE;
-            }
-            set
-            {
-                this._uSE = value;
-            }
-        }
+        [XmlAttribute(DataType = "IDREF")] public string USE { get; set; }
 
         /// <summary>
-        /// The containerField is responsible for defining where the SceneGraphNode belongs.
-        /// For example, if "children" is defined, the node belongs as a child of its parent. 
-        /// Formally: If "children" is defined, the node will appear as a child in the Children property of its parent.
-        /// Otherwise, insert the node into the property name "container" specified by containerField.
-        /// 
-        /// Types may be; ["children", "appearance", "geometry", "material", "displacers", "trimmingContour", "shaders", "programs", 
-        /// "parts", "texture", "textureTransform", "viewport", "layout", "source", "joints", "collider", "contacts", "physics",
-        /// "emitter", "renderStyle", "normal", "texCoord"].
+        ///     The containerField is responsible for defining where the SceneGraphNode belongs.
+        ///     For example, if "children" is defined, the node belongs as a child of its parent.
+        ///     Formally: If "children" is defined, the node will appear as a child in the Children property of its parent.
+        ///     Otherwise, insert the node into the property name "container" specified by containerField.
+        ///     Types may be; ["children", "appearance", "geometry", "material", "displacers", "trimmingContour", "shaders",
+        ///     "programs",
+        ///     "parts", "texture", "textureTransform", "viewport", "layout", "source", "joints", "collider", "contacts",
+        ///     "physics",
+        ///     "emitter", "renderStyle", "normal", "texCoord"].
         /// </summary>
         [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        [System.ComponentModel.DefaultValueAttribute("children")]
-        public string containerField
-        {
-            get
-            {
-                return this._containerField;
-            }
-            set
-            {
-                this._containerField = value;
-            }
-        }
+        [DefaultValue("children")]
+        public string containerField { get; set; } = "children";
 
         [XmlAttributeAttribute(DataType = "NMTOKEN")]
-        public string name
-        {
-            get
-            {
-                return this._name;
-            }
-            set
-            {
-                this._name = value;
-            }
-        }
+        public string name { get; set; }
 
         [XmlAttributeAttribute(DataType = "NMTOKENS")]
-        public string @class
-        {
-            get
-            {
-                return this._class;
-            }
-            set
-            {
-                this._class = value;
-            }
-        }
+        public string @class { get; set; }
 
         /// <summary>
-        /// If true, disabled the node from any Render() calls. KeepAlive() is then called instead.
+        ///     If true, disabled the node from any Render() calls. KeepAlive() is then called instead.
         /// </summary>
         [XmlIgnore]
-        public bool Hidden
-        {
-            get
-            {
-                return _isHidden;
-            }
-            set
-            {
-                _isHidden = value;
-            }
-        }
+        public bool Hidden { get; set; } = false;
 
-        [XmlIgnore]
-        public bool IsPrototypeBase = false;
+        [XmlIgnore] public bool IsPrototypeBase = false;
 
         #endregion
 
         #region Public Fields
 
         /// <summary>
-        /// The line number and column number the element was parsed from in the XML document.
+        ///     The line number and column number the element was parsed from in the XML document.
         /// </summary>
-        [XmlIgnore]
-        public Vector2 XMLDocumentLocation = new Vector2(-1, -1);
+        [XmlIgnore] public Vector2 XMLDocumentLocation = new Vector2(-1, -1);
 
         [XmlIgnore]
         public int _ID
         {
-            get
-            {
-                return this._id;
-            }
-            set
-            {
-                this._id = value;
-            }
+            get => _id;
+            set => _id = value;
         }
 
-        [XmlAttributeAttribute()]
+        [XmlAttributeAttribute]
         public string id
         {
-            get
-            {
-                return this.__id;
-            }
-            set
-            {
-                this.__id = value;
-            }
+            get => __id;
+            set => __id = value;
         }
 
-        [XmlIgnore]
-        public bool PassthroughAllowed = true;
+        [XmlIgnore] public bool PassthroughAllowed = true;
 
-        [XmlIgnore]
-        public SceneGraphNode Parent = null;
+        [XmlIgnore] public SceneGraphNode Parent = null;
 
-        [XmlIgnore]
-        public List<SceneGraphNode> Parents = new List<SceneGraphNode>();
+        [XmlIgnore] public List<SceneGraphNode> Parents = new List<SceneGraphNode>();
 
-        [XmlIgnore]
-        public List<SceneGraphNode> Children = new List<SceneGraphNode>();
+        [XmlIgnore] public List<SceneGraphNode> Children = new List<SceneGraphNode>();
 
         [XmlIgnore]
         public List<SceneGraphNode> ChildrenWithAppliedReferences
         {
             get
             {
-                var lst = this.Children;
+                var lst = Children;
 
-                List<SceneGraphNode> refs = new List<SceneGraphNode>();
+                var refs = new List<SceneGraphNode>();
 
-                foreach(SceneGraphNode child in Children)
-                {
+                foreach (var child in Children)
                     if (!string.IsNullOrEmpty(child.USE))
                     {
-                        var def = child.Siblings.FirstOrDefault(n => !string.IsNullOrEmpty(n.DEF) && n.DEF == child.USE);
+                        var def = child.Siblings.FirstOrDefault(n =>
+                            !string.IsNullOrEmpty(n.DEF) && n.DEF == child.USE);
 
-                        if(def != null)
-                        {
+                        if (def != null)
                             refs.Add(def);
-                        }
                         else
-                        {
                             refs.Add(child);
-                        }
                     }
                     else
                     {
                         refs.Add(child);
                     }
-                }
 
                 return refs;
             }
         }
 
         /// <summary>
-        /// The children that arent currently visible in the scene
+        ///     The children that arent currently visible in the scene
         /// </summary>
-        [XmlIgnore]
-        public List<SceneGraphNode> Shadow = new List<SceneGraphNode>();
+        [XmlIgnore] public List<SceneGraphNode> Shadow = new List<SceneGraphNode>();
 
-        [XmlIgnore]
-        public List<SceneGraphNode> Siblings = new List<SceneGraphNode>();
+        [XmlIgnore] public List<SceneGraphNode> Siblings = new List<SceneGraphNode>();
 
-        [XmlIgnore]
-        public bool IsLeaf;
+        [XmlIgnore] public bool IsLeaf;
 
-        [XmlIgnore]
-        public bool HasRendered = false;
+        [XmlIgnore] public bool HasRendered;
 
-        [XmlIgnore]
-        public bool? hasValid;
+        [XmlIgnore] public bool? hasValid;
 
-        [XmlIgnore]
-        public int Depth { get; set; }
+        [XmlIgnore] public int Depth { get; set; }
 
         #endregion
 
@@ -288,14 +191,14 @@ namespace X3D
         {
             if (!HasRendered)
             {
-                this.PreRenderOnce(rc);
+                PreRenderOnce(rc);
 
                 HasRendered = true;
             }
 
-            this.PreRender();
-            this.Render(rc);
-            this.PostRender(rc);
+            PreRender();
+            Render(rc);
+            PostRender(rc);
         }
 
         public NameValueCollection GetAttributes()
@@ -307,7 +210,7 @@ namespace X3D
             string value;
             object v;
 
-            type = this.GetType();
+            type = GetType();
             attributes = new NameValueCollection();
 
             properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
@@ -316,35 +219,27 @@ namespace X3D
             fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance)
                 .Where(field => !field.IsDefined(typeof(XmlIgnoreAttribute), false)).ToArray();
 
-            foreach (PropertyInfo pi in properties)
+            foreach (var pi in properties)
             {
                 v = pi.GetValue(this, null);
 
-                if(v != null)
-                {
+                if (v != null)
                     value = v.ToString();
-                }
                 else
-                {
                     value = "";
-                }
-                
+
 
                 attributes.Add(pi.Name, value);
             }
-            
-            foreach (FieldInfo fi in fields)
+
+            foreach (var fi in fields)
             {
                 v = fi.GetValue(this);
 
                 if (v != null)
-                {
                     value = v.ToString();
-                }
                 else
-                {
                     value = "";
-                }
 
                 attributes.Add(fi.Name, value);
             }
@@ -354,12 +249,9 @@ namespace X3D
 
         public string ErrorStringWithLineNumbers()
         {
-            if (XMLDocumentLocation == null)
-            {
-                return this.ToString();
-            }
+            if (XMLDocumentLocation == null) return ToString();
 
-            return string.Format("line ({2},{1})", this.ToString(), XMLDocumentLocation.X, XMLDocumentLocation.Y);
+            return string.Format("line ({2},{1})", ToString(), XMLDocumentLocation.X, XMLDocumentLocation.Y);
         }
 
         #endregion
@@ -367,58 +259,44 @@ namespace X3D
         #region Public Virtuals
 
         /// <summary>
-        /// Node deserilized callback
+        ///     Node deserilized callback
         /// </summary>
-        public virtual void Init() { }
-
-        public virtual void Load() { }
-
-        public virtual void PostDeserialization() { Load(); }
-        public virtual void PostDescendantDeserialization() { Init(); }
-
-        public virtual void PreRenderOnce(RenderingContext rc) { }
-        public virtual void PreRender() { }
-        public virtual void Render(RenderingContext rc) { }
-        public virtual void KeepAlive(RenderingContext rc) { } 
-        public virtual void PostRender(RenderingContext rc) { }
-
-        #endregion
-
-        #region Internal Methods
-
-        /// <summary>
-        /// Used to control the visibility listing of nodes in the graph.
-        /// </summary>
-        internal void CopyToShadowDom()
+        public virtual void Init()
         {
-            //TODO: Note when XML Writer is used later we need to write from SwitchChildren instead of Children
-
-            if (this.Children != null && this.Children.Count > 0)
-            {
-                SceneGraphNode[] tmp = new SceneGraphNode[this.Children.Count];
-
-                this.Children.CopyTo(tmp);
-
-                this.Shadow = tmp.ToList();
-
-                this.Children.Clear();
-            }
         }
 
-        #endregion
-
-        #region Dynamic Validation
-
-        /// <summary>
-        /// Validate relationships in scene at runtime and make adjustments instantly as necessary.
-        /// </summary>
-        /// <returns>
-        /// True, if the types of children of the current node are allowable under this type of SceneGraphNode
-        /// Otherwise false, if there were any children found that arent valid relationships.
-        /// </returns>
-        public bool Validate()
+        public virtual void Load()
         {
-            return X3DRuntimeValidator.Validate(this);
+        }
+
+        public virtual void PostDeserialization()
+        {
+            Load();
+        }
+
+        public virtual void PostDescendantDeserialization()
+        {
+            Init();
+        }
+
+        public virtual void PreRenderOnce(RenderingContext rc)
+        {
+        }
+
+        public virtual void PreRender()
+        {
+        }
+
+        public virtual void Render(RenderingContext rc)
+        {
+        }
+
+        public virtual void KeepAlive(RenderingContext rc)
+        {
+        }
+
+        public virtual void PostRender(RenderingContext rc)
+        {
         }
 
         #endregion
@@ -427,7 +305,7 @@ namespace X3D
 
         public SGn GetParent<SGn>() where SGn : SceneGraphNode
         {
-            return (SGn)AscendantByType<SGn>().FirstOrDefault();
+            return AscendantByType<SGn>().FirstOrDefault();
         }
 
         public List<SceneGraphNode> DecendantsByType(Type t)
@@ -435,7 +313,7 @@ namespace X3D
             // Breadth first search for decendant node by type
             Queue<SceneGraphNode> work_items;
             SceneGraphNode node;
-            List<SceneGraphNode> lst = new List<SceneGraphNode>();
+            var lst = new List<SceneGraphNode>();
 
             work_items = new Queue<SceneGraphNode>();
             work_items.Enqueue(this);
@@ -443,18 +321,11 @@ namespace X3D
             do
             {
                 node = work_items.Dequeue();
-                
-                if (t.IsInstanceOfType(node))
-                {
-                    lst.Add(node);
-                }
 
-                foreach (SceneGraphNode child in node.Children)
-                {
-                    work_items.Enqueue(child);
-                }
-            }
-            while (work_items.Count > 0);
+                if (t.IsInstanceOfType(node)) lst.Add(node);
+
+                foreach (var child in node.Children) work_items.Enqueue(child);
+            } while (work_items.Count > 0);
 
             return lst;
         }
@@ -464,8 +335,8 @@ namespace X3D
             // Breadth first search for decendant node by type
             Queue<SceneGraphNode> work_items;
             SceneGraphNode node;
-            List<Sgn> lst = new List<Sgn>();
-            Type t = typeof(Sgn);
+            var lst = new List<Sgn>();
+            var t = typeof(Sgn);
 
             work_items = new Queue<SceneGraphNode>();
             work_items.Enqueue(this);
@@ -474,17 +345,10 @@ namespace X3D
             {
                 node = work_items.Dequeue();
 
-                if (t.IsInstanceOfType(node))
-                {
-                    lst.Add((Sgn)node);
-                }
+                if (t.IsInstanceOfType(node)) lst.Add((Sgn)node);
 
-                foreach (SceneGraphNode child in node.Children)
-                {
-                    work_items.Enqueue(child);
-                }
-            }
-            while (work_items.Count > 0);
+                foreach (var child in node.Children) work_items.Enqueue(child);
+            } while (work_items.Count > 0);
 
             return lst;
         }
@@ -492,17 +356,14 @@ namespace X3D
         public List<Sgn> AscendantByType<Sgn>() where Sgn : SceneGraphNode
         {
             SceneGraphNode parent;
-            List<Sgn> lst = new List<Sgn>();
-            Type t = typeof(Sgn);
+            var lst = new List<Sgn>();
+            var t = typeof(Sgn);
 
-            parent = this.Parent;
-            
+            parent = Parent;
+
             while (parent != null)
             {
-                if (t.IsInstanceOfType(parent))
-                {
-                    lst.Add((Sgn)parent);
-                }
+                if (t.IsInstanceOfType(parent)) lst.Add((Sgn)parent);
 
                 parent = parent.Parent;
             }
@@ -515,7 +376,7 @@ namespace X3D
             // Breadth first search for decendant node by type
             Queue<SceneGraphNode> work_items;
             SceneGraphNode node;
-            List<SceneGraphNode> lst = new List<SceneGraphNode>();
+            var lst = new List<SceneGraphNode>();
 
             work_items = new Queue<SceneGraphNode>();
             work_items.Enqueue(this);
@@ -526,12 +387,8 @@ namespace X3D
 
                 lst.Add(node);
 
-                foreach (SceneGraphNode child in node.Children)
-                {
-                    work_items.Enqueue(child);
-                }
-            }
-            while (work_items.Count > 0);
+                foreach (var child in node.Children) work_items.Enqueue(child);
+            } while (work_items.Count > 0);
 
             return lst;
         }
@@ -539,9 +396,9 @@ namespace X3D
         public List<SceneGraphNode> Ascendants()
         {
             SceneGraphNode ascendant;
-            List<SceneGraphNode> lst = new List<SceneGraphNode>();
+            var lst = new List<SceneGraphNode>();
 
-            ascendant = this.Parent;
+            ascendant = Parent;
 
             while (ascendant != null)
             {
@@ -556,23 +413,19 @@ namespace X3D
         public List<Sgn> ItemsByType<Sgn>() where Sgn : SceneGraphNode
         {
             // Look for children in Items list (if available) that match specified type
-            List<Sgn> lst = new List<Sgn>();
-            Type t = typeof(Sgn);
+            var lst = new List<Sgn>();
+            var t = typeof(Sgn);
             PropertyInfo prop;
 
-            prop = this.GetType().GetProperty("Items", BindingFlags.Public | BindingFlags.Instance);
+            prop = GetType().GetProperty("Items", BindingFlags.Public | BindingFlags.Instance);
 
             if (prop != null)
             {
-                List<object> value = (List<object>)prop.GetValue(this, null);
+                var value = (List<object>)prop.GetValue(this, null);
 
-                foreach(object o in value)
-                {
+                foreach (var o in value)
                     if (o.GetType() == t)
-                    {
                         lst.Add((Sgn)o);
-                    }
-                }
             }
 
             return lst;
@@ -583,64 +436,58 @@ namespace X3D
         #region Scene API Methods
 
         /// <summary>
-        /// Callable through ECMAScript V8 Javascript engine
+        ///     Callable through ECMAScript V8 Javascript engine
         /// </summary>
         public SceneGraphNode getElementById(string id)
         {
             //TODO: cache nodes and IDs
 
-            return SceneGraph.QueryBFS(this,(SceneGraphNode n) =>
-            {
-                return n.id == id;
-
-            }).FirstOrDefault();
+            return SceneGraph.QueryBFS(this, n => { return n.id == id; }).FirstOrDefault();
         }
 
         /// <summary>
-        /// Callable through ECMAScript V8 Javascript engine
+        ///     Callable through ECMAScript V8 Javascript engine
         /// </summary>
         public void setAttribute(string name, object value)
         {
-
             Type type;
             PropertyInfo propertyInfo;
             FieldInfo fieldInfo;
 
-            type = this.GetType();
+            type = GetType();
 
             try
             {
                 propertyInfo = type.GetProperty(name, BindingFlags.Public | BindingFlags.Instance);
 
-                if(propertyInfo != null)
+                if (propertyInfo != null)
                 {
-                    var @new = !propertyInfo.PropertyType.IsInstanceOfType(value) 
-                        ? Convert.ChangeType(value, propertyInfo.PropertyType) : value;
+                    var @new = !propertyInfo.PropertyType.IsInstanceOfType(value)
+                        ? Convert.ChangeType(value, propertyInfo.PropertyType)
+                        : value;
 
                     propertyInfo.SetValue(this, @new, null);
 
                     return;
                 }
             }
-            catch { }
+            catch
+            {
+            }
 
             try
             {
                 fieldInfo = type.GetField(name, BindingFlags.Public | BindingFlags.Instance);
 
-                if(fieldInfo!= null)
-                {
-                    fieldInfo.SetValue(this, Convert.ChangeType(value, fieldInfo.FieldType));
-
-                    return;
-                }
+                if (fieldInfo != null) fieldInfo.SetValue(this, Convert.ChangeType(value, fieldInfo.FieldType));
             }
-            catch  { }
-
+            catch
+            {
+            }
         }
 
         /// <summary>
-        /// Callable through ECMAScript V8 Javascript engine
+        ///     Callable through ECMAScript V8 Javascript engine
         /// </summary>
         public object getAttribute(string name)
         {
@@ -649,7 +496,7 @@ namespace X3D
             FieldInfo fieldInfo;
             object value = null;
 
-            type = this.GetType();
+            type = GetType();
 
             try
             {
@@ -662,7 +509,9 @@ namespace X3D
                     return value;
                 }
             }
-            catch  { }
+            catch
+            {
+            }
 
             try
             {
@@ -675,7 +524,9 @@ namespace X3D
                     return value;
                 }
             }
-            catch  { }
+            catch
+            {
+            }
 
             return null;
         }
@@ -685,18 +536,15 @@ namespace X3D
             Type type;
             PropertyInfo propertyInfo;
 
-            type = this.GetType();
+            type = GetType();
 
             try
             {
                 propertyInfo = type.GetProperty(name, BindingFlags.Public | BindingFlags.Instance);
 
-                if (propertyInfo != null)
-                {
-                    return true;
-                }
+                if (propertyInfo != null) return true;
             }
-            catch 
+            catch
             {
                 return false;
             }

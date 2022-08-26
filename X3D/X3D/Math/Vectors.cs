@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenTK;
+﻿using OpenTK;
 
 public static class VectorExt
 {
@@ -14,13 +10,16 @@ public static class VectorExt
 
 public class VectorExtensions
 {
+    public VectorExtensions(Vector3 vec3)
+    {
+        Vector3 = vec3;
+    }
 
-    public VectorExtensions(Vector3 vec3) { Vector3 = vec3; }
     public Vector3 Vector3 { get; private set; }
 
 
     /// <summary>
-    /// Caclulate the cross (vector) product of two vectors
+    ///     Caclulate the cross (vector) product of two vectors
     /// </summary>
     /// <param name="left">First operand</param>
     /// <param name="right">Second operand</param>
@@ -33,7 +32,7 @@ public class VectorExtensions
     }
 
     /// <summary>
-    /// Caclulate the cross (vector) product of two vectors
+    ///     Caclulate the cross (vector) product of two vectors
     /// </summary>
     /// <param name="left">First operand</param>
     /// <param name="right">Second operand</param>
@@ -54,8 +53,8 @@ public class VectorExtensions
     public static VectorExtensions operator -(VectorExtensions vector, VectorExtensions value)
     {
         vector.Vector3 = new Vector3(vector.Vector3.X - value.Vector3.X,
-                                     vector.Vector3.Y - value.Vector3.Y,
-                                     vector.Vector3.Z - value.Vector3.Z);
+            vector.Vector3.Y - value.Vector3.Y,
+            vector.Vector3.Z - value.Vector3.Z);
         return vector;
     }
 
@@ -73,16 +72,16 @@ public class VectorExtensions
     public static VectorExtensions operator +(VectorExtensions vector, double value)
     {
         vector.Vector3 = new Vector3(vector.Vector3.X + (float)value,
-                                     vector.Vector3.Y + (float)value,
-                                     vector.Vector3.Z + (float)value);
+            vector.Vector3.Y + (float)value,
+            vector.Vector3.Z + (float)value);
         return vector;
     }
 
     public static VectorExtensions operator -(VectorExtensions vector, double value)
     {
         vector.Vector3 = new Vector3(vector.Vector3.X - (float)value,
-                                     vector.Vector3.Y - (float)value,
-                                     vector.Vector3.Z - (float)value);
+            vector.Vector3.Y - (float)value,
+            vector.Vector3.Z - (float)value);
         return vector;
     }
 
@@ -100,20 +99,18 @@ public class VectorExtensions
     public static VectorExtensions operator +(VectorExtensions vector, float value)
     {
         vector.Vector3 = new Vector3(vector.Vector3.X + value,
-                                     vector.Vector3.Y + value,
-                                     vector.Vector3.Z + value);
+            vector.Vector3.Y + value,
+            vector.Vector3.Z + value);
         return vector;
     }
 
     public static VectorExtensions operator -(VectorExtensions vector, float value)
     {
         vector.Vector3 = new Vector3(vector.Vector3.X - value,
-                                     vector.Vector3.Y - value,
-                                     vector.Vector3.Z - value);
+            vector.Vector3.Y - value,
+            vector.Vector3.Z - value);
         return vector;
     }
 
     #endregion
-
-
 }

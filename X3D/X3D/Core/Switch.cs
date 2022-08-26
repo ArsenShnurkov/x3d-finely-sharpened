@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace X3D
+﻿namespace X3D
 {
     /// <summary>
-    /// http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/components/group.html#Switch
+    ///     http://www.web3d.org/files/specifications/19775-1/V3.3/Part01/components/group.html#Switch
     /// </summary>
     public partial class Switch
     {
-
         public Switch()
         {
             // Could implement switch by disabling passthrough, 
@@ -18,7 +12,7 @@ namespace X3D
             // Better to keep rendering logic within the renderer.
 
             //this.PassthroughAllowed = false; 
-            this.debug = true;
+            debug = true;
         }
 
         #region Rendering Methods
@@ -41,9 +35,9 @@ namespace X3D
 
             if (Shadow != null && Shadow.Count > 0)
             {
-                this.Children.Clear();
+                Children.Clear();
 
-                this.Children.Add(this.Shadow[choice]);
+                Children.Add(Shadow[choice]);
             }
         }
 
@@ -56,8 +50,8 @@ namespace X3D
 
             CopyToShadowDom();
 
-            if(Shadow != null && Shadow.Count > 0)
-                this.Children.Add(this.Shadow[this.WhichChoice]);
+            if (Shadow != null && Shadow.Count > 0)
+                Children.Add(Shadow[WhichChoice]);
         }
 
         public override void Render(RenderingContext rc)

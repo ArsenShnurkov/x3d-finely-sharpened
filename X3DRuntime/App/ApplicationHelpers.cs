@@ -1,39 +1,18 @@
-﻿using OpenTK;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
+using OpenTK;
+using OpenTK.Input;
 
 namespace X3D.Runtime
 {
     public partial class X3DApplication
     {
+        private readonly INativeWindow window;
 
-        private INativeWindow window;
+        public KeyboardDevice Keyboard => window.InputDriver.Keyboard[0];
 
-        public OpenTK.Input.KeyboardDevice Keyboard
-        {
-            get
-            {
-                return window.InputDriver.Keyboard[0];
-            }
-        }
+        public MouseDevice Mouse => window.InputDriver.Mouse[0];
 
-        public OpenTK.Input.MouseDevice Mouse
-        {
-            get
-            {
-                return window.InputDriver.Mouse[0];
-            }
-        }
-
-        public OpenTK.Input.JoystickDevice Joystick
-        {
-            get
-            {
-                return window.InputDriver.Joysticks[0];
-            }
-        }
+        public JoystickDevice Joystick => window.InputDriver.Joysticks[0];
 
         private void Renderer_RenderingNotificationEventHandler(string message, ConsoleColor textColor)
         {

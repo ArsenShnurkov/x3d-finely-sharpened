@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace X3D
 {
     /// <summary>
-    /// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/time.html#TimeSensor
+    ///     http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/time.html#TimeSensor
     /// </summary>
     public partial class TimeSensor
     {
-        [XmlIgnore]
-        public bool Enabled { get; set; }
+        private double worldTime;
 
-        [XmlIgnore]
-        public float fraction_changed { get; private set; }
+        [XmlIgnore] public bool Enabled { get; set; }
 
-        private double worldTime = 0;
+        [XmlIgnore] public float fraction_changed { get; private set; }
 
         #region Rendering Methods
 
@@ -32,7 +26,7 @@ namespace X3D
         {
             base.PreRenderOnce(rc);
 
-            this.startTime = rc.Time;
+            startTime = rc.Time;
         }
 
         public override void Render(RenderingContext rc)
@@ -49,7 +43,7 @@ namespace X3D
 
             time = worldTime;
 
-            delta = (time - startTime) / (double)cycleInterval;
+            delta = (time - startTime) / cycleInterval;
 
             f = (decimal)MathHelpers.RoundFractional(MathHelpers.FractionalPart(delta), cycleInterval);
 
@@ -57,10 +51,7 @@ namespace X3D
             {
                 fraction_changed = 1.0f;
 
-                if (!this.loop)
-                {
-                    Enabled = false;
-                }
+                if (!loop) Enabled = false;
             }
             else
             {

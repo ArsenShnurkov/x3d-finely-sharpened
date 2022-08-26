@@ -14,45 +14,45 @@ public static class QuaternionExtensions
         pitch = Math.Atan2(2 * q.X * q.W - 2 * q.Y * q.Z, 1 - 2 * q.X * q.X - 2 * q.Z * q.Z);
         yaw = Math.Asin(2 * q.X * q.Y + 2 * q.Z * q.W);
 
-        v = new Vector3()
+        v = new Vector3
         {
             X = (float)pitch,
             Y = (float)yaw,
             Z = (float)roll
         };
-        
+
         return v;
     }
 
-	public static Vector3 Rotate(Quaternion q, Vector3 v) 
-	{
+    public static Vector3 Rotate(Quaternion q, Vector3 v)
+    {
         // conjugate(this) * [v,0] * this
-        Quaternion c = new Quaternion(q.X, q.Y, q.Z, q.W);
+        var c = new Quaternion(q.X, q.Y, q.Z, q.W);
         c.Conjugate();
 
         //q = c;
 
-        float _w = q.W;
-        float _z = q.Z;
-        float _y = q.Y;
-        float _x = q.X;
-        float tiw = _w;
-        float tiz = -_z;
-        float tiy = -_y;
-        float tix = -_x;
-		float tx = tiw * v.X + tix * 0.0f + tiy * v.Z - tiz * v.Y;
-        float ty = tiw * v.Y + tiy * 0.0f + tiz * v.X - tix * v.Z;
-        float tz = tiw * v.Z + tiz * 0.0f + tix * v.Y - tiy * v.X;
-        float tw = tiw * 0.0f - tix * v.X - tiy * v.Y - tiz * v.Z;
+        var _w = q.W;
+        var _z = q.Z;
+        var _y = q.Y;
+        var _x = q.X;
+        var tiw = _w;
+        var tiz = -_z;
+        var tiy = -_y;
+        var tix = -_x;
+        var tx = tiw * v.X + tix * 0.0f + tiy * v.Z - tiz * v.Y;
+        var ty = tiw * v.Y + tiy * 0.0f + tiz * v.X - tix * v.Z;
+        var tz = tiw * v.Z + tiz * 0.0f + tix * v.Y - tiy * v.X;
+        var tw = tiw * 0.0f - tix * v.X - tiy * v.Y - tiz * v.Z;
 
         //v = new Vector3();
-		v.Z = tw * _z + tz * _w + tx * _y - ty * _x;
-		v.Y = tw * _y + ty * _w + tz * _x - tx * _z;
-		v.X = tw * _x + tx * _w + ty * _z - tz * _y;
+        v.Z = tw * _z + tz * _w + tx * _y - ty * _x;
+        v.Y = tw * _y + ty * _w + tz * _x - tx * _z;
+        v.X = tw * _x + tx * _w + ty * _z - tz * _y;
 
 
-		return v;
-	}
+        return v;
+    }
 
     public static Quaternion EulerToQuat(float roll, float pitch, float yaw)
     {
@@ -67,7 +67,7 @@ public static class QuaternionExtensions
         cpcy = cp * cy;
         spsy = sp * sy;
 
-        Quaternion quat = new Quaternion();
+        var quat = new Quaternion();
 
         quat.W = cr * cpcy + sr * spsy;
         quat.X = sr * cpcy - cr * spsy;
@@ -97,6 +97,7 @@ public static class QuaternionExtensions
     {
         return QuaternionFromEulerAnglesRad(rotation.X, rotation.Y, rotation.Z);
     }
+
     public static Quaternion QuaternionFromEulerAnglesRad(float yaw, float pitch, float roll)
     {
         var q = new Quaternion(pitch, yaw, roll);

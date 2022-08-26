@@ -1,60 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using OpenTK.Graphics.OpenGL;
-using OpenTK;
 using System.Drawing;
-using OpenTK.Graphics;
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
 
 namespace GraphDebugger.OpenGL
 {
     public class GfxGraph : RenderableVertexBufferObjects
     {
-        
-        #region Variables
-
-        public Color NodeForeColor { get; set; }
-        public Color NodeBackColor { get; set; }
-        public Color EdgeColor { get; set; }
-
-        public bool RootVisible { get; set; }
-        public Vector3 Position = new Vector3(0.0f, 0.0f, 1.0f);
-        public Vector3 Scale = new Vector3(0.7f, 0.7f, 0.7f);
-        public MatrixCollection gfx_model;
-
-        private List<GfxTextNode2D> textObjects;
-        public Tree t;
-        public List<Vector3> edges = new List<Vector3>();
-
-        //private int vbo_position,
-        //            vbo_color;
-        //private int attribute_vcol,
-        //            attribute_vpos;
-
-        float edge_length = 1.0f; // 0.3
-        float branch_radius = 1.0f;
-
-        TraversalType render_type = TraversalType.DepthFirst;
-        TraversalType layout_type = TraversalType.DepthFirst;
-
-        #endregion
-
-        public GfxGraph() 
+        public GfxGraph()
         {
             RootVisible = true;
-        }
-
-        public List<TNode> ToList()
-        {
-            var lst = new List<TNode>();
-            t.TraversePreorder((TNode node) =>
-            {
-                lst.Add(node);
-            }, TraversalType.DepthFirst);
-            return lst;
         }
 
         public void EnableVertexAttribArrays()
@@ -98,31 +54,6 @@ namespace GraphDebugger.OpenGL
             //GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
         }
 
-        public void Load(Tree t, Vector3 rootPosition, Tree.VisitNodeFunct setupNode)
-        {
-            Vector2 radius;
-
-            t.Root.Point = rootPosition;
-
-            edges = new List<Vector3>();
-            radius = new Vector2(branch_radius, branch_radius);
-
-            t.LayoutRadial2D(radius, edge_length, layout_type, false);
-            t.TraversePreorder((TNode node) =>
-            {
-                if (node.Parent != null)
-                {
-                    edges.Add(node.Point);
-                    edges.Add(node.Parent.Point);
-                }
-
-                if (!(node.Parent == null &&  RootVisible == false))
-                    setupNode(node);
-
-            }, render_type);
-            this.t = t;
-        }
-
         public void Render()
         {
             //EnableVertexAttribArrays();
@@ -133,10 +64,10 @@ namespace GraphDebugger.OpenGL
 
             GL.PushMatrix();
 
-            gfx_model.ApplyLocalTransformations(this.Position, this.Scale);
+            gfx_model.ApplyLocalTransformations(Position, Scale);
             gfx_model.SetMatrixUniforms();
 
-            
+
             foreach (var label in textObjects)
                 label.Render();
 
@@ -144,12 +75,43 @@ namespace GraphDebugger.OpenGL
 
 
             GL.PushMatrix();
-            gfx_model.ApplyLocalTransformations(this.Position, this.Scale);
+            gfx_model.ApplyLocalTransformations(Position, Scale);
             gfx_model.SetMatrixUniforms();
-            
+
             Draw.Lines(edges, EdgeColor);
 
             GL.PopMatrix();
+        }
+
+        public List<TNode> ToList()
+        {
+            var lst = new List<TNode>();
+            t.TraversePreorder(node => { lst.Add(node); }, TraversalType.DepthFirst);
+            return lst;
+        }
+
+        public void Load(Tree t, Vector3 rootPosition, Tree.VisitNodeFunct setupNode)
+        {
+            Vector2 radius;
+
+            t.Root.Point = rootPosition;
+
+            edges = new List<Vector3>();
+            radius = new Vector2(branch_radius, branch_radius);
+
+            t.LayoutRadial2D(radius, edge_length, layout_type, false);
+            t.TraversePreorder(node =>
+            {
+                if (node.Parent != null)
+                {
+                    edges.Add(node.Point);
+                    edges.Add(node.Parent.Point);
+                }
+
+                if (!(node.Parent == null && RootVisible == false))
+                    setupNode(node);
+            }, render_type);
+            this.t = t;
         }
 
         public void AddTextNode(float x, float y, string @string, Font font, Color forecolor, Color backcolor)
@@ -163,6 +125,34 @@ namespace GraphDebugger.OpenGL
             tx.Position = new Vector3(x, y, 0.0f);
             textObjects.Add(tx);
         }
+
+        #region Variables
+
+        public Color NodeForeColor { get; set; }
+        public Color NodeBackColor { get; set; }
+        public Color EdgeColor { get; set; }
+
+        public bool RootVisible { get; set; }
+        public Vector3 Position = new Vector3(0.0f, 0.0f, 1.0f);
+        public Vector3 Scale = new Vector3(0.7f, 0.7f, 0.7f);
+        public MatrixCollection gfx_model;
+
+        private List<GfxTextNode2D> textObjects;
+        public Tree t;
+        public List<Vector3> edges = new List<Vector3>();
+
+        //private int vbo_position,
+        //            vbo_color;
+        //private int attribute_vcol,
+        //            attribute_vpos;
+
+        private readonly float edge_length = 1.0f; // 0.3
+        private readonly float branch_radius = 1.0f;
+
+        private readonly TraversalType render_type = TraversalType.DepthFirst;
+        private readonly TraversalType layout_type = TraversalType.DepthFirst;
+
+        #endregion
 
         //private Vector3[] vertdata = new Vector3[] { 
         //    new Vector3(-0.8f, -0.8f, 0f),

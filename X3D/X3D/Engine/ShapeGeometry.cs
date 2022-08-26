@@ -1,16 +1,21 @@
 ﻿using OpenTK;
-using OpenTK.Graphics.OpenGL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using X3D.Core.Shading;
-using X3D.Core;
 
 namespace X3D
 {
     public abstract class ShapeGeometry
     {
+        /// <summary>
+        ///     Converts a System.Drawing.Color to a System.Int32.
+        /// </summary>
+        /// <param name="c">The System.Drawing.Color to convert.</param>
+        /// <returns>
+        ///     A System.Int32 containing the R, G, B, A values of the
+        ///     given System.Drawing.Color in the Rbga32 format.
+        /// </returns>
+        public static int ColorToRgba32(System.Drawing.Color c)
+        {
+            return (c.A << 24) | (c.B << 16) | (c.G << 8) | c.R;
+        }
         //public int NumElements;
         //private int NumVerticies, NumVerticies4;
 
@@ -52,18 +57,5 @@ namespace X3D
         //}
 
         #endregion
-
-        /// <summary>
-        /// Converts a System.Drawing.Color to a System.Int32.
-        /// </summary>
-        /// <param name="c">The System.Drawing.Color to convert.</param>
-        /// <returns>A System.Int32 containing the R, G, B, A values of the
-        /// given System.Drawing.Color in the Rbga32 format.</returns>
-        public static int ColorToRgba32(System.Drawing.Color c)
-        {
-            return (int)((c.A << 24) | (c.B << 16) | (c.G << 8) | c.R);
-        }
-
     }
-
 }

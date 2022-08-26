@@ -9,27 +9,26 @@ namespace X3D
 {
     public sealed class _Build
     {
-
 #if EXPERIMENTAL
         public static bool EXPERIMENTAL_VERSION = true;
 #else
-        public static bool EXPERIMENTAL_VERSION=false;
+        public static bool EXPERIMENTAL_VERSION = false;
 #endif
 #if NO_VBOS
-        public static bool NO_VBOS=true;
-        public static bool VBOSupported=false;
+        public static bool NO_VBOS = true;
+        public static bool VBOSupported = false;
 #else
 #if ASSERT_VBOS
         public static bool NO_VBOS = false;
         public static bool VBOSupported = true;
 #else
-        public static bool NO_VBOS=false;
+        public static bool NO_VBOS = false;
         public static bool VBOSupported;
 #endif
 #endif
 
 #if WEBGL
-        public static bool WEBGLSupported=true;
+        public static bool WEBGLSupported = true;
 #else
         public static bool WEBGLSupported = false;
 #endif
@@ -37,13 +36,12 @@ namespace X3D
 #if MESHING
         public static bool MESHING = true;
 #else
-        public static bool MESHING=false;
+        public static bool MESHING = false;
 #endif
 #if NO_TEXTURING
-        public static bool NO_TEXTURING=true;
+        public static bool NO_TEXTURING = true;
 #else
         public static bool NO_TEXTURING = false;
 #endif
-
     }
 }

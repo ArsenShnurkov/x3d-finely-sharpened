@@ -6,36 +6,36 @@
 // If you are not using the windows platform, then another wrapper might be required to work in mono
 // Portability will be under investigation.
 
-using OpenTK.Input;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-
-// Google V8 Engine via V8.Net wrapper
+using OpenTK.Input;
 using V8.Net;
-
 using X3D.Platform;
+// Google V8 Engine via V8.Net wrapper
 
 namespace X3D.Engine
 {
     public delegate void ScriptingInitilizeDelegate(ScriptingEngine engine);
+
     public delegate void ScriptingShutdownDelegate(ScriptingEngine engine);
 
     public class ScriptingEngine : IDisposable
     {
         public const string SOURCE_NAME = "X3D 3.3";
-        private bool isDisposing = false;
         private static V8Engine v8;
-        public static ScriptingEngine CurrentContext = null;
+        public static ScriptingEngine CurrentContext;
+        private bool isDisposing;
+
+        private ScriptingEngine()
+        {
+        }
 
         public event ScriptingInitilizeDelegate InitilizeEventHandler;
         public event ScriptingInitilizeDelegate ShutdownEventHandler;
-
-        private ScriptingEngine() { }
 
         #region Public Static Methods
 
@@ -63,10 +63,10 @@ namespace X3D.Engine
             {
                 document = manager.SceneGraph.GetRoot();
 
-                if(Script.EngineEnabled)
+                if (Script.EngineEnabled)
                     engine.StartV8(document);
             }
-            
+
             CurrentContext = engine;
 
             return engine;
@@ -77,25 +77,19 @@ namespace X3D.Engine
         #region Public Methods
 
         /// <summary>
-        /// Called when the scene is unloading.
+        ///     Called when the scene is unloading.
         /// </summary>
         public void OnShutdown()
         {
-            if (ShutdownEventHandler != null)
-            {
-                ShutdownEventHandler(this);
-            }
+            if (ShutdownEventHandler != null) ShutdownEventHandler(this);
         }
 
         /// <summary>
-        /// Called on Initilization of Head scripts.
+        ///     Called on Initilization of Head scripts.
         /// </summary>
         public void OnInitilize()
         {
-            if (InitilizeEventHandler != null)
-            {
-                InitilizeEventHandler(this);
-            }
+            if (InitilizeEventHandler != null) InitilizeEventHandler(this);
         }
 
         public void CompileAndExecute(string script)
@@ -107,15 +101,14 @@ namespace X3D.Engine
 
             script = script.TrimStart();
 
-            string start = script.Substring(0, ES_REF.Length).ToLower();
+            var start = script.Substring(0, ES_REF.Length).ToLower();
 
             script = start.StartsWith(ES_REF) ? script.Remove(0, ES_REF.Length) : script;
             script = start.StartsWith(JS_REF) ? script.Remove(0, JS_REF.Length) : script;
 
-            using (InternalHandle handle = v8.Compile(script, SOURCE_NAME, false).AsInternalHandle)
+            using (var handle = v8.Compile(script, SOURCE_NAME))
             {
                 if (!handle.IsError)
-                {
                     try
                     {
                         Handle result = v8.Execute(handle, true);
@@ -123,14 +116,13 @@ namespace X3D.Engine
                     }
                     catch (Exception ex)
                     {
-                        ConsoleColor tmp = Console.ForegroundColor;
+                        var tmp = Console.ForegroundColor;
                         Console.ForegroundColor = ConsoleColor.Red;
 
                         Console.WriteLine("(SCRIPT) {0}", ex.Message);
 
                         Console.ForegroundColor = tmp;
                     }
-                }
             }
         }
 
@@ -140,9 +132,9 @@ namespace X3D.Engine
 
             string result;
 
-            using (Handle handle = v8.Execute(script, SOURCE_NAME, false))
+            using (Handle handle = v8.Execute(script, SOURCE_NAME))
             {
-                result = handle.AsString;
+                result = handle.InternalHandle;
             }
 
             return result;
@@ -174,13 +166,13 @@ namespace X3D.Engine
         public void UpdateKeyboardState(KeyboardDevice currentKeyboard)
         {
             if (v8.IsDisposed) return;
-            
+
             // Copy keyboard state 
             //TODO: copy state quicker. Should be able to transfer over in O(1)
-            InternalHandle[] keyboard = new InternalHandle[(int)Key.LastKey];
-            for (int i = 0; i < keyboard.Length; i++)
+            var keyboard = new InternalHandle[(int)Key.LastKey];
+            for (var i = 0; i < keyboard.Length; i++)
             {
-                int k = currentKeyboard[(Key)i] ? 1 : 0;
+                var k = currentKeyboard[(Key)i] ? 1 : 0;
                 keyboard[i] = v8.CreateValue(k);
             }
 
@@ -191,16 +183,17 @@ namespace X3D.Engine
         {
             if (v8.IsDisposed) return;
 
-            using (Handle functHandle = v8.Execute("document.onkeydown", SOURCE_NAME, false))
+            using (Handle functHandle = v8.Execute("document.onkeydown", SOURCE_NAME))
             {
-                if (functHandle.ValueType != JSValueType.CompilerError && functHandle.IsFunction)
+                if (functHandle.InternalHandle.ValueType != JSValueType.CompilerError &&
+                    functHandle.InternalHandle.IsFunction)
                 {
-                    InternalHandle obj = v8.CreateObject();
+                    var obj = v8.CreateObject();
 
                     obj.SetProperty("keyCode", keyCode);
                     obj.SetProperty("charCode", charCode);
 
-                    functHandle.AsInternalHandle.StaticCall(obj);
+                    functHandle.InternalHandle.StaticCall(obj);
                 }
             }
         }
@@ -222,12 +215,10 @@ namespace X3D.Engine
         {
             if (v8.IsDisposed) return;
 
-            using (Handle functHandle = v8.Execute(name, SOURCE_NAME, false))
+            using (Handle functHandle = v8.Execute(name, SOURCE_NAME))
             {
-                if (functHandle.ValueType != JSValueType.CompilerError && functHandle.IsFunction)
-                {
-                    functHandle.AsInternalHandle.StaticCall();
-                }
+                if (functHandle.InternalHandle.ValueType != JSValueType.CompilerError &&
+                    functHandle.InternalHandle.IsFunction) functHandle.InternalHandle.StaticCall();
             }
         }
 
@@ -235,15 +226,16 @@ namespace X3D.Engine
         {
             if (v8.IsDisposed) return;
 
-            using (Handle functHandle = v8.Execute("onRenderFrame", SOURCE_NAME, false))
+            using (Handle functHandle = v8.Execute("onRenderFrame", SOURCE_NAME))
             {
-                if (functHandle.ValueType != JSValueType.CompilerError && functHandle.IsFunction)
+                if (functHandle.InternalHandle.ValueType != JSValueType.CompilerError &&
+                    functHandle.InternalHandle.IsFunction)
                 {
-                    InternalHandle obj = v8.CreateObject();
+                    var obj = v8.CreateObject();
 
                     obj.SetProperty("time", rc.Time);
 
-                    functHandle.AsInternalHandle.StaticCall(obj);
+                    functHandle.InternalHandle.StaticCall(obj);
                 }
             }
         }
@@ -253,26 +245,28 @@ namespace X3D.Engine
         #region Private Methods
 
         /// <summary>
-        /// Check v8 engine dependencies and fix any problems at runtime.
+        ///     Check v8 engine dependencies and fix any problems at runtime.
         /// </summary>
         private void deps()
         {
             //TODO: wait for v8.net.mono to mature
 
             // ensure v8.net dependencies are in bin folder
-            string v8_net_proxy_interface64 = string.Format(@"x64{0}V8.Net.Proxy.Interface.x64.dll", System.IO.Path.DirectorySeparatorChar);
-            string v8_net_proxy64 = string.Format(@"x64{0}V8_Net_Proxy_x64.dll", System.IO.Path.DirectorySeparatorChar);
-            string v8_net_proxy_interface32 = string.Format(@"x86{0}V8.Net.Proxy.Interface.x86.dll", System.IO.Path.DirectorySeparatorChar);
-            string v8_net_proxy32 = string.Format(@"x86{0}V8_Net_Proxy_x86.dll", System.IO.Path.DirectorySeparatorChar);
+            var v8_net_proxy_interface64 =
+                string.Format(@"x64{0}V8.Net.Proxy.Interface.x64.dll", Path.DirectorySeparatorChar);
+            var v8_net_proxy64 = string.Format(@"x64{0}V8_Net_Proxy_x64.dll", Path.DirectorySeparatorChar);
+            var v8_net_proxy_interface32 =
+                string.Format(@"x86{0}V8.Net.Proxy.Interface.x86.dll", Path.DirectorySeparatorChar);
+            var v8_net_proxy32 = string.Format(@"x86{0}V8_Net_Proxy_x86.dll", Path.DirectorySeparatorChar);
 
-            bool is64Bit = Environment.Is64BitProcess;
+            var is64Bit = Environment.Is64BitProcess;
 
-            string lib_proxy_interface = is64Bit ? v8_net_proxy_interface64 : v8_net_proxy_interface32;
-            string lib_proxy = is64Bit ? v8_net_proxy64 : v8_net_proxy32;
+            var lib_proxy_interface = is64Bit ? v8_net_proxy_interface64 : v8_net_proxy_interface32;
+            var lib_proxy = is64Bit ? v8_net_proxy64 : v8_net_proxy32;
 
-            
-            bool hasInterface = System.IO.File.Exists(lib_proxy_interface);
-            bool hasProxy = System.IO.File.Exists(lib_proxy);
+
+            var hasInterface = File.Exists(lib_proxy_interface);
+            var hasProxy = File.Exists(lib_proxy);
 
             if (X3DPlatform.IsWindows)
             {
@@ -288,9 +282,7 @@ namespace X3D.Engine
 
 
             if (hasInterface && hasProxy)
-            {
                 Console.WriteLine("V8 engine dependencies seem fine, they are {0}", is64Bit ? "x64" : "x86");
-            }
         }
 
         private void StartV8(SceneGraphNode root)
@@ -300,7 +292,7 @@ namespace X3D.Engine
 
             v8 = new V8Engine();
             v8.RegisterType(typeof(X3DConsole), null, true, ScriptMemberSecurity.Locked);
-            
+
             // Scene Access Interface
             // See: http://www.web3d.org/documents/specifications/19775-2/V3.3/Part02/servRef.html
 
@@ -311,7 +303,7 @@ namespace X3D.Engine
 
             v8.DynamicGlobalObject.window = v8.CreateFunctionTemplate("window").GetFunctionObject<WindowFunction>();
             v8.DynamicGlobalObject.browser = v8.CreateFunctionTemplate("browser").GetFunctionObject<BrowserFunction>();
-            
+
 
             MapKeyValues();
 
@@ -320,14 +312,14 @@ namespace X3D.Engine
 
         private void MapKeyValues()
         {
-            Type type = typeof(Key);
-            string[] keyNames = Enum.GetNames(type);
-            Array values = Enum.GetValues(type);
-            InternalHandle key = v8.CreateObject();
+            var type = typeof(Key);
+            var keyNames = Enum.GetNames(type);
+            var values = Enum.GetValues(type);
+            var key = v8.CreateObject();
 
-            for (int i = 0; i < keyNames.Length; i++)
+            for (var i = 0; i < keyNames.Length; i++)
             {
-                InternalHandle value = v8.CreateValue(values.GetValue(i));
+                var value = v8.CreateValue(values.GetValue(i));
 
                 key.SetProperty(keyNames[i], value);
             }
@@ -337,17 +329,14 @@ namespace X3D.Engine
 
         private void HookTypeSystem()
         {
-            Assembly asm = Assembly.GetAssembly(typeof(X3D));
+            var asm = Assembly.GetAssembly(typeof(X3D));
 
-            Type[] x3dTypes = (new List<Type>(asm.GetTypes()))
+            var x3dTypes = new List<Type>(asm.GetTypes())
                 .Where(t => t.IsSubclassOf(typeof(SceneGraphNode)))
                 .OrderBy(t => t.FullName).ToArray();
 
             // REGISTER X3D TYPE SYSTEM
-            foreach(Type x3dType in x3dTypes)
-            {
-                v8.RegisterType(x3dType, null, true, ScriptMemberSecurity.Locked);
-            }
+            foreach (var x3dType in x3dTypes) v8.RegisterType(x3dType, null, true, ScriptMemberSecurity.Locked);
 
             //TODO: hook X3D simple types such as SFVec3, MFString, etc. 
             // Note that for some types there is a translation SFVec3 is interchanged to OpenTK.Vector3 internally

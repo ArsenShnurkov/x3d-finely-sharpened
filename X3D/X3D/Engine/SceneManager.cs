@@ -1,10 +1,12 @@
 ﻿#define NO_DTD_VALIDATION
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Cache;
+using System.Net.Security;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Linq;
 using X3D.Parser;
@@ -18,24 +20,17 @@ createX3DFromUrl
 
 namespace X3D.Engine
 {
-
     public class SceneManager : IDisposable
     {
+        public static string CurrentLocation; // the cd is set upon every X3D scene fetch
+
+        private static readonly Regex regProto = new Regex("[a-zA-Z]+[:][/][/]", RegexOptions.Compiled);
         public SceneGraph SceneGraph;
         public ScriptingEngine ScriptingEngine;
         public static IConstructionSet ConstructionSet { get; set; }
 
-        public static IConstructionSet GetCurrentConstructionSet()
-        {
-            return ConstructionSet;
-        }
-
-        public static string CurrentLocation; // the cd is set upon every X3D scene fetch
-
         public static string BaseURL { get; set; }
         public static X3DMIMEType BaseMIME { get; set; }
-
-        private static Regex regProto = new Regex("[a-zA-Z]+[:][/][/]", RegexOptions.Compiled);
 
         public void Dispose()
         {
@@ -43,6 +38,11 @@ namespace X3D.Engine
 
             //GL.DeleteTexture()
             //GL.DeleteBuffer()
+        }
+
+        public static IConstructionSet GetCurrentConstructionSet()
+        {
+            return ConstructionSet;
         }
 
         #region Scene Loader Methods
@@ -54,10 +54,7 @@ namespace X3D.Engine
             scene = new SceneManager();
             scene.SceneGraph = graph;
 
-            if (Script.ScriptingEnabled)
-            {
-                scene.ScriptingEngine = ScriptingEngine.CreateFromManager(scene);
-            }
+            if (Script.ScriptingEnabled) scene.ScriptingEngine = ScriptingEngine.CreateFromManager(scene);
 
             return scene;
         }
@@ -68,10 +65,7 @@ namespace X3D.Engine
 
             if (Fetch(url, out document))
             {
-                if (document != null && document.GetType() == typeof(SceneManager))
-                {
-                    return (SceneManager)document;
-                }
+                if (document != null && document.GetType() == typeof(SceneManager)) return (SceneManager)document;
             }
             else
             {
@@ -87,11 +81,12 @@ namespace X3D.Engine
             {
                 case X3DMIMEType.X3D:
                     return _x3dfromString(data);
-                    //case X3DMIMEType.X3DBinary:
-                    //case X3DMIMEType.ClassicVRML:
-                    //case X3DMIMEType.VRML:
-                    //case X3DMIMEType.UNKNOWN:
+                //case X3DMIMEType.X3DBinary:
+                //case X3DMIMEType.ClassicVRML:
+                //case X3DMIMEType.VRML:
+                //case X3DMIMEType.UNKNOWN:
             }
+
             return null;
         }
 
@@ -103,11 +98,12 @@ namespace X3D.Engine
                     return _x3dfromStream(data);
                 case X3DMIMEType.X3DBinary:
                     return X3DBinaryCompression.FromStream(data);
-                    //case X3DMIMEType.ClassicVRML:
-                    //case X3DMIMEType.X3DBinary:
-                    //case X3DMIMEType.VRML:
-                    //case X3DMIMEType.UNKNOWN:
+                //case X3DMIMEType.ClassicVRML:
+                //case X3DMIMEType.X3DBinary:
+                //case X3DMIMEType.VRML:
+                //case X3DMIMEType.UNKNOWN:
             }
+
             return null;
         }
 
@@ -149,23 +145,16 @@ namespace X3D.Engine
         {
             if (X3DTypeConverters.IsMFString(url_mfstring))
             {
-                string[] urls = X3DTypeConverters.GetMFString(url_mfstring);
+                var urls = X3DTypeConverters.GetMFString(url_mfstring);
 
-                foreach (string url in urls)
-                {
+                foreach (var url in urls)
                     if (FetchSingle(url, out resource))
-                    {
                         return true;
-                    }
-                }
                 resource = null;
                 return false;
+            }
 
-            }
-            else
-            {
-                return FetchSingle(url_mfstring, out resource);
-            }
+            return FetchSingle(url_mfstring, out resource);
 
             //resource = null;
             //return false;
@@ -178,7 +167,6 @@ namespace X3D.Engine
 
         private static bool isrelative(string url)
         {
-
             //return Uri.IsWellFormedUriString(url, UriKind.Absolute) == false;
 
             Uri uri;
@@ -192,7 +180,7 @@ namespace X3D.Engine
         {
             //return Uri.IsWellFormedUriString(url, UriKind.Absolute) == true;
 
-            Uri uri = new Uri(url);
+            var uri = new Uri(url);
 
             return uri.IsAbsoluteUri;
         }
@@ -200,8 +188,8 @@ namespace X3D.Engine
         private static bool isWebUrl(string uriString)
         {
             Uri uriResult;
-            bool result = Uri.TryCreate(uriString, UriKind.Absolute, out uriResult)
-                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            var result = Uri.TryCreate(uriString, UriKind.Absolute, out uriResult)
+                         && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 
             return result;
         }
@@ -242,16 +230,16 @@ namespace X3D.Engine
                 return false;
             }
 
-            string tmp = X3DTypeConverters.removeQuotes(url);
+            var tmp = X3DTypeConverters.removeQuotes(url);
             if (tmp.StartsWith(X3DTypeConverters.DATA_TEXT_PLAIN))
             {
                 //TODO: complete implementation of data:uri as seen in https://developer.mozilla.org/en-US/docs/Web/HTTP/data_URIs
 
-                string dataTextPlain = tmp.Remove(0, X3DTypeConverters.DATA_TEXT_PLAIN.Length);
+                var dataTextPlain = tmp.Remove(0, X3DTypeConverters.DATA_TEXT_PLAIN.Length);
                 dataTextPlain = dataTextPlain.TrimStart();
 
-                MemoryStream stream = new MemoryStream();
-                StreamWriter writer = new StreamWriter(stream);
+                var stream = new MemoryStream();
+                var writer = new StreamWriter(stream);
                 writer.Write(dataTextPlain);
                 writer.Flush();
                 stream.Position = 0;
@@ -263,16 +251,18 @@ namespace X3D.Engine
 
             url = X3DTypeConverters.removeQuotes(url);
 
-            if (!CapabilityEnabled(System.IO.Path.GetExtension(url)))
+            if (!CapabilityEnabled(Path.GetExtension(url)))
             {
-                switch (System.Windows.Forms.MessageBox.Show("File Extension of type " + System.IO.Path.GetExtension(url) + " is not implemented yet", "Not imp", System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Information))
+                switch (MessageBox.Show("File Extension of type " + Path.GetExtension(url) + " is not implemented yet",
+                            "Not imp", MessageBoxButtons.YesNo, MessageBoxIcon.Information))
                 {
-                    case System.Windows.Forms.DialogResult.Yes:
+                    case DialogResult.Yes:
                         break;
-                    case System.Windows.Forms.DialogResult.No:
-                        System.Windows.Forms.MessageBox.Show("Perhaps this feature will be implemented soon");
+                    case DialogResult.No:
+                        MessageBox.Show("Perhaps this feature will be implemented soon");
                         break;
                 }
+
                 resource = null;
                 return false;
             }
@@ -280,32 +270,23 @@ namespace X3D.Engine
             if (url.ToLower().StartsWith("file://"))
             {
                 if (url.ToLower().StartsWith("file:///"))
-                {
                     url = url.Remove(0, 8);
-                }
                 else
-                {
                     url = url.Remove(0, 7);
-                }
                 url.Replace('/', '\\');
             }
 
             if (GetMIMETypeByURL(url) != X3DMIMEType.UNKNOWN)
-            {
                 // File is an X3D compatible Scene Graph .x3d, .x3db, .vrml etc
-
                 //if (string.IsNullOrEmpty(SceneManager.CurrentLocation))
                 //{
-                    //SceneManager.CurrentLocation = (new System.IO.DirectoryInfo(url)).Parent.FullName;
+                //SceneManager.CurrentLocation = (new System.IO.DirectoryInfo(url)).Parent.FullName;
                 //}
-
                 // get the current path to the html document
                 set_cd(BaseURL);
-                // what if the *.x3d file is a relative address and no CurrentLocation can be found??? SEE THIS X3D example:
-                // http://www.web3d.org/x3d/content/examples/Conformance/Appearance/ImageTexture/_pages/page13.html
-                //http://www.web3d.org/x3d/content/examples/Conformance/Appearance/ImageTexture/ElevationGrid.x3d
-            }
-
+            // what if the *.x3d file is a relative address and no CurrentLocation can be found??? SEE THIS X3D example:
+            // http://www.web3d.org/x3d/content/examples/Conformance/Appearance/ImageTexture/_pages/page13.html
+            //http://www.web3d.org/x3d/content/examples/Conformance/Appearance/ImageTexture/ElevationGrid.x3d
             //if(GetMIMETypeByURL(url)!=X3DMIMEType.UNKNOWN) {
             //CurrentLocation=url.TrimEnd().TrimEnd(System.IO.Path.GetFileName(url).ToCharArray());
             //}
@@ -316,46 +297,32 @@ namespace X3D.Engine
             if (isrelative(url))
             {
                 if (isWebUrl(CurrentLocation))
-                {
                     url = url.Replace("\\", "/");
-                }
                 else
-                {
                     url = url.Replace("/", "\\");
-                }
-
-                
-                if (url.StartsWith("/"))
-                {
-                    url = "." + url;
-                }
 
 
-                if(!isWebUrl(CurrentLocation) && isrelative(url))
+                if (url.StartsWith("/")) url = "." + url;
+
+
+                if (!isWebUrl(CurrentLocation) && isrelative(url))
                 {
                     // Is on the file system. Unix or Windows.
 
-                    url = SceneManager.CurrentLocation 
-                        +(SceneManager.CurrentLocation.EndsWith("\\") ? "" : "\\") 
-                        + url;
-
+                    url = CurrentLocation
+                          + (CurrentLocation.EndsWith("\\") ? "" : "\\")
+                          + url;
                 }
-                else if(isWebUrl(CurrentLocation) && isrelative(url))
+                else if (isWebUrl(CurrentLocation) && isrelative(url))
                 {
-                    if (string.IsNullOrEmpty(SceneManager.CurrentLocation))
-                    {
-                        SceneManager.CurrentLocation = (new System.IO.DirectoryInfo(url)).Parent.FullName;
-                    }
+                    if (string.IsNullOrEmpty(CurrentLocation)) CurrentLocation = new DirectoryInfo(url).Parent.FullName;
 
                     base_uri = new Uri(CurrentLocation);
 
                     if (Uri.TryCreate(base_uri, url, out www_url))
                     {
                         url = www_url.ToString();
-                        if (System.IO.Path.GetFileName(url) == System.IO.Path.GetFileName(BaseURL))
-                        {
-                            url = BaseURL;
-                        }
+                        if (Path.GetFileName(url) == Path.GetFileName(BaseURL)) url = BaseURL;
                     }
                     else
                     {
@@ -364,23 +331,17 @@ namespace X3D.Engine
                         return false;
                     }
                 }
-
-
             }
 
             if (url.ToLower().StartsWith("file://"))
             {
                 if (url.ToLower().StartsWith("file:///"))
-                {
                     url = url.Remove(0, 8);
-                }
                 else
-                {
                     url = url.Remove(0, 7);
-                }
                 url.Replace('/', '\\');
             }
-       
+
 
             uri = new Uri(url);
 
@@ -399,123 +360,112 @@ namespace X3D.Engine
                     //         .Replace("\n", "&#xA;"); // &#13;   &#xA;
 
 
-
                     byte[] bytes;
 
                     //bytes = UTF8Encoding.UTF8.GetBytes(txt);
                     bytes = File.ReadAllBytes(url);
 
                     // Read all bytes now so that we quickly loose lock to file
-                    MemoryStream ms = new MemoryStream(bytes);
+                    var ms = new MemoryStream(bytes);
 
-                    X3DMIMEType mimeType = GetMIMETypeByURL(url);
+                    var mimeType = GetMIMETypeByURL(url);
 
                     switch (mimeType)
                     {
                         case X3DMIMEType.UNKNOWN:
-                            resource = (Stream)ms;
+                            resource = ms;
                             break;
                         case X3DMIMEType.X3D:
-                            resource = fromStream((Stream)ms);
+                            resource = fromStream(ms);
                             break;
                         case X3DMIMEType.X3DBinary:
-                            resource = fromStream((Stream)ms, mimeType);
+                            resource = fromStream(ms, mimeType);
                             break;
                         default:
                             resource = null;
                             break;
                     }
+
                     return true;
                 }
-                else
-                {
-                    resource = null;
-                    return false;
-                }
+
+                resource = null;
+                return false;
             }
-            else
+
+            HttpWebRequest request;
+            HttpWebResponse response;
+            X3DMIMEType m;
+
+            request = (HttpWebRequest)WebRequest.Create(url);
+
+            request.AuthenticationLevel = AuthenticationLevel.None;
+            request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.BypassCache);
+            request.KeepAlive = true;
+            request.Timeout = 10000;
+            request.ReadWriteTimeout = 32000;
+            request.Method = "GET";
+            //request.Method="post";
+            //request.ContentType = "text/plain";
+            //request.UserAgent = "x3d-finely-sharpened-3.3";
+
+            byte[] lnBuffer, lnFile;
+            MemoryStream fileStream = null;
+            var contentType = string.Empty;
+
+            try
             {
-                HttpWebRequest request;
-                HttpWebResponse response;
-                X3DMIMEType m;
-
-                request = (HttpWebRequest)WebRequest.Create(url);
-                
-                request.AuthenticationLevel = System.Net.Security.AuthenticationLevel.None;
-                request.CachePolicy = new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.BypassCache);
-                request.KeepAlive = true;
-                request.Timeout = 10000;
-                request.ReadWriteTimeout = 32000;
-                request.Method = "GET";
-                //request.Method="post";
-                //request.ContentType = "text/plain";
-                //request.UserAgent = "x3d-finely-sharpened-3.3";
-
-                byte[] lnBuffer, lnFile;
-                MemoryStream fileStream = null;
-                string contentType = string.Empty;
-
-                try
+                using (response = (HttpWebResponse)request.GetResponse())
                 {
-                    using (response = (HttpWebResponse)request.GetResponse())
+                    // Handle the response now and buffer quickly into local cache ..
+                    contentType = response.ContentType;
+
+                    using (var lxBR = new BinaryReader(response.GetResponseStream()))
                     {
-                        // Handle the response now and buffer quickly into local cache ..
-                        contentType = response.ContentType;
-
-                        using (BinaryReader lxBR = new BinaryReader(response.GetResponseStream()))
+                        using (var lxMS = new MemoryStream())
                         {
-                            using (MemoryStream lxMS = new MemoryStream())
+                            lnBuffer = lxBR.ReadBytes(1024);
+                            while (lnBuffer.Length > 0)
                             {
+                                lxMS.Write(lnBuffer, 0, lnBuffer.Length);
                                 lnBuffer = lxBR.ReadBytes(1024);
-                                while (lnBuffer.Length > 0)
-                                {
-                                    lxMS.Write(lnBuffer, 0, lnBuffer.Length);
-                                    lnBuffer = lxBR.ReadBytes(1024);
-                                }
-                                lnFile = new byte[(int)lxMS.Length];
-                                lxMS.Position = 0;
-                                lxMS.Read(lnFile, 0, lnFile.Length);
                             }
-                        }
 
-                        if (response.StatusCode == HttpStatusCode.OK)
-                        {
-                            fileStream = new MemoryStream(lnFile, false);
-
-                        }
-                        else
-                        {
-                            resource = null;
-                            return false;
+                            lnFile = new byte[(int)lxMS.Length];
+                            lxMS.Position = 0;
+                            lxMS.Read(lnFile, 0, lnFile.Length);
                         }
                     }
 
-
-                    // Response is closed off and we have now a cached copy of it in a MemoryStream
-                    // This process usually avoids timeouts when requesting say Images or larger files.
-
-                    if (fileStream == null)
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        fileStream = new MemoryStream(lnFile, false);
+                    }
+                    else
                     {
                         resource = null;
                         return false;
                     }
+                }
 
-                    m = GetMIMETypeByURL(url);
 
-                    if (string.IsNullOrEmpty(contentType) || m == X3DMIMEType.UNKNOWN)
+                // Response is closed off and we have now a cached copy of it in a MemoryStream
+                // This process usually avoids timeouts when requesting say Images or larger files.
+
+                if (fileStream == null)
+                {
+                    resource = null;
+                    return false;
+                }
+
+                m = GetMIMETypeByURL(url);
+
+                if (string.IsNullOrEmpty(contentType) || m == X3DMIMEType.UNKNOWN)
+                {
+                    if (m == X3DMIMEType.UNKNOWN)
                     {
-                        if (m == X3DMIMEType.UNKNOWN)
-                        {
-                            // response is a generic resource
-                            resource = fileStream;
-                        }
-                        else
-                        {
-                            // response is a scene
-                            resource = fromStream(fileStream, m);
-
-                            set_cd(url);
-                        }
+                        // response is a generic resource
+                        resource = fileStream;
                     }
                     else
                     {
@@ -524,29 +474,31 @@ namespace X3D.Engine
 
                         set_cd(url);
                     }
-                    return true;
-
                 }
-                catch (WebException wex)
+                else
                 {
-                    if(wex.Status == WebExceptionStatus.Timeout)
-                    {
-                        Console.WriteLine(string.Format("Timed out requesting resource '{0}'", url));
-                        resource = null;
-                        return false;
-                    }
-                    else
-                    {
-                        // Skip download. If MFString was used, there should hopefully be a URL that works
+                    // response is a scene
+                    resource = fromStream(fileStream, m);
 
-                        Console.WriteLine("** skipping ** url {0}", url);
-
-                        resource = null;
-                        return false;
-                    }
+                    set_cd(url);
                 }
 
+                return true;
+            }
+            catch (WebException wex)
+            {
+                if (wex.Status == WebExceptionStatus.Timeout)
+                {
+                    Console.WriteLine("Timed out requesting resource '{0}'", url);
+                    resource = null;
+                    return false;
+                }
+                // Skip download. If MFString was used, there should hopefully be a URL that works
 
+                Console.WriteLine("** skipping ** url {0}", url);
+
+                resource = null;
+                return false;
             }
         }
 
@@ -556,7 +508,7 @@ namespace X3D.Engine
             //u=new Uri(url);
             //CurrentLocation=u.AbsolutePath;
 
-            CurrentLocation = url.TrimEnd().TrimEnd(System.IO.Path.GetFileName(url).ToCharArray());
+            CurrentLocation = url.TrimEnd().TrimEnd(Path.GetFileName(url).ToCharArray());
         }
 
         #endregion
@@ -567,7 +519,7 @@ namespace X3D.Engine
         {
             string file_extension;
 
-            file_extension = System.IO.Path.GetExtension(url);
+            file_extension = Path.GetExtension(url);
 
             switch (file_extension.ToLower().Trim())
             {
@@ -599,9 +551,9 @@ namespace X3D.Engine
                 case X3DMIMEType.X3D:
                     return "model/x3d+xml";
                 case X3DMIMEType.X3DBinary:
-                    return  "model/x3d+binary";
+                    return "model/x3d+binary";
                 case X3DMIMEType.ClassicVRML:
-                    return  "model/x3d+vrml";
+                    return "model/x3d+vrml";
                 case X3DMIMEType.VRML:
                     return "model/vrml";
                 default:
@@ -633,12 +585,12 @@ namespace X3D.Engine
         #region Scene Helper Methods
 
         /// <summary>
-        /// Informally: Convert the XML DOM into a X3D DOM by building a tree of X3DNodes.
-        /// Formally: Each XML element is deserialized automatically into an X3DNode,
-        /// then a X3D DOM is formed inside the scene graph.
+        ///     Informally: Convert the XML DOM into a X3D DOM by building a tree of X3DNodes.
+        ///     Formally: Each XML element is deserialized automatically into an X3DNode,
+        ///     then a X3D DOM is formed inside the scene graph.
         /// </summary>
         /// <returns>
-        /// A scene with a newly formed scene graph
+        ///     A scene with a newly formed scene graph
         /// </returns>
         private static SceneManager _x3dfromStream(Stream xml_stream)
         {
@@ -647,11 +599,11 @@ namespace X3D.Engine
 
             s = new SceneManager();
             // defaulted back to legacy XmlTextReader so we can change whitespace processing
-            using (XmlTextReader xtr = new XmlTextReader(xml_stream))
+            using (var xtr = new XmlTextReader(xml_stream))
             {
                 xtr.WhitespaceHandling = WhitespaceHandling.All; // preserve line endings in attribute values
-                                                                 //xtr.Normalization = false; // another way to preserve line endings in attribute values
-                                                                 // however turning off normalization makes processing much slower
+                //xtr.Normalization = false; // another way to preserve line endings in attribute values
+                // however turning off normalization makes processing much slower
                 xml = XDocument.Load(xtr, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
             }
 
@@ -659,11 +611,8 @@ namespace X3D.Engine
 
             s.SceneGraph = new SceneGraph(xml);
 
-            if (Script.ScriptingEnabled)
-            {
-                s.ScriptingEngine = ScriptingEngine.CreateFromManager(s);
-            }
-            
+            if (Script.ScriptingEnabled) s.ScriptingEngine = ScriptingEngine.CreateFromManager(s);
+
             return s;
         }
 
@@ -675,11 +624,11 @@ namespace X3D.Engine
             s = new SceneManager();
 
             // defaulted back to legacy XmlTextReader so we can change whitespace processing
-            using (XmlTextReader xtr = new XmlTextReader(new StringReader(xml_string)))
+            using (var xtr = new XmlTextReader(new StringReader(xml_string)))
             {
                 xtr.WhitespaceHandling = WhitespaceHandling.All; // preserve line endings in attribute values
-                                                                 //xtr.Normalization = false; // another way to preserve line endings in attribute values
-                                                                 // however turning off normalization makes processing much slower
+                //xtr.Normalization = false; // another way to preserve line endings in attribute values
+                // however turning off normalization makes processing much slower
                 xml = XDocument.Load(xtr, LoadOptions.PreserveWhitespace | LoadOptions.SetLineInfo);
             }
 
@@ -687,17 +636,14 @@ namespace X3D.Engine
 
             s.SceneGraph = new SceneGraph(xml);
 
-            if (Script.ScriptingEnabled)
-            {
-                s.ScriptingEngine = ScriptingEngine.CreateFromManager(s);
-            }
+            if (Script.ScriptingEnabled) s.ScriptingEngine = ScriptingEngine.CreateFromManager(s);
 
             return s;
         }
 
         private static bool IsURLScene(string url)
         {
-            return CapabilityEnabled(System.IO.Path.GetExtension(url));
+            return CapabilityEnabled(Path.GetExtension(url));
         }
 
         private static bool IsScene(string file_extension)
@@ -759,7 +705,7 @@ namespace X3D.Engine
         //    int i;
 
         //    i = _texturesToBuffer.Count;
-            
+
         //    _texturesToBuffer.Enqueue(indexableTexture);
 
         //    return i;

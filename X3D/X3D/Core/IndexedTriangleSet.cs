@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenTK;
-using OpenTK.Graphics.OpenGL4;
-using X3D.Core;
-using X3D.Core.Shading;
-using X3D.Parser;
+﻿using X3D.Core.Shading;
 
 namespace X3D
 {
@@ -15,11 +7,11 @@ namespace X3D
         internal PackedGeometry _pack;
 
         public override void CollectGeometry(
-                                    RenderingContext rc,
-                                    out GeometryHandle handle, 
-                                    out BoundingBox bbox,
-                                    out bool coloring,
-                                    out bool texturing)
+            RenderingContext rc,
+            out GeometryHandle handle,
+            out BoundingBox bbox,
+            out bool coloring,
+            out bool texturing)
         {
             handle = GeometryHandle.Zero;
             bbox = BoundingBox.Zero;

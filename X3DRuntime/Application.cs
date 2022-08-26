@@ -1,43 +1,69 @@
 ﻿//#define LIVE_FPS
 
 using System;
-using System.Drawing;
-using System.Reflection;
-using OpenTK;
-
-using X3D;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using X3D.Engine;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Threading;
+using OpenTK;
+using X3D.Engine;
+using X3D.Parser;
 
 namespace X3D.Runtime
 {
     public partial class X3DApplication
     {
+        private const int TITLE_UPDATE_INTERVAL = 2000;
+        private static bool systemCursorVisible = true;
+
+
+        //private DateTime before;
+        //private DateTime after;
+        private DateTime _prev;
+        private string title;
+        private Timer tmrTitleUpdate;
+
+        public static string AppInfo
+        {
+            get
+            {
+                Assembly asm;
+                AssemblyProductAttribute productName;
+                //AssemblyVersionAttribute ver;
+                AssemblyDescriptionAttribute desc;
+
+                asm = Assembly.GetAssembly(typeof(XMLParser));
+                productName =
+                    (AssemblyProductAttribute)Attribute.GetCustomAttribute(asm, typeof(AssemblyProductAttribute));
+                //ver=(AssemblyVersionAttribute)Attribute.GetCustomAttribute(asm,typeof(AssemblyVersionAttribute));
+                desc = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(asm,
+                    typeof(AssemblyDescriptionAttribute));
+
+                var version = asm.GetName().Version.ToString();
+                return productName.Product + " " + version + " \"" + desc.Description + "\"";
+            }
+        }
+
         [DllImport("user32.dll")]
         private static extern int ShowCursor(bool bShow);
-        private static bool systemCursorVisible = true;
 
         public void ToggleCursor()
         {
             if (systemCursorVisible)
-            {
                 ShowCursor(false);
-            }
             else
-            {
                 ShowCursor(true);
-            }
             systemCursorVisible = !systemCursorVisible;
         }
 
 
         public void ShowSupportMatrix()
         {
-            Assembly asm = Assembly.GetAssembly(typeof(Parser.XMLParser));
+            var asm = Assembly.GetAssembly(typeof(XMLParser));
 
-            Type[] types = (new List<Type>(asm.GetTypes()))
+            var types = new List<Type>(asm.GetTypes())
                 .Where(t => t.IsSubclassOf(typeof(SceneGraphNode)))
                 .OrderBy(t => t.FullName).ToArray();
 
@@ -45,13 +71,13 @@ namespace X3D.Runtime
             int w = 4, h = types.Length / w;
 
 
-            string[,] grid = new string[h, w];
+            var grid = new string[h, w];
             int r = 0, c = 0;
 
-            for (int i = 0; i < types.Length && c < h; i++)
+            for (var i = 0; i < types.Length && c < h; i++)
             {
-                int j = i;
-                Type t = types[i];
+                var j = i;
+                var t = types[i];
 
                 grid[c, r] = t.FullName;
 
@@ -73,136 +99,78 @@ namespace X3D.Runtime
                 }
             }
 
-            for (int x = 0; x < w; x++)
+            for (var x = 0; x < w; x++)
+            for (var y = 0; y < h; y++)
             {
-                for (int y = 0; y < h; y++)
+                var s = grid[y, x];
+
+                if (!string.IsNullOrEmpty(s))
                 {
-                    string s = grid[y, x];
+                    Console.SetCursorPosition(x * 25, y + 4);
 
-                    if (!string.IsNullOrEmpty(s))
-                    {
-                        Console.SetCursorPosition(x * 25, y + 4);
-
-                        Console.Write((x > 0 ? " " : "") + "{0}", s);
-                    }
+                    Console.Write((x > 0 ? " " : "") + "{0}", s);
                 }
             }
+
             Console.Write("\n");
             Console.WriteLine("-- EO Support Matrix --");
         }
 
-
-        public sealed class App
-        {
-
-            public static string MapPath(string relativePath)
-            {
-                return System.IO.Path.GetFullPath(relativePath);
-            }
-
-            public static string Path
-            {
-                get
-                {
-                    //return System.Windows.Forms.Application.StartupPath+"\\";
-                    return (new System.IO.FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location)).Directory.FullName + "\\";
-                }
-            }
-        }
-
-        public static string AppInfo
-        {
-            get
-            {
-                Assembly asm;
-                AssemblyProductAttribute productName;
-                //AssemblyVersionAttribute ver;
-                AssemblyDescriptionAttribute desc;
-
-                asm = Assembly.GetAssembly(typeof(Parser.XMLParser));
-                productName = (AssemblyProductAttribute)Attribute.GetCustomAttribute(asm, typeof(AssemblyProductAttribute));
-                //ver=(AssemblyVersionAttribute)Attribute.GetCustomAttribute(asm,typeof(AssemblyVersionAttribute));
-                desc = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(asm, typeof(AssemblyDescriptionAttribute));
-
-                string version = asm.GetName().Version.ToString();
-                return productName.Product + " " + version + " \"" + desc.Description + "\"";
-            }
-        }
-
-
-        //private DateTime before;
-        //private DateTime after;
-        private DateTime _prev;
-        private System.Threading.Timer tmrTitleUpdate;
-        private string title;
-
-        const int TITLE_UPDATE_INTERVAL = 2000;
-
         private void UpdateTitle(FrameEventArgs e)
         {
 #if LIVE_FPS
-            draw_time=DateTime.Now.Subtract(_prev).Milliseconds;
-            fps=GetFps(e.Time);
+            draw_time = DateTime.Now.Subtract(_prev).Milliseconds;
+            fps = GetFps(e.Time);
 
-            string dt=draw_time.ToString();
+            string dt = draw_time.ToString();
             if(dt.Length<2) {
                 if(dt.Length==1) {
-                    dt=" "+dt;
+                    dt = " "+dt;
                 }
                 else {
-                    dt="  ";
+                    dt = "  ";
                 }
             }
-            title=fps.ToString()+"f/s "+dt+"ms";
+            title = fps.ToString()+"f/s "+dt+"ms";
 #else
             if (tmrTitleUpdate == null)
-            {
-                tmrTitleUpdate = new System.Threading.Timer(new System.Threading.TimerCallback(
-                    (object obj) =>
-                    {
-                        draw_time = DateTime.Now.Subtract(_prev).Milliseconds;
-                        fps = GetFps(e.Time);
+                tmrTitleUpdate = new Timer(obj =>
+                {
+                    draw_time = DateTime.Now.Subtract(_prev).Milliseconds;
+                    fps = GetFps(e.Time);
 
-                        string dt = draw_time.ToString();
-                        if (dt.Length < 2)
-                        {
-                            if (dt.Length == 1)
-                            {
-                                dt = " " + dt;
-                            }
-                            else
-                            {
-                                dt = "  ";
-                            }
-                        }
-                        title = fps.ToString() + "f/s " + dt + "ms";
+                    var dt = draw_time.ToString();
+                    if (dt.Length < 2)
+                    {
+                        if (dt.Length == 1)
+                            dt = " " + dt;
+                        else
+                            dt = "  ";
                     }
-                ), null, 0, TITLE_UPDATE_INTERVAL);
-            }
+
+                    title = fps + "f/s " + dt + "ms";
+                }, null, 0, TITLE_UPDATE_INTERVAL);
 #endif
 
             string view;
 
             if (Viewpoint.CurrentViewpoint == null)
-            {
                 view = Viewpoint.VIEWPOINT_DEFAULT_DESCRIPTION;
-            }
             else
-            {
                 view = Viewpoint.CurrentViewpoint.description;
-            }
 
             // update world time a bit faster:
             WorldTime = DateTime.Now.Subtract(time_at_init);
 
-            string pos = string.Format("{0}, {1}, {2}", ActiveCamera.Position.X, ActiveCamera.Position.Y, ActiveCamera.Position.Z);
-            string fileName = System.IO.Path.GetFileName(SceneManager.BaseURL);
-            string @base = string.Format("({0}) ({1})", fileName, SceneManager.GetMIMETypeString(SceneManager.BaseMIME));
+            var pos = string.Format("{0}, {1}, {2}", ActiveCamera.Position.X, ActiveCamera.Position.Y,
+                ActiveCamera.Position.Z);
+            var fileName = Path.GetFileName(SceneManager.BaseURL);
+            var @base = string.Format("({0}) ({1})", fileName, SceneManager.GetMIMETypeString(SceneManager.BaseMIME));
 
-            this.window.Title = string.Format("X3D Runtime {0} {1} vwt [{2}] Viewpoint: {3} {4}", 
-                title, 
-                WorldTime, 
-                pos, 
+            window.Title = string.Format("X3D Runtime {0} {1} vwt [{2}] Viewpoint: {3} {4}",
+                title,
+                WorldTime,
+                pos,
                 view,
                 @base);
         }
@@ -212,6 +180,19 @@ namespace X3D.Runtime
             _fps = (int)(1.0 / time);
 
             return _fps;
+        }
+
+
+        public sealed class App
+        {
+            public static string Path =>
+                //return System.Windows.Forms.Application.StartupPath+"\\";
+                new FileInfo(Assembly.GetExecutingAssembly().Location).Directory.FullName + "\\";
+
+            public static string MapPath(string relativePath)
+            {
+                return System.IO.Path.GetFullPath(relativePath);
+            }
         }
     }
 }

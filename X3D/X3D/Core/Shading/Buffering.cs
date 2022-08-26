@@ -6,21 +6,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
-using X3D.Core;
+using X3D.Core.Shading.DefaultUniforms;
 
 namespace X3D.Core.Shading
 {
     using Verticies = List<Vertex>;
     using Mesh = List<List<Vertex>>; // Mesh will contain faces made up of either or Triangles, and Quads
-    using DefaultUniforms;
-    using Parser;
 
     /// <summary>
-    /// Interleave all geometry for single API simplicity for now.
-    /// Later include additional support for indexing geometry.
+    ///     Interleave all geometry for single API simplicity for now.
+    ///     Later include additional support for indexing geometry.
     /// </summary>
     public class Buffering
     {
@@ -28,7 +25,7 @@ namespace X3D.Core.Shading
         {
             int uboMaterial;
             int uboIndex; // Index to use for the buffer binding. All binding indicies start from 0
-            ShaderMaterial[] _materials; 
+            ShaderMaterial[] _materials;
             ShaderMaterial[] src;
 
             _materials = new ShaderMaterial[16]; // finely-sharpened imposes a limit of 16 of materials per object
@@ -41,18 +38,18 @@ namespace X3D.Core.Shading
             GL.BindBuffer(BufferTarget.UniformBuffer, uboMaterial);
 
             // Allocate Memory Request
-            GL.BufferData<ShaderMaterial>(BufferTarget.UniformBuffer,
+            GL.BufferData(BufferTarget.UniformBuffer,
                 (IntPtr)(_materials.Length * ShaderMaterial.Size),
                 _materials, BufferUsageHint.StaticDraw);
 
 
             // Bind the created Uniform Buffer to the Buffer Index
             GL.BindBufferRange(BufferRangeTarget.UniformBuffer,
-                               uboIndex,
-                               uboMaterial,
-                               (IntPtr)0, 
-                               _materials.Length * ShaderMaterial.Size
-                                );
+                uboIndex,
+                uboMaterial,
+                (IntPtr)0,
+                _materials.Length * ShaderMaterial.Size
+            );
 
 
             // Cleanup
@@ -61,12 +58,13 @@ namespace X3D.Core.Shading
             return true;
         }
 
-        public static bool BufferMaterial(ComposedShader shader, ShaderMaterial material, string name, out int uboMaterial)
+        public static bool BufferMaterial(ComposedShader shader, ShaderMaterial material, string name,
+            out int uboMaterial)
         {
             int uboIndex; // Index to use for the buffer binding (All good things start at 0 )
             //int uniformBlockLocation;
 
-            uboIndex = 0; 
+            uboIndex = 0;
 
             //uniformBlockLocation = GL.GetUniformBlockIndex(shader.ShaderHandle, name);
 
@@ -81,26 +79,26 @@ namespace X3D.Core.Shading
             GL.BindBuffer(BufferTarget.UniformBuffer, uboMaterial);
 
             // Allocate Memory Request
-            GL.BufferData(BufferTarget.UniformBuffer, 
-                (IntPtr)(ShaderMaterial.Size), (IntPtr)(null), BufferUsageHint.DynamicDraw);
+            GL.BufferData(BufferTarget.UniformBuffer,
+                (IntPtr)ShaderMaterial.Size, (IntPtr)null, BufferUsageHint.DynamicDraw);
 
             // Bind the created Uniform Buffer to the Buffer Index
             GL.BindBufferRange(BufferRangeTarget.UniformBuffer,
-                               uboIndex, 
-                               uboMaterial, 
-                               (IntPtr)0, ShaderMaterial.Size
-                                );
+                uboIndex,
+                uboMaterial,
+                (IntPtr)0, ShaderMaterial.Size
+            );
 
 
-            GL.BufferSubData<ShaderMaterial>(BufferTarget.UniformBuffer, (IntPtr)0, ShaderMaterial.Size, ref material);
+            GL.BufferSubData(BufferTarget.UniformBuffer, (IntPtr)0, ShaderMaterial.Size, ref material);
             GL.BindBuffer(BufferTarget.UniformBuffer, 0);
 
             return true;
         }
 
         /// <summary>
-        /// Precondition: Apply Buffer Pointers right before GL.DrawArrays or GL.DrawElements, 
-        /// requires default pointers to be bound in the shader after linking.
+        ///     Precondition: Apply Buffer Pointers right before GL.DrawArrays or GL.DrawElements,
+        ///     requires default pointers to be bound in the shader after linking.
         /// </summary>
         public static void ApplyBufferPointers(ComposedShader shader)
         {
@@ -111,8 +109,9 @@ namespace X3D.Core.Shading
             shader.SetPointer("texcoord", VertexAttribType.TextureCoord); // vertex texCoordinate
         }
 
-        /// <summary>d
-        /// Precondition: Apply Buffer Pointers right before GL.DrawArrays or GL.DrawElements
+        /// <summary>
+        ///     d
+        ///     Precondition: Apply Buffer Pointers right before GL.DrawArrays or GL.DrawElements
         /// </summary>
         [ObsoleteAttribute("use ApplyBufferPointers(ComposedShader) instead")]
         public static void ApplyBufferPointers(ShaderUniformsPNCT uniforms)
@@ -120,26 +119,30 @@ namespace X3D.Core.Shading
             if (uniforms.a_position != -1)
             {
                 GL.EnableVertexAttribArray(uniforms.a_position); // vertex position
-                GL.VertexAttribPointer(uniforms.a_position, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)0);
+                GL.VertexAttribPointer(uniforms.a_position, 3, VertexAttribPointerType.Float, false, Vertex.Stride,
+                    (IntPtr)0);
             }
 
             if (uniforms.a_normal != -1)
             {
                 GL.EnableVertexAttribArray(uniforms.a_normal); // vertex normal
-                GL.VertexAttribPointer(uniforms.a_normal, 3, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes));
+                GL.VertexAttribPointer(uniforms.a_normal, 3, VertexAttribPointerType.Float, false, Vertex.Stride,
+                    (IntPtr)Vector3.SizeInBytes);
             }
 
             if (uniforms.a_color != -1)
             {
                 GL.EnableVertexAttribArray(uniforms.a_color); // vertex color
-                GL.VertexAttribPointer(uniforms.a_color, 4, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes));
+                GL.VertexAttribPointer(uniforms.a_color, 4, VertexAttribPointerType.Float, false, Vertex.Stride,
+                    (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes));
             }
 
 
             if (uniforms.a_texcoord != -1)
             {
                 GL.EnableVertexAttribArray(uniforms.a_texcoord); // vertex texCoordinate
-                GL.VertexAttribPointer(uniforms.a_texcoord, 2, VertexAttribPointerType.Float, false, Vertex.Stride, (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes + Vector4.SizeInBytes));
+                GL.VertexAttribPointer(uniforms.a_texcoord, 2, VertexAttribPointerType.Float, false, Vertex.Stride,
+                    (IntPtr)(Vector3.SizeInBytes + Vector3.SizeInBytes + Vector4.SizeInBytes));
             }
         }
 
@@ -150,33 +153,25 @@ namespace X3D.Core.Shading
             handle = new GeometryHandle();
 
             if (packSet.interleaved3.Count > 0)
-            {
-                Buffering.BufferShaderGeometry(packSet.interleaved3, out handle.vbo3, out handle.NumVerticies3);
-            }
+                BufferShaderGeometry(packSet.interleaved3, out handle.vbo3, out handle.NumVerticies3);
 
             if (packSet.interleaved4.Count > 0)
-            {
-                Buffering.BufferShaderGeometry(packSet.interleaved4, out handle.vbo4, out handle.NumVerticies4);
-            }
+                BufferShaderGeometry(packSet.interleaved4, out handle.vbo4, out handle.NumVerticies4);
 
             return handle;
         }
 
         public static int BufferShaderGeometry(Mesh geometries, out int verts)
         {
-
-            int numBuffers = geometries.Count;
+            var numBuffers = geometries.Count;
             int buffers;
 
 
             GL.GenBuffers(1, out buffers);
 
-            int totalSize = 0;
+            var totalSize = 0;
 
-            for (int i = 0; i < numBuffers; i++)
-            {
-                totalSize += geometries[i].Count * Vertex.SizeInBytes;
-            }
+            for (var i = 0; i < numBuffers; i++) totalSize += geometries[i].Count * Vertex.SizeInBytes;
 
             //GL.BindBuffer(BufferTarget.ArrayBuffer, buffers[0]);
             // GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(totalSize*2), IntPtr.Zero, BufferUsageHint.StaticDraw);
@@ -184,26 +179,25 @@ namespace X3D.Core.Shading
             //GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)totalSize, IntPtr.Zero, BufferUsageHint.StaticDraw);
 
             GL.BindBuffer(BufferTarget.ArrayBuffer, buffers);
-            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(totalSize), IntPtr.Zero, BufferUsageHint.StaticDraw);
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)totalSize, IntPtr.Zero, BufferUsageHint.StaticDraw);
 
             verts = 0;
 
-            int offset = 0;
-            for (int i = 0; i < numBuffers; i++)
+            var offset = 0;
+            for (var i = 0; i < numBuffers; i++)
             {
-                Vertex[] _interleaved3 = geometries[i].ToArray();
+                var _interleaved3 = geometries[i].ToArray();
                 verts += _interleaved3.Length;
 
 
-                int stride = BlittableValueType.StrideOf(_interleaved3); // Vertex.SizeInBytes;
-                int size = _interleaved3.Length * stride;
+                var stride = BlittableValueType.StrideOf(_interleaved3); // Vertex.SizeInBytes;
+                var size = _interleaved3.Length * stride;
 
                 Console.WriteLine("Buffering Verticies..");
-                GL.BufferSubData<Vertex>(BufferTarget.ArrayBuffer, (IntPtr)offset, (IntPtr)(size), _interleaved3);
+                GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)offset, (IntPtr)size, _interleaved3);
                 Console.WriteLine("[done]");
 
                 offset += size;
-
             }
 
             return buffers;
@@ -211,7 +205,7 @@ namespace X3D.Core.Shading
 
         public static int BufferShaderGeometry(Verticies geometry, out int vbo_interleaved, out int NumVerticies)
         {
-            Vertex[] _interleaved = geometry.ToArray();
+            var _interleaved = geometry.ToArray();
 
 
             Console.WriteLine("Buffering Verticies..");
@@ -219,8 +213,8 @@ namespace X3D.Core.Shading
             vbo_interleaved = GL.GenBuffer();
             //GL.GenBuffers(1, out vbo_interleaved);
             GL.BindBuffer(BufferTarget.ArrayBuffer, vbo_interleaved); // InterleavedArrayFormat.T2fC4fN3fV3f
-            GL.BufferData<Vertex>(BufferTarget.ArrayBuffer, 
-                (IntPtr)(_interleaved.Length * Vertex.SizeInBytes), 
+            GL.BufferData(BufferTarget.ArrayBuffer,
+                (IntPtr)(_interleaved.Length * Vertex.SizeInBytes),
                 _interleaved, BufferUsageHint.StaticDraw);
 
             Console.WriteLine("[done]");
@@ -267,19 +261,19 @@ namespace X3D.Core.Shading
 
         public static void Interleave(ref PackedGeometry pack, bool genTexCoordPerVertex = true, bool calcBounds = true)
         {
-            int FACE_RESTART_INDEX = 2;
+            var FACE_RESTART_INDEX = 2;
 
             pack.colorPerVertex = true;
 
-            int coordIndex = 0;
-            int faceSetIndex = 0;
+            var coordIndex = 0;
+            var faceSetIndex = 0;
             int faceSetValue, texSetValue = -1, colSetValue = -1;
-            int faceType = 0;
+            var faceType = 0;
             int i;
             pack.faceset = new List<int>();
             pack.texset = new List<int>();
             pack.colset = new List<int>();
-            List<Vertex> verticies2 = new List<Vertex>();
+            var verticies2 = new List<Vertex>();
             pack.interleaved3 = new List<Vertex>(); // buffer verticies of different face types separatly
             pack.interleaved4 = new List<Vertex>();
             Vertex v;
@@ -290,7 +284,7 @@ namespace X3D.Core.Shading
             pack.minimum = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
 
             // MESH INTERLEAVING ALGORITHM
-            if(pack._indices == null && pack.vertexStride.HasValue)
+            if (pack._indices == null && pack.vertexStride.HasValue)
             {
                 i = -1;
                 pack._indices = pack._coords.Select(c => ++i).ToArray();
@@ -304,17 +298,13 @@ namespace X3D.Core.Shading
                     return;
                 }
 
-                if(pack._colorIndicies == null && pack.Coloring)
+                if (pack._colorIndicies == null && pack.Coloring)
                 {
                     i = -1;
                     if (pack.RGB)
-                    {
-                        pack._colorIndicies = pack.color.Take(pack.color.Length / 3).Select(c => ++i ).ToArray();
-                    }
+                        pack._colorIndicies = pack.color.Take(pack.color.Length / 3).Select(c => ++i).ToArray();
                     else if (pack.RGBA)
-                    {
                         pack._colorIndicies = pack.color.Take(pack.color.Length / 4).Select(c => ++i).ToArray();
-                    }
                 }
 
                 for (coordIndex = 0; coordIndex < pack._coords.Length; coordIndex++)
@@ -341,10 +331,7 @@ namespace X3D.Core.Shading
                                 pack.colset.Add(colSetValue);
                         }
 
-                        for (int k = 0; k < faceType; k++)
-                        {
-                            interleaveVertex(out v, ref pack, faceType, k);
-                        }
+                        for (var k = 0; k < faceType; k++) interleaveVertex(out v, ref pack, faceType, k);
 
                         faceSetIndex++;
                         faceType = 0;
@@ -383,10 +370,7 @@ namespace X3D.Core.Shading
 
                         if (faceSetValue == pack.restartIndex.Value)
                         {
-                            for (int k = 0; k < faceType; k++)
-                            {
-                                interleaveVertex(out v, ref pack, faceType, k);
-                            }
+                            for (var k = 0; k < faceType; k++) interleaveVertex(out v, ref pack, faceType, k);
 
                             faceSetIndex++;
                             faceType = 0;
@@ -412,17 +396,11 @@ namespace X3D.Core.Shading
                     // NO RESTART INDEX, assume new face is at every 3rd value / i = 2
 
                     if (pack._indices.Length == 4)
-                    {
                         FACE_RESTART_INDEX = 4; // 0-3 Quad
-                    }
                     else if (pack._indices.Length == 3)
-                    {
                         FACE_RESTART_INDEX = 3; // 0-3 Triangle
-                    }
                     else
-                    {
                         FACE_RESTART_INDEX = 3;
-                    }
 
                     for (coordIndex = 0; coordIndex < pack._indices.Length; coordIndex++)
                     {
@@ -438,10 +416,7 @@ namespace X3D.Core.Shading
 
                         if (coordIndex > 0 && (coordIndex + 1) % FACE_RESTART_INDEX == 0)
                         {
-                            for (int k = 0; k < faceType; k++)
-                            {
-                                interleaveVertex(out v, ref pack, faceType, k);
-                            }
+                            for (var k = 0; k < faceType; k++) interleaveVertex(out v, ref pack, faceType, k);
 
                             faceSetIndex++;
                             faceType = 0;
@@ -454,13 +429,13 @@ namespace X3D.Core.Shading
 
             if (calcBounds)
             {
-                Vector3 x3dScale = new Vector3(0.06f, 0.06f, 0.06f);
+                var x3dScale = new Vector3(0.06f, 0.06f, 0.06f);
 
-                pack.bbox = new BoundingBox()
+                pack.bbox = new BoundingBox
                 {
-                    Width = (pack.maximum.X - pack.minimum.X),
-                    Height = (pack.maximum.Y - pack.minimum.Y),
-                    Depth = (pack.maximum.Z - pack.minimum.Z),
+                    Width = pack.maximum.X - pack.minimum.X,
+                    Height = pack.maximum.Y - pack.minimum.Y,
+                    Depth = pack.maximum.Z - pack.minimum.Z,
 
                     Maximum = pack.maximum,
                     Minimum = pack.minimum
@@ -496,9 +471,7 @@ namespace X3D.Core.Shading
             //v.Position.Y = tmp;
 
             if (pack.texset != null && pack.texset.Count > 0 && pack._texCoords != null && pack._texCoords.Length > 0)
-            {
                 v.TexCoord = pack._texCoords[pack.texset[k]];
-            }
             //else if (genTexCoordPerVertex && texturing && _bbox != null)
             //{
             //    //v.TexCoord = MathHelpers.uv(v.Position.x);
@@ -512,41 +485,29 @@ namespace X3D.Core.Shading
                     if (pack.colset != null && pack.colset.Count > 0 && pack.color != null && pack.color.Length > 0)
                     {
                         if (pack.colset.Count == 3)
-                        {
                             v.Color = new Vector4(
                                 pack.color[pack.colset[k]],
                                 pack.color[pack.colset[k] + 1],
                                 pack.color[pack.colset[k] + 2],
                                 1.0f
                             );
-                        }
                         else if (pack.colset.Count == 4)
-                        {
                             v.Color = new Vector4(
                                 pack.color[pack.colset[k]],
                                 pack.color[pack.colset[k] + 1],
                                 pack.color[pack.colset[k] + 2],
                                 pack.color[pack.colset[k] + 3]
                             );
-                        }
                         else if (pack.colset.Count == 1)
-                        {
                             v.Color = new Vector4(
                                 pack.color[pack.colset[k]],
                                 pack.color[pack.colset[k] + 1],
                                 pack.color[pack.colset[k] + 2],
                                 1.0f
                             );
-                        }
-
                     }
                 }
-                else
-                {
-                    // color per face
-
-
-                }
+                // color per face
             }
 
             if (pack.normals != null && pack.normals.Length > 0)
@@ -558,15 +519,10 @@ namespace X3D.Core.Shading
 
             if (pack.vertexStride.HasValue)
             {
-                if(pack.vertexStride == 1 || pack.vertexStride == 2 || pack.vertexStride == 3)
-                {
+                if (pack.vertexStride == 1 || pack.vertexStride == 2 || pack.vertexStride == 3)
                     pack.interleaved3.Add(v);
-                }
 
-                if (pack.vertexStride == 4)
-                {
-                    pack.interleaved4.Add(v);
-                }
+                if (pack.vertexStride == 4) pack.interleaved4.Add(v);
             }
             else
             {
@@ -582,8 +538,6 @@ namespace X3D.Core.Shading
                         break;
                 }
             }
-
-            
         }
     }
 }

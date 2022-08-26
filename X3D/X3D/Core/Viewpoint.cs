@@ -1,40 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using X3D.Engine;
 
 namespace X3D
 {
     /// <summary>
-    /// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/navigation.html#Viewpoint
+    ///     http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/navigation.html#Viewpoint
     /// </summary>
     public partial class Viewpoint
     {
+        public const string VIEWPOINT_DEFAULT_DESCRIPTION = "Origin";
+
         /// <summary>
-        /// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/navigation.html#ViewpointList
+        ///     http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/navigation.html#ViewpointList
         /// </summary>
         public static List<Viewpoint> ViewpointList = new List<Viewpoint>();
 
-        public const string VIEWPOINT_DEFAULT_DESCRIPTION = "Origin";
-        public static Viewpoint CurrentViewpoint = null;
+        public static Viewpoint CurrentViewpoint;
         public static int CurrentIndex = -1;
 
-        public static Viewpoint InitialViewpoint
-        {
-            get
-            {
-                return ViewpointList.FirstOrDefault();
-            }
-        }
+        public static Viewpoint InitialViewpoint => ViewpointList.FirstOrDefault();
 
-        public static Viewpoint FinalViewpoint
-        {
-            get
-            {
-                return ViewpointList.LastOrDefault();
-            }
-        }
+        public static Viewpoint FinalViewpoint => ViewpointList.LastOrDefault();
 
 
         public static void Apply(RenderingContext rc, Viewpoint viewpoint)
@@ -42,43 +29,32 @@ namespace X3D
             if (viewpoint == null)
             {
                 // No viewpoint assigned in X3D
-
-
             }
             else
             {
                 rc.TranslateWorldview(viewpoint.Position);
                 rc.RotateWorldview(viewpoint.Orientation, viewpoint.CenterOfRotation);
             }
-
-
         }
 
         public static void Initilize(SceneCamera activeCamera, View viewport)
         {
             // Set up the Viewport and projection matrix
-            if(InitialViewpoint == null)
-            {
+            if (InitialViewpoint == null)
                 activeCamera.ApplyViewport(viewport.Width, viewport.Height);
-            }
             else
-            {
                 activeCamera.ApplyViewportProjection(InitialViewpoint, viewport);
-            }
 
             CurrentViewpoint = InitialViewpoint;
         }
 
         #region Rendering Methods
-         
+
         public override void Load()
         {
             base.Load();
 
-            if(CurrentIndex == -1)
-            {
-                CurrentIndex = 0;
-            }
+            if (CurrentIndex == -1) CurrentIndex = 0;
 
             ViewpointList.Add(this);
         }
@@ -96,7 +72,7 @@ namespace X3D
 
             //rc.Translate(this.Position);
             //rc.Rotate(this.Orientation, this.CenterOfRotation);
-            
+
             //rc.PushMatricies();
         }
 

@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 using X3D.Parser;
 
 namespace X3D
 {
     /// <summary>
-    /// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/utils.html#IntegerSequencer
+    ///     http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/utils.html#IntegerSequencer
     /// </summary>
     public partial class IntegerSequencer
     {
@@ -26,34 +23,22 @@ namespace X3D
         [XmlIgnore]
         public float set_fraction
         {
-            private get
-            {
-                return this._set_fraction;
-            }
+            private get { return _set_fraction; }
             set
             {
-                this._set_fraction = value;
+                _set_fraction = value;
 
-                float percent = value * 100;
+                var percent = value * 100;
 
-                if (map.ContainsKey(percent))
-                {
-                    this.value_changed = map[percent];
-                }
+                if (map.ContainsKey(percent)) value_changed = map[percent];
             }
         }
 
         [XmlIgnore]
         public int value_changed
         {
-            get
-            {
-                return this._value_changed;
-            }
-            private set
-            {
-                this._value_changed = value;
-            }
+            get => _value_changed;
+            private set => _value_changed = value;
         }
 
         #endregion
@@ -66,33 +51,24 @@ namespace X3D
 
             int i;
 
-            _keyValues = X3DTypeConverters.Integers(this.keyValue);
+            _keyValues = X3DTypeConverters.Integers(keyValue);
 
             // OPTIMISE
-            for(i = 0; i < Keys.Length; i++)
-            {
-                if(i >= _keyValues.Length)
-                {
+            for (i = 0; i < Keys.Length; i++)
+                if (i >= _keyValues.Length)
                     map[Keys[i]] = 0;
-                }
                 else
-                {
                     map[Keys[i]] = _keyValues[i];
-                }
-            }
         }
 
         public override void PreRenderOnce(RenderingContext rc)
         {
             base.PreRenderOnce(rc);
-
         }
 
         public override void Render(RenderingContext rc)
         {
             base.Render(rc);
-
-
         }
 
         #endregion

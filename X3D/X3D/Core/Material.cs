@@ -11,20 +11,12 @@ e. The transparency field specifies how "clear" an object is, with 1.0 being com
  
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenTK;
-using OpenTK.Graphics.OpenGL4;
 using X3D.Parser;
 
 namespace X3D
 {
-
-
     /// <summary>
-    /// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/shape.html#Material
+    ///     http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/shape.html#Material
     /// </summary>
     public partial class Material
     {
@@ -54,11 +46,11 @@ Material : X3DMaterialNode {
             return string.Format(
                 "Material <ambientIntensity=\"{0}\", diffuse=\"{1}\", emissive=\"{2}\", shininess=\"{3}\", specular=\"{4}\", transparency=\"{5}\">",
                 ambientIntensity,
-                X3DTypeConverters.ToString(this._diffuseColor),
-                X3DTypeConverters.ToString(this._emissiveColor),
-                this._shininess,
-                X3DTypeConverters.ToString(this._specularColor),
-                this._transparency
+                X3DTypeConverters.ToString(_diffuseColor),
+                X3DTypeConverters.ToString(_emissiveColor),
+                _shininess,
+                X3DTypeConverters.ToString(_specularColor),
+                _transparency
             );
         }
     }

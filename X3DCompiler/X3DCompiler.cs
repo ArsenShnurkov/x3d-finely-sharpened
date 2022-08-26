@@ -1,15 +1,13 @@
-﻿using ILRepacking;
-using Microsoft.CSharp;
-using OpenTK;
-using System;
+﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Xml.Serialization;
+using ILRepacking;
+using Microsoft.CSharp;
+using OpenTK;
 using X3D.Engine;
 using X3D.Parser;
 
@@ -21,19 +19,19 @@ namespace X3D
     }
 
     /// <summary>
-    /// The X3D Compiler for the x3d-finely-sharpened project.
-    /// Compiles X3D scenes into platform specific executables.
+    ///     The X3D Compiler for the x3d-finely-sharpened project.
+    ///     Compiles X3D scenes into platform specific executables.
     /// </summary>
     public class X3DCompiler
     {
         /// <summary>
-        /// Compiles a scene graph into a windows platform .NET executable.
+        ///     Compiles a scene graph into a windows platform .NET executable.
         /// </summary>
         /// <param name="graph">
-        /// The specified scene graph to compile source from.
+        ///     The specified scene graph to compile source from.
         /// </param>
         /// <returns>
-        /// A Stream comprising the compilation output 
+        ///     A Stream comprising the compilation output
         /// </returns>
         public static Stream Compile(SceneGraph graph, PlatformTarget platform = PlatformTarget.Windows)
         {
@@ -51,14 +49,14 @@ namespace X3D
 
             compiled = CompileCSharp(source, out tmpExeFile);
 
-            tmpExeFileRepacked = Path.GetTempFileName()+".exe";
+            tmpExeFileRepacked = Path.GetTempFileName() + ".exe";
 
-            options = new RepackOptions()
+            options = new RepackOptions
             {
                 TargetKind = ILRepack.Kind.Exe,
                 Parallel = true,
                 Internalize = true,
-                InputAssemblies = new string[] { tmpExeFile },
+                InputAssemblies = new[] { tmpExeFile },
                 OutputFile = tmpExeFileRepacked
             };
             repack = new ILRepack(options);
@@ -72,13 +70,13 @@ namespace X3D
         }
 
         /// <summary>
-        /// Builds a CSharp source code representation of a Scene Graph.
+        ///     Builds a CSharp source code representation of a Scene Graph.
         /// </summary>
         /// <param name="graph">
-        /// The Specified Scene Graph to compile.
+        ///     The Specified Scene Graph to compile.
         /// </param>
         /// <returns>
-        /// CSharp source code strings.
+        ///     CSharp source code strings.
         /// </returns>
         public static string CompileAsObjects(SceneGraph graph)
         {
@@ -100,7 +98,7 @@ namespace X3D
 
             source = "";
 
-            while(work_items.Count> 0)
+            while (work_items.Count > 0)
             {
                 n = work_items.Dequeue();
 
@@ -111,7 +109,7 @@ namespace X3D
                 line = string.Format("{0} {2}{1} = new {0}();", nodeName, n._ID, NODE_IDENTIFIER);
                 lines.Add(line);
 
-                if(n.Parent != null)
+                if (n.Parent != null)
                 {
                     line = string.Format("{2}{0}.Parent = {2}{1};", n._ID, n.Parent._ID, NODE_IDENTIFIER);
                     lines.Add(line);
@@ -122,33 +120,28 @@ namespace X3D
 
                 //attributeItems = attributes.AllKeys.SelectMany(attributes.GetValues, (k, v) => new KeyValuePair<string,string>(k, v ));
 
-                foreach(attribute attribute in attributes)
+                foreach (var attribute in attributes)
                 {
                     if (attribute.compiled)
-                    {
-                        line = string.Format("{4}{3}.{0} = {1}", attribute.name, attribute.value, nodeName, n._ID, NODE_IDENTIFIER);
-                    }
+                        line = string.Format("{4}{3}.{0} = {1}", attribute.name, attribute.value, nodeName, n._ID,
+                            NODE_IDENTIFIER);
                     else
-                    {
-                        line = string.Format("{4}{3}.{0} = \"{1}\";", attribute.name, attribute.value, nodeName, n._ID, NODE_IDENTIFIER);
-                    }
-                    
+                        line = string.Format("{4}{3}.{0} = \"{1}\";", attribute.name, attribute.value, nodeName, n._ID,
+                            NODE_IDENTIFIER);
+
                     lines.Add(line);
                 }
 
-                foreach (SceneGraphNode child in n.Children)
-                {
-                    work_items.Enqueue(child);
-                }
+                foreach (var child in n.Children) work_items.Enqueue(child);
             }
-            
+
             line = string.Format("Application = new SceneGraph({1}{0});", root._ID, NODE_IDENTIFIER);
             lines.Add(line);
 
             line = "RunApplication();";
             lines.Add(line);
 
-            for (i=0; i < lines.Count; i++)
+            for (i = 0; i < lines.Count; i++)
             {
                 line = lines[i];
 
@@ -156,13 +149,6 @@ namespace X3D
             }
 
             return source;
-        }
-
-        private class attribute
-        {
-            public string name;
-            public string value;
-            public bool compiled = false;
         }
 
         private static List<attribute> GetAttributes(SceneGraphNode node)
@@ -179,45 +165,41 @@ namespace X3D
             attributes = new List<attribute>();
 
             properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(prop => !prop.IsDefined(typeof(XmlIgnoreAttribute), false) 
-                            || prop.IsDefined(typeof(XmlAttributeAttribute), false))
+                .Where(prop => !prop.IsDefined(typeof(XmlIgnoreAttribute), false)
+                               || prop.IsDefined(typeof(XmlAttributeAttribute), false))
                 .ToArray();
 
             fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance)
                 .Where(field => !field.IsDefined(typeof(XmlIgnoreAttribute), false)).ToArray();
 
-            foreach (PropertyInfo pi in properties)
+            foreach (var pi in properties)
             {
                 v = pi.GetValue(node, null);
 
                 value = serializeValue(v, out isCompiled);
 
                 if (!string.IsNullOrEmpty(value))
-                {
-                    attributes.Add(new attribute()
+                    attributes.Add(new attribute
                     {
                         name = pi.Name,
                         value = value,
                         compiled = isCompiled
                     });
-                }
             }
 
-            foreach (FieldInfo fi in fields)
+            foreach (var fi in fields)
             {
                 v = fi.GetValue(node);
 
                 value = serializeValue(v, out isCompiled);
 
                 if (!string.IsNullOrEmpty(value))
-                {
-                    attributes.Add(new attribute()
+                    attributes.Add(new attribute
                     {
                         name = fi.Name,
                         value = value,
                         compiled = isCompiled
                     });
-                }
             }
 
             return attributes;
@@ -233,7 +215,7 @@ namespace X3D
             {
                 if (v is Vector3)
                 {
-                    Vector3 vec = (Vector3)v;
+                    var vec = (Vector3)v;
 
                     value = string.Format("new Vector3({0}f, {1}f, {2}f);", vec.X, vec.Y, vec.Z);
 
@@ -241,7 +223,7 @@ namespace X3D
                 }
                 else if (v is Vector4)
                 {
-                    Vector4 vec = (Vector4)v;
+                    var vec = (Vector4)v;
 
                     value = string.Format("new Vector4({0}f, {1}f, {2}f, {3}f);", vec.X, vec.Y, vec.Z, vec.W);
 
@@ -253,12 +235,12 @@ namespace X3D
                 }
                 else if (v is float)
                 {
-                    value = v.ToString() + "f";
+                    value = v + "f";
                     isCompiled = true;
                 }
-                else if (v is Single)
+                else if (v is float)
                 {
-                    value = v.ToString() + "f";
+                    value = v + "f";
                     isCompiled = true;
                 }
                 else if (v is double)
@@ -284,7 +266,7 @@ namespace X3D
 
 
         /// <summary>
-        /// Compiles a Scene Graph into XML.
+        ///     Compiles a Scene Graph into XML.
         /// </summary>
         public static string CompileXML(SceneGraph graph)
         {
@@ -300,7 +282,7 @@ namespace X3D
             CSharpCodeProvider codeProvider;
             string code;
 
-            tmpExeFile = System.IO.Path.GetTempFileName() + ".exe";
+            tmpExeFile = Path.GetTempFileName() + ".exe";
 
             codeProvider = new CSharpCodeProvider();
 
@@ -313,23 +295,20 @@ namespace X3D
 
                 return true;
             }
-            else
-            {
-                Console.WriteLine("X3D Application failed compiling");
-            }
+
+            Console.WriteLine("X3D Application failed compiling");
 
             return false;
         }
 
         public static bool CompileCode
-            (
+        (
             CodeDomProvider provider,
-            String sourceCode,
-            String exeFile
-            )
+            string sourceCode,
+            string exeFile
+        )
         {
-
-            CompilerParameters cp = new CompilerParameters();
+            var cp = new CompilerParameters();
 
 
             cp.GenerateExecutable = true;
@@ -355,14 +334,11 @@ namespace X3D
             cp.TempFiles = new TempFileCollection(".", true);
 
             if (provider.Supports(GeneratorSupport.EntryPointMethod))
-            {
                 // Specify the class that contains 
                 // the main method of the executable.
                 cp.MainClass = "X3D.Program";
-            }
 
             if (Directory.Exists("Resources"))
-            {
                 if (provider.Supports(GeneratorSupport.Resources))
                 {
                     // Set the embedded resource file of the assembly.
@@ -375,11 +351,10 @@ namespace X3D
                     // typically localized for a specific language and culture.
                     cp.LinkedResources.Add("Resources\\nb-no.resources");
                 }
-            }
 
 
             // Invoke compilation.
-            CompilerResults cr = provider.CompileAssemblyFromSource(cp, sourceCode.Split('\n'));
+            var cr = provider.CompileAssemblyFromSource(cp, sourceCode.Split('\n'));
             //CompilerResults cr = provider.CompileAssemblyFromFile(cp, sourceFile);
 
             if (cr.Errors.Count > 0)
@@ -389,7 +364,7 @@ namespace X3D
 
                 foreach (CompilerError ce in cr.Errors)
                 {
-                    Console.WriteLine("  {0}", ce.ToString());
+                    Console.WriteLine("  {0}", ce);
                     Console.WriteLine();
                 }
             }
@@ -398,18 +373,19 @@ namespace X3D
                 Console.WriteLine("Source code built into {0} successfully.", cr.PathToAssembly);
                 Console.WriteLine("{0} temporary files created during the compilation.",
                     cp.TempFiles.Count.ToString());
-
             }
 
             // Return the results of compilation.
             if (cr.Errors.Count > 0)
-            {
                 return false;
-            }
-            else
-            {
-                return true;
-            }
+            return true;
+        }
+
+        private class attribute
+        {
+            public bool compiled;
+            public string name;
+            public string value;
         }
     }
 }

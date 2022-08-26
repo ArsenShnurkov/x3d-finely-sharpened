@@ -4,12 +4,8 @@
 // All the nodes under the proto declare are shadow-copied under the ProtoInstance
 // becoming part of the Scene Graph again as a new instance but managed explicitly by ProtoInstance.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using OpenTK;
-using X3D.Parser;
 using System.Xml.Serialization;
 
 namespace X3D
@@ -20,28 +16,32 @@ namespace X3D
 
         internal _ProtoDeclareInstance()
         {
-
         }
     }
 
     public partial class ProtoInstance
     {
         private List<fieldValue> fieldValues;
-        private bool hasPrototyped = false;
+        private bool hasPrototyped;
 
         /// <summary>
-        /// The reference to the declaration of the actual implementation of this ProtoInstance.
-        /// Referenced by @name attribute.
-        /// </summary>
-        [XmlIgnore]
-        public ProtoDeclare Prototype { get; set; } // NOTE: scene graph sets this field automatically if ProtoDeclare is declared above ProtoInstance so we dont have to search for node
-
-        /// <summary>
-        /// Shadow copy of the ProtoDeclare.
-        /// Events should be routed to and from this underlying instance leaving the original ProtoDeclare untouched.
-        /// Leaving the ProtoDeclare untouched 
+        ///     Shadow copy of the ProtoDeclare.
+        ///     Events should be routed to and from this underlying instance leaving the original ProtoDeclare untouched.
+        ///     Leaving the ProtoDeclare untouched
         /// </summary>
         internal _ProtoDeclareInstance underlyingInstance;
+
+        /// <summary>
+        ///     The reference to the declaration of the actual implementation of this ProtoInstance.
+        ///     Referenced by @name attribute.
+        /// </summary>
+        [XmlIgnore]
+        public ProtoDeclare
+            Prototype
+        {
+            get;
+            set;
+        } // NOTE: scene graph sets this field automatically if ProtoDeclare is declared above ProtoInstance so we dont have to search for node
 
         private _ProtoDeclareInstance CreateInstance()
         {
@@ -62,7 +62,6 @@ namespace X3D
             underlyingInstance = CreateInstance();
 
 
-
             //this.underlyingInstance = 
         }
 
@@ -74,15 +73,11 @@ namespace X3D
             fieldValue value;
 
             // Assign default values to imported ProtoDeclare:
-            foreach (field f in Prototype.Fields)
+            foreach (var f in Prototype.Fields)
             {
                 value = fieldValues.FirstOrDefault(fv => fv.name == f.name);
 
-                if (value != null)
-                {
-                    f.value = value.value;
-                }
-
+                if (value != null) f.value = value.value;
             }
         }
 
@@ -99,7 +94,7 @@ namespace X3D
 
             //SceneGraphNode @base;
 
-            
+
             //bool found = false;
             //int i;
             //SceneGraphNode c;
@@ -107,59 +102,35 @@ namespace X3D
             //SceneGraphNode newBase;
 
             if (!hasPrototyped)
-            {
                 // Use direct references to set field attribute of object in parent from field in ProtoInterface
                 // --                                                                                          --
                 // Put a new instance of BaseDefinition as a child of parent,
                 // then overwrite BaseDefinition instance in ProtoBody with same one that is under target parent.
-
-
-
                 //@base = Prototype.BaseDefinition;
                 //@base.IsPrototypeBase = true;
-
                 //newBase = (SceneGraphNode)Activator.CreateInstance(@base.GetType());
-
                 //Parent.Children.Add(newBase);
-
                 //Prototype.BaseDefinition = newBase;
-
-
                 //for (i = 0; i < Parent.Children.Count && !found; i++)
                 //{
                 //    c = Parent.Children[i];
-
                 //    if (c.IsPrototypeBase && c._id == @base._id)
                 //    {
                 //        updatee = c;
                 //        found = true;
                 //    }
                 //}
-
                 //if (!found)
                 //{
-
-
-
-
                 //@base.Parent = this.Parent;
-
                 //@base.Parents.Add(this.Parent);
-
                 //this.Parent.Children.Add(@base);
                 //}
                 //else
                 //{
                 //    this.Parent.Children[i] = @base;
                 //}
-
-
-
                 hasPrototyped = true;
-            }
-
-
-
         }
     }
 }

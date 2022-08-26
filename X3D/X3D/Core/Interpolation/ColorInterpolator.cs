@@ -1,64 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenTK;
 using System.Xml.Serialization;
+using OpenTK;
 using X3D.Parser;
 
 namespace X3D
 {
     /// <summary>
-    /// http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/interp.html#ColorInterpolator
+    ///     http://www.web3d.org/documents/specifications/19775-1/V3.3/Part01/components/interp.html#ColorInterpolator
     /// </summary>
     public partial class ColorInterpolator
     {
-        #region Private Fields
-
-        private float _set_fraction;
-        private Vector3 _value_changed;
-        private Dictionary<float, Vector3> map = new Dictionary<float, Vector3>();
-
-        #endregion
-
         #region Public Fields
 
-
         public Vector3[] KeyValues { get; set; }
-
-        #endregion
-
-        #region Public Properties
-
-        [XmlIgnore]
-        public float set_fraction
-        {
-            private get
-            {
-                return this._set_fraction;
-            }
-            set
-            {
-                this._set_fraction = value;
-
-                // A linear interpolation using the value of set_fraction as input (interpolation in HSV space)
-
-                this.value_changed = LerpColor(value);
-            }
-        }
-
-        [XmlIgnore]
-        public Vector3 value_changed
-        {
-            get
-            {
-                return this._value_changed;
-            }
-            private set
-            {
-                this._value_changed = value;
-            }
-        }
 
         #endregion
 
@@ -76,8 +31,7 @@ namespace X3D
 
                 Vector3 hsv_result;
                 Vector3 hsv_from,
-                        hsv_to;
-
+                    hsv_to;
 
 
                 // HSV SPACE
@@ -98,6 +52,39 @@ namespace X3D
 
         #endregion
 
+        #region Private Fields
+
+        private float _set_fraction;
+        private Vector3 _value_changed;
+        private Dictionary<float, Vector3> map = new Dictionary<float, Vector3>();
+
+        #endregion
+
+        #region Public Properties
+
+        [XmlIgnore]
+        public float set_fraction
+        {
+            private get { return this._set_fraction; }
+            set
+            {
+                this._set_fraction = value;
+
+                // A linear interpolation using the value of set_fraction as input (interpolation in HSV space)
+
+                this.value_changed = LerpColor(value);
+            }
+        }
+
+        [XmlIgnore]
+        public Vector3 value_changed
+        {
+            get { return this._value_changed; }
+            private set { this._value_changed = value; }
+        }
+
+        #endregion
+
         #region Rendering Methods
 
         public override void Load()
@@ -109,9 +96,10 @@ namespace X3D
             // The keyValue field and value_changed events are defined in RGB colour space. 
             KeyValues = X3DTypeConverters.MFVec3f(this.keyValue);
 
-            if(KeyValues.Length > Keys.Length)
+            if (KeyValues.Length > Keys.Length)
             {
-                Console.WriteLine("[Warning] ColorInterpolator : The number of colours in the keyValue field should be equal to the number of key frames in the key field");
+                Console.WriteLine(
+                    "[Warning] ColorInterpolator : The number of colours in the keyValue field should be equal to the number of key frames in the key field");
             }
 
             // OPTIMISE
@@ -131,14 +119,11 @@ namespace X3D
         public override void PreRenderOnce(RenderingContext rc)
         {
             base.PreRenderOnce(rc);
-
         }
 
         public override void Render(RenderingContext rc)
         {
             base.Render(rc);
-
-
         }
 
         #endregion

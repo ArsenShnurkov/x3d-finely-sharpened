@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-
+using System.Drawing;
+using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
-using g = OpenTK.Graphics;
-using System.Runtime.InteropServices;
-using X3D.Engine;
 using OpenTK.Input;
-using X3D;
-using System.Reflection;
-using System.Drawing;
 using X3D.ConstructionSet;
+using X3D.Engine;
+using g = OpenTK.Graphics;
+using View = X3D.Engine.View;
 
 /* Some important things:
  * --
@@ -24,14 +21,69 @@ namespace X3D.Runtime
 {
     public partial class X3DApplication : IDisposable
     {
+        #region Public Constructors
+
+        /// <param name="window">
+        ///     A window or display which is used to render the X3D application
+        /// </param>
+        public X3DApplication(INativeWindow window, SceneGraph cachedGraph = null)
+        {
+            this.window = window;
+            this._cachedGraph = cachedGraph;
+
+            // Set up a Construction Set for the current instance
+            SceneManager.ConstructionSet = X3DConsructionSet.GetConstructionSetProvider();
+
+
+            //this.window.KeyPress+=new EventHandler<KeyPressEventArgs>(X3DApplication_KeyPress);
+            //this.Keyboard.KeyDown+=new EventHandler<OpenTK.Input.KeyboardKeyEventArgs>(Keyboard_KeyDown);
+            this.Keyboard.KeyUp += new EventHandler<KeyboardKeyEventArgs>(Keyboard_KeyUp);
+
+            this.window.FocusedChanged += (object sender, EventArgs e) =>
+            {
+                if (this.window.WindowState == WindowState.Fullscreen)
+                {
+                    window.WindowState = WindowState.Normal;
+                    lockMouseCursor = false;
+
+                    isFullscreen = !isFullscreen;
+
+                    ToggleCursor();
+                }
+            };
+
+            ActiveCamera = new SceneCamera(this.window.Width, this.window.Height);
+
+            if (NavigationInfo.NavigationType == NavigationType.Examine)
+            {
+                this.Mouse.WheelChanged += Mouse_WheelChanged;
+                this.window.MouseLeave += Window_MouseLeave;
+                this.Mouse.ButtonDown += (object sender, MouseButtonEventArgs e) =>
+                {
+                    if (e.IsPressed && e.Button == MouseButton.Left)
+                    {
+                        iszooming = true;
+                        ispanning = false;
+                    }
+                    else if (e.IsPressed && e.Button == MouseButton.Right)
+                    {
+                        ispanning = true;
+                        iszooming = false;
+                    }
+
+                    mouseDragging = true;
+                };
+                this.Mouse.ButtonUp += (object sender, MouseButtonEventArgs e) => { mouseDragging = false; };
+            }
+        }
+
+        #endregion
+
         #region Public Static Properties
 
         public static SceneGraph SceneGraph
         {
-            get
-            {
-                return scene != null ? scene.SceneGraph : null;
-            }
+            get { return scene != null ? scene.SceneGraph : null; }
         }
 
         #endregion
@@ -49,7 +101,9 @@ namespace X3D.Runtime
         private bool ispanning, iszooming;
         private float mouseScale = 0.01f;
         private bool mouseDragging = false;
+
         private bool? lockMouseCursor = true;
+
         //private float dx = 0, dy = 0;
         private Vector2 mouseDelta = Vector2.Zero;
         private Crosshair _crosshair;
@@ -70,66 +124,6 @@ namespace X3D.Runtime
         private static Vector4 black = new Vector4(0.0f, 0.0f, 0.0f, 1.0f); // Black
         private static Vector4 white = new Vector4(1.0f, 1.0f, 1.0f, 1.0f); // White
         private static Vector4 ClearColor = black;
-
-        #endregion
-
-        #region Public Constructors
-
-        /// <param name="window">
-        /// A window or display which is used to render the X3D application
-        /// </param>
-        public X3DApplication(INativeWindow window, SceneGraph cachedGraph = null)
-        {
-            this.window = window;
-            this._cachedGraph = cachedGraph;
-
-            // Set up a Construction Set for the current instance
-            SceneManager.ConstructionSet = X3DConsructionSet.GetConstructionSetProvider();
-
-
-            //this.window.KeyPress+=new EventHandler<KeyPressEventArgs>(X3DApplication_KeyPress);
-            //this.Keyboard.KeyDown+=new EventHandler<OpenTK.Input.KeyboardKeyEventArgs>(Keyboard_KeyDown);
-            this.Keyboard.KeyUp += new EventHandler<OpenTK.Input.KeyboardKeyEventArgs>(Keyboard_KeyUp);
-
-            this.window.FocusedChanged += (object sender, EventArgs e) =>
-            {
-                if(this.window.WindowState == WindowState.Fullscreen)
-                {
-                    window.WindowState = WindowState.Normal;
-                    lockMouseCursor = false;
-
-                    isFullscreen = !isFullscreen;
-
-                    ToggleCursor();
-                }
-            };
-
-            ActiveCamera = new SceneCamera(this.window.Width, this.window.Height);
-
-            if(NavigationInfo.NavigationType == NavigationType.Examine)
-            {
-                this.Mouse.WheelChanged += Mouse_WheelChanged;
-                this.window.MouseLeave += Window_MouseLeave;
-                this.Mouse.ButtonDown += (object sender, MouseButtonEventArgs e) =>
-                {
-                    if (e.IsPressed && e.Button == MouseButton.Left)
-                    {
-                        iszooming = true;
-                        ispanning = false;
-                    }
-                    else if (e.IsPressed && e.Button == MouseButton.Right)
-                    {
-                        ispanning = true;
-                        iszooming = false;
-                    }
-                    mouseDragging = true;
-                };
-                this.Mouse.ButtonUp += (object sender, MouseButtonEventArgs e) =>
-                {
-                    mouseDragging = false;
-                };
-            }
-        }
 
         #endregion
 
@@ -165,32 +159,32 @@ namespace X3D.Runtime
             //ShowSupportMatrix();
 
 #if GAME_INIT_MODE && FULLSCREEN
-            window.WindowState=WindowState.Minimized;
-            ConsoleVisibility=true;
+            window.WindowState = WindowState.Minimized;
+            ConsoleVisibility = true;
 #endif
 
             // INITILISE SCENE
 
             GL.Disable(EnableCap.Normalize);
-            GL.ClearColor(ClearColor.X, ClearColor.Y, ClearColor.Z, ClearColor.W);           
-            GL.ClearDepth(1.0f);                 // Depth Buffer Setup
-            GL.Enable(EnableCap.DepthTest);                // Enables Depth Testing
-            GL.DepthFunc(DepthFunction.Lequal);                 // The Type Of Depth Testing To Do
+            GL.ClearColor(ClearColor.X, ClearColor.Y, ClearColor.Z, ClearColor.W);
+            GL.ClearDepth(1.0f); // Depth Buffer Setup
+            GL.Enable(EnableCap.DepthTest); // Enables Depth Testing
+            GL.DepthFunc(DepthFunction.Lequal); // The Type Of Depth Testing To Do
             //GL.Enable(EnableCap.CullFace); // causes bugs if enabled i.e. nehe10 wont render properly
-            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);  // Really Nice Perspective Calculations
+            GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest); // Really Nice Perspective Calculations
 
             DateTime time_before = DateTime.Now;
 
             if (!string.IsNullOrEmpty(url) && !string.IsNullOrEmpty(mime_type))
             {
                 View view = View.CreateViewFromWindow(this.window);
-                
+
                 Viewpoint.ViewpointList.Clear();
 
                 SceneManager.BaseURL = BaseURL;
                 SceneManager.BaseMIME = SceneManager.GetMIMEType(BaseMIME);
 
-                if(_cachedGraph != null)
+                if (_cachedGraph != null)
                 {
                     scene = SceneManager.fromSceneGraph(_cachedGraph);
                 }
@@ -212,19 +206,19 @@ namespace X3D.Runtime
             }
 
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("loading time: " + DateTime.Now.Subtract(time_before).TotalMilliseconds.ToString() + "ms");
+            Console.WriteLine("loading time: " + DateTime.Now.Subtract(time_before).TotalMilliseconds.ToString() +
+                              "ms");
             Console.ForegroundColor = ConsoleColor.Yellow;
 
 #if GAME_INIT_MODE&&FULLSCREEN
-            Console.ForegroundColor=ConsoleColor.DarkGreen;
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine("Sleeping for 5 secs so you can read me");
-            Console.ForegroundColor=ConsoleColor.DarkCyan;
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
             System.Threading.Thread.Sleep(5000);
-            window.WindowState=WindowState.Fullscreen;
+            window.WindowState = WindowState.Fullscreen;
 #elif FULLSCREEN
-            window.WindowState=WindowState.Fullscreen;
+            window.WindowState = WindowState.Fullscreen;
 #endif
-
         }
 
         public void Render(FrameEventArgs e)
@@ -240,10 +234,9 @@ namespace X3D.Runtime
             GL.DepthFunc(DepthFunction.Lequal);
             GL.PointSize(6.0f);
             //GL.Enable(EnableCap.Blend);
-            
+
             ActiveCamera.ApplyTransformations();
 
-            
 
             if (scene != null && scene.SceneGraph.Loaded)
             {
@@ -252,7 +245,7 @@ namespace X3D.Runtime
                 rc.Time = e.Time;
                 rc.matricies.worldview = Matrix4.Identity;
                 rc.matricies.projection = ActiveCamera.Projection;
-                
+
                 rc.matricies.modelview = Matrix4.Identity;
                 rc.matricies.orientation = Quaternion.Identity;
                 rc.cam = ActiveCamera;
@@ -260,7 +253,6 @@ namespace X3D.Runtime
 
                 // Apply the current Viewpoint
                 Viewpoint.Apply(rc, Viewpoint.CurrentViewpoint);
-
 
 
                 Engine.Runtime.Draw(scene.SceneGraph, rc);
@@ -289,7 +281,7 @@ namespace X3D.Runtime
         }
 
         /// <summary>
-        /// When the application is Resized
+        ///     When the application is Resized
         /// </summary>
         public void Resize()
         {
@@ -301,8 +293,8 @@ namespace X3D.Runtime
             }
             else
             {
-                ActiveCamera.ApplyViewportProjection(Viewpoint.CurrentViewpoint, 
-                                            View.CreateViewFromWindow(this.window));
+                ActiveCamera.ApplyViewportProjection(Viewpoint.CurrentViewpoint,
+                    View.CreateViewFromWindow(this.window));
             }
         }
 
@@ -319,9 +311,10 @@ namespace X3D.Runtime
 
         #region Public Methods
 
-        public static void TrackMouseCursor(ref Vector2 mouseDelta, INativeWindow window, Action updateCamera, Action lockMouseCursor)
+        public static void TrackMouseCursor(ref Vector2 mouseDelta, INativeWindow window, Action updateCamera,
+            Action lockMouseCursor)
         {
-            Rectangle screen = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
+            Rectangle screen = Screen.PrimaryScreen.WorkingArea;
 
             if (NavigationInfo.NavigationType != NavigationType.Examine)
             {
@@ -329,8 +322,8 @@ namespace X3D.Runtime
                 {
                     mouseDelta = new Vector2
                     (
-                       System.Windows.Forms.Cursor.Position.X - (screen.Width / 2.0f),
-                       System.Windows.Forms.Cursor.Position.Y - (screen.Height / 2.0f)
+                        Cursor.Position.X - (screen.Width / 2.0f),
+                        Cursor.Position.Y - (screen.Height / 2.0f)
                     );
 
                     mouseDelta *= 0.005f;
@@ -350,14 +343,12 @@ namespace X3D.Runtime
             }
             else
             {
-
-
                 if (window.WindowState == WindowState.Fullscreen)
                 {
                     mouseDelta = new Vector2
                     (
-                       System.Windows.Forms.Cursor.Position.X - (screen.Width / 2.0f),
-                       System.Windows.Forms.Cursor.Position.Y - (screen.Height / 2.0f)
+                        Cursor.Position.X - (screen.Width / 2.0f),
+                        Cursor.Position.Y - (screen.Height / 2.0f)
                     );
 
                     mouseDelta *= 0.005f;
@@ -370,8 +361,8 @@ namespace X3D.Runtime
                 {
                     mouseDelta = new Vector2
                     (
-                       System.Windows.Forms.Cursor.Position.X - screen.Width,
-                       System.Windows.Forms.Cursor.Position.Y - screen.Height
+                        Cursor.Position.X - screen.Width,
+                        Cursor.Position.Y - screen.Height
                     );
 
                     mouseDelta *= 0.0005f;
@@ -384,9 +375,9 @@ namespace X3D.Runtime
         public void Dispose()
         {
             // Perform a shutdown of the scene and its resources
-            if(scene != null)
+            if (scene != null)
             {
-                if(scene.ScriptingEngine != null)
+                if (scene.ScriptingEngine != null)
                 {
                     // Cleanup loaded scripts from scripting engine 
                     scene.ScriptingEngine.Dispose();
@@ -402,13 +393,11 @@ namespace X3D.Runtime
 
         private void updateCamera()
         {
-
             if (NavigationInfo.NavigationType == NavigationType.Examine)
             {
                 // MOUSE ORBIT/PAN NAVIGATION
                 if (mouseDragging)
                 {
-
                     if (ispanning)
                     {
                         ActiveCamera.PanXY(mouseDelta.X * mouseScale, mouseDelta.Y * mouseScale);
@@ -423,7 +412,8 @@ namespace X3D.Runtime
                 }
             }
 
-            if (NavigationInfo.NavigationType == NavigationType.Fly || NavigationInfo.NavigationType == NavigationType.Walk)
+            if (NavigationInfo.NavigationType == NavigationType.Fly ||
+                NavigationInfo.NavigationType == NavigationType.Walk)
             {
                 // TEST new camera walk/fly implementation:
 
@@ -449,12 +439,12 @@ namespace X3D.Runtime
         {
             if (NavigationInfo.NavigationType != NavigationType.Examine && lockMouseCursor.HasValue == false)
             {
-                var result = System.Windows.Forms.MessageBox.Show(
+                var result = MessageBox.Show(
                     "Do you want to allow this application to lock the mouse cursor?\n (Note if you allow the lock, you can quit the application by pressing 'q')",
                     "Lock Mouse Cursor",
-                    System.Windows.Forms.MessageBoxButtons.YesNo);
+                    MessageBoxButtons.YesNo);
 
-                lockMouseCursor = (result == System.Windows.Forms.DialogResult.Yes);
+                lockMouseCursor = (result == DialogResult.Yes);
             }
 
             if (lockMouseCursor.HasValue && lockMouseCursor.Value == true)
@@ -462,13 +452,12 @@ namespace X3D.Runtime
                 //        System.Windows.Forms.Cursor.Position = new System.Drawing.Point(window.Bounds.Left + (window.Bounds.Width / 2),
                 //window.Bounds.Top + (window.Bounds.Height / 2));
 
-                
 
                 if (this.isFullscreen)
                 {
-                    Rectangle screen = System.Windows.Forms.Screen.PrimaryScreen.WorkingArea;
+                    Rectangle screen = Screen.PrimaryScreen.WorkingArea;
 
-                    System.Windows.Forms.Cursor.Position = new Point(screen.Width / 2,
+                    Cursor.Position = new Point(screen.Width / 2,
                         screen.Height / 2);
                 }
                 else
@@ -510,6 +499,5 @@ namespace X3D.Runtime
         }
 
         #endregion
-
     }
 }

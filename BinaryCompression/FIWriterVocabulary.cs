@@ -21,365 +21,361 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace LiquidTechnologies.FastInfoset
 {
-	internal class FIWriterVocabulary
-	{
-		#region Inner Classes
-		internal struct QNameIndex
-		{
-			internal void Init(string prefix, string ns, string localName)
-			{
-				index = -1;
-				qname.Init(prefix, ns, localName);
-			}
+    internal class FIWriterVocabulary
+    {
+        #region enums
 
-			internal QualifiedName qname;
-			internal int index;
-		}
+        internal enum StringEncoding
+        {
+            UTF8,
+            UTF16BE
+        }
 
-		internal class QNameIndexLookup
-		{
-			internal QNameIndexLookup(QNameIndex qname)
-			{
-				_qnames = new QNameIndex[1];
-				_qnames[0] = qname;
-			}
+        #endregion
 
-			internal void AddQNameIndex(QNameIndex qname)
-			{
-				int len = _qnames.Length;
-				QNameIndex[] buffer = new QNameIndex[len + 1];
-				Array.Copy(_qnames, buffer, len);
-				_qnames = buffer;
-				_qnames[len] = qname;
-			}
+        #region Inner Classes
 
-			internal bool TryGetIndex(string prefix, string ns, out int index)
-			{
-				for (int n = 0; n < _qnames.Length; n++)
-				{
-					QNameIndex qnameIndex = _qnames[n];
-					if ((qnameIndex.qname.prefix == prefix) && (qnameIndex.qname.ns == ns))
-					{
-						index = qnameIndex.index;
-						return true;
-					}
-				}
+        internal struct QNameIndex
+        {
+            internal void Init(string prefix, string ns, string localName)
+            {
+                index = -1;
+                qname.Init(prefix, ns, localName);
+            }
 
-				index = -1;
-				return false;
-			}
+            internal QualifiedName qname;
+            internal int index;
+        }
 
-			internal bool Contains(string prefix, string ns)
-			{
-				for (int n = 0; n < _qnames.Length; n++)
-				{
-					QNameIndex qnameIndex = _qnames[n];
-					if ((qnameIndex.qname.prefix == prefix) && (qnameIndex.qname.ns == ns))
-						return true;
-				}
+        internal class QNameIndexLookup
+        {
+            private QNameIndex[] _qnames;
 
-				return false;
-			}
+            internal QNameIndexLookup(QNameIndex qname)
+            {
+                _qnames = new QNameIndex[1];
+                _qnames[0] = qname;
+            }
 
-			private QNameIndex[] _qnames;
-		}
+            internal void AddQNameIndex(QNameIndex qname)
+            {
+                var len = _qnames.Length;
+                var buffer = new QNameIndex[len + 1];
+                Array.Copy(_qnames, buffer, len);
+                _qnames = buffer;
+                _qnames[len] = qname;
+            }
 
-		internal class QNameArray
-		{
-			internal QNameArray()
-			{
-				_lastIndex = 0;
-				_nameQNameIndexLookupMap = new Dictionary<string, QNameIndexLookup>();
-			}
+            internal bool TryGetIndex(string prefix, string ns, out int index)
+            {
+                for (var n = 0; n < _qnames.Length; n++)
+                {
+                    var qnameIndex = _qnames[n];
+                    if (qnameIndex.qname.prefix == prefix && qnameIndex.qname.ns == ns)
+                    {
+                        index = qnameIndex.index;
+                        return true;
+                    }
+                }
 
-			internal QNameArray(QNameArray qnameArray)
-			{
-				_lastIndex = qnameArray._lastIndex;
-				_nameQNameIndexLookupMap = qnameArray._nameQNameIndexLookupMap;
-			}
+                index = -1;
+                return false;
+            }
 
-			internal bool TryAddQName(QNameIndex qnameIndex, out int index)
-			{
-				QNameIndexLookup qnameLookup;
-				if (_nameQNameIndexLookupMap.TryGetValue(qnameIndex.qname.localName, out qnameLookup))
-				{
-					// found QNameIndexLookup for localName, so try match prfix and namespace
-					if (qnameLookup.TryGetIndex(qnameIndex.qname.prefix, qnameIndex.qname.ns, out index))
-						return false;
+            internal bool Contains(string prefix, string ns)
+            {
+                for (var n = 0; n < _qnames.Length; n++)
+                {
+                    var qnameIndex = _qnames[n];
+                    if (qnameIndex.qname.prefix == prefix && qnameIndex.qname.ns == ns)
+                        return true;
+                }
 
-					// match not found, so add a new entry
-					_lastIndex++;
-					qnameIndex.index = _lastIndex;
-					qnameLookup.AddQNameIndex(qnameIndex);
-				}
-				else
-				{
-					// match not found, so add a new lookup entry for localName
-					_lastIndex++;
-					qnameIndex.index = _lastIndex;
-					_nameQNameIndexLookupMap.Add(qnameIndex.qname.localName, new QNameIndexLookup(qnameIndex));
-				}
+                return false;
+            }
+        }
 
-				index = -1;
-				return true;
-			}
+        internal class QNameArray
+        {
+            private int _lastIndex;
 
-			internal bool Contains(QNameIndex qnameIndex)
-			{
-				QNameIndexLookup qnameLookup;
-				if (_nameQNameIndexLookupMap.TryGetValue(qnameIndex.qname.localName, out qnameLookup))
-				{
-					// found QNameIndexLookup
-					return qnameLookup.Contains(qnameIndex.qname.prefix, qnameIndex.qname.ns);
-				}
+            private readonly Dictionary<string, QNameIndexLookup> _nameQNameIndexLookupMap;
 
-				return false;
-			}
+            internal QNameArray()
+            {
+                _lastIndex = 0;
+                _nameQNameIndexLookupMap = new Dictionary<string, QNameIndexLookup>();
+            }
 
-			private Dictionary<string, QNameIndexLookup> _nameQNameIndexLookupMap;
-			private int _lastIndex;
-		}
-		#endregion
+            internal QNameArray(QNameArray qnameArray)
+            {
+                _lastIndex = qnameArray._lastIndex;
+                _nameQNameIndexLookupMap = qnameArray._nameQNameIndexLookupMap;
+            }
 
-		#region enums
-		internal enum StringEncoding
-		{
-			UTF8,
-			UTF16BE
-		}
-		#endregion
+            internal bool TryAddQName(QNameIndex qnameIndex, out int index)
+            {
+                QNameIndexLookup qnameLookup;
+                if (_nameQNameIndexLookupMap.TryGetValue(qnameIndex.qname.localName, out qnameLookup))
+                {
+                    // found QNameIndexLookup for localName, so try match prfix and namespace
+                    if (qnameLookup.TryGetIndex(qnameIndex.qname.prefix, qnameIndex.qname.ns, out index))
+                        return false;
 
-		#region Constructors
-		internal FIWriterVocabulary()
-		{
-			// internal vocabulary constructor
-			_encodingAlgorithmManager = new FIEncodingAlgorithmManager();
-			_restrictedAlphabetManager = new FIRestrictedAlphabetManager();
+                    // match not found, so add a new entry
+                    _lastIndex++;
+                    qnameIndex.index = _lastIndex;
+                    qnameLookup.AddQNameIndex(qnameIndex);
+                }
+                else
+                {
+                    // match not found, so add a new lookup entry for localName
+                    _lastIndex++;
+                    qnameIndex.index = _lastIndex;
+                    _nameQNameIndexLookupMap.Add(qnameIndex.qname.localName, new QNameIndexLookup(qnameIndex));
+                }
 
-			Init();
-		}
+                index = -1;
+                return true;
+            }
 
-		internal FIWriterVocabulary(Uri uri, FIEncodingAlgorithmManager encodingAlgorithmManager, FIRestrictedAlphabetManager restrictedAlphabetManager)
-		{
-			if (uri != null)
-				_uri = uri.ToString();
+            internal bool Contains(QNameIndex qnameIndex)
+            {
+                QNameIndexLookup qnameLookup;
+                if (_nameQNameIndexLookupMap.TryGetValue(qnameIndex.qname.localName, out qnameLookup))
+                    // found QNameIndexLookup
+                    return qnameLookup.Contains(qnameIndex.qname.prefix, qnameIndex.qname.ns);
 
-			// external vocabulary constructor
-			_encodingAlgorithmManager = encodingAlgorithmManager;
-			_restrictedAlphabetManager = restrictedAlphabetManager;
+                return false;
+            }
+        }
 
-			Init();
-		}
+        #endregion
 
-		internal FIWriterVocabulary(FIWriterVocabulary vocab)
-		{
-			// copy constructor
-			_encodingAlgorithmManager = vocab._encodingAlgorithmManager;
-			_restrictedAlphabetManager = vocab._restrictedAlphabetManager;
+        #region Constructors
 
-			_attributeNamesMap = new QNameArray(vocab._attributeNamesMap);
-			_attributeValuesMap = new Dictionary<string,int>(vocab._attributeValuesMap);
-			_elementNamesMap = new QNameArray(vocab._elementNamesMap);
-			_contentCharacterChunksMap = new Dictionary<string,int>(vocab._contentCharacterChunksMap);
-			_localNamesMap = new Dictionary<string,int>(vocab._localNamesMap);
-			_namespaceNamesMap = new Dictionary<string,int>(vocab._namespaceNamesMap);
-			_prefixNamesMap = new Dictionary<string,int>(vocab._prefixNamesMap);
-			_otherNCNamesMap = new Dictionary<string, int>(vocab._otherNCNamesMap);
-			_otherStringMap = new Dictionary<string, int>(vocab._otherStringMap);
+        internal FIWriterVocabulary()
+        {
+            // internal vocabulary constructor
+            _encodingAlgorithmManager = new FIEncodingAlgorithmManager();
+            _restrictedAlphabetManager = new FIRestrictedAlphabetManager();
 
-			_uri = vocab._uri;
-			_stringEncoding = vocab._stringEncoding;
-		}
+            Init();
+        }
 
-		private void Init()
-		{
-			_attributeNamesMap = new QNameArray();
-			_attributeValuesMap = new Dictionary<string, int>();
-			_elementNamesMap = new QNameArray();
-			_contentCharacterChunksMap = new Dictionary<string, int>();
-			_localNamesMap = new Dictionary<string, int>();
-			_namespaceNamesMap = new Dictionary<string, int>();
-			_prefixNamesMap = new Dictionary<string, int>();
-			_otherNCNamesMap = new Dictionary<string, int>();
-			_otherStringMap = new Dictionary<string, int>();
+        internal FIWriterVocabulary(Uri uri, FIEncodingAlgorithmManager encodingAlgorithmManager,
+            FIRestrictedAlphabetManager restrictedAlphabetManager)
+        {
+            if (uri != null)
+                URI = uri.ToString();
 
-			// add default prefix and namespace
-			_prefixNamesMap.Add(FIConsts.FI_DEFAULT_PREFIX, 1);
-			_namespaceNamesMap.Add(FIConsts.FI_DEFAULT_NAMESPACE, 1);
-		}
-		#endregion
+            // external vocabulary constructor
+            _encodingAlgorithmManager = encodingAlgorithmManager;
+            _restrictedAlphabetManager = restrictedAlphabetManager;
 
-		#region Internal Interface
-		internal QNameArray AttributeNamesMap { get { return _attributeNamesMap; } }
-		internal Dictionary<string, int> AttributeValuesMap { get { return _attributeValuesMap; } }
-		internal QNameArray ElementNamesMap { get { return _elementNamesMap; } }
-		internal Dictionary<string, int> ContentCharacterChunksMap { get { return _contentCharacterChunksMap; } }
-		internal Dictionary<string, int> LocalNamesMap { get { return _localNamesMap; } }
-		internal Dictionary<string, int> NamespaceNamesMap { get { return _namespaceNamesMap; } }
-		internal Dictionary<string, int> PrefixNamesMap { get { return _prefixNamesMap; } }
-		internal Dictionary<string, int> OtherNCNamesMap { get { return _otherNCNamesMap; } }
-		internal Dictionary<string, int> OtherStringMap { get { return _otherStringMap; } }
+            Init();
+        }
 
-		#region Add Methods
-		internal void AddAttribute(string prefix, string ns, string localName)
-		{
-			QNameIndex qname = new QNameIndex();
-			qname.Init(prefix, ns, localName);
-			AddQName(qname, _attributeNamesMap);
-		}
+        internal FIWriterVocabulary(FIWriterVocabulary vocab)
+        {
+            // copy constructor
+            _encodingAlgorithmManager = vocab._encodingAlgorithmManager;
+            _restrictedAlphabetManager = vocab._restrictedAlphabetManager;
 
-		internal void AddElement(string prefix, string ns, string localName)
-		{
-			QNameIndex qname = new QNameIndex();
-			qname.Init(prefix, ns, localName);
-			AddQName(qname, _elementNamesMap);
-		}
+            AttributeNamesMap = new QNameArray(vocab.AttributeNamesMap);
+            AttributeValuesMap = new Dictionary<string, int>(vocab.AttributeValuesMap);
+            ElementNamesMap = new QNameArray(vocab.ElementNamesMap);
+            ContentCharacterChunksMap = new Dictionary<string, int>(vocab.ContentCharacterChunksMap);
+            LocalNamesMap = new Dictionary<string, int>(vocab.LocalNamesMap);
+            NamespaceNamesMap = new Dictionary<string, int>(vocab.NamespaceNamesMap);
+            PrefixNamesMap = new Dictionary<string, int>(vocab.PrefixNamesMap);
+            OtherNCNamesMap = new Dictionary<string, int>(vocab.OtherNCNamesMap);
+            OtherStringMap = new Dictionary<string, int>(vocab.OtherStringMap);
 
-		internal void AddAttributeValue(string strValue)
-		{
-			AddValueToMap(strValue, _attributeValuesMap);
-		}
+            URI = vocab.URI;
+            CharacterStringEncoding = vocab.CharacterStringEncoding;
+        }
 
-		internal void AddContentCharacterChunk(string strValue)
-		{
-			AddValueToMap(strValue, _contentCharacterChunksMap);
-		}
+        private void Init()
+        {
+            AttributeNamesMap = new QNameArray();
+            AttributeValuesMap = new Dictionary<string, int>();
+            ElementNamesMap = new QNameArray();
+            ContentCharacterChunksMap = new Dictionary<string, int>();
+            LocalNamesMap = new Dictionary<string, int>();
+            NamespaceNamesMap = new Dictionary<string, int>();
+            PrefixNamesMap = new Dictionary<string, int>();
+            OtherNCNamesMap = new Dictionary<string, int>();
+            OtherStringMap = new Dictionary<string, int>();
 
-		internal void AddPrefixName(string name)
-		{
-			AddValueToMap(name, _prefixNamesMap);
-		}
+            // add default prefix and namespace
+            PrefixNamesMap.Add(FIConsts.FI_DEFAULT_PREFIX, 1);
+            NamespaceNamesMap.Add(FIConsts.FI_DEFAULT_NAMESPACE, 1);
+        }
 
-		internal void AddNamespaceName(string name)
-		{
-			AddValueToMap(name, _namespaceNamesMap);
-		}
+        #endregion
 
-		internal void AddLocalName(string name)
-		{
-			AddValueToMap(name, _localNamesMap);
-		}
+        #region Internal Interface
 
-		internal void AddOtherNCName(string otherNCName)
-		{
-			AddValueToMap(otherNCName, _otherNCNamesMap);
-		}
+        internal QNameArray AttributeNamesMap { get; private set; }
 
-		internal void AddOtherString(string otherString)
-		{
-			AddValueToMap(otherString, _otherStringMap);
-		}
+        internal Dictionary<string, int> AttributeValuesMap { get; private set; }
 
-		internal void AddQName(QNameIndex qnameIndex, QNameArray mapQNames)
-		{
-			int index;
-			if (mapQNames.TryAddQName(qnameIndex, out index))
-			{
-				// value was added
+        internal QNameArray ElementNamesMap { get; private set; }
 
-				int prefixIndex = 0;
-				int namespaceIndex = 0;
-				int localNameIndex = 0;
+        internal Dictionary<string, int> ContentCharacterChunksMap { get; private set; }
 
-				if (!string.IsNullOrEmpty(qnameIndex.qname.prefix))
-				{
-					if (!FindPrefixNameIndex(qnameIndex.qname.prefix, out prefixIndex))
-						AddPrefixName(qnameIndex.qname.prefix);
-				}
+        internal Dictionary<string, int> LocalNamesMap { get; private set; }
 
-				if (!string.IsNullOrEmpty(qnameIndex.qname.ns))
-				{
-					if (!FindNamespaceNameIndex(qnameIndex.qname.ns, out namespaceIndex))
-						AddNamespaceName(qnameIndex.qname.ns);
-				}
+        internal Dictionary<string, int> NamespaceNamesMap { get; private set; }
 
-				if (!FindLocalNameIndex(qnameIndex.qname.localName, out localNameIndex))
-					AddLocalName(qnameIndex.qname.localName);
-			}
-		}
+        internal Dictionary<string, int> PrefixNamesMap { get; private set; }
 
-		internal void AddValueToMap(string key, Dictionary<string, int> map)
-		{
-			if (map.Count < FIConsts.TWO_POWER_TWENTY)
-				map.Add(key, map.Count + 1);
-		}
-		#endregion
+        internal Dictionary<string, int> OtherNCNamesMap { get; private set; }
 
-		#region Lookup Methods
-		internal string URI
-		{
-			get { return _uri; }
-		}
+        internal Dictionary<string, int> OtherStringMap { get; private set; }
 
-		internal StringEncoding CharacterStringEncoding
-		{
-			get { return _stringEncoding; }
-			set { _stringEncoding = value; }
-		}
+        #region Add Methods
 
-		internal FIRestrictedAlphabet RestrictedAlphabet(int fiTableIndex)
-		{
-			return _restrictedAlphabetManager.Alphabet(fiTableIndex);
-		}
+        internal void AddAttribute(string prefix, string ns, string localName)
+        {
+            var qname = new QNameIndex();
+            qname.Init(prefix, ns, localName);
+            AddQName(qname, AttributeNamesMap);
+        }
 
-		internal FIEncoding EncodingAlgorithm(string uri)
-		{
-			return _encodingAlgorithmManager.Encoding(uri);
-		}
+        internal void AddElement(string prefix, string ns, string localName)
+        {
+            var qname = new QNameIndex();
+            qname.Init(prefix, ns, localName);
+            AddQName(qname, ElementNamesMap);
+        }
 
-		internal bool FindIndex(Dictionary<string, int> map, string key, ref int index)
-		{
-			if (map.ContainsKey(key))
-			{
-				index = map[key];
-				return true;
-			}
+        internal void AddAttributeValue(string strValue)
+        {
+            AddValueToMap(strValue, AttributeValuesMap);
+        }
 
-			return false;
-		}
+        internal void AddContentCharacterChunk(string strValue)
+        {
+            AddValueToMap(strValue, ContentCharacterChunksMap);
+        }
 
-		internal bool FindPrefixNameIndex(string name, out int index)
-		{
-			return _prefixNamesMap.TryGetValue(name, out index);
-		}
+        internal void AddPrefixName(string name)
+        {
+            AddValueToMap(name, PrefixNamesMap);
+        }
 
-		internal bool FindNamespaceNameIndex(string name, out int index)
-		{
-			return _namespaceNamesMap.TryGetValue(name, out index);
-		}
+        internal void AddNamespaceName(string name)
+        {
+            AddValueToMap(name, NamespaceNamesMap);
+        }
 
-		internal bool FindLocalNameIndex(string name, out int index)
-		{
-			return _localNamesMap.TryGetValue(name, out index);
-		}
-		#endregion
-		#endregion
+        internal void AddLocalName(string name)
+        {
+            AddValueToMap(name, LocalNamesMap);
+        }
 
-		#region Members Variables
-		// Internal Data
-		private string _uri = null;
-		private StringEncoding _stringEncoding = StringEncoding.UTF8;
+        internal void AddOtherNCName(string otherNCName)
+        {
+            AddValueToMap(otherNCName, OtherNCNamesMap);
+        }
 
-		private FIEncodingAlgorithmManager _encodingAlgorithmManager;
-		private FIRestrictedAlphabetManager _restrictedAlphabetManager;
+        internal void AddOtherString(string otherString)
+        {
+            AddValueToMap(otherString, OtherStringMap);
+        }
 
-		// Writer Tables
-		private QNameArray _attributeNamesMap;
-		private Dictionary<string, int> _attributeValuesMap;
+        internal void AddQName(QNameIndex qnameIndex, QNameArray mapQNames)
+        {
+            int index;
+            if (mapQNames.TryAddQName(qnameIndex, out index))
+            {
+                // value was added
 
-		private QNameArray _elementNamesMap;
-		private Dictionary<string, int> _contentCharacterChunksMap;
+                var prefixIndex = 0;
+                var namespaceIndex = 0;
+                var localNameIndex = 0;
 
-		private Dictionary<string, int> _localNamesMap;
-		private Dictionary<string, int> _namespaceNamesMap;
-		private Dictionary<string, int> _prefixNamesMap;
+                if (!string.IsNullOrEmpty(qnameIndex.qname.prefix))
+                    if (!FindPrefixNameIndex(qnameIndex.qname.prefix, out prefixIndex))
+                        AddPrefixName(qnameIndex.qname.prefix);
 
-		private Dictionary<string, int> _otherNCNamesMap;
-		private Dictionary<string, int> _otherStringMap;
-		#endregion
-	}
+                if (!string.IsNullOrEmpty(qnameIndex.qname.ns))
+                    if (!FindNamespaceNameIndex(qnameIndex.qname.ns, out namespaceIndex))
+                        AddNamespaceName(qnameIndex.qname.ns);
+
+                if (!FindLocalNameIndex(qnameIndex.qname.localName, out localNameIndex))
+                    AddLocalName(qnameIndex.qname.localName);
+            }
+        }
+
+        internal void AddValueToMap(string key, Dictionary<string, int> map)
+        {
+            if (map.Count < FIConsts.TWO_POWER_TWENTY)
+                map.Add(key, map.Count + 1);
+        }
+
+        #endregion
+
+        #region Lookup Methods
+
+        internal string URI { get; }
+
+        internal StringEncoding CharacterStringEncoding { get; set; } = StringEncoding.UTF8;
+
+        internal FIRestrictedAlphabet RestrictedAlphabet(int fiTableIndex)
+        {
+            return _restrictedAlphabetManager.Alphabet(fiTableIndex);
+        }
+
+        internal FIEncoding EncodingAlgorithm(string uri)
+        {
+            return _encodingAlgorithmManager.Encoding(uri);
+        }
+
+        internal bool FindIndex(Dictionary<string, int> map, string key, ref int index)
+        {
+            if (map.ContainsKey(key))
+            {
+                index = map[key];
+                return true;
+            }
+
+            return false;
+        }
+
+        internal bool FindPrefixNameIndex(string name, out int index)
+        {
+            return PrefixNamesMap.TryGetValue(name, out index);
+        }
+
+        internal bool FindNamespaceNameIndex(string name, out int index)
+        {
+            return NamespaceNamesMap.TryGetValue(name, out index);
+        }
+
+        internal bool FindLocalNameIndex(string name, out int index)
+        {
+            return LocalNamesMap.TryGetValue(name, out index);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Members Variables
+
+        // Internal Data
+
+        private readonly FIEncodingAlgorithmManager _encodingAlgorithmManager;
+        private readonly FIRestrictedAlphabetManager _restrictedAlphabetManager;
+
+        // Writer Tables
+
+        #endregion
+    }
 }

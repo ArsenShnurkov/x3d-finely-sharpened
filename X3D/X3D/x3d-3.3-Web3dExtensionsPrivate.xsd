@@ -28,14 +28,15 @@
 #
 -->
 
-<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="3.3.0">
+<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" version="3.3.0">
 
-<!-- construction note:  unlike xs:element, xs:attributeGroup constructs from parent schema not referencable -->
+	<!-- construction note:  unlike xs:element, xs:attributeGroup constructs from parent schema not referencable -->
 
-<!-- ================================================================= -->
+	<!-- ================================================================= -->
 
 	<!-- Local/user schema extensions for elements and attributes are added here. -->
 
-<!-- ================================================================= -->
+	<!-- ================================================================= -->
 
 </xs:schema>

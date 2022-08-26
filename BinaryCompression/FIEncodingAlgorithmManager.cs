@@ -19,105 +19,102 @@
  *  http://www.liquid-technologies.com
  */
 
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace LiquidTechnologies.FastInfoset
 {
-	internal class FIEncodingAlgorithmManager
-	{
-		#region Consts
-		private const byte ENCODING_ALGORITHM_COUNT = 10;
-		private const byte EXTENDED_ENCODING_ALGORITHM_START = 32;
-		private const int EXTENDED_ENCODING_ALGORITHM_MAX = 256;
-		#endregion
+    internal class FIEncodingAlgorithmManager
+    {
+        private InternalEncodingAlgorithm _internalEncodingAlgorithm;
+        private Dictionary<string, FIEncodingAlgorithm> _uriToEncodingMap;
 
-		#region Constructors
-		internal FIEncodingAlgorithmManager()
-		{
-			_internalEncodingAlgorithm = null;
-			_uriToEncodingMap = null;
-		}
-		#endregion
+        #region Constructors
 
-		internal void Add(FIEncodingAlgorithm encoding)
-		{
-			string uri = encoding.URI.ToString();
+        internal FIEncodingAlgorithmManager()
+        {
+            _internalEncodingAlgorithm = null;
+            _uriToEncodingMap = null;
+        }
 
-			if (_uriToEncodingMap == null)
-				_uriToEncodingMap = new Dictionary<string, FIEncodingAlgorithm>();
-			else
-				if (_uriToEncodingMap.ContainsKey(uri))
-					throw new LtFastInfosetException("An encoding algorithm already exists for URI " + uri);
+        #endregion
 
-			_uriToEncodingMap.Add(uri, encoding);
-		}
+        internal void Add(FIEncodingAlgorithm encoding)
+        {
+            var uri = encoding.URI.ToString();
 
-		internal FIEncodingAlgorithm Encoding(string uri)
-		{
-			if (_uriToEncodingMap != null)
-			{
-				FIEncodingAlgorithm encoding = null;
-				if (_uriToEncodingMap.TryGetValue(uri, out encoding))
-					return encoding;
-			}
+            if (_uriToEncodingMap == null)
+                _uriToEncodingMap = new Dictionary<string, FIEncodingAlgorithm>();
+            else if (_uriToEncodingMap.ContainsKey(uri))
+                throw new LtFastInfosetException("An encoding algorithm already exists for URI " + uri);
 
-			return null;
-		}
+            _uriToEncodingMap.Add(uri, encoding);
+        }
 
-		internal FIEncoding Encoding(int fiTableIndex)
-		{
-			FIEncoding encoding = null;
+        internal FIEncodingAlgorithm Encoding(string uri)
+        {
+            if (_uriToEncodingMap != null)
+            {
+                FIEncodingAlgorithm encoding = null;
+                if (_uriToEncodingMap.TryGetValue(uri, out encoding))
+                    return encoding;
+            }
 
-			if (fiTableIndex > 0)
-			{
-				if (fiTableIndex < EXTENDED_ENCODING_ALGORITHM_START)
-				{
-					if (fiTableIndex <= ENCODING_ALGORITHM_COUNT)
-					{
-						if (_internalEncodingAlgorithm == null)
-							_internalEncodingAlgorithm = new InternalEncodingAlgorithm();
+            return null;
+        }
 
-						_internalEncodingAlgorithm.Encoding = (InternalEncodingAlgorithm.EncodingType)fiTableIndex;
-						encoding = _internalEncodingAlgorithm;
-					}
-				}
-				else if ((_uriToEncodingMap != null) && (fiTableIndex < EXTENDED_ENCODING_ALGORITHM_MAX))
-				{
-					// index - 1 to move from FI table index to list index
-					int realIndex = fiTableIndex - 1;
-					if (realIndex < _uriToEncodingMap.Count)
-					{
-						Dictionary<string, FIEncodingAlgorithm>.Enumerator e = _uriToEncodingMap.GetEnumerator();
-						while (e.MoveNext())
-						{
-							if (e.Current.Value.TableIndex == fiTableIndex)
-							{
-								encoding = e.Current.Value;
-								break;
-							}
-						}
-					}
+        internal FIEncoding Encoding(int fiTableIndex)
+        {
+            FIEncoding encoding = null;
+
+            if (fiTableIndex > 0)
+            {
+                if (fiTableIndex < EXTENDED_ENCODING_ALGORITHM_START)
+                {
+                    if (fiTableIndex <= ENCODING_ALGORITHM_COUNT)
+                    {
+                        if (_internalEncodingAlgorithm == null)
+                            _internalEncodingAlgorithm = new InternalEncodingAlgorithm();
+
+                        _internalEncodingAlgorithm.Encoding = (InternalEncodingAlgorithm.EncodingType)fiTableIndex;
+                        encoding = _internalEncodingAlgorithm;
+                    }
+                }
+                else if (_uriToEncodingMap != null && fiTableIndex < EXTENDED_ENCODING_ALGORITHM_MAX)
+                {
+                    // index - 1 to move from FI table index to list index
+                    var realIndex = fiTableIndex - 1;
+                    if (realIndex < _uriToEncodingMap.Count)
+                    {
+                        var e = _uriToEncodingMap.GetEnumerator();
+                        while (e.MoveNext())
+                            if (e.Current.Value.TableIndex == fiTableIndex)
+                            {
+                                encoding = e.Current.Value;
+                                break;
+                            }
+                    }
                     else
                     {
-                        Dictionary<string, FIEncodingAlgorithm>.Enumerator e = _uriToEncodingMap.GetEnumerator();
+                        var e = _uriToEncodingMap.GetEnumerator();
                         while (e.MoveNext())
-                        {
                             if (e.Current.Value.Index == fiTableIndex)
                             {
                                 encoding = e.Current.Value;
                                 break;
                             }
-                        }
                     }
-				}
-			}
+                }
+            }
 
-			return encoding;
-		}
+            return encoding;
+        }
 
-		private InternalEncodingAlgorithm _internalEncodingAlgorithm;
-		private Dictionary<string, FIEncodingAlgorithm> _uriToEncodingMap;
-	}
+        #region Consts
+
+        private const byte ENCODING_ALGORITHM_COUNT = 10;
+        private const byte EXTENDED_ENCODING_ALGORITHM_START = 32;
+        private const int EXTENDED_ENCODING_ALGORITHM_MAX = 256;
+
+        #endregion
+    }
 }

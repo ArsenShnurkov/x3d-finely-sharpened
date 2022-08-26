@@ -1,8 +1,5 @@
-﻿using OpenTK;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
+using OpenTK;
 using OpenTK.Input;
 using X3D.Engine;
 
@@ -10,34 +7,31 @@ namespace X3D
 {
     public class RenderingContext
     {
-        public Matricies matricies = new Matricies();
         public SceneCamera cam;
-        public double Time;
-
-        /// <summary>
-        /// Monoscopic View
-        /// </summary>
-        public View View;
+        public Matricies matricies = new Matricies();
         public View StereoscopicLeft = null;
         public View StereoscopicRight = null;
+        public double Time;
+
+        private readonly Stack<Matricies> transformHierarchy = new Stack<Matricies>();
+
+        /// <summary>
+        ///     Monoscopic View
+        /// </summary>
+        public View View;
 
         public KeyboardDevice Keyboard { get; set; }
-
-        private Stack<Matricies> transformHierarchy = new Stack<Matricies>();
 
         #region Public Methods
 
         public void TranslateWorldview(Vector3 translation)
         {
-
-
-            matricies.worldview  *= Matrix4.CreateTranslation(translation);
+            matricies.worldview *= Matrix4.CreateTranslation(translation);
             //matricies.modelview *= Matrix4.CreateTranslation(translation);
         }
 
         public void RotateWorldview(Vector4 rotation, Vector3 centerOfRotation)
         {
-
         }
 
         public void Translate(Vector3 translation)
@@ -47,12 +41,10 @@ namespace X3D
 
         public void Rotate(Vector4 rotation)
         {
-
         }
 
         public void Rotate(Vector4 rotation, Vector3 centerOfRotation)
         {
-            
         }
 
         public void Scale(Vector3 scale)

@@ -20,97 +20,104 @@
  */
 
 using System;
-using System.Text;
 
 namespace LiquidTechnologies.FastInfoset
 {
-	internal class FIRestrictedAlphabetManager
-	{
-		#region Consts
-		private const int GROW_ARRAY_SIZE = 2;
+    internal class FIRestrictedAlphabetManager
+    {
+        #region Constructors
 
-		// Built In Restricted Alphabets
-		private const string RESTRICTED_ALPHABET_VALUES_NUMERIC = "0123456789-+.e ";
-		private const string RESTRICTED_ALPHABET_VALUES_DATE_TIME = "0123456789-:TZ ";
+        internal FIRestrictedAlphabetManager()
+        {
+            // initialize array
+            _restrictedAlphabets = new FIRestrictedAlphabet[GROW_ARRAY_SIZE];
+            _restrictedAlphabetTop = 0;
 
-		private const byte RESTRICTED_ALPHABET_NUMERIC = 1;
-		private const byte RESTRICTED_ALPHABET_DATE_TIME = 2;
-		private const byte BUILT_IN_RESTRICTED_ALPHABET_COUNT = 2;
-		private const byte EXTENDED_RESTRICTED_ALPHABET_START = 16;
-		private const int EXTENDED_RESTRICTED_ALPHABET_MAX = 256;
-		#endregion
+            // Add built in restricted alphabets
+            var alphabet = new FIRestrictedAlphabet(RESTRICTED_ALPHABET_VALUES_NUMERIC);
+            alphabet.TableIndex = RESTRICTED_ALPHABET_NUMERIC;
+            _restrictedAlphabets[_restrictedAlphabetTop] = alphabet;
 
-		#region Constructors
-		internal FIRestrictedAlphabetManager()
-		{
-			// initialize array
-			_restrictedAlphabets = new FIRestrictedAlphabet[GROW_ARRAY_SIZE];
-			_restrictedAlphabetTop = 0;
+            alphabet = new FIRestrictedAlphabet(RESTRICTED_ALPHABET_VALUES_DATE_TIME);
+            alphabet.TableIndex = RESTRICTED_ALPHABET_DATE_TIME;
+            _restrictedAlphabets[++_restrictedAlphabetTop] = alphabet;
+        }
 
-			// Add built in restricted alphabets
-			FIRestrictedAlphabet alphabet = new FIRestrictedAlphabet(RESTRICTED_ALPHABET_VALUES_NUMERIC);
-			alphabet.TableIndex = RESTRICTED_ALPHABET_NUMERIC;
-			_restrictedAlphabets[_restrictedAlphabetTop] = alphabet;
+        #endregion
 
-			alphabet = new FIRestrictedAlphabet(RESTRICTED_ALPHABET_VALUES_DATE_TIME);
-			alphabet.TableIndex = RESTRICTED_ALPHABET_DATE_TIME;
-			_restrictedAlphabets[++_restrictedAlphabetTop] = alphabet;
-		}
-		#endregion
+        #region Consts
 
-		#region Internal Interface
-		internal int Add(FIRestrictedAlphabet alphabet)
-		{
-			// set table index
-			alphabet.TableIndex = _restrictedAlphabets.Length + (EXTENDED_RESTRICTED_ALPHABET_START - BUILT_IN_RESTRICTED_ALPHABET_COUNT);
+        private const int GROW_ARRAY_SIZE = 2;
 
-			if (_restrictedAlphabetTop == (_restrictedAlphabets.Length - 1))
-			{
-				// grow array
-				FIRestrictedAlphabet[] destinationArray = new FIRestrictedAlphabet[_restrictedAlphabets.Length + GROW_ARRAY_SIZE];
-				if (_restrictedAlphabetTop > 0)
-					Array.Copy(_restrictedAlphabets, destinationArray, (int)(_restrictedAlphabetTop + 1));
+        // Built In Restricted Alphabets
+        private const string RESTRICTED_ALPHABET_VALUES_NUMERIC = "0123456789-+.e ";
+        private const string RESTRICTED_ALPHABET_VALUES_DATE_TIME = "0123456789-:TZ ";
 
-				_restrictedAlphabets = destinationArray;
-			}
+        private const byte RESTRICTED_ALPHABET_NUMERIC = 1;
+        private const byte RESTRICTED_ALPHABET_DATE_TIME = 2;
+        private const byte BUILT_IN_RESTRICTED_ALPHABET_COUNT = 2;
+        private const byte EXTENDED_RESTRICTED_ALPHABET_START = 16;
+        private const int EXTENDED_RESTRICTED_ALPHABET_MAX = 256;
 
-			// add new restricted alphabet
-			_restrictedAlphabetTop++;
-			_restrictedAlphabets[_restrictedAlphabetTop] = alphabet;
+        #endregion
 
-			return alphabet.TableIndex;
-		}
+        #region Internal Interface
 
-		internal FIRestrictedAlphabet Alphabet(int fiTableIndex)
-		{
-			FIRestrictedAlphabet alphabet = null;
+        internal int Add(FIRestrictedAlphabet alphabet)
+        {
+            // set table index
+            alphabet.TableIndex = _restrictedAlphabets.Length +
+                                  (EXTENDED_RESTRICTED_ALPHABET_START - BUILT_IN_RESTRICTED_ALPHABET_COUNT);
 
-			if (fiTableIndex > 0)
-			{
-				if (fiTableIndex < EXTENDED_RESTRICTED_ALPHABET_START)
-				{
-					if (fiTableIndex <= BUILT_IN_RESTRICTED_ALPHABET_COUNT)
-					{
-						// index - 1 to move from FI table index to list index
-						alphabet = _restrictedAlphabets[fiTableIndex - 1];
-					}
-				}
-				else if (fiTableIndex < EXTENDED_RESTRICTED_ALPHABET_MAX)
-				{
-					// to move from FI table index to list index
-					int realIndex = fiTableIndex - (EXTENDED_RESTRICTED_ALPHABET_START - BUILT_IN_RESTRICTED_ALPHABET_COUNT);
-					if (realIndex < _restrictedAlphabets.Length)
-						alphabet = _restrictedAlphabets[realIndex];
-				}
-			}
+            if (_restrictedAlphabetTop == _restrictedAlphabets.Length - 1)
+            {
+                // grow array
+                var destinationArray = new FIRestrictedAlphabet[_restrictedAlphabets.Length + GROW_ARRAY_SIZE];
+                if (_restrictedAlphabetTop > 0)
+                    Array.Copy(_restrictedAlphabets, destinationArray, _restrictedAlphabetTop + 1);
 
-			return alphabet;
-		}
-		#endregion
+                _restrictedAlphabets = destinationArray;
+            }
 
-		#region Member Variables
-		private FIRestrictedAlphabet[] _restrictedAlphabets;
-		private int _restrictedAlphabetTop;
-		#endregion
-	}
+            // add new restricted alphabet
+            _restrictedAlphabetTop++;
+            _restrictedAlphabets[_restrictedAlphabetTop] = alphabet;
+
+            return alphabet.TableIndex;
+        }
+
+        internal FIRestrictedAlphabet Alphabet(int fiTableIndex)
+        {
+            FIRestrictedAlphabet alphabet = null;
+
+            if (fiTableIndex > 0)
+            {
+                if (fiTableIndex < EXTENDED_RESTRICTED_ALPHABET_START)
+                {
+                    if (fiTableIndex <= BUILT_IN_RESTRICTED_ALPHABET_COUNT)
+                        // index - 1 to move from FI table index to list index
+                        alphabet = _restrictedAlphabets[fiTableIndex - 1];
+                }
+                else if (fiTableIndex < EXTENDED_RESTRICTED_ALPHABET_MAX)
+                {
+                    // to move from FI table index to list index
+                    var realIndex = fiTableIndex -
+                                    (EXTENDED_RESTRICTED_ALPHABET_START - BUILT_IN_RESTRICTED_ALPHABET_COUNT);
+                    if (realIndex < _restrictedAlphabets.Length)
+                        alphabet = _restrictedAlphabets[realIndex];
+                }
+            }
+
+            return alphabet;
+        }
+
+        #endregion
+
+        #region Member Variables
+
+        private FIRestrictedAlphabet[] _restrictedAlphabets;
+        private int _restrictedAlphabetTop;
+
+        #endregion
+    }
 }

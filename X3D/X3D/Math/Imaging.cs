@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenTK;
 using System.Drawing;
-using System.IO;
+using System.Drawing.Imaging;
+using OpenTK;
 
 namespace X3D
 {
@@ -17,23 +15,23 @@ namespace X3D
             int x, y;
             System.Drawing.Color color;
 
-            bitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
+            bitmap = new Bitmap(width, height, PixelFormat.Format32bppRgb);
             x = 0;
             y = 0;
 
-            for (i=0; i < pixels.Length; i+=4)
+            for (i = 0; i < pixels.Length; i += 4)
             {
                 color = System.Drawing.Color.FromArgb(
-                    pixels[i], 
-                    pixels[i+1], 
-                    pixels[i+2], 
-                    pixels[i+3]
+                    pixels[i],
+                    pixels[i + 1],
+                    pixels[i + 2],
+                    pixels[i + 3]
                 );
-                
+
                 bitmap.SetPixel(x, y, color);
 
-                x = (x == width -1) ? 0 : x + 1;
-                y = (x == width -1 && y != height -1) ? y + 1 : y;
+                x = x == width - 1 ? 0 : x + 1;
+                y = x == width - 1 && y != height - 1 ? y + 1 : y;
             }
 
             return bitmap;

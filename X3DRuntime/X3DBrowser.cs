@@ -1,5 +1,4 @@
 ﻿using System;
-
 using OpenTK;
 using OpenTK.Graphics;
 using X3D.Engine;
@@ -8,6 +7,22 @@ namespace X3D.Runtime
 {
     public class X3DBrowser : GameWindow, IDisposable
     {
+        #region Private Fields
+
+        private readonly X3DApplication app;
+
+        #endregion
+
+        #region Destructors
+
+        public new void Dispose()
+        {
+            //base.Dispose();
+            app.Dispose();
+        }
+
+        #endregion
+
         #region Public Properties
 
         public SceneGraph Graph { get; set; }
@@ -15,27 +30,23 @@ namespace X3D.Runtime
 
         #endregion
 
-        #region Private Fields
-
-        private X3DApplication app;
-
-        #endregion
-
         #region Constructors
 
-        public X3DBrowser(VSyncMode VSync, string url, Resolution res, GraphicsMode mode) : base(res.Width, res.Height, mode)
+        public X3DBrowser(VSyncMode VSync, string url, Resolution res, GraphicsMode mode) : base(res.Width, res.Height,
+            mode)
         {
             this.VSync = VSync;
-            this.URL = url;
+            URL = url;
 
             app = new X3DApplication(this);
         }
 
-        public X3DBrowser(VSyncMode VSync, SceneGraph graph, Resolution res, GraphicsMode mode) : base(res.Width, res.Height, mode)
+        public X3DBrowser(VSyncMode VSync, SceneGraph graph, Resolution res, GraphicsMode mode) : base(res.Width,
+            res.Height, mode)
         {
             this.VSync = VSync;
-            this.URL = string.Empty;
-            this.Graph = graph;
+            URL = string.Empty;
+            Graph = graph;
 
             app = new X3DApplication(this, graph);
         }
@@ -67,16 +78,6 @@ namespace X3D.Runtime
             app.BaseURL = URL;
             app.BaseMIME = "model/x3d+xml";
             app.Init(URL, app.BaseMIME);
-        }
-
-        #endregion
-
-        #region Destructors
-
-        public new void Dispose()
-        {
-            //base.Dispose();
-            this.app.Dispose();
         }
 
         #endregion
